@@ -44,6 +44,8 @@ float
 int main(void)
 {
 	stm32_setup();
+
+	//galletas
 	
 	// hall data initialization
 	hall1_data.hall_state=HALL_INITIAL;
