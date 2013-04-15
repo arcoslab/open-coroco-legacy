@@ -37,6 +37,7 @@ float
 #include "set_up.c"
 #include "usart_functions.c"
 #include "timer_1.c"
+#include "timer_2.c"
 #include "hall_sensors.c"
 #include "control_loops.c"
 #include "interrupt_handler.c"
@@ -122,7 +123,8 @@ int main(void)
 			
 			//usart_send_blocking(USART2, 'e');
 			//usart_transmit_a_floating_number(II_captured_sine_freq);
-*/			usart_send_blocking(USART2, 'a');
+*/
+			usart_send_blocking(USART2, 'a');
 			usart_transmit_a_floating_number(captured_actual_sine_frequency);
 			//usart_send_blocking(USART2, 'd');
 			//usart_transmit_a_floating_number(captured_desired_sine_frequency);
@@ -152,14 +154,20 @@ int main(void)
 			//usart_send_blocking(USART2, 'M');
 			//usart_transmit_a_floating_number(captured_phase_sum);
 
-*/		
 		
+		
+			captured_V_hall_1_V1=V_hall_1_V1;
+	captured_V_hall_1_V2=V_hall_1_V2;
+	captured_V_hall_2_V1=V_hall_2_V1;
+	captured_V_hall_2_V2=V_hall_2_V2;
+	captured_V_hall_3_V1=V_hall_3_V1;
+	captured_V_hall_3_V2=V_hall_3_V2;
 			
 			
-/*
+
 			usart_send_blocking(USART2, 'V');
 			usart_transmit_a_floating_number(captured_V_hall_1_V1*1000);
-
+/*
 			usart_send_blocking(USART2, 'V');
 			usart_transmit_a_floating_number(captured_V_hall_2_V1*1000);
 
@@ -176,15 +184,33 @@ int main(void)
 			{
 				usart_send_blocking(USART2, '0');
 			}
+
+			usart_send_blocking(USART2, 'U');
+			if (hall1_data.hall_update==true)
+			{
+
+				usart_send_blocking(USART2, '1');
+			}
+			else
+			{
+				usart_send_blocking(USART2, '0');
+			}
+	
+
+			float ZZ;
+			ZZ=gpio_get(GPIOA, GPIO1);
+			usart_send_blocking(USART2, 'Z');
+			usart_transmit_a_floating_number(ZZ);
 */
 			usart_send_blocking(USART2, '\r');
 			usart_send_blocking(USART2, '\n');
 
-
 			//usart_counter=0;
 		
 		
-		hall_sensors();
+		
+
+		//hall_sensors();
 
 	}	
 		return 0;

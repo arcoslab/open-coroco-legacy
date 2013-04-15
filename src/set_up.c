@@ -35,6 +35,7 @@ void gpio_setup(void)
 	gpio_mode_setup(GPIOD, GPIO_MODE_OUTPUT,GPIO_PUPD_NONE, GPIO15);	//	blue led
 }
 
+
 void exti_setup(void)
 {
 	/* Enable GPIOA clock. */
@@ -59,6 +60,34 @@ void exti_setup(void)
 	exti_set_trigger(EXTI0, EXTI_TRIGGER_FALLING);
 	exti_enable_request(EXTI0);
 }
+
+
+void exti1_setup(void)
+{
+	/* Enable GPIOA clock. */
+	rcc_peripheral_enable_clock(&RCC_AHB1ENR, RCC_AHB1ENR_IOPAEN);		//f4
+
+	/* Enable AFIO clock. */
+	//rcc_peripheral_enable_clock(&RCC_APB2ENR, RCC_APB2ENR_AFIOEN);	//f1
+										//f4 there is no AFIO clock (apparentely)
+	/* Enable EXTI1 interrupt. */
+	nvic_enable_irq(NVIC_EXTI1_IRQ);
+
+	/*enable update interrupt*/
+	nvic_enable_irq(NVIC_TIM1_UP_TIM10_IRQ);
+
+	/* Set GPIO1 (in GPIO port A) to 'input open-drain'. */
+	gpio_mode_setup(GPIOA, GPIO_MODE_INPUT, GPIO_PUPD_NONE, GPIO1);		//f4 user button still at PA0 
+	gpio_set_af(GPIOA, GPIO_AF0, GPIO1);	//f4 AF0 means TIM1/TIM2. From PE8 to PE15 AF is for TIM1
+
+	/* Configure the EXTI subsystem. */
+	exti_select_source(EXTI1, GPIOA);
+	exti_direction = FALLING;
+	exti_set_trigger(EXTI1, EXTI_TRIGGER_FALLING);
+	exti_enable_request(EXTI1);
+}
+
+
 
 void tim_setup(void)
 {
@@ -319,7 +348,8 @@ void stm32_setup()
 	gpio_setup();
 	tim_setup();
 	exti_setup();
-	mortal_adc();
+	//exti1_setup;
+	//mortal_adc();
 	usart_setup();
 
 }

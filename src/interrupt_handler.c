@@ -20,54 +20,82 @@
 
 void exti0_isr(void)
 {
+	//gpio_toggle(GPIOD, GPIO12);
 	exti_reset_request(EXTI0);
 
 	button=1;
 
+/*	
+
+	exti_reset_request(EXTI0);
+
+	if (exti_direction == FALLING) 
+	{
+		//gpio_toggle(GPIOD, GPIO13);
+		exti_direction = RISING;
+		exti_set_trigger(EXTI0, EXTI_TRIGGER_RISING);
+
+		V_hall_1_V1=0.0f;	
+	} 
+
+	else 
+	{
+		 //gpio_toggle(GPIOD, GPIO14);
+		
+		exti_direction = FALLING;
+		exti_set_trigger(EXTI0, EXTI_TRIGGER_FALLING);
+		
+		V_hall_1_V1=3.0f;
+
+	}
+*/
+
+}
+
+
+
+
+
+
+void exti1_isr(void)
+{
+	exti_reset_request(EXTI1);
+
+	if (exti_direction == FALLING) 
+	{
+		gpio_toggle(GPIOD, GPIO13);
+		exti_direction = RISING;
+		exti_set_trigger(EXTI1, EXTI_TRIGGER_RISING);
+
+		V_hall_1_V1=0.0f;	
+	} 
+
+	else 
+	{
+		 gpio_toggle(GPIOD, GPIO14);
+		
+		exti_direction = FALLING;
+		exti_set_trigger(EXTI1, EXTI_TRIGGER_FALLING);
+		
+		V_hall_1_V1=3.0f;
+
+	}
+	button=1;
 }
 
 void tim1_cc_isr (void)
 {
-/*
-	static float
-		attenuation		=0;
-*/
 	// Clear the update interrupt flag
 	timer_clear_flag(TIM1,  TIM_SR_CC1IF);	
 
 	//pwm duty cycle calculation
 	pwm(ticks,attenuation,max_ticks);
 
-	//hall sensors 
-	//one_hall_sensor_finite_state_machine_state_evaluation (&hall1_data,hall_1);
-	
 
-if (button==1)
-{
-
-	
-/*
-  	if (ticks<max_ticks)
+	if (button==1)
 	{
-		ticks+=1.0f;
+		PID_control_loop();
 	}
-	else
-	{ 
-		ticks=0.0f;
-		frequency_change_counter++;
-	}
-
-	if ( (frequency_change_counter>=max_sinusoidal_periods) && (otor_speed_loop_state==OPEN_LOOP) )
-	{
-		frequency_change_counter=0;
-		sine_freq+=sine_freq_increment;
-	}
-
-	hall_ticks+=1.0f;
-*/
-
-	PID_control_loop();
-}
 
 }
 

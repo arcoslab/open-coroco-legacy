@@ -83,7 +83,7 @@ void open_loop (int* rotor_speed_loop_state)
 		//frequency_change_counter=0;
 	actual_sine_frequency=pwmfreq_f/(2.0f*previous_hall_ticks);
 
-	if (sine_freq>100.0f)
+	if (sine_freq>125.0f)
 	{
 		//*rotor_speed_loop_state=CLOSE_LOOP;
 	}
@@ -281,6 +281,8 @@ void PID_control_loop(void)
 	static int 
 		//frequency_change_counter=0,
 		rotor_speed_loop_state=NO_HALL_UPDATE;
+
+	V_hall_1_V1=gpio_get(GPIOA, GPIO1);
 
 	hall_hysteresis_window(V_hall_1_V1,HALL_1_UPPER_BAND,HALL_1_LOWER_BAND,&hall1_data);
 	

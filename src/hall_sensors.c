@@ -220,20 +220,19 @@ float one_hall_sensor_position_detection (bool hall1_corrected)
 	return hall_angle;
 }
 
-//#define HALL_1_UPPER_BAND 2.019f
-//#define HALL_1_LOWER_BAND 2.000f
-
-//#define HALL_1_UPPER_BAND 2.020f
-//#define HALL_1_LOWER_BAND 1.999f
-
-//#define HALL_1_UPPER_BAND 2.950f
-//#define HALL_1_LOWER_BAND 2.880f
 
 #define HALL_1_UPPER_BAND 2.800f
 #define HALL_1_LOWER_BAND 0.200f
 
+
+#define HALL_1_UPPER_BAND 0.800f
+#define HALL_1_LOWER_BAND 0.200f
+
+
 void hall_hysteresis_window(float voltage, float upper_band,float lower_band,hall_finite_state_machine_data * hallx_data)
 {	
+	//gpio_toggle(GPIOD, GPIO12);
+
 	if (hallx_data->hall_corrected==HIGH)
 	{
 		if (voltage<lower_band)
@@ -350,168 +349,14 @@ one_hall_sensor_finite_state_machine_state_evaluation (&hall3_data,hall_3);
 int 
 	hall_evaluation_counter;
 
-void one_hall_sensor_finite_state_machine_state_evaluation (hall_finite_state_machine_data * hallx_data,bool hall_x)
-{
 
 
 
-if(hallx_data->hall_state==HALL_INITIAL)
-{	
-	hall_evaluation_counter=0;
-	/*gpio_port_write(GPIOD, GPIO12);
-	gpio_port_write(GPIOD, GPIO13);
-	gpio_port_write(GPIOD, GPIO14);
-	gpio_port_write(GPIOD, GPIO15);*/
-	gpio_clear(GPIOD, GPIO12);
-	gpio_clear(GPIOD, GPIO13);
-	gpio_clear(GPIOD, GPIO14);
-	gpio_clear(GPIOD, GPIO15);
-	if (hall_x==HIGH)
-	{
-		hallx_data->hall_state=HALL_DELAY;
-		hallx_data->hall_counter=0;
-		hallx_data->hall_update=false;
-		hallx_data->hall_corrected=hallx_data->hall_corrected;
-	}
-	else
-	{
-		hallx_data->hall_state=NO_HALL_DELAY;
-		hallx_data->hall_counter=0;
-		hallx_data->hall_update=false;
-		hallx_data->hall_corrected=hallx_data->hall_corrected;
-	}
-}
-else if(hallx_data->hall_state==HALL_DELAY)
-{
-	hall_evaluation_counter++;
-	/*gpio_set(GPIOD, GPIO12);
-	gpio_clear(GPIOD, GPIO13);
-	gpio_clear(GPIOD, GPIO14);
-	gpio_clear(GPIOD, GPIO15);*/
-	if (hall_x==HIGH && hallx_data->hall_counter>hall_counter_max)
-	{
-		/*gpio_set(GPIOD, GPIO12);
-		gpio_clear(GPIOD, GPIO13);
-		gpio_clear(GPIOD, GPIO14);
-		gpio_clear(GPIOD, GPIO15);*/
-		
-		hallx_data->hall_state=HALL_UPDATED;
-		hallx_data->hall_counter=0;
-		hallx_data->hall_update=true;
-		hallx_data->hall_corrected=HIGH;
-		//gpio_set(GPIOD, GPIO13);
-		
-	}
-	else if (hall_x==HIGH && hallx_data->hall_counter<=hall_counter_max)
-	{
-		hallx_data->hall_state=HALL_DELAY;
-		hallx_data->hall_counter++;
-		hallx_data->hall_update=false;
-		hallx_data->hall_corrected=hallx_data->hall_corrected;
-	}
-	else
-	{
-		hallx_data->hall_state=NO_HALL_DELAY;
-		hallx_data->hall_counter=0;
-		hallx_data->hall_update=false;
-		hallx_data->hall_corrected=hallx_data->hall_corrected;
-	}
-}
-else if(hallx_data->hall_state==NO_HALL_DELAY)
-{
-	hall_evaluation_counter++;
-	/*gpio_clear(GPIOD, GPIO12);
-	gpio_set(GPIOD, GPIO13);
-	gpio_clear(GPIOD, GPIO14);
-	gpio_clear(GPIOD, GPIO15);*/
-	if (hall_x==LOW && hallx_data->hall_counter>hall_counter_max)
-	{
-		/*gpio_clear(GPIOD, GPIO12);
-		gpio_set(GPIOD, GPIO13);
-		gpio_clear(GPIOD, GPIO14);
-	        gpio_clear(GPIOD, GPIO15);*/
-
-		hallx_data->hall_state=NO_HALL_UPDATED;
-		hallx_data->hall_counter=0;
-		hallx_data->hall_update=true;
-		hallx_data->hall_corrected=LOW;
-		gpio_clear(GPIOD, GPIO13);
-			
-	}
-	else if (hall_x==LOW && hallx_data->hall_counter<=hall_counter_max)
-	{
-		hallx_data->hall_state=NO_HALL_DELAY;
-		hallx_data->hall_counter++;
-		hallx_data->hall_update=false;
-		hallx_data->hall_corrected=hallx_data->hall_corrected;
-	}
-	else
-	{
-		hallx_data->hall_state=HALL_DELAY;
-		hallx_data->hall_counter=0;
-		hallx_data->hall_update=false;
-		hallx_data->hall_corrected=hallx_data->hall_corrected;
-	}
-}
-
-else if(hallx_data->hall_state==HALL_UPDATED)
-{
-	
-	/*gpio_clear(GPIOD, GPIO12);
-	gpio_clear(GPIOD, GPIO13);
-	gpio_set(GPIOD, GPIO14);
-	gpio_clear(GPIOD, GPIO15);*/
-	if (hall_x==HIGH)
-	{
-		hallx_data->hall_state=HALL_UPDATED;
-		hallx_data->hall_counter=0;
-		hallx_data->hall_update=false;
-		hallx_data->hall_corrected=HIGH;
-	}
-	else
-	{
-		hallx_data->hall_state=NO_HALL_DELAY;
-		hallx_data->hall_counter=0;
-		hallx_data->hall_update=false;
-		hallx_data->hall_corrected=hallx_data->hall_corrected;
-		
-		hall_evaluation_counter=0;
-	}
-}
-
-else if(hallx_data->hall_state==NO_HALL_UPDATED)
-{	
-	
-	/*gpio_clear(GPIOD, GPIO12);
-	gpio_clear(GPIOD, GPIO13);
-	gpio_clear(GPIOD, GPIO14);
-	gpio_set(GPIOD, GPIO15);*/
-	if (hall_x==LOW)
-	{
-		hallx_data->hall_state=NO_HALL_UPDATED;
-		hallx_data->hall_counter=0;
-		hallx_data->hall_update=false;
-		hallx_data->hall_corrected=LOW;
-	}
-	else
-	{
-		hallx_data->hall_state=HALL_DELAY;
-		hallx_data->hall_counter=0;
-		hallx_data->hall_update=false;
-		hallx_data->hall_corrected=hallx_data->hall_corrected;
-
-		hall_evaluation_counter=0;
-	}
-}
-else
-{
-	hall_evaluation_counter++;
-	hallx_data->hall_state=HALL_INITIAL;
-	hallx_data->hall_counter=0;
-	hallx_data->hall_update=false;
-	hallx_data->hall_corrected=hallx_data->hall_corrected;
-}
 
 
-}
+
+
+
+
+
 
