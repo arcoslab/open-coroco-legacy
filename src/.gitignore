@@ -1,0 +1,11 @@
+#Temporal files
+*~
+
+#files created after compiling
+*.elf
+*.d
+*.hex
+*.list
+*.o
+*.srec
+
