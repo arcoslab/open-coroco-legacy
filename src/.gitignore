@@ -8,4 +8,4 @@
 *.list
 *.o
 *.srec
-
+*.bin
