@@ -221,8 +221,8 @@ float one_hall_sensor_position_detection (bool hall1_corrected)
 }
 
 
-#define HALL_1_UPPER_BAND 2.800f
-#define HALL_1_LOWER_BAND 0.200f
+//#define HALL_1_UPPER_BAND 2.800f
+//#define HALL_1_LOWER_BAND 0.200f
 
 
 #define HALL_1_UPPER_BAND 0.800f

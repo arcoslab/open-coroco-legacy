@@ -111,36 +111,36 @@ int main(void)
 
 		captured_ticks				=ticks;
 		captured_attenuation			=attenuation;
-/*
-			usart_send_blocking(USART2, 'm');
-			usart_transmit_a_floating_number(II_captured_max_ticks);
-			usart_send_blocking(USART2, 'p');
-			usart_transmit_a_floating_number(II_captured_previous_hall_ticks);
+
+			//usart_send_blocking(USART2, 'm');
+			//usart_transmit_a_floating_number(II_captured_max_ticks);
+			//usart_send_blocking(USART2, 'p');
+			//usart_transmit_a_floating_number(II_captured_previous_hall_ticks);
 			//usart_send_blocking(USART2, 'h');
 			//usart_transmit_an_integer_number(captured_hall_ticks);
-			usart_send_blocking(USART2, 't');
-			usart_transmit_a_floating_number(captured_ticks*360.0f/II_captured_max_ticks);
+			//usart_send_blocking(USART2, 't');
+			//usart_transmit_a_floating_number(captured_ticks*360.0f/II_captured_max_ticks);
 			
-			//usart_send_blocking(USART2, 'e');
-			//usart_transmit_a_floating_number(II_captured_sine_freq);
-*/
+			usart_send_blocking(USART2, 'e');
+			usart_transmit_a_floating_number(II_captured_sine_freq);
+
 			usart_send_blocking(USART2, 'a');
 			usart_transmit_a_floating_number(captured_actual_sine_frequency);
 			//usart_send_blocking(USART2, 'd');
 			//usart_transmit_a_floating_number(captured_desired_sine_frequency);
 			//usart_send_blocking(USART2, 'E');
 			//usart_transmit_a_floating_number(open_loop_error);
-/*
-			usart_send_blocking(USART2, 'A');
+
+			usart_send_blocking(USART2, 'T');
 			usart_transmit_a_floating_number(captured_attenuation*100.0f);
 			usart_send_blocking(USART2, 'E');
 			usart_transmit_a_floating_number(captured_close_loop_error);
 			usart_send_blocking(USART2, 'D');
 			usart_transmit_a_floating_number(captured_close_loop_desired_frequency);
-			usart_send_blocking(USART2, 'P');
+			//usart_send_blocking(USART2, 'P');
 			//usart_transmit_a_floating_number(captured_desired_previous_hall_ticks);
 			//usart_send_blocking(USART2, 'T');
-			usart_transmit_a_floating_number(captured_close_loop_tick_error);
+			//usart_transmit_a_floating_number(captured_close_loop_tick_error);
 			usart_send_blocking(USART2, 'U');
 			usart_transmit_a_floating_number(captured_phaseU);
 			usart_send_blocking(USART2, 'A');
@@ -165,8 +165,8 @@ int main(void)
 			
 			
 
-			usart_send_blocking(USART2, 'V');
-			usart_transmit_a_floating_number(captured_V_hall_1_V1*1000);
+			//usart_send_blocking(USART2, 'V');
+			//usart_transmit_a_floating_number(captured_V_hall_1_V1*1000);
 /*
 			usart_send_blocking(USART2, 'V');
 			usart_transmit_a_floating_number(captured_V_hall_2_V1*1000);
