@@ -1,0 +1,46 @@
+*********************despues de reset 
+
+VDD 			salida 	digital	3V (medio) continuos
+PA2 (USART Tx) 		salida 	digital	3.2 Vpp, cuadrada, 38.36kHz
+PA1 (GPIO1-Hall1) 	entrada	digital 48.0mVpp, cuadrada  38.46kHz
+PA3 (GPIO3-Hall2) 	entrada digital 34.4mVpp, cuadrada  38.42kHz
+PA5 (GPIO5-Hall3) 	entrada digital 2.94V, 
+
+PE9  TIM1_CH1 PWM1_alto		salida	digital	3mV
+PE11 TIM1_CH2 PWM2_alto		salida	digital	3mV
+PE13 TIM1_CH3 PWM3_alto		salida	digital	3mV
+
+PE8 TIM1_CH1N 	PWM1_bajo	salida 	digital	3mV
+PE10 TIM1_CH2N 	PWM2_bajo	salida	digital	3mV
+PE12 TIM1_CH3N 	PWM3_bajo	salida 	digital	3mV
+
+
+*************************despues de button 
+
+VDD 			3V (medio) continuos
+PA2 (USART Tx) 		3.16 Vpp, cuadrada, 38.41kHz
+PA1 (GPIO1-Hall1) 	48.0mVpp, cuadrada  38.46kHz
+PA3 (GPIO3-Hall2) 	34.4mVpp, cuadrada  38.42kHz
+PA5 (GPIO5-Hall3) 	2.94V, 
+
+PE9  TIM1_CH1 PWM1_alto	salida 	digital 3,16Vpp 32.02kHz
+PE11 TIM1_CH2 PWM2_alto	salida	digital	3.16Vpp 32.04kHz
+PE13 TIM1_CH3 PWM3_alto	saliad	digital 3.16Vpp 32.01kHz
+
+PE8  TIM1_CH1N  PWM1_bajo	salida	digital	3.12Vpp 32.00kHz
+PE10 TIM1_CH2N	PWM2_bajo	salida	digital	3.16Vpp 32.02kHz
+PE12 TIM1_CH3N	PWM3_bajo	salida	digital	3.12Vpp 32.00kHz
+
+
+---------------------------------------------------------------
+
+****************************Desde el puente
+
+PWM1 alto 20.7mV	ruido
+PWM2 alto 1.07Vpp	ruido
+PWM3 alto 1Vpp		ruido
+
+PWM1 bajo 976mVpp	ruido
+PWM2 bajo 1.07Vpp	ruido
+PWM3 bajo 1Vpp		ruido
+

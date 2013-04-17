@@ -27,7 +27,8 @@ void pwm(float ticks, float attenuation,float max_ticks)
 	float 
 		angle;
 
-  	angle=(2.0f*PI*ticks/max_ticks);
+
+  	angle=(2.0f*PI*ticks/max_ticks)+offset;
 		
   	duty_a=sinf(angle);
  	duty_b=sinf(angle+2.0f*PI/3.0f);

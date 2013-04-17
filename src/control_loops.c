@@ -89,10 +89,10 @@ void open_loop (int* rotor_speed_loop_state)
 	}
 	else if (frequency_change_counter>max_sinusoidal_periods)
 	{
-		sine_freq=sine_freq+0.25f;
+		//sine_freq=sine_freq+0.25f;
 		
 		if (sine_freq<50.0f)
-			attenuation=0.75f;
+			attenuation=0.50f;
 		else 
 			attenuation=1.0f;
 
@@ -144,6 +144,7 @@ void open_loop (int* rotor_speed_loop_state)
 	}
 */
 	max_ticks=pwmfreq_f/sine_freq;
+	offset=0.0f;
 
 }
 
@@ -168,7 +169,28 @@ if (hall1_data.hall_update)
 	//close_loop_tick_error= -0.25f*(desired_previous_hall_ticks-previous_hall_ticks);
 
 	//phaseU=close_loop_tick_error*Pkp;//+phase_sum;
-	phaseU=close_loop_error*1/2.5f; //2.0 mejor resultado hasta ahora
+	phaseU=close_loop_error*1.0f/1.0f; 
+
+//revisar en los casos que funciona el control cuanto es el offset en ángulos
+//revisar cuando no funciona para ver el offset y comparar
+
+
+//deseada 100Hz
+//KP=0 KP=1/10
+	//1/10 130-148 // más de eso 
+	//1/7  124-140
+	//1/5	117-132
+	//1/3	107-122	
+	//1/2.9 18-43
+	//1/2.8 23-45
+	//1/2.5 17-44
+	//1/2	35-40
+
+	//2 36-62
+	//3 54-70
+	//10 
+
+
 
 //KP=1/1: 
 	//deseado 100Hz, final 15-41
@@ -183,15 +205,7 @@ if (hall1_data.hall_update)
 	//deseado 10 HZ, final 16-19
 	//deseado 5Hz, final 14-22
 
-//deseada 100Hz
-//KP=0 KP=1/10
-	//1/10 130-148
-	//1/7  124-140
-	//1/5	117-132
-	//1/3	107-122	
-	//1/2.8 23-45
-	//1/2.5 17-44
-	//1/2	35-40
+
 	
 
 //deseada 100HZ
@@ -342,8 +356,12 @@ if (hall1_data.hall_update)
 	{
 		ticks=ticks+7.5f*max_ticks/360.0f;
 	}*/
-	ticks=ticks+phase_advance*max_ticks/360.0f;
-	//attenuation=0.75f;
+	
+
+	//ticks=ticks+phase_advance*max_ticks/360.0f;
+	ticks=ticks+0.0f*max_ticks/360.0f;
+	offset=-25.0f;
+//attenuation=0.75f;
 	//ticks=ticks-150.0f*max_ticks/360.0f;
 
 //hasta 130 libre, +90°

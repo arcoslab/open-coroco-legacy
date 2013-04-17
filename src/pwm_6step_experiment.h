@@ -50,12 +50,12 @@
 #define max_sinusoidal_periods	5
 #define sine_freq_increment	0.75f
 #define max_sine_freq		20.0f
-#define min_sine_freq		1.0f	
-#define sine_freq_fixed	15.0f
+#define min_sine_freq		15.0f	
+#define sine_freq_fixed	10.0f
 
 #define attenuation_value 		1.0f
 #define attenuation_max 		1.0f
-#define attenuation_min 		1.0f
+#define attenuation_min 		0.25f
 #define attenuation_increment 		0.1f
 
 
@@ -125,5 +125,7 @@ float captured_attenuation=0.0f;
 
 int frequency_change_counter=0;
 
+
+float offset=0;
 
 #endif
