@@ -228,10 +228,11 @@ float one_hall_sensor_position_detection (bool hall1_corrected)
 #define HALL_1_UPPER_BAND 0.800f
 #define HALL_1_LOWER_BAND 0.200f
 
+//gpio_toggle(GPIOD, GPIO13);
 
 void hall_hysteresis_window(float voltage, float upper_band,float lower_band,hall_finite_state_machine_data * hallx_data)
 {	
-	//gpio_toggle(GPIOD, GPIO12);
+	
 
 	if (hallx_data->hall_corrected==HIGH)
 	{
@@ -239,6 +240,7 @@ void hall_hysteresis_window(float voltage, float upper_band,float lower_band,hal
 		{
 			hallx_data->hall_update=true;
 			hallx_data->hall_corrected=LOW;
+			
 		}
 		else 
 		{
@@ -253,6 +255,7 @@ void hall_hysteresis_window(float voltage, float upper_band,float lower_band,hal
 		{
 			hallx_data->hall_update=true;
 			hallx_data->hall_corrected=HIGH;
+			
 		}
 		else 
 		{

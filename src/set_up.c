@@ -20,10 +20,10 @@
 
 void clock_setup(void)
 {
-	rcc_clock_setup_hse_3v3(&hse_8mhz_3v3[CLOCK_3V3_168MHZ]);	//f4 stm32-discovery
+	rcc_clock_setup_hse_3v3(&hse_8mhz_3v3[CLOCK_3V3_168MHZ]);
 }
 
-void gpio_setup(void)
+void gpio_LED_set_up(void)
 {
 	/* Enable GPIOC clock. */
 	rcc_peripheral_enable_clock(&RCC_AHB1ENR, RCC_AHB1ENR_IOPDEN);		
@@ -35,15 +35,34 @@ void gpio_setup(void)
 	gpio_mode_setup(GPIOD, GPIO_MODE_OUTPUT,GPIO_PUPD_NONE, GPIO15);	//	blue led
 }
 
+void gpio_digital_hall_sensors_set_up(void)
+{
+	/* Enable GPIOB and GPIOE clock. */
+	rcc_peripheral_enable_clock(&RCC_AHB1ENR, RCC_AHB1ENR_IOPBEN);		
+	rcc_peripheral_enable_clock(&RCC_AHB1ENR, RCC_AHB1ENR_IOPEEN);
 
-void exti_setup(void)
+	/* Set GPIO to 'input open-drain'. */
+
+	//Hall sensor 1 
+	gpio_mode_setup(GPIOE, GPIO_MODE_INPUT, GPIO_PUPD_NONE, GPIO15);		
+	gpio_set_af(GPIOE, GPIO_AF0, GPIO15);	
+
+	//Hall sensor 2 
+	gpio_mode_setup(GPIOB, GPIO_MODE_INPUT, GPIO_PUPD_NONE, GPIO11);		
+	gpio_set_af(GPIOB, GPIO_AF0, GPIO11);	
+
+	//Hall sensor 3 
+	gpio_mode_setup(GPIOB, GPIO_MODE_INPUT, GPIO_PUPD_NONE, GPIO13);		
+	gpio_set_af(GPIOB, GPIO_AF0, GPIO13);	
+
+
+}
+
+void exti_button_setup(void)
 {
 	/* Enable GPIOA clock. */
-	rcc_peripheral_enable_clock(&RCC_AHB1ENR, RCC_AHB1ENR_IOPAEN);		//f4
+	rcc_peripheral_enable_clock(&RCC_AHB1ENR, RCC_AHB1ENR_IOPAEN);		
 
-	/* Enable AFIO clock. */
-	//rcc_peripheral_enable_clock(&RCC_APB2ENR, RCC_APB2ENR_AFIOEN);	//f1
-										//f4 there is no AFIO clock (apparentely)
 	/* Enable EXTI0 interrupt. */
 	nvic_enable_irq(NVIC_EXTI0_IRQ);
 
@@ -52,7 +71,7 @@ void exti_setup(void)
 
 	/* Set GPIO0 (in GPIO port A) to 'input open-drain'. */
 	gpio_mode_setup(GPIOA, GPIO_MODE_INPUT, GPIO_PUPD_NONE, GPIO0);		//f4 user button still at PA0 
-	gpio_set_af(GPIOA, GPIO_AF0, GPIO0);	//f4 AF0 means TIM1/TIM2. From PE8 to PE15 AF is for TIM1
+	gpio_set_af(GPIOA, GPIO_AF0, GPIO0);	
 
 	/* Configure the EXTI subsystem. */
 	exti_select_source(EXTI0, GPIOA);
@@ -60,33 +79,6 @@ void exti_setup(void)
 	exti_set_trigger(EXTI0, EXTI_TRIGGER_FALLING);
 	exti_enable_request(EXTI0);
 }
-
-
-void exti1_setup(void)
-{
-	/* Enable GPIOA clock. */
-	rcc_peripheral_enable_clock(&RCC_AHB1ENR, RCC_AHB1ENR_IOPAEN);		//f4
-
-	/* Enable AFIO clock. */
-	//rcc_peripheral_enable_clock(&RCC_APB2ENR, RCC_APB2ENR_AFIOEN);	//f1
-										//f4 there is no AFIO clock (apparentely)
-	/* Enable EXTI1 interrupt. */
-	nvic_enable_irq(NVIC_EXTI1_IRQ);
-
-	/*enable update interrupt*/
-	nvic_enable_irq(NVIC_TIM1_UP_TIM10_IRQ);
-
-	/* Set GPIO1 (in GPIO port A) to 'input open-drain'. */
-	gpio_mode_setup(GPIOA, GPIO_MODE_INPUT, GPIO_PUPD_NONE, GPIO1);		//f4 user button still at PA0 
-	gpio_set_af(GPIOA, GPIO_AF0, GPIO1);	//f4 AF0 means TIM1/TIM2. From PE8 to PE15 AF is for TIM1
-
-	/* Configure the EXTI subsystem. */
-	exti_select_source(EXTI1, GPIOA);
-	exti_direction = FALLING;
-	exti_set_trigger(EXTI1, EXTI_TRIGGER_FALLING);
-	exti_enable_request(EXTI1);
-}
-
 
 
 void tim_setup(void)
@@ -281,7 +273,7 @@ void tim_setup(void)
 
 }
 
-
+/*
 void mortal_adc (void)
 {
 
@@ -312,11 +304,10 @@ adc_set_sample_time(ADC1, ADC_CHANNEL5, ADC_SMPR1_SMP_1DOT5CYC);
 adc_set_multi_mode(ADC_CCR_MULTI_INDEPENDENT);
 adc_power_on(ADC1);
 }
+*/
 
 void usart_setup(void)
 {
-
-
 	/* Enable GPIOD clock for LED & USARTs. */
 	rcc_peripheral_enable_clock(&RCC_AHB1ENR, RCC_AHB1ENR_IOPAEN);
 
@@ -338,16 +329,16 @@ void usart_setup(void)
 
 	/* Setup USART2 TX pin as alternate function. */
 	gpio_set_af(GPIOA, GPIO_AF7, GPIO2);
-
 }
 
 
 void stm32_setup()
 {
 	clock_setup();
-	gpio_setup();
+	gpio_LED_set_up();
+	gpio_digital_hall_sensors_set_up();
 	tim_setup();
-	exti_setup();
+	exti_button_setup();
 	//exti1_setup;
 	//mortal_adc();
 	usart_setup();

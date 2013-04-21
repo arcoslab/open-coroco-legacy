@@ -34,7 +34,7 @@
 #define OPEN_LOOP_MIN_ATTENUATION 0.75f
 
 void no_hall_update (int* rotor_speed_loop_state)
-{
+{	//gpio_set(GPIOD, GPIO12);
 	if (hall1_data.hall_update)
 	{
 		attenuation = OPEN_LOOP_MIN_ATTENUATION;
@@ -53,7 +53,7 @@ void no_hall_update (int* rotor_speed_loop_state)
 }
 
 void first_hall_update (int* rotor_speed_loop_state)
-{
+{	//gpio_set(GPIOD, GPIO13);
 	if (hall1_data.hall_update)
 	{
 		attenuation = OPEN_LOOP_MIN_ATTENUATION;
@@ -76,9 +76,10 @@ void second_hall_update (int* rotor_speed_loop_state)
 }
 */
 void open_loop (int* rotor_speed_loop_state)
+
 {	
 	//gpio_set(GPIOD, GPIO13);
-	//gpio_clear(GPIOD, GPIO15);
+	//gpio_set(GPIOD, GPIO15);
 	//static int
 		//frequency_change_counter=0;
 	actual_sine_frequency=pwmfreq_f/(2.0f*previous_hall_ticks);
@@ -89,7 +90,7 @@ void open_loop (int* rotor_speed_loop_state)
 	}
 	else if (frequency_change_counter>max_sinusoidal_periods)
 	{
-		//sine_freq=sine_freq+0.25f;
+		sine_freq=sine_freq+0.25f;
 		
 		if (sine_freq<50.0f)
 			attenuation=0.50f;
@@ -360,7 +361,21 @@ if (hall1_data.hall_update)
 
 	//ticks=ticks+phase_advance*max_ticks/360.0f;
 	ticks=ticks+0.0f*max_ticks/360.0f;
-	offset=-25.0f;
+	offset=-70.0f; 
+//offset fijo 
+
+//-5.0f 		80Hz
+//-10.0f		70-80Hz
+
+//-15.0f se invierta y da vueltaas por todo lado
+//-25.0f ~40Hz
+//-50.0f ~50Hz
+//-70.0f ~25-48
+//
+
+
+//---------------------------------------
+
 //attenuation=0.75f;
 	//ticks=ticks-150.0f*max_ticks/360.0f;
 
@@ -519,7 +534,11 @@ void PID_control_loop(void)
 		//frequency_change_counter=0,
 		rotor_speed_loop_state=NO_HALL_UPDATE;
 
-	V_hall_1_V1=gpio_get(GPIOA, GPIO1);
+	//hall sensor readings
+	V_hall_1_V1=gpio_get(GPIOE, GPIO15);	//32768	10000000 00000000
+	V_hall_2_V1=gpio_get(GPIOB, GPIO11);	//2048	00001000 00000000
+	V_hall_3_V1=gpio_get(GPIOB, GPIO13);	//8192	00100000 00000000
+
 
 	hall_hysteresis_window(V_hall_1_V1,HALL_1_UPPER_BAND,HALL_1_LOWER_BAND,&hall1_data);
 	
@@ -544,6 +563,8 @@ void PID_control_loop(void)
 		//hall-sensor time	
 		previous_hall_ticks=hall_ticks;
 		hall_ticks=0.0f;
+		
+		
 	}
 
 

@@ -126,6 +126,6 @@ float captured_attenuation=0.0f;
 int frequency_change_counter=0;
 
 
-float offset=0;
+float offset=0.0f;
 
 #endif

@@ -165,15 +165,15 @@ int main(void)
 			
 			
 
-			//usart_send_blocking(USART2, 'V');
-			//usart_transmit_a_floating_number(captured_V_hall_1_V1*1000);
+			usart_send_blocking(USART2, 'V');
+			usart_transmit_a_floating_number(captured_V_hall_1_V1);
+
+			usart_send_blocking(USART2, 'V');
+			usart_transmit_a_floating_number(captured_V_hall_2_V1);
+
+			usart_send_blocking(USART2, 'V');
+			usart_transmit_a_floating_number(captured_V_hall_3_V1);
 /*
-			usart_send_blocking(USART2, 'V');
-			usart_transmit_a_floating_number(captured_V_hall_2_V1*1000);
-
-			usart_send_blocking(USART2, 'V');
-			usart_transmit_a_floating_number(captured_V_hall_3_V1*1000);
-
 			usart_send_blocking(USART2, 'D');
 			if (hall1_data.hall_corrected==HIGH)
 			{
