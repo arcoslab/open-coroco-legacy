@@ -44,13 +44,17 @@
 #define deadtime_percentage		0.10f	//10% 87.2us de alto a bajo, 48.8us de bajo a alto 
 #define	initial_duty_cycle		0.5f
 
+
+//
+#define CYCLE_TIME	1.0f/pwmfreq_f
+
 /*new motor: 
 	min electrical frequency: 20Hz
 	max electrical frequency: 425Hz (for full open loop demo (some))*/ 
 #define max_sinusoidal_periods	5
 #define sine_freq_increment	0.75f
 #define max_sine_freq		20.0f
-#define min_sine_freq		15.0f	
+#define min_sine_freq		10.0f	
 #define sine_freq_fixed	10.0f
 
 #define attenuation_value 		1.0f
@@ -82,10 +86,10 @@ u16
 	
 float	
 	attenuation		=0.0f,
-	ticks			=0.0f,
-	hall_ticks		=0.0f,
-	previous_hall_ticks	=0.0f,
-	max_ticks		=pwmfreq_f/sine_freq_fixed,
+	//ticks			=0.0f,
+	//hall_ticks		=0.0f,
+	//previous_hall_ticks	=0.0f,
+	//max_ticks		=pwmfreq_f/sine_freq_fixed,
 	sine_freq		=sine_freq_fixed;
 
 
@@ -101,8 +105,8 @@ float captured_actual_sine_frequency=0.0f;
 
 float close_loop_error=0.0f;
 float close_loop_desired_frequency=100.0f;
-float desired_previous_hall_ticks=0.0f;
-float close_loop_tick_error=0.0f;
+//float desired_previous_hall_ticks=0.0f;
+//float close_loop_tick_error=0.0f;
 float phaseU=0.0f;
 float phase_advance=0.0f;
 float phase_excess=0.0f;
@@ -112,8 +116,8 @@ float phase_sum;
 
 float captured_close_loop_error=0.0f;
 float captured_close_loop_desired_frequency=0.0f;
-float captured_desired_previous_hall_ticks=0.0f;
-float captured_close_loop_tick_error=0.0f;
+//float captured_desired_previous_hall_ticks=0.0f;
+//float captured_close_loop_tick_error=0.0f;
 float captured_phaseU=0.0f;
 float captured_phase_advance=0.0f;
 float captured_phase_excess=0.0f;
@@ -127,5 +131,10 @@ int frequency_change_counter=0;
 
 
 float offset=0.0f;
+float rotor_angle=0.0f;
+float stator_angle=0.0f;
+float hall_time=0.0f;
+float previous_hall_time=0.0f;
+
 
 #endif

@@ -66,9 +66,9 @@ int main(void)
 	hall3_data.hall_corrected=LOW;	
 
 	float 
-	captured_ticks=0.0f,
-	II_captured_max_ticks=0.0f,
-	II_captured_previous_hall_ticks=0.0f,
+	//captured_ticks=0.0f,
+	//II_captured_max_ticks=0.0f,
+	//II_captured_previous_hall_ticks=0.0f,
 	II_captured_sine_freq=0.0f;
 	//captured_hall_ticks=0.0f;
 	//bool
@@ -79,10 +79,28 @@ int main(void)
 	while (1)
 	{
 
+float captured_offset=0.0f;
+float captured_rotor_angle=0.0f;
+float captured_stator_angle=0.0f;
+//float captured_hall_time=0.0f;
+float captured_previous_hall_time=0.0f;
+
+captured_offset=offset;
+captured_rotor_angle=rotor_angle;
+captured_stator_angle=stator_angle;
+//captured_hall_time=hall_time;
+captured_previous_hall_time=previous_hall_time;
+
+
+
+
+
+
+
 //nota: no se deben combinar muchos comandos del usart con el hall sensor, pueden interferir y hacer que se lea mal la velocidad del motor	
 		
-		II_captured_max_ticks=max_ticks;
-		II_captured_previous_hall_ticks=previous_hall_ticks;
+		//II_captured_max_ticks=max_ticks;
+		//II_captured_previous_hall_ticks=previous_hall_ticks;
 		II_captured_sine_freq=sine_freq;
 		//captured_hall_ticks=hall_ticks;
 		//captured_corrected=hall1_data.hall_corrected;
@@ -100,8 +118,8 @@ int main(void)
 
 		captured_close_loop_error		=close_loop_error;
 		captured_close_loop_desired_frequency	=close_loop_desired_frequency;
-		captured_desired_previous_hall_ticks	=desired_previous_hall_ticks;
-		captured_close_loop_tick_error		=close_loop_tick_error;
+		//captured_desired_previous_hall_ticks	=desired_previous_hall_ticks;
+		//captured_close_loop_tick_error		=close_loop_tick_error;
 		captured_phaseU				=phaseU;
 		captured_phase_advance			=phase_advance;
 		captured_phase_excess			=phase_excess;
@@ -109,7 +127,7 @@ int main(void)
 		captured_phase_rotor			=phase_rotor;
 		captured_phase_sum			=phase_sum;
 
-		captured_ticks				=ticks;
+		//captured_ticks				=ticks;
 		captured_attenuation			=attenuation;
 
 			//usart_send_blocking(USART2, 'm');
@@ -133,18 +151,18 @@ int main(void)
 
 			usart_send_blocking(USART2, 'T');
 			usart_transmit_a_floating_number(captured_attenuation*100.0f);
-			usart_send_blocking(USART2, 'E');
-			usart_transmit_a_floating_number(captured_close_loop_error);
-			usart_send_blocking(USART2, 'D');
-			usart_transmit_a_floating_number(captured_close_loop_desired_frequency);
+			//usart_send_blocking(USART2, 'E');
+			//usart_transmit_a_floating_number(captured_close_loop_error);
+			//usart_send_blocking(USART2, 'D');
+			//usart_transmit_a_floating_number(captured_close_loop_desired_frequency);
 			//usart_send_blocking(USART2, 'P');
 			//usart_transmit_a_floating_number(captured_desired_previous_hall_ticks);
 			//usart_send_blocking(USART2, 'T');
 			//usart_transmit_a_floating_number(captured_close_loop_tick_error);
-			usart_send_blocking(USART2, 'U');
-			usart_transmit_a_floating_number(captured_phaseU);
-			usart_send_blocking(USART2, 'A');
-			usart_transmit_a_floating_number(captured_phase_advance);
+			//usart_send_blocking(USART2, 'U');
+			//usart_transmit_a_floating_number(captured_phaseU);
+			//usart_send_blocking(USART2, 'A');
+			//usart_transmit_a_floating_number(captured_phase_advance);
 			//usart_send_blocking(USART2, 'X');
 			//usart_transmit_a_floating_number(captured_phase_excess);
 			//usart_send_blocking(USART2, 'S');
@@ -164,7 +182,7 @@ int main(void)
 	captured_V_hall_3_V2=V_hall_3_V2;
 			
 			
-
+/*
 			usart_send_blocking(USART2, 'V');
 			usart_transmit_a_floating_number(captured_V_hall_1_V1);
 
@@ -173,6 +191,26 @@ int main(void)
 
 			usart_send_blocking(USART2, 'V');
 			usart_transmit_a_floating_number(captured_V_hall_3_V1);
+*/
+
+
+			usart_send_blocking(USART2, 'S');
+			usart_transmit_a_floating_number(captured_stator_angle);
+
+			usart_send_blocking(USART2, 'R');
+			usart_transmit_a_floating_number(captured_rotor_angle);
+
+			usart_send_blocking(USART2, 'H');
+			usart_transmit_a_floating_number(captured_previous_hall_time);
+
+			usart_send_blocking(USART2, 'O');
+			usart_transmit_a_floating_number(captured_offset);
+
+
+
+
+
+
 /*
 			usart_send_blocking(USART2, 'D');
 			if (hall1_data.hall_corrected==HIGH)

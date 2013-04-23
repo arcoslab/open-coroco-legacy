@@ -17,7 +17,9 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-void pwm(float ticks, float attenuation,float max_ticks)
+//void pwm(float ticks, float attenuation,float max_ticks)
+void pwm(float angle_degree)
+
 {
 
 	static float
@@ -25,14 +27,16 @@ void pwm(float ticks, float attenuation,float max_ticks)
 		duty_b=0.0f, 
 		duty_c=0.0f;
 	float 
-		angle;
+		angle_radians;
 
 
-  	angle=(2.0f*PI*ticks/max_ticks)+offset;
-		
-  	duty_a=sinf(angle);
- 	duty_b=sinf(angle+2.0f*PI/3.0f);
-  	duty_c=sinf(angle+4.0f*PI/3.0f);
+  	//angle=(2.0f*PI*ticks/max_ticks)+offset;
+	angle_radians=angle_degree*PI/180.0f;
+
+	
+  	duty_a=sinf(angle_radians);
+ 	duty_b=sinf(angle_radians+2.0f*PI/3.0f);
+  	duty_c=sinf(angle_radians+4.0f*PI/3.0f);
   
   	if (duty_a < 0.0f)
 	{

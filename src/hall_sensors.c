@@ -42,7 +42,16 @@
 #define ADC_CONVERSION_FACTOR 4096.0f
 
 
+//#define HALL_1_UPPER_BAND 2.800f
+//#define HALL_1_LOWER_BAND 0.200f
+
+
+#define HALL_1_UPPER_BAND 0.800f
+#define HALL_1_LOWER_BAND 0.200f
+
+
 //rotor positions
+/*
 #define POSITION_0	 30.0f*PI/180.0f	//h1
 #define POSITION_1	 90.0f*PI/180.0f	//h2
 #define POSITION_2	120.0f*PI/180.0f	//h3
@@ -53,6 +62,19 @@
 #define POSITION_7	  0.0f*PI/180.0f	//
 #define POSITION_8	  0.0f*PI/180.0f
 #define POSITION_9	180.0f*PI/180.0f
+*/
+
+#define POSITION_0	  0.0f	//H1
+#define POSITION_1	 60.0f	//H1H2
+#define POSITION_2	120.0f	//H2
+#define POSITION_3	180.0f	//H2H3
+#define POSITION_4	240.0f	//H3
+#define POSITION_5	300.0f	//H3H1
+#define POSITION_6	360.0f	//
+#define POSITION_7	  0.0f	//
+#define POSITION_8	  0.0f
+#define POSITION_9	180.0f
+
 
 
 //finite-state-machine states
@@ -90,38 +112,8 @@ float hall_angle;
 */
 
 
-float hall_sensor_voltage_measure_ADC1 (u8 channel)
-{
-	u8 channels[16];
-	float hall_voltage;
 
-	channels[0] = channel;
-	channels[1] = channel;
-	channels[2] = channel;
-	channels[3] = channel;
-	channels[4] = channel;
-	channels[5] = channel;
-	channels[6] = channel;
-	channels[7] = channel;
-	channels[8] = channel;
-	channels[9] = channel;
-	channels[10] = channel;
-	channels[11] = channel;
-	channels[12] = channel;
-	channels[13] = channel;
-	channels[14] = channel;
-	channels[15] = channel;
-
-	adc_set_regular_sequence(ADC1, 1, channels);
-	//ADC_SQR1(adc)=channel;
-
-
-       	adc_start_conversion_regular(ADC1);
-	while (!adc_eoc(ADC1));
-	hall_voltage=adc_read_regular(ADC1)*(VREF/ADC_CONVERSION_FACTOR);
-	return hall_voltage;
-}
-
+/*
 bool hall_sensor_voltage_evaluation (float V1, float V2,float threshold)
 {
 	bool hall;
@@ -133,35 +125,39 @@ bool hall_sensor_voltage_evaluation (float V1, float V2,float threshold)
 		
 	return hall;
 }
+*/
 
-float three_hall_sensor_position_detection (bool hall_1, bool hall_2, bool hall_3)
+
+
+//float three_hall_sensor_position_detection (bool hall_1, bool hall_2, bool hall_3)
+float three_hall_sensor_position_detection (float hall_1, float hall_2, float hall_3)
 {
-	if 	(hall_1 && ~hall_2 && ~hall_3)//100	first
+	if 	( (hall_1>HALL_1_LOWER_BAND ) && (hall_2<HALL_1_LOWER_BAND ) && (hall_3<HALL_1_LOWER_BAND) )//100	first
 	{
 		hall_angle=POSITION_0;
 
 	}
-	else if (hall_1 & hall_2 & ~hall_3)//110 fourth 
+	else if ( (hall_1>HALL_1_LOWER_BAND) && (hall_2>HALL_1_LOWER_BAND) && (hall_3<HALL_1_LOWER_BAND) )//110 fourth 
 	{
 		hall_angle=POSITION_1;
 	}
-	else if (~hall_1 & hall_2 & ~hall_3)//010	second
+	else if ( (hall_1<HALL_1_LOWER_BAND) && (hall_2>HALL_1_LOWER_BAND) && (hall_3<HALL_1_LOWER_BAND) )//010	second
 	{
 		hall_angle=POSITION_2;
 	}
-	else if (~hall_1 & hall_2 & hall_3)//011	third 
+	else if ( (hall_1<HALL_1_LOWER_BAND) && (hall_2>HALL_1_LOWER_BAND) && (hall_3>HALL_1_LOWER_BAND) )//011	third 
 	{
 		hall_angle=POSITION_3;
 	}
-	else if (~hall_1 & ~hall_2 & hall_3)//001
+	else if ( (hall_1<HALL_1_LOWER_BAND) && (hall_2<HALL_1_LOWER_BAND) && (hall_3>HALL_1_LOWER_BAND) )//001
 	{
 		hall_angle=POSITION_4;
 	}
-	else if (hall_1 & ~hall_2 & hall_3)//101 fifth
+	else if ( (hall_1>HALL_1_LOWER_BAND) && (hall_2<HALL_1_LOWER_BAND) && (hall_3>HALL_1_LOWER_BAND) )//101 fifth
 	{
 		hall_angle=POSITION_5;
 	}
-	else if (~hall_1 & ~hall_2 & ~hall_3)//000
+	else if ( (hall_1<HALL_1_LOWER_BAND) && (hall_2<HALL_1_LOWER_BAND) && (hall_3<HALL_1_LOWER_BAND) )//000
 	{
 		hall_angle=POSITION_6;
 	}
@@ -172,6 +168,7 @@ float three_hall_sensor_position_detection (bool hall_1, bool hall_2, bool hall_
 	return hall_angle;
 }
 
+/*
 float two_hall_sensor_position_detection (bool hall_1, bool hall_2)
 {
 	if 	(hall_1 && ~hall_2)//100	
@@ -219,14 +216,9 @@ float one_hall_sensor_position_detection (bool hall1_corrected)
 	
 	return hall_angle;
 }
+*/
 
 
-//#define HALL_1_UPPER_BAND 2.800f
-//#define HALL_1_LOWER_BAND 0.200f
-
-
-#define HALL_1_UPPER_BAND 0.800f
-#define HALL_1_LOWER_BAND 0.200f
 
 //gpio_toggle(GPIOD, GPIO13);
 
@@ -275,65 +267,7 @@ void hall_hysteresis_window(float voltage, float upper_band,float lower_band,hal
 	float V_hall_3_V1=0.0f;
 	float V_hall_3_V2=0.0f;
 
-void hall_sensors (void)
-{		
-	/*float V_hall_1_V1=0.0f;
-	float V_hall_1_V2=0.0f;
-	float V_hall_2_V1=0.0f;
-	float V_hall_2_V2=0.0f;
-	float V_hall_3_V1=0.0f;
-	float V_hall_3_V2=0.0f;*/
-/*
-	hall1_data.hall_state=HALL_INITIAL;
-	hall1_data.hall_counter=0;
-	hall1_data.hall_update=false;
-	hall1_data.hall_corrected=LOW;
 
-	hall2_data.hall_state=HALL_INITIAL;
-	hall2_data.hall_counter=0;
-	hall2_data.hall_update=false;
-	hall2_data.hall_corrected=LOW;
-
-	hall3_data.hall_state=HALL_INITIAL;
-	hall3_data.hall_counter=0;
-	hall3_data.hall_update=false;
-	hall3_data.hall_corrected=LOW;
-*/
-//while(1)
-//{
-	//Hall-Sensor 1
-	V_hall_1_V1	=hall_sensor_voltage_measure_ADC1 (ADC_CHANNEL1);
-	//hall_hysteresis_window(V_hall_1_V1,HALL_1_UPPER_BAND,HALL_1_LOWER_BAND,&hall1_data);
-
-
-	//Hall-Sensor 2
-	//+++++++++++++++++++++++V_hall_2_V1	=hall_sensor_voltage_measure_ADC1 (ADC_CHANNEL3);
-	//V_hall_2_V2	=hall_sensor_voltage_measure_ADC1 (ADC_CHANNEL4);
-	/*hall_2		=hall_sensor_voltage_evaluation (	V_hall_2_V1,
-								V_hall_2_V2,
-								HALL_2_THRESHOLD);*/
-	//Hall-Sensor 3
-	//+++++++++++++++++++++++V_hall_3_V1	=hall_sensor_voltage_measure_ADC1 (ADC_CHANNEL5);
-	//V_hall_3_V2	=hall_sensor_voltage_measure_ADC1 (ADC_CHANNEL6);
-	/*hall_3		=hall_sensor_voltage_evaluation (	V_hall_3_V1,
-								V_hall_3_V2,
-								HALL_2_THRESHOLD);*/
-
-	//Captured Values
-	captured_V_hall_1_V1=V_hall_1_V1;
-	captured_V_hall_1_V2=V_hall_1_V2;
-	captured_V_hall_2_V1=V_hall_2_V1;
-	captured_V_hall_2_V2=V_hall_2_V2;
-	captured_V_hall_3_V1=V_hall_3_V1;
-	captured_V_hall_3_V2=V_hall_3_V2;
-
-
-	//position detection
-	//hall_angle=one_hall_sensor_position_detection (hall1_data.hall_corrected);
-
-	
-//}
-}
 
 
 
@@ -349,8 +283,7 @@ one_hall_sensor_finite_state_machine_state_evaluation (&hall3_data,hall_3);
 }
 */
 
-int 
-	hall_evaluation_counter;
+
 
 
 

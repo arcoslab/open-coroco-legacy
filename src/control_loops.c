@@ -31,7 +31,8 @@
 //#define KI 100.0f
 //#define KC 100.0f
 
-#define OPEN_LOOP_MIN_ATTENUATION 0.75f
+#define OPEN_LOOP_MIN_ATTENUATION 0.6f
+
 
 void no_hall_update (int* rotor_speed_loop_state)
 {	//gpio_set(GPIOD, GPIO12);
@@ -49,7 +50,7 @@ void no_hall_update (int* rotor_speed_loop_state)
 		*rotor_speed_loop_state=NO_HALL_UPDATE;
 	}
 
-	max_ticks=pwmfreq_f/sine_freq;
+	//max_ticks=pwmfreq_f/sine_freq;
 }
 
 void first_hall_update (int* rotor_speed_loop_state)
@@ -67,7 +68,7 @@ void first_hall_update (int* rotor_speed_loop_state)
 		sine_freq=sine_freq_fixed;
 		*rotor_speed_loop_state=FIRST_HALL_UPDATE;
 	}
-	max_ticks=pwmfreq_f/sine_freq;
+	//max_ticks=pwmfreq_f/sine_freq;
 }
 /*
 void second_hall_update (int* rotor_speed_loop_state)
@@ -75,6 +76,42 @@ void second_hall_update (int* rotor_speed_loop_state)
 	
 }
 */
+
+
+//*****open loop
+//attenuation=0.5 freq=10Hz => counter clock, most of the time does not rotate
+//attenuation=0.5 freq=15Hz => counter clock, it does not rotate
+//attenuation=0.6 freq=10Hz => counter clock, counter clock but once clockwise and once did not started
+//attenuation=0.7 freq=10Hz => counter clock, sometimes clock wise, sometimes counter, but it always starts.
+//attenuation=0.7 freq=15Hz => counter clock, sometimes clock wise, sometimes counter, but it always starts.
+//attenuation=0.7 freq=20Hz => counter clock, sometimes clock wise, it cannot start, it swings from side to side (frecuency to fast)
+//attenuation=0.7 freq=5Hz => counter clock, sometimes clock wise, it cannot start, it swings from side to side (frecuency to fast)
+
+//open loop frecuencia fija inicial y sin aceleraar
+//attenuation=0.7 freq=5Hz	=> se invierte sentido de giro una y otra vez
+//attenuation=0.5 freq=5Hz	=> no tiene la fuerza para arrancar
+//attenuation=0.6 freq=5Hz	=> se invierte
+//attenuation=0.8 freq=5Hz	=> no tiene la fuerza para arrancar
+
+//attenuation=0.5 freq=10Hz	=> gira suave pero a veces arranca en sentidos opuestos
+//attenuation=0.6 freq=10Hz	=> gira medio tac tac en sentido del reloj, suave en opuesto, y a veces se pega. es poco lo que le falta
+//attenuation=0.7 freq=10Hz	=> se invierte inclusive luego de haber arrancado
+
+
+//attenuation=0.5 freq=15Hz	=> solo vibra
+//attenuation=0.6 freq=15Hz	=> arranca en diferente dir
+//attenuation00.9 freq=15Hz	=> arranca en diferente dir
+
+
+
+
+//--------
+//60-120-180° clock wise
+//240-300-0°
+
+
+
+
 void open_loop (int* rotor_speed_loop_state)
 
 {	
@@ -82,18 +119,20 @@ void open_loop (int* rotor_speed_loop_state)
 	//gpio_set(GPIOD, GPIO15);
 	//static int
 		//frequency_change_counter=0;
-	actual_sine_frequency=pwmfreq_f/(2.0f*previous_hall_ticks);
+	//actual_sine_frequency=pwmfreq_f/(2.0f*previous_hall_ticks);
+	actual_sine_frequency=1.0f/(2.0f*previous_hall_time);
+
 
 	if (sine_freq>20.0f)
 	{
-		*rotor_speed_loop_state=CLOSE_LOOP;
+		//*rotor_speed_loop_state=CLOSE_LOOP;
 	}
 	else if (frequency_change_counter>max_sinusoidal_periods)
 	{
-		sine_freq=sine_freq+0.25f;
+		sine_freq=sine_freq+0.75f;
 		
 		if (sine_freq<50.0f)
-			attenuation=0.50f;
+			attenuation=OPEN_LOOP_MIN_ATTENUATION;
 		else 
 			attenuation=1.0f;
 
@@ -144,7 +183,7 @@ void open_loop (int* rotor_speed_loop_state)
 		*rotor_speed_loop_state=OPEN_LOOP;		
 	}
 */
-	max_ticks=pwmfreq_f/sine_freq;
+	//max_ticks=pwmfreq_f/sine_freq;
 	offset=0.0f;
 
 }
@@ -163,7 +202,9 @@ if (hall1_data.hall_update)
 
 	gpio_set(GPIOD, GPIO14);
 
-	actual_sine_frequency=pwmfreq_f/(2.0f*previous_hall_ticks);
+	//actual_sine_frequency=pwmfreq_f/(2.0f*previous_hall_ticks);
+	actual_sine_frequency=1.0f/(2.0f*previous_hall_time);
+
 	close_loop_error=close_loop_desired_frequency-actual_sine_frequency;
 
 	//desired_previous_hall_ticks=pwmfreq_f/(2.0f*close_loop_desired_frequency);
@@ -233,7 +274,7 @@ if (hall1_data.hall_update)
 		{
 			phase_advance=MAX_PHASE_ADVANCE;
 			//attenuation=1.0f;//1.0f;
-			attenuation=1.0f;//phase_advance*1.0f/75.0f;
+			//attenuation=1.0f;//phase_advance*1.0f/75.0f;
 			Pki=1.0f/1000.0f;//8.0f;
 		}
 		
@@ -241,7 +282,7 @@ if (hall1_data.hall_update)
 		{
 			phase_advance=-MAX_PHASE_ADVANCE;
 			//attenuation=1.0f;
-			attenuation=1.0f;//-phase_advance*1.0f/75.0f;
+			//attenuation=1.0f;//-phase_advance*1.0f/75.0f;
 			Pkc=8.0f;
 		}
 
@@ -252,12 +293,12 @@ if (hall1_data.hall_update)
 			if (phase_advance<0.0f)
 			{
 				//attenuation=phase_advance*1.0f/100.0f;//-phase_advance/72.0f;
-				attenuation=0.75f;
+				//attenuation=0.75f;
 			}
 			else
 			{
 				//attenuation=phase_advance*1.0f/100.0f;//phase_advance/72.0f;
-				attenuation=0.75f;
+				//attenuation=0.75f;
 			}
 		}
 
@@ -328,7 +369,7 @@ if (hall1_data.hall_update)
 	phase_excess=phaseU-phase_advance;
 
 	//BEMF adjustment
-	phase_sum+=close_loop_tick_error/Pki-Pkc*phase_excess;
+	//phase_sum+=close_loop_tick_error/Pki-Pkc*phase_excess;
 
 	phase_stator=phase_rotor+phase_advance;
 
@@ -342,7 +383,8 @@ if (hall1_data.hall_update)
 	//max_ticks=pwmfreq_f/sine_freq;
 	//ticks=ticks+phase_advance*max_ticks/360.0f;
 	//attenuation=0.75f;
-	max_ticks=2.0f*previous_hall_ticks;
+	//max_ticks=2.0f*previous_hall_ticks;
+	sine_freq=actual_sine_frequency;
 /*
 	static bool evaluation_close_loop=false;
 	
@@ -360,8 +402,27 @@ if (hall1_data.hall_update)
 	
 
 	//ticks=ticks+phase_advance*max_ticks/360.0f;
-	ticks=ticks+0.0f*max_ticks/360.0f;
-	offset=-70.0f; 
+	//ticks=ticks+0.0f*max_ticks/360.0f;
+	offset=0.0f; 
+
+//Open loop initial angle
+//H1	starts counter clock
+//H1H2  starts clockwise
+//H2	starts clockwise
+//H2H3	starts clockwise
+//H3	starts counter clock
+//H3H1	starts counter clock
+
+
+
+//-70	17-32
+//-35   102-109
+//-10	122-131
+//-5	78-89
+// 0	15-32
+//+5	acelera desacelera, se invierte, final 12-24 counter clock
+//+10	acelera desacelera, se invierte, final se pega
+
 //offset fijo 
 
 //-5.0f 		80Hz
@@ -371,7 +432,7 @@ if (hall1_data.hall_update)
 //-25.0f ~40Hz
 //-50.0f ~50Hz
 //-70.0f ~25-48
-//
+// 0	17-32
 
 
 //---------------------------------------
@@ -527,6 +588,28 @@ else
 
 }
 
+
+void next_stator_angle_and_hall_time(void)
+{	
+	//PWM angle
+	stator_angle=stator_angle+360.0f*CYCLE_TIME*sine_freq+offset;
+
+	if (stator_angle>=360.0f)
+	{
+		stator_angle=stator_angle-360.0f;
+		frequency_change_counter++;	
+	}
+	
+	//speed time
+	hall_time=hall_time+CYCLE_TIME;
+	
+	if (hall1_data.hall_update )//|| hall2_data.hall_update || hall3_data.hall_update
+	{
+		previous_hall_time=hall_time;
+		hall_time=0.0f;	
+	}
+}
+
 void PID_control_loop(void)
 {
 
@@ -541,8 +624,34 @@ void PID_control_loop(void)
 
 
 	hall_hysteresis_window(V_hall_1_V1,HALL_1_UPPER_BAND,HALL_1_LOWER_BAND,&hall1_data);
+
+	next_stator_angle_and_hall_time();
 	
-	
+
+	//waiting for having two hall sensor measures in order to calculate the rotor speed
+	if (rotor_speed_loop_state==NO_HALL_UPDATE)
+		no_hall_update(&rotor_speed_loop_state);
+		//open_loop(&rotor_speed_loop_state);
+
+	else if (rotor_speed_loop_state==FIRST_HALL_UPDATE)
+		first_hall_update(&rotor_speed_loop_state);
+		//open_loop(&rotor_speed_loop_state);		
+		
+	//else if (rotor_speed_loop_state==SECOND_HALL_UPDATE)
+		//second_hall_update(&rotor_speed_loop_state);
+
+	else if (rotor_speed_loop_state==OPEN_LOOP)
+		open_loop(&rotor_speed_loop_state);
+
+	else if (rotor_speed_loop_state==CLOSE_LOOP)
+		close_loop(&rotor_speed_loop_state);
+	else
+		rotor_speed_loop_state=NO_HALL_UPDATE;
+
+}
+
+
+/*	
   	if (ticks<max_ticks)
 	{
 		ticks+=1.0f;
@@ -566,31 +675,7 @@ void PID_control_loop(void)
 		
 		
 	}
-
-
-
-	//waiting for having two hall sensor measures in order to calculate the rotor speed
-	if (rotor_speed_loop_state==NO_HALL_UPDATE)
-		no_hall_update(&rotor_speed_loop_state);
-
-	else if (rotor_speed_loop_state==FIRST_HALL_UPDATE)
-		first_hall_update(&rotor_speed_loop_state);
-	
-	//else if (rotor_speed_loop_state==SECOND_HALL_UPDATE)
-		//second_hall_update(&rotor_speed_loop_state);
-
-	else if (rotor_speed_loop_state==OPEN_LOOP)
-		open_loop(&rotor_speed_loop_state);
-
-	else if (rotor_speed_loop_state==CLOSE_LOOP)
-		close_loop(&rotor_speed_loop_state);
-	else
-		rotor_speed_loop_state=NO_HALL_UPDATE;
-
-}
-
-
-
+*/
 
 
 
