@@ -137,4 +137,14 @@ float hall_time=0.0f;
 float previous_hall_time=0.0f;
 
 
+
+
+float 
+	V_sD=0.0f,
+	V_sQ=0.0f,
+	V_s_angle=0.0f,
+	V_s_magnitude=0.0f;
+
+
+
 #endif

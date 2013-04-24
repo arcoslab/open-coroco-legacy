@@ -17,8 +17,45 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+
+
+
+float direct_park_transformation(float i_sA, float i_sB, float i_sC)
+{
+	float i_sD;
+	i_sD=(2.0f/3.0f) * (i_sA-(1.0f/2.0f)*i_sB-(1.0f/2.0f)*i_sC);
+	return i_sD;
+}
+
+float quadrature_park_transformation(float i_sB, float i_sC)
+{
+	float i_sQ;
+	i_sQ=(2.0f/3.0f)*(sqrtf(3.0f)/2.0f) * (i_sB-i_sC);
+	return i_sQ;
+}
+
+
+float vector_magnitude(float quadrature_component, float direct_component)
+{
+	float magnitude;
+	magnitude=sqrtf( (quadrature_component*quadrature_component+direct_component*direct_component) );
+	return magnitude;
+}
+
+float vector_angle(float quadrature_component, float direct_component)
+{
+	float angle;
+	angle=180.0f/PI*atanf(quadrature_component/direct_component);
+	
+	if (angle<0.0f)
+		angle=angle+360.0f;
+
+	return angle;
+}
+
+
 //void pwm(float ticks, float attenuation,float max_ticks)
-void pwm(float angle_degree)
+void pwm(float a_phase_angle_degree)
 
 {
 
@@ -26,17 +63,27 @@ void pwm(float angle_degree)
 		duty_a=0.0f, 
 		duty_b=0.0f, 
 		duty_c=0.0f;
-	float 
+	float
 		angle_radians;
 
 
   	//angle=(2.0f*PI*ticks/max_ticks)+offset;
-	angle_radians=angle_degree*PI/180.0f;
+	angle_radians=a_phase_angle_degree*PI/180.0f;
 
 	
   	duty_a=sinf(angle_radians);
  	duty_b=sinf(angle_radians+2.0f*PI/3.0f);
   	duty_c=sinf(angle_radians+4.0f*PI/3.0f);
+
+
+	//park_transformation
+	V_sD		=direct_park_transformation	(duty_a,duty_b,duty_c);
+	V_sQ		=quadrature_park_transformation	(duty_b,duty_c);
+	V_s_angle	=vector_angle			(V_sQ,V_sD);
+	V_s_magnitude	=vector_magnitude		(V_sQ,V_sD);		
+
+
+
   
   	if (duty_a < 0.0f)
 	{
@@ -88,5 +135,6 @@ void pwm(float angle_degree)
 	timer_set_oc_value(TIM1, TIM_OC3, duty_c*attenuation*pwm_period_ARR);
   	//tim_force_update_event(TIM1);
 	
+
 	
 }

@@ -92,13 +92,23 @@ captured_stator_angle=stator_angle;
 captured_previous_hall_time=previous_hall_time;
 
 
-
-
+float 
+	captured_V_sD,
+	captured_V_sQ,
+	captured_V_s_angle,
+	captured_V_s_magnitude;
 
 
 
 //nota: no se deben combinar muchos comandos del usart con el hall sensor, pueden interferir y hacer que se lea mal la velocidad del motor	
 		
+		captured_V_sD=V_sD;
+		captured_V_sQ=V_sQ;
+		captured_V_s_angle=V_s_angle;
+		captured_V_s_magnitude=V_s_magnitude;
+
+
+
 		//II_captured_max_ticks=max_ticks;
 		//II_captured_previous_hall_ticks=previous_hall_ticks;
 		II_captured_sine_freq=sine_freq;
@@ -130,6 +140,17 @@ captured_previous_hall_time=previous_hall_time;
 		//captured_ticks				=ticks;
 		captured_attenuation			=attenuation;
 
+
+
+			captured_V_hall_1_V1=V_hall_1_V1;
+	captured_V_hall_1_V2=V_hall_1_V2;
+	captured_V_hall_2_V1=V_hall_2_V1;
+	captured_V_hall_2_V2=V_hall_2_V2;
+	captured_V_hall_3_V1=V_hall_3_V1;
+	captured_V_hall_3_V2=V_hall_3_V2;
+
+
+
 			//usart_send_blocking(USART2, 'm');
 			//usart_transmit_a_floating_number(II_captured_max_ticks);
 			//usart_send_blocking(USART2, 'p');
@@ -138,20 +159,20 @@ captured_previous_hall_time=previous_hall_time;
 			//usart_transmit_an_integer_number(captured_hall_ticks);
 			//usart_send_blocking(USART2, 't');
 			//usart_transmit_a_floating_number(captured_ticks*360.0f/II_captured_max_ticks);
-			
+/*			
 			usart_send_blocking(USART2, 'e');
 			usart_transmit_a_floating_number(II_captured_sine_freq);
 
 			usart_send_blocking(USART2, 'a');
 			usart_transmit_a_floating_number(captured_actual_sine_frequency);
-			//usart_send_blocking(USART2, 'd');
+*/			//usart_send_blocking(USART2, 'd');
 			//usart_transmit_a_floating_number(captured_desired_sine_frequency);
 			//usart_send_blocking(USART2, 'E');
 			//usart_transmit_a_floating_number(open_loop_error);
-
+/*
 			usart_send_blocking(USART2, 'T');
 			usart_transmit_a_floating_number(captured_attenuation*100.0f);
-			//usart_send_blocking(USART2, 'E');
+*/			//usart_send_blocking(USART2, 'E');
 			//usart_transmit_a_floating_number(captured_close_loop_error);
 			//usart_send_blocking(USART2, 'D');
 			//usart_transmit_a_floating_number(captured_close_loop_desired_frequency);
@@ -174,12 +195,7 @@ captured_previous_hall_time=previous_hall_time;
 
 		
 		
-			captured_V_hall_1_V1=V_hall_1_V1;
-	captured_V_hall_1_V2=V_hall_1_V2;
-	captured_V_hall_2_V1=V_hall_2_V1;
-	captured_V_hall_2_V2=V_hall_2_V2;
-	captured_V_hall_3_V1=V_hall_3_V1;
-	captured_V_hall_3_V2=V_hall_3_V2;
+
 			
 			
 /*
@@ -199,14 +215,27 @@ captured_previous_hall_time=previous_hall_time;
 
 			usart_send_blocking(USART2, 'R');
 			usart_transmit_a_floating_number(captured_rotor_angle);
-
+/*
 			usart_send_blocking(USART2, 'H');
 			usart_transmit_a_floating_number(captured_previous_hall_time);
 
 			usart_send_blocking(USART2, 'O');
 			usart_transmit_a_floating_number(captured_offset);
+*/
 
+/*
+			usart_send_blocking(USART2, 'D');
+			usart_transmit_a_floating_number(captured_V_sD*1000.0f);
 
+			usart_send_blocking(USART2, 'Q');
+			usart_transmit_a_floating_number(captured_V_sQ*1000.0f);
+*/
+			usart_send_blocking(USART2, 'A');
+			usart_transmit_a_floating_number(captured_V_s_angle);
+/*
+			usart_send_blocking(USART2, 'M');
+			usart_transmit_a_floating_number(captured_V_s_magnitude*1000.0f);
+*/
 
 
 

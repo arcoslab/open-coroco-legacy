@@ -17,11 +17,12 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#define NO_HALL_UPDATE	 	0
-#define FIRST_HALL_UPDATE	1
-#define SECOND_HALL_UPDATE	2
-#define OPEN_LOOP		3
-#define CLOSE_LOOP 		4
+#define INITIAL_STATOR_ANGLE_OPEN_LOOP	0
+#define NO_HALL_UPDATE	 		1
+#define FIRST_HALL_UPDATE		2
+#define SECOND_HALL_UPDATE		3
+#define OPEN_LOOP			4
+#define CLOSE_LOOP 			5
 
 
 #define MAX_AMPLITUDE 1.0f
@@ -33,6 +34,45 @@
 
 #define OPEN_LOOP_MIN_ATTENUATION 0.6f
 
+
+//--------rotor initial angle and rotation---------------
+//60-120-180° clock wise
+//240-300-0°	counter clock
+
+//stator=rotor => 120 -240 intercambiados
+	//240 clock wise
+	//120 counter clock
+
+
+
+
+
+
+
+
+//offset
+//----180
+//0 	clock wise
+//-45
+//-90   counter clock 	
+
+//----120
+//+120
+//+90	clock wise
+//+45	clock wise
+//0	clock wise
+//-45	clock wise
+//-90	clock wise
+void initial_stator_angle_open_loop(int* rotor_speed_loop_state)
+{
+	attenuation = OPEN_LOOP_MIN_ATTENUATION;
+	sine_freq=sine_freq_fixed;
+	*rotor_speed_loop_state=NO_HALL_UPDATE;
+	stator_angle=rotor_angle;//rotor_angle+180.0f;
+	
+	if (stator_angle==rotor_angle)
+		gpio_set(GPIOD, GPIO12);
+}
 
 void no_hall_update (int* rotor_speed_loop_state)
 {	//gpio_set(GPIOD, GPIO12);
@@ -51,6 +91,9 @@ void no_hall_update (int* rotor_speed_loop_state)
 	}
 
 	//max_ticks=pwmfreq_f/sine_freq;
+
+	
+
 }
 
 void first_hall_update (int* rotor_speed_loop_state)
@@ -105,9 +148,7 @@ void second_hall_update (int* rotor_speed_loop_state)
 
 
 
-//--------
-//60-120-180° clock wise
-//240-300-0°
+
 
 
 
@@ -615,12 +656,7 @@ void PID_control_loop(void)
 
 	static int 
 		//frequency_change_counter=0,
-		rotor_speed_loop_state=NO_HALL_UPDATE;
-
-	//hall sensor readings
-	V_hall_1_V1=gpio_get(GPIOE, GPIO15);	//32768	10000000 00000000
-	V_hall_2_V1=gpio_get(GPIOB, GPIO11);	//2048	00001000 00000000
-	V_hall_3_V1=gpio_get(GPIOB, GPIO13);	//8192	00100000 00000000
+		rotor_speed_loop_state=INITIAL_STATOR_ANGLE_OPEN_LOOP;
 
 
 	hall_hysteresis_window(V_hall_1_V1,HALL_1_UPPER_BAND,HALL_1_LOWER_BAND,&hall1_data);
@@ -628,8 +664,12 @@ void PID_control_loop(void)
 	next_stator_angle_and_hall_time();
 	
 
+
+	if (rotor_speed_loop_state==INITIAL_STATOR_ANGLE_OPEN_LOOP)
+		initial_stator_angle_open_loop(&rotor_speed_loop_state);	
+
 	//waiting for having two hall sensor measures in order to calculate the rotor speed
-	if (rotor_speed_loop_state==NO_HALL_UPDATE)
+	else if (rotor_speed_loop_state==NO_HALL_UPDATE)
 		no_hall_update(&rotor_speed_loop_state);
 		//open_loop(&rotor_speed_loop_state);
 
@@ -646,36 +686,9 @@ void PID_control_loop(void)
 	else if (rotor_speed_loop_state==CLOSE_LOOP)
 		close_loop(&rotor_speed_loop_state);
 	else
-		rotor_speed_loop_state=NO_HALL_UPDATE;
+		rotor_speed_loop_state=INITIAL_STATOR_ANGLE_OPEN_LOOP; //NO_HALL_UPDATE;
 
 }
-
-
-/*	
-  	if (ticks<max_ticks)
-	{
-		ticks+=1.0f;
-	}
-	else
-	{ 
-		ticks=0.0f;
-		frequency_change_counter++;
-	}
-
-	hall_ticks+=1.0f;
-	//max_ticks=pwmfreq_f/sine_freq;
-
-
-
-	if (hall1_data.hall_update )//|| hall2_data.hall_update || hall3_data.hall_update)
-	{	
-		//hall-sensor time	
-		previous_hall_ticks=hall_ticks;
-		hall_ticks=0.0f;
-		
-		
-	}
-*/
 
 
 

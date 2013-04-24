@@ -83,6 +83,8 @@ void exti1_isr(void)
 	button=1;
 }
 
+
+
 void tim1_cc_isr (void)
 {
 	// Clear the update interrupt flag
@@ -95,13 +97,14 @@ void tim1_cc_isr (void)
 	//pwm duty cycle calculation
 	pwm(stator_angle);
 
+	//angle and magnitude stator voltage vector
+	
 
 	V_hall_1_V1=gpio_get(GPIOE, GPIO15);	//32768	10000000 00000000
 	V_hall_2_V1=gpio_get(GPIOB, GPIO11);	//2048	00001000 00000000
 	V_hall_3_V1=gpio_get(GPIOB, GPIO13);	//8192	00100000 00000000
-
 	rotor_angle=three_hall_sensor_position_detection (V_hall_1_V1,V_hall_2_V1,V_hall_3_V1);
-
+	
 	if (button==1)
 	{
 		PID_control_loop();
