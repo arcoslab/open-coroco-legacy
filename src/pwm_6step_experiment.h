@@ -55,7 +55,7 @@
 #define sine_freq_increment	0.75f
 #define max_sine_freq		20.0f
 #define min_sine_freq		10.0f	
-#define sine_freq_fixed	10.0f
+#define sine_freq_fixed	0.0f
 
 #define attenuation_value 		1.0f
 #define attenuation_max 		1.0f
@@ -132,7 +132,7 @@ int frequency_change_counter=0;
 
 float offset=0.0f;
 float rotor_angle=0.0f;
-float stator_angle=0.0f;
+float phase_A_stator_angle=0.0f;
 float hall_time=0.0f;
 float previous_hall_time=0.0f;
 
@@ -146,5 +146,7 @@ float
 	V_s_magnitude=0.0f;
 
 
+float
+	A=0.0f,B=0.0f,C=0.0f;
 
 #endif

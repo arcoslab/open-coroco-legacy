@@ -31,6 +31,7 @@ float
 	captured_V_hall_3_V1,
 	captured_V_hall_3_V2;
 
+float captured_A,captured_B,captured_C;
 
 #include "pwm_6step_experiment.h"
 //impedance control libraries
@@ -81,16 +82,19 @@ int main(void)
 
 float captured_offset=0.0f;
 float captured_rotor_angle=0.0f;
-float captured_stator_angle=0.0f;
+float captured_phase_A_stator_angle=0.0f;
 //float captured_hall_time=0.0f;
 float captured_previous_hall_time=0.0f;
 
 captured_offset=offset;
 captured_rotor_angle=rotor_angle;
-captured_stator_angle=stator_angle;
+captured_phase_A_stator_angle=phase_A_stator_angle;
 //captured_hall_time=hall_time;
 captured_previous_hall_time=previous_hall_time;
 
+captured_A=A;
+captured_B=B;
+captured_C=C;
 
 float 
 	captured_V_sD,
@@ -210,17 +214,48 @@ float
 */
 
 
-			usart_send_blocking(USART2, 'S');
-			usart_transmit_a_floating_number(captured_stator_angle);
+			usart_send_blocking(USART2, 'A');
+			usart_transmit_a_floating_number(captured_phase_A_stator_angle);
 
 			usart_send_blocking(USART2, 'R');
 			usart_transmit_a_floating_number(captured_rotor_angle);
+
 /*
 			usart_send_blocking(USART2, 'H');
 			usart_transmit_a_floating_number(captured_previous_hall_time);
 
 			usart_send_blocking(USART2, 'O');
 			usart_transmit_a_floating_number(captured_offset);
+*/
+/*
+	float duty_a,duty_b,duty_c;
+	static float cita=0.0f;
+	duty_a=sinf(cita*PI/180.0f);
+	duty_b=sinf(cita*PI/180.0f+2.0f*PI/3.0f);
+	duty_c=sinf(cita*PI/180.0f+4.0f*PI/3.0f);
+
+	//park_transformation
+	V_sD		=direct_clark_transformation	(duty_a,duty_b,duty_c);
+	V_sQ		=quadrature_clark_transformation(duty_a,duty_b,duty_c);
+	V_s_angle	=vector_angle			(V_sQ,V_sD);
+	V_s_magnitude	=vector_magnitude		(V_sQ,V_sD);		
+
+	//inverse park transformation	
+	float cita_A, cita_B, cita_C;
+	cita_A=duty_cycle_to_angle(	A_inverse_clark_transformation(V_sQ,V_sD)		);
+  	cita_B=duty_cycle_to_angle(	B_inverse_clark_transformation(V_sQ,V_sD)	);
+	cita_C=duty_cycle_to_angle(	C_inverse_clark_transformation(V_sQ,V_sD)	);
+
+	A=A_inverse_clark_transformation(V_sQ,V_sD)		;
+  	B=B_inverse_clark_transformation(V_sQ,V_sD)	;
+	C=C_inverse_clark_transformation(V_sQ,V_sD)	;
+
+			usart_send_blocking(USART2, 'C');
+			usart_transmit_a_floating_number(cita);
+	cita=cita+1.0f;
+
+	if (cita>=360.0f)
+		cita=cita-360.0f;
 */
 
 /*
@@ -230,17 +265,99 @@ float
 			usart_send_blocking(USART2, 'Q');
 			usart_transmit_a_floating_number(captured_V_sQ*1000.0f);
 */
-			usart_send_blocking(USART2, 'A');
+			usart_send_blocking(USART2, 'S');
 			usart_transmit_a_floating_number(captured_V_s_angle);
 /*
 			usart_send_blocking(USART2, 'M');
 			usart_transmit_a_floating_number(captured_V_s_magnitude*1000.0f);
+
+			usart_send_blocking(USART2, 'A');
+			usart_transmit_a_floating_number(captured_A);
+
+			usart_send_blocking(USART2, 'B');
+			usart_transmit_a_floating_number(captured_B);
+
+			usart_send_blocking(USART2, 'C');
+			usart_transmit_a_floating_number(captured_C);
 */
-
-
-
-
 /*
+			usart_send_blocking(USART2, 'a');
+			usart_transmit_a_floating_number(duty_a*1000.0f);
+
+			usart_send_blocking(USART2, 'b');
+			usart_transmit_a_floating_number(duty_b*1000.0f);
+
+			usart_send_blocking(USART2, 'c');
+			usart_transmit_a_floating_number(duty_c*1000.0f);
+
+
+			usart_send_blocking(USART2, 'D');
+			usart_transmit_a_floating_number(V_sD*1000.0f);
+
+			usart_send_blocking(USART2, 'Q');
+			usart_transmit_a_floating_number(V_sQ*1000.0f);
+*/
+/*
+			usart_send_blocking(USART2, 'A');
+			usart_transmit_a_floating_number(phase_A_stator_angle);
+
+			usart_send_blocking(USART2, 'X');
+			usart_transmit_a_floating_number(captured_V_s_angle);
+
+			usart_send_blocking(USART2, 'a');
+			usart_transmit_a_floating_number(captured_A);
+
+			usart_send_blocking(USART2, 'x');
+			usart_transmit_a_floating_number(captured_B);
+*/
+/*
+			float s;
+			float v;
+				
+			s=451.0f-cita;
+			if (s>=360.0f)
+				s=s-360.0f;
+			else if (s<0.0f)
+				s=s+360.0f;
+			
+			v=450-V_s_angle;
+			if (v>=360.0f)
+				v=v-360.0f;
+			else if (v<0.0f)
+				v=v+360.0f;
+
+
+			usart_send_blocking(USART2, 'S');
+			usart_transmit_a_floating_number(s);
+			
+			usart_send_blocking(USART2, 'V');
+			usart_transmit_a_floating_number(v);
+
+*/
+			
+/*
+			usart_send_blocking(USART2, 'M');
+			usart_transmit_a_floating_number(V_s_magnitude*1000.0f);
+
+			usart_send_blocking(USART2, 'A');
+			usart_transmit_a_floating_number(A*1000.0f);
+
+			usart_send_blocking(USART2, 'B');
+			usart_transmit_a_floating_number(B*1000.0f);
+
+			usart_send_blocking(USART2, 'C');
+			usart_transmit_a_floating_number(C*1000.0f);
+
+			usart_send_blocking(USART2, 'a');
+			usart_transmit_a_floating_number(cita_A);
+
+			usart_send_blocking(USART2, 'b');
+			usart_transmit_a_floating_number(cita_B);
+
+			usart_send_blocking(USART2, 'c');
+			usart_transmit_a_floating_number(cita_C);
+
+
 			usart_send_blocking(USART2, 'D');
 			if (hall1_data.hall_corrected==HIGH)
 			{

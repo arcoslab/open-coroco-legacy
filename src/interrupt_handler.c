@@ -95,7 +95,7 @@ void tim1_cc_isr (void)
 	
 
 	//pwm duty cycle calculation
-	pwm(stator_angle);
+	pwm(phase_A_stator_angle);
 
 	//angle and magnitude stator voltage vector
 	

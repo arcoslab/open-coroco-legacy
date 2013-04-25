@@ -32,7 +32,7 @@
 //#define KI 100.0f
 //#define KC 100.0f
 
-#define OPEN_LOOP_MIN_ATTENUATION 0.6f
+#define OPEN_LOOP_MIN_ATTENUATION 0.8f
 
 
 //--------rotor initial angle and rotation---------------
@@ -68,11 +68,40 @@ void initial_stator_angle_open_loop(int* rotor_speed_loop_state)
 	attenuation = OPEN_LOOP_MIN_ATTENUATION;
 	sine_freq=sine_freq_fixed;
 	*rotor_speed_loop_state=NO_HALL_UPDATE;
-	stator_angle=rotor_angle;//rotor_angle+180.0f;
 	
-	if (stator_angle==rotor_angle)
-		gpio_set(GPIOD, GPIO12);
+	//V_s_angle=rotor_angle+180.0f;//rotor_angle+180.0f;
+	//phase_A_stator_angle=stator_angle_to_phase_A(V_s_angle);
+	//phase_A_stator_angle=rotor_angle+240.0f;//200.0f;
+/*
+	if (rotor_angle==0.0f)
+		phase_A_stator_angle=rotor_angle-180.0f;//200.0f;
+	else
+		phase_A_stator_angle=rotor_angle-120.0f;//200.0f;
+*/	
 }
+//--0°
+//0 y 180° counter clock, el resto clock wise como se esperaría
+//-10°
+//
+//-45
+//
+//-90
+
+
+//+90
+	//0	 0 -
+	//60+	
+	//120 -
+	//180 0-
+	//240 +
+	//300	+
+//-90
+	//0	 0 -
+	//60-	
+	//120 +
+	//180 0-
+	//240 -
+	//300	+
 
 void no_hall_update (int* rotor_speed_loop_state)
 {	//gpio_set(GPIOD, GPIO12);
@@ -633,11 +662,11 @@ else
 void next_stator_angle_and_hall_time(void)
 {	
 	//PWM angle
-	stator_angle=stator_angle+360.0f*CYCLE_TIME*sine_freq+offset;
+	phase_A_stator_angle=phase_A_stator_angle+360.0f*CYCLE_TIME*sine_freq+offset;
 
-	if (stator_angle>=360.0f)
+	if (phase_A_stator_angle>=360.0f)
 	{
-		stator_angle=stator_angle-360.0f;
+		phase_A_stator_angle=phase_A_stator_angle-360.0f;
 		frequency_change_counter++;	
 	}
 	
@@ -656,7 +685,7 @@ void PID_control_loop(void)
 
 	static int 
 		//frequency_change_counter=0,
-		rotor_speed_loop_state=INITIAL_STATOR_ANGLE_OPEN_LOOP;
+		rotor_speed_loop_state=OPEN_LOOP;//INITIAL_STATOR_ANGLE_OPEN_LOOP;
 
 
 	hall_hysteresis_window(V_hall_1_V1,HALL_1_UPPER_BAND,HALL_1_LOWER_BAND,&hall1_data);
@@ -664,7 +693,7 @@ void PID_control_loop(void)
 	next_stator_angle_and_hall_time();
 	
 
-
+/*
 	if (rotor_speed_loop_state==INITIAL_STATOR_ANGLE_OPEN_LOOP)
 		initial_stator_angle_open_loop(&rotor_speed_loop_state);	
 
@@ -679,8 +708,8 @@ void PID_control_loop(void)
 		
 	//else if (rotor_speed_loop_state==SECOND_HALL_UPDATE)
 		//second_hall_update(&rotor_speed_loop_state);
-
-	else if (rotor_speed_loop_state==OPEN_LOOP)
+*/
+	if (rotor_speed_loop_state==OPEN_LOOP)
 		open_loop(&rotor_speed_loop_state);
 
 	else if (rotor_speed_loop_state==CLOSE_LOOP)
