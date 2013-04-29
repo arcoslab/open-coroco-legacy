@@ -40,7 +40,7 @@ void open_loop (int* rotor_speed_loop_state, float* attenuation, float* sine_fre
 {	
 	 if (*sine_freq>20.0f)
 	{
-		//*rotor_speed_loop_state=CLOSE_LOOP;
+		*rotor_speed_loop_state=CLOSE_LOOP;
 	}
 	
 	else if (*frequency_change_counter>max_sinusoidal_periods)
@@ -134,7 +134,7 @@ void close_loop(float desired_rotor_frequency,float actual_rotor_frequency,bool 
 			*attenuation=1.00f;
 
 		//*offset=phase_advance;
-		*offset=-0.5f;
+		*offset=0.0f;//-0.5f;
 
 		if (actual_rotor_frequency<0.0f)
 			*sine_frequency=-actual_rotor_frequency;
