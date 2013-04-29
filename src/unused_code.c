@@ -17,6 +17,9 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/************************************************************/
+/**************************Interrupts************************/
+/************************************************************/
 void exti0_isr(void)
 {
 	exti_reset_request(EXTI0);
@@ -194,5 +197,65 @@ void tim1_trg_com_tim11_isr(void)
 }
 
 
+/************************************************************/
+/**************************PID states************************/
+/************************************************************/
+
+void initial_stator_angle_open_loop(int* rotor_speed_loop_state)
+{
+	attenuation = OPEN_LOOP_MIN_ATTENUATION;
+	sine_freq=sine_freq_fixed;
+	*rotor_speed_loop_state=NO_HALL_UPDATE;
+	
+	//V_s_angle=rotor_angle+180.0f;//rotor_angle+180.0f;
+	//phase_A_stator_angle=stator_angle_to_phase_A(V_s_angle);
+	//phase_A_stator_angle=rotor_angle+240.0f;//200.0f;
+/*
+	if (rotor_angle==0.0f)
+		phase_A_stator_angle=rotor_angle-180.0f;//200.0f;
+	else
+		phase_A_stator_angle=rotor_angle-120.0f;//200.0f;
+*/	
+}
 
 
+void no_hall_update (int* rotor_speed_loop_state)
+{	
+	if (hall1_data.hall_update)
+	{
+		attenuation = OPEN_LOOP_MIN_ATTENUATION;
+		sine_freq=sine_freq_fixed;
+		*rotor_speed_loop_state=FIRST_HALL_UPDATE;
+	}
+
+	else
+	{
+		attenuation = OPEN_LOOP_MIN_ATTENUATION;
+		sine_freq=sine_freq_fixed;
+		*rotor_speed_loop_state=NO_HALL_UPDATE;
+	}
+}
+
+void first_hall_update (int* rotor_speed_loop_state)
+{	
+	if (hall1_data.hall_update)
+	{
+		attenuation = OPEN_LOOP_MIN_ATTENUATION;
+		sine_freq=sine_freq_fixed;
+		*rotor_speed_loop_state=OPEN_LOOP;
+	}
+
+	else
+	{
+		attenuation = OPEN_LOOP_MIN_ATTENUATION;
+		sine_freq=sine_freq_fixed;
+		*rotor_speed_loop_state=FIRST_HALL_UPDATE;
+	}
+	
+}
+/*
+void second_hall_update (int* rotor_speed_loop_state)
+{
+	
+}
+*/

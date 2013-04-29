@@ -17,6 +17,10 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#define ADC_CONVERSION_FACTOR 4096.0f
+#define VREF 2.966f	//ADC conversion reference voltage
+
+
 float voltage_measure_ADC1 (u8 channel)
 {
 	u8 channels[16];
