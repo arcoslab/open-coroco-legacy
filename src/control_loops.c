@@ -29,13 +29,13 @@
 #define AMPLITUDE_REDUCTION 90.0f 
 
 
-#define OPEN_LOOP_MIN_ATTENUATION 0.8f
+#define OPEN_LOOP_MIN_ATTENUATION 0.7f
 
 
 
 
 
-void open_loop (int* rotor_speed_loop_state, float* attenuation, float* sine_freq, int* frequency_change_counter,float actual_sine_freq, float hall_time)
+void open_loop (int* rotor_speed_loop_state, float* attenuation, float* sine_freq, int* frequency_change_counter,float actual_sine_freq)//, float hall_time)
 
 {	
 	 if (*sine_freq>20.0f)
@@ -51,10 +51,13 @@ void open_loop (int* rotor_speed_loop_state, float* attenuation, float* sine_fre
 		if ( actual_sine_freq>0.0f)// && (hall_time<2.5f) )
 		{
 			*attenuation=0.0f;
+			//*attenuation=OPEN_LOOP_MIN_ATTENUATION;
 			*sine_freq=sine_freq_fixed;
 		}
 		//----------------------------------------------------------------------
-		if (*sine_freq>50.0f)
+
+
+		else if (*sine_freq>50.0f)
 			*attenuation=OPEN_LOOP_MIN_ATTENUATION;
 		else 
 			*attenuation=1.0f;
@@ -67,132 +70,98 @@ void open_loop (int* rotor_speed_loop_state, float* attenuation, float* sine_fre
 	{
 		*rotor_speed_loop_state=OPEN_LOOP;
 	}
+
+	
 }
 
-void close_loop(int* rotor_speed_loop_state)
+void close_loop(float desired_rotor_frequency,float actual_rotor_frequency,bool update,
+		int* rotor_speed_loop_state,float* sine_frequency,float* attenuation, float* offset)
 {
-	#define Pkp 1.0f/12.0f
+	#define K_P 	1.0f
+	#define K_I	1.0f
+	#define K_D	1.0f	
 	
 	#define MAX_PHASE_ADVANCE 90.0f
 
-	float Pki=1000000.0f;
-	float Pkc=1.0f/1000.0f;
+	float
+		//phase_excess=0.0f,
+		close_loop_error=0.0f,
+		phase_advance=0.0f,
+		phase_U=0.0f; 
+		
+	if (update)
+	{
 
-if (hall1_data.hall_update)
-{
+		gpio_set(GPIOD, GPIO14);
 
-	gpio_set(GPIOD, GPIO14);
+		close_loop_error=desired_rotor_frequency-actual_rotor_frequency;
 
-	//actual_sine_frequency=pwmfreq_f/(2.0f*previous_hall_ticks);
-	actual_sine_frequency=1.0f/(2.0f*previous_hall_time);
-
-	close_loop_error=close_loop_desired_frequency-actual_sine_frequency;
-
-	//desired_previous_hall_ticks=pwmfreq_f/(2.0f*close_loop_desired_frequency);
-	//close_loop_tick_error= -0.25f*(desired_previous_hall_ticks-previous_hall_ticks);
-
-	//phaseU=close_loop_tick_error*Pkp;//+phase_sum;
-	phaseU=close_loop_error*1.0f/1.0f; 
+		phase_U=-close_loop_error*K_P; 
 
 
-		//regular phase advance
-		if (phaseU>MAX_PHASE_ADVANCE)
+		if (phase_U>MAX_PHASE_ADVANCE)
 		{
 			phase_advance=MAX_PHASE_ADVANCE;
-			//attenuation=1.0f;//1.0f;
-			//attenuation=1.0f;//phase_advance*1.0f/75.0f;
-			Pki=1.0f/1000.0f;//8.0f;
+			*attenuation=OPEN_LOOP_MIN_ATTENUATION;//1.0f;
 		}
 		
-		else if (phaseU<-MAX_PHASE_ADVANCE)
+		else if (phase_U<-MAX_PHASE_ADVANCE)
 		{
 			phase_advance=-MAX_PHASE_ADVANCE;
-			//attenuation=1.0f;
-			//attenuation=1.0f;//-phase_advance*1.0f/75.0f;
-			Pkc=8.0f;
+			*attenuation=OPEN_LOOP_MIN_ATTENUATION;//1.0f;
 		}
 
 		else
 		{
-			phase_advance=phaseU;
-			
-			if (phase_advance<0.0f)
-			{
-				//attenuation=phase_advance*1.0f/100.0f;//-phase_advance/72.0f;
-				//attenuation=0.75f;
-			}
-			else
-			{
-				//attenuation=phase_advance*1.0f/100.0f;//phase_advance/72.0f;
-				//attenuation=0.75f;
-			}
+			phase_advance=phase_U;
+			*attenuation=OPEN_LOOP_MIN_ATTENUATION;//1.0f;
 		}
 
 
+		//phase_sum+phase_excess
+		//phase_excess=phase_U-phase_advance;
+
+		//BEMF adjustment
+		//phase_sum+=close_loop_tick_error/Pki-Pkc*phase_excess;
+
+		//phase_stator=phase_rotor+phase_advance;
 
 
+		*rotor_speed_loop_state=CLOSE_LOOP;
 
 
+		if (*attenuation>1.0f)
+			*attenuation=1.00f;
 
+		//*offset=phase_advance;
+		*offset=-0.5f;
 
-	//phase_sum+phase_excess
-	phase_excess=phaseU-phase_advance;
+		if (actual_rotor_frequency<0.0f)
+			*sine_frequency=-actual_rotor_frequency;
 
-	//BEMF adjustment
-	//phase_sum+=close_loop_tick_error/Pki-Pkc*phase_excess;
-
-	phase_stator=phase_rotor+phase_advance;
-
-
-	*rotor_speed_loop_state=CLOSE_LOOP;
-
-
-	if (attenuation>1.0f)
-		attenuation=1.00f;
-
-	//max_ticks=pwmfreq_f/sine_freq;
-	//ticks=ticks+phase_advance*max_ticks/360.0f;
-	//attenuation=0.75f;
-	//max_ticks=2.0f*previous_hall_ticks;
-	sine_freq=actual_sine_frequency;
-/*
-	static bool evaluation_close_loop=false;
-	
-
-	if (actual_sine_frequency>130)
-	{
-		evaluation_close_loop=true;
+		else 
+			*sine_frequency=actual_rotor_frequency;
 		
+		E=phase_U;
+		F=phase_advance;
+		G=close_loop_error;
 	}
 
-	if (evaluation_close_loop==true)
+
+	else
 	{
-		ticks=ticks+7.5f*max_ticks/360.0f;
-	}*/
-	
 
-	//ticks=ticks+phase_advance*max_ticks/360.0f;
-	//ticks=ticks+0.0f*max_ticks/360.0f;
-	offset=0.0f; 
-
-
-}
-
-
-else
-{
-
-}
+	}
 
 
 
 }
 
 
-int next_stator_angle_and_hall_time(bool update, float* phase_A_stator_angle, float sine_freq,int frequency_change_counter, float* new_hall_time, float* old_hall_time, float *offset)
+int next_stator_angle_and_hall_time(bool update, float* phase_A_stator_angle, float sine_freq,int frequency_change_counter, float* new_hall_time, float* old_hall_time, float offset)
 {	
 	//PWM angle
-	*phase_A_stator_angle=*phase_A_stator_angle+360.0f*CYCLE_TIME* sine_freq+*offset;
+	*phase_A_stator_angle=*phase_A_stator_angle+360.0f*CYCLE_TIME* sine_freq+offset;
 
 	if (*phase_A_stator_angle>=360.0f)
 	{
@@ -209,22 +178,22 @@ int next_stator_angle_and_hall_time(bool update, float* phase_A_stator_angle, fl
 		*new_hall_time=0.0f;	
 	}
 	
-	A=*old_hall_time;
-	B=*new_hall_time;
-
 	return frequency_change_counter;
 }
 
 
 
 
-void next_PID_loop_state(int* rotor_speed_loop_state, float* attenuation, float* sine_freq, int* frequency_change_counter,float actual_sine_freq, float hall_time)
+void next_PID_loop_state(int* rotor_speed_loop_state, float* attenuation, float* sine_freq, int* frequency_change_counter,float actual_sine_freq, 
+//float hall_time,
+bool update, float desired_rotor_frequency, float* offset)
 {
 	if (*rotor_speed_loop_state==OPEN_LOOP)
-		open_loop (rotor_speed_loop_state,attenuation,sine_freq,frequency_change_counter,actual_sine_freq,hall_time);
+		open_loop (rotor_speed_loop_state,attenuation,sine_freq,frequency_change_counter,actual_sine_freq);//,hall_time);
 
 	else if (*rotor_speed_loop_state==CLOSE_LOOP)
-		close_loop(rotor_speed_loop_state);
+		close_loop(	desired_rotor_frequency,actual_sine_freq,update,
+				rotor_speed_loop_state,sine_freq,attenuation,offset);
 
 	else
 		*rotor_speed_loop_state=OPEN_LOOP;
@@ -234,12 +203,19 @@ void next_PID_loop_state(int* rotor_speed_loop_state, float* attenuation, float*
 
 
 
-void PID_control_loop(void)
+void PID_control_loop(float* attenuation)
 {
 
 	static int rotor_speed_loop_state=OPEN_LOOP;
-	static float old_rotor_angle;
-	static float last_read_rotor_angle;
+	static float old_rotor_angle=0.0f;
+	static float last_read_rotor_angle=0.0f;
+	static float desired_rotor_frequency=-100.0f;
+	static float offset=0.0f;
+	static float actual_sine_frequency=0.0f;
+	static float previous_hall_time=0.0f;
+	static float hall_time=0.0f;
+	
+
 	//if (previous_rotor_angle!=rotor_angle)
 		//previous_rotor_angle=rotor_angle;
 	
@@ -252,8 +228,8 @@ void PID_control_loop(void)
 		last_read_rotor_angle=rotor_angle;
 	}
 
-	actual_sine_frequency=rotor_frequency_Hz(hall_time,previous_hall_time,last_read_rotor_angle,old_rotor_angle,hall1_data.hall_update);
-	D=actual_sine_frequency;
+	actual_sine_frequency=rotor_frequency_Hz(hall_time,previous_hall_time,last_read_rotor_angle,old_rotor_angle);
+
 
 	frequency_change_counter=
 		next_stator_angle_and_hall_time(
@@ -263,12 +239,18 @@ void PID_control_loop(void)
 				frequency_change_counter,
 				&hall_time,
 				&previous_hall_time,
-				&offset);
+				offset);
 
-	next_PID_loop_state(&rotor_speed_loop_state,&attenuation,&sine_freq,&frequency_change_counter,actual_sine_frequency,hall_time);
+	next_PID_loop_state(	&rotor_speed_loop_state,attenuation,&sine_freq,&frequency_change_counter,
+				actual_sine_frequency,
+				//hall_time,
+				hall1_data.hall_update,desired_rotor_frequency,&offset);
 	
 
-
+	A=sine_freq;
+	B=actual_sine_frequency;
+	C=offset;
+	D=*attenuation;
 }
 
 

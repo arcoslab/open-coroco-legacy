@@ -56,7 +56,7 @@ void exti0_isr(void)
 
 
 
-
+/*
 void exti1_isr(void)
 {
 	exti_reset_request(EXTI1);
@@ -82,20 +82,22 @@ void exti1_isr(void)
 	}
 	button=1;
 }
-
+*/
 
 
 void tim1_cc_isr (void)
 {
+	static float attenuation;
+
 	// Clear the update interrupt flag
 	timer_clear_flag(TIM1,  TIM_SR_CC1IF);	
 
 	//pwm duty cycle calculation
-	pwm(phase_A_stator_angle);
+	pwm(phase_A_stator_angle,attenuation);
 		
 	if (button==1)
 	{
-		PID_control_loop();
+		PID_control_loop(&attenuation);
 	}
 
 }

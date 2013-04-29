@@ -54,7 +54,7 @@
 #define NO_HALL_DELAY	3
 #define NO_HALL_UPDATED 4
 
- 
+
 typedef struct 
 {
 	int 	hall_state;
@@ -69,7 +69,7 @@ hall_finite_state_machine_data
 	hall3_data;
 	
 
-
+/*
 float hall_angle=0.0f;
 
 	float V_hall_1_V1=0.0f;
@@ -78,10 +78,12 @@ float hall_angle=0.0f;
 	float V_hall_2_V2=0.0f;
 	float V_hall_3_V1=0.0f;
 	float V_hall_3_V2=0.0f;
-
+*/
 //float three_hall_sensor_position_detection (bool hall_1, bool hall_2, bool hall_3)
 float three_hall_sensor_position_detection (float hall_1, float hall_2, float hall_3)
 {
+	float hall_angle=0.0f;
+
 	if 	( (hall_1>HALL_LOWER_BAND ) && (hall_2<HALL_LOWER_BAND ) && (hall_3<HALL_LOWER_BAND) )//100	first
 	{
 		hall_angle=POSITION_0;
@@ -153,16 +155,13 @@ bool hall_hysteresis_window(float voltage, float upper_band,float lower_band,boo
 		}
 	}
 
-
-	//A=previous_hall;
-	//B=update;
 	return update;
 }
 
 
 
 
-float rotor_frequency_Hz(float hall_time,float previous_hall_time,float rotor_angle,float previous_rotor_angle, float update)
+float rotor_frequency_Hz(float hall_time,float previous_hall_time,float rotor_angle,float previous_rotor_angle)
 {
 	//static float previous_rotor_angle=0.0f;
 	float rotor_frequency;
@@ -186,7 +185,7 @@ float rotor_frequency_Hz(float hall_time,float previous_hall_time,float rotor_an
 		rotor_frequency=-1.0f/(2.0f*previous_hall_time);
 	//------------------------------------------------------
 
-	if (hall_time>=3.0f)
+	if (hall_time>=0.5f)//1.0f)
 		rotor_frequency=0.0f;
 
 	return rotor_frequency;
@@ -204,14 +203,14 @@ void hall_sensor_measure(float *hall_1,float *hall_2, float *hall_3)
 void rotor_angle_update(float *rotor_angle, bool *update)
 {
 	float hall_1,hall_2,hall_3;
-	static bool previous_hall_1=false,previous_hall_2=false,previous_hall_3=false;
-	bool updated_hall_1,updated_hall_2,updated_hall_3;
+	static bool previous_hall_1=false;//,previous_hall_2=false,previous_hall_3=false;
+	bool updated_hall_1;//,updated_hall_2,updated_hall_3;
 
 	hall_sensor_measure(&hall_1,&hall_2,&hall_3);
 
 	updated_hall_1=hall_hysteresis_window(hall_1,HALL_UPPER_BAND,HALL_LOWER_BAND,&previous_hall_1);
-	updated_hall_2=hall_hysteresis_window(hall_2,HALL_UPPER_BAND,HALL_LOWER_BAND,&previous_hall_2);
-	updated_hall_3=hall_hysteresis_window(hall_3,HALL_UPPER_BAND,HALL_LOWER_BAND,&previous_hall_3);
+	//updated_hall_2=hall_hysteresis_window(hall_2,HALL_UPPER_BAND,HALL_LOWER_BAND,&previous_hall_2);
+	//updated_hall_3=hall_hysteresis_window(hall_3,HALL_UPPER_BAND,HALL_LOWER_BAND,&previous_hall_3);
 
 	if (updated_hall_1)// || updated_hall_2 || updated_hall_3)
 		*update=true;
@@ -222,8 +221,6 @@ void rotor_angle_update(float *rotor_angle, bool *update)
 
 
 	*rotor_angle=three_hall_sensor_position_detection (hall_1,hall_2,hall_3);
-	C=*rotor_angle;
-	
 }
 
 

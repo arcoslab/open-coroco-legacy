@@ -17,7 +17,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-void pwm(float A_phase_angle_degree)
+void pwm(float A_phase_angle_degree, float attenuation)
 
 {
 

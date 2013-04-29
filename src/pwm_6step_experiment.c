@@ -50,7 +50,7 @@ int main(void)
 	hall3_data.hall_update=false;
 	hall3_data.hall_corrected=LOW;	
 
-	float captured_A,captured_B,captured_C,captured_D;
+	float captured_A,captured_B,captured_C,captured_D,captured_E,captured_F,captured_G;
 
 
 	while (1)
@@ -62,18 +62,39 @@ int main(void)
 		captured_B=B;
 		captured_C=C;
 		captured_D=D;
+		captured_E=E;
+		captured_F=F;
+		captured_G=G;
+		
 
+		//sine frequency
+		usart_send_blocking(USART2, 'S');
+		usart_transmit_a_floating_number(captured_A);
+			
+		//rotor frequency
+		usart_send_blocking(USART2, 'R');
+		usart_transmit_a_floating_number(captured_B);
+
+		//offset
+		usart_send_blocking(USART2, 'O');
+		usart_transmit_a_floating_number(captured_C);
+			
+		//attenuation
 		usart_send_blocking(USART2, 'A');
-		usart_transmit_an_integer_number(captured_A*100000.0f);
-			
-		usart_send_blocking(USART2, 'B');
-		usart_transmit_an_integer_number(captured_B*100000.0f);
+		usart_transmit_a_floating_number(captured_D);
 
-		usart_send_blocking(USART2, 'C');
-		usart_transmit_an_integer_number(captured_C);
-			
-		usart_send_blocking(USART2, 'D');
-		usart_transmit_an_integer_number(captured_D);
+		//phase U
+		usart_send_blocking(USART2, 'U');
+		usart_transmit_a_floating_number(captured_E);
+
+		//phase advance
+		usart_send_blocking(USART2, 'V');
+		usart_transmit_a_floating_number(captured_F);
+
+		//close loop error
+		usart_send_blocking(USART2, 'E');
+		usart_transmit_a_floating_number(captured_G);
+
 
 		usart_send_blocking(USART2, '\r');
 		usart_send_blocking(USART2, '\n');
