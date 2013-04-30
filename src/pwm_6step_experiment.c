@@ -81,7 +81,7 @@ int main(void)
 			
 		//attenuation
 		usart_send_blocking(USART2, 'A');
-		usart_transmit_a_floating_number(captured_D);
+		usart_transmit_a_floating_number(captured_D*100.0f);
 
 		//phase U
 		usart_send_blocking(USART2, 'U');

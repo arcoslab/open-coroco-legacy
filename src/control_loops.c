@@ -29,7 +29,7 @@
 #define AMPLITUDE_REDUCTION 90.0f 
 
 
-#define OPEN_LOOP_MIN_ATTENUATION 0.7f
+#define OPEN_LOOP_MIN_ATTENUATION 0.8f
 
 
 
@@ -77,7 +77,7 @@ void open_loop (int* rotor_speed_loop_state, float* attenuation, float* sine_fre
 void close_loop(float desired_rotor_frequency,float actual_rotor_frequency,bool update,
 		int* rotor_speed_loop_state,float* sine_frequency,float* attenuation, float* offset)
 {
-	#define K_P 	1.0f
+	#define K_P 	1.0f/10.0f
 	#define K_I	1.0f
 	#define K_D	1.0f	
 	
@@ -102,19 +102,19 @@ void close_loop(float desired_rotor_frequency,float actual_rotor_frequency,bool 
 		if (phase_U>MAX_PHASE_ADVANCE)
 		{
 			phase_advance=MAX_PHASE_ADVANCE;
-			*attenuation=OPEN_LOOP_MIN_ATTENUATION;//1.0f;
+			*attenuation=1.0f;//OPEN_LOOP_MIN_ATTENUATION;//1.0f;
 		}
 		
 		else if (phase_U<-MAX_PHASE_ADVANCE)
 		{
 			phase_advance=-MAX_PHASE_ADVANCE;
-			*attenuation=OPEN_LOOP_MIN_ATTENUATION;//1.0f;
+			*attenuation=1.0f;//OPEN_LOOP_MIN_ATTENUATION;//1.0f;
 		}
 
 		else
 		{
 			phase_advance=phase_U;
-			*attenuation=OPEN_LOOP_MIN_ATTENUATION;//1.0f;
+			*attenuation=1.0f;//OPEN_LOOP_MIN_ATTENUATION;//1.0f;
 		}
 
 
@@ -129,12 +129,32 @@ void close_loop(float desired_rotor_frequency,float actual_rotor_frequency,bool 
 
 		*rotor_speed_loop_state=CLOSE_LOOP;
 
-
+		/*
 		if (*attenuation>1.0f)
-			*attenuation=1.00f;
+			*attenuation=1.0f;
+		*/
+		*offset=phase_advance;
+		//*offset=-0.4f;
 
-		//*offset=phase_advance;
-		*offset=0.0f;//-0.5f;
+		//-50
+		//-25				se invierte por ratos
+		//-17		-31 	-52
+		//-10		-30	-50	se invierte
+		//-5.0		-20	-45
+		//-1		-25	-40	
+		//-0.5		-25	-40
+		//-0.25f	-99 	-110
+		//0		-110 	-210
+		//0.5		-90	-160
+		//1		-90 	-110
+		//5		-70     -100
+		//10		-50	-90
+		//25		-54	-72
+		//50		-46	-73	se inverte una y otra vez
+		//100		
+	
+
+//	S 35       R -34      O 0        A 100      U 64       V 64       E -64      
 
 		if (actual_rotor_frequency<0.0f)
 			*sine_frequency=-actual_rotor_frequency;
@@ -150,7 +170,8 @@ void close_loop(float desired_rotor_frequency,float actual_rotor_frequency,bool 
 
 	else
 	{
-
+		*rotor_speed_loop_state=CLOSE_LOOP;
+		*offset=0.0f;
 	}
 
 
@@ -209,7 +230,7 @@ void PID_control_loop(float* attenuation)
 	static int rotor_speed_loop_state=OPEN_LOOP;
 	static float old_rotor_angle=0.0f;
 	static float last_read_rotor_angle=0.0f;
-	static float desired_rotor_frequency=-100.0f;
+	static float desired_rotor_frequency=-120.0f;	//-130.0f;
 	static float offset=0.0f;
 	static float actual_sine_frequency=0.0f;
 	static float previous_hall_time=0.0f;

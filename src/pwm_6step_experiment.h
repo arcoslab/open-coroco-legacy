@@ -85,7 +85,7 @@ u16
 	exti_direction = FALLING;
 	
 float	
-	attenuation		=0.0f,
+	//attenuation		=0.0f,
 	//ticks			=0.0f,
 	//hall_ticks		=0.0f,
 	//previous_hall_ticks	=0.0f,
