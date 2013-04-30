@@ -40,7 +40,7 @@ void open_loop (int* rotor_speed_loop_state, float* attenuation, float* sine_fre
 {	
 	 if (*sine_freq>20.0f)
 	{
-		*rotor_speed_loop_state=CLOSE_LOOP;
+	  //*rotor_speed_loop_state=CLOSE_LOOP;
 	}
 	
 	else if (*frequency_change_counter>max_sinusoidal_periods)
@@ -48,19 +48,19 @@ void open_loop (int* rotor_speed_loop_state, float* attenuation, float* sine_fre
 		*sine_freq=*sine_freq+0.75f;
 	
 		//dealing with reverse rotation during startup of the motor spin--------
-		if ( actual_sine_freq>0.0f)// && (hall_time<2.5f) )
-		{
-			*attenuation=0.0f;
+		//if ( actual_sine_freq>0.0f)// && (hall_time<2.5f) )
+		//{
+		  //*attenuation=0.0f;
 			//*attenuation=OPEN_LOOP_MIN_ATTENUATION;
-			*sine_freq=sine_freq_fixed;
-		}
+			//*sine_freq=sine_freq_fixed;
+		//}
 		//----------------------------------------------------------------------
 
 
-		else if (*sine_freq>50.0f)
-			*attenuation=OPEN_LOOP_MIN_ATTENUATION;
-		else 
-			*attenuation=1.0f;
+		//else if (*sine_freq>50.0f)
+		  //*attenuation=OPEN_LOOP_MIN_ATTENUATION;
+		//else 
+		  //*attenuation=1.0f;
 
 		*rotor_speed_loop_state=OPEN_LOOP;
 		*frequency_change_counter=0;
@@ -182,7 +182,7 @@ void close_loop(float desired_rotor_frequency,float actual_rotor_frequency,bool 
 int next_stator_angle_and_hall_time(bool update, float* phase_A_stator_angle, float sine_freq,int frequency_change_counter, float* new_hall_time, float* old_hall_time, float offset)
 {	
 	//PWM angle
-	*phase_A_stator_angle=*phase_A_stator_angle+360.0f*CYCLE_TIME* sine_freq+offset;
+	*phase_A_stator_angle=*phase_A_stator_angle+360.0f*CYCLE_TIME* sine_freq;
 
 	if (*phase_A_stator_angle>=360.0f)
 	{

@@ -55,7 +55,7 @@
 #define sine_freq_increment	0.75f
 #define max_sine_freq		20.0f
 #define min_sine_freq		10.0f	
-#define sine_freq_fixed	10.0f
+#define sine_freq_fixed	0.3f
 
 #define attenuation_value 		1.0f
 #define attenuation_max 		1.0f
