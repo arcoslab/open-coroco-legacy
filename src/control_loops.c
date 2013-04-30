@@ -38,6 +38,8 @@
 void open_loop (int* rotor_speed_loop_state, float* attenuation, float* sine_freq, int* frequency_change_counter,float actual_sine_freq)//, float hall_time)
 
 {	
+  *attenuation=0.2f;
+  
 	 if (*sine_freq>20.0f)
 	{
 	  //*rotor_speed_loop_state=CLOSE_LOOP;
