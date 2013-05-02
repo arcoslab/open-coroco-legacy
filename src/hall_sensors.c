@@ -177,7 +177,7 @@ float rotor_frequency_Hz(float hall_time,float previous_hall_time,float rotor_an
 
 	//rotor_frequency=(advance)/(360.0f*previous_hall_time);
 
-
+/*
 	//solo con un hall sensor-------------------------------
 	if (advance>0.0f)
 		rotor_frequency=1.0f/(2.0f*previous_hall_time);
@@ -187,6 +187,8 @@ float rotor_frequency_Hz(float hall_time,float previous_hall_time,float rotor_an
 
 	if (hall_time>=0.5f)//1.0f)
 		rotor_frequency=0.0f;
+*/
+rotor_frequency=-1.0f/(2.0f*previous_hall_time);
 
 	return rotor_frequency;
 }
@@ -219,7 +221,7 @@ void rotor_angle_update(float *rotor_angle, bool *update)
 		*update=false;
 
 
-
+	H=previous_hall_1;
 	*rotor_angle=three_hall_sensor_position_detection (hall_1,hall_2,hall_3);
 }
 

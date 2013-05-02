@@ -87,7 +87,7 @@ void exti1_isr(void)
 
 void tim1_cc_isr (void)
 {
-	static float attenuation;
+	static float attenuation=0.0f;
 
 	// Clear the update interrupt flag
 	timer_clear_flag(TIM1,  TIM_SR_CC1IF);	

@@ -29,7 +29,7 @@
 #define AMPLITUDE_REDUCTION 90.0f 
 
 
-#define OPEN_LOOP_MIN_ATTENUATION 0.8f
+#define OPEN_LOOP_MIN_ATTENUATION 0.15f
 
 
 
@@ -38,16 +38,22 @@
 void open_loop (int* rotor_speed_loop_state, float* attenuation, float* sine_freq, int* frequency_change_counter,float actual_sine_freq)//, float hall_time)
 
 {	
-  *attenuation=0.2f;
+  *attenuation=0.15f;
   
-	 if (*sine_freq>20.0f)
+//0.2 atenuación
+//549Hz velocidad maxima
+
+//0.15 atenuación
+//410Hz veloicidaad máxima
+
+	 if (*sine_freq>350.0f)
 	{
-	  //*rotor_speed_loop_state=CLOSE_LOOP;
+	  *rotor_speed_loop_state=CLOSE_LOOP;
 	}
 	
 	else if (*frequency_change_counter>max_sinusoidal_periods)
 	{
-		*sine_freq=*sine_freq+0.75f;
+		*sine_freq=*sine_freq+1.75f;
 	
 		//dealing with reverse rotation during startup of the motor spin--------
 		//if ( actual_sine_freq>0.0f)// && (hall_time<2.5f) )
@@ -79,18 +85,23 @@ void open_loop (int* rotor_speed_loop_state, float* attenuation, float* sine_fre
 void close_loop(float desired_rotor_frequency,float actual_rotor_frequency,bool update,
 		int* rotor_speed_loop_state,float* sine_frequency,float* attenuation, float* offset)
 {
-	#define K_P 	1.0f/10.0f
+	#define K_P 	0.2f//1.0f//1.0f/10.0f		//a partir de 0.45 se desboca	//0.1 parece perfecto
+		//0.1	197-203
+		//0.2   197-202
+		//0.3	195-203
 	#define K_I	1.0f
 	#define K_D	1.0f	
 	
-	#define MAX_PHASE_ADVANCE 90.0f
+	#define MAX_PHASE_ADVANCE 50.0f
 
 	float
 		//phase_excess=0.0f,
 		close_loop_error=0.0f,
 		phase_advance=0.0f,
 		phase_U=0.0f; 
-		
+
+	//gpio_set(GPIOD, GPIO13);		
+
 	if (update)
 	{
 
@@ -104,19 +115,19 @@ void close_loop(float desired_rotor_frequency,float actual_rotor_frequency,bool 
 		if (phase_U>MAX_PHASE_ADVANCE)
 		{
 			phase_advance=MAX_PHASE_ADVANCE;
-			*attenuation=1.0f;//OPEN_LOOP_MIN_ATTENUATION;//1.0f;
+			*attenuation=OPEN_LOOP_MIN_ATTENUATION;//1.0f;
 		}
 		
 		else if (phase_U<-MAX_PHASE_ADVANCE)
 		{
 			phase_advance=-MAX_PHASE_ADVANCE;
-			*attenuation=1.0f;//OPEN_LOOP_MIN_ATTENUATION;//1.0f;
+			*attenuation=OPEN_LOOP_MIN_ATTENUATION;//1.0f;
 		}
 
 		else
 		{
 			phase_advance=phase_U;
-			*attenuation=1.0f;//OPEN_LOOP_MIN_ATTENUATION;//1.0f;
+			*attenuation=OPEN_LOOP_MIN_ATTENUATION;//1.0f;
 		}
 
 
@@ -135,28 +146,35 @@ void close_loop(float desired_rotor_frequency,float actual_rotor_frequency,bool 
 		if (*attenuation>1.0f)
 			*attenuation=1.0f;
 		*/
-		*offset=phase_advance;
-		//*offset=-0.4f;
+		*offset=phase_advance-0.1f;
+		//*offset=0.0f;
 
-		//-50
-		//-25				se invierte por ratos
-		//-17		-31 	-52
-		//-10		-30	-50	se invierte
-		//-5.0		-20	-45
-		//-1		-25	-40	
-		//-0.5		-25	-40
-		//-0.25f	-99 	-110
-		//0		-110 	-210
-		//0.5		-90	-160
-		//1		-90 	-110
-		//5		-70     -100
-		//10		-50	-90
-		//25		-54	-72
-		//50		-46	-73	se inverte una y otra vez
-		//100		
-	
+//0.0	se acelera rápidamente hasta 400Hz y luego cae a 200
 
-//	S 35       R -34      O 0        A 100      U 64       V 64       E -64      
+
+
+//+20	-120	-140
+//+5	-166	-228
+//+1	-200	-300
+//+0.5	-220	-370
+//+0.1	-220	-400
+//+0.05	-220	-405
+//+0.01	-130	-278
+//0	-220	-410
+//-0.01	se acelera 
+
+//-0.05	-45-47  a veces llega 52 (rebote)
+//-0.1	-48	-52
+//-0.5	-48	-52
+//-0.1	-49	-54
+//-0.25	-47	-52
+//-0.5	-47	-52
+//-1	-45	-52
+//-5	-38	-57
+//-10	-33	-57
+//-15	
+//-25	-24	-56
+//-50	se bloquea
 
 		if (actual_rotor_frequency<0.0f)
 			*sine_frequency=-actual_rotor_frequency;
@@ -232,7 +250,7 @@ void PID_control_loop(float* attenuation)
 	static int rotor_speed_loop_state=OPEN_LOOP;
 	static float old_rotor_angle=0.0f;
 	static float last_read_rotor_angle=0.0f;
-	static float desired_rotor_frequency=-120.0f;	//-130.0f;
+	static float desired_rotor_frequency=-30.0f;	//-130.0f;
 	static float offset=0.0f;
 	static float actual_sine_frequency=0.0f;
 	static float previous_hall_time=0.0f;
@@ -269,6 +287,8 @@ void PID_control_loop(float* attenuation)
 				//hall_time,
 				hall1_data.hall_update,desired_rotor_frequency,&offset);
 	
+	
+	phase_A_stator_angle=phase_A_stator_angle+offset;
 
 	A=sine_freq;
 	B=actual_sine_frequency;

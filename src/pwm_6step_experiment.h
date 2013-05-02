@@ -55,7 +55,7 @@
 #define sine_freq_increment	0.75f
 #define max_sine_freq		20.0f
 #define min_sine_freq		10.0f	
-#define sine_freq_fixed	0.3f
+#define sine_freq_fixed	10.0f
 
 #define attenuation_value 		1.0f
 #define attenuation_max 		1.0f
@@ -150,7 +150,7 @@ float
 	A=0.0f,B=0.0f,C=0.0f;
 
 float
-	E=0.0f,D=0.0f,F=0.0f,G=0.0f;
+	E=0.0f,D=0.0f,F=0.0f,G=0.0f,H=0.0f;
 
 
 

@@ -50,7 +50,7 @@ int main(void)
 	hall3_data.hall_update=false;
 	hall3_data.hall_corrected=LOW;	
 
-	float captured_A,captured_B,captured_C,captured_D,captured_E,captured_F,captured_G;
+	float captured_A,captured_B,captured_C,captured_D,captured_E,captured_F,captured_G,captured_H;
 
 
 	while (1)
@@ -65,7 +65,7 @@ int main(void)
 		captured_E=E;
 		captured_F=F;
 		captured_G=G;
-		
+		captured_H=H;
 
 		//sine frequency
 		usart_send_blocking(USART2, 'S');
@@ -77,7 +77,7 @@ int main(void)
 
 		//offset
 		usart_send_blocking(USART2, 'O');
-		usart_transmit_a_floating_number(captured_C);
+		usart_transmit_a_floating_number(captured_C*1000.0f);
 			
 		//attenuation
 		usart_send_blocking(USART2, 'A');
@@ -94,7 +94,10 @@ int main(void)
 		//close loop error
 		usart_send_blocking(USART2, 'E');
 		usart_transmit_a_floating_number(captured_G);
-
+		
+		//close loop error
+		usart_send_blocking(USART2, 'H');
+		usart_transmit_a_floating_number(captured_H);
 
 		usart_send_blocking(USART2, '\r');
 		usart_send_blocking(USART2, '\n');
