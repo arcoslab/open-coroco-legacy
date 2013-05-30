@@ -20,6 +20,7 @@
 #define MAX_SIZE_FLOATING_NUMBER_CARACTERS 10
 #define MAX_SIZE_INTEGER_NUMBER_CARACTERS 10
 
+
 void usart_transmit_a_floating_number(float value)
 {
 	char array [MAX_SIZE_FLOATING_NUMBER_CARACTERS];
@@ -70,3 +71,56 @@ void usart_transmit_an_integer_number(int value)
 	//usart_send_blocking(USART2, '\r');
 	//usart_send_blocking(USART2, '\n');*/
 }
+
+void usart_transmit_a_string(char* phrase)
+{
+	int string_length;
+	int j=0;
+			
+	string_length=strlen(phrase);
+
+	for (j=0;j<string_length;j++)
+		usart_send_blocking(USART2,phrase[j]);	
+}
+
+void usart_transmit_a_tagged_floating_number(char* tag, float number)
+{
+	usart_transmit_a_string(tag);
+	usart_transmit_a_floating_number(number);
+}
+
+void usart_transmit_a_tagged_integer_number(char* tag, int number)
+{
+	usart_transmit_a_string(tag);
+	usart_transmit_an_integer_number(number);
+}
+
+float usart_receive_a_floating_number(void)
+{
+
+	static float number=0.0f;
+	char string_number[MAX_SIZE_FLOATING_NUMBER_CARACTERS];
+	char character;	
+	int j=0;
+
+	character=usart_recv(USART2);
+
+	if (character=='a')
+	{
+		for (j=0; (j<MAX_SIZE_FLOATING_NUMBER_CARACTERS) && (string_number[j-1]!='k');j++)
+		{
+			string_number[j]=usart_recv_blocking(USART2);
+		}
+
+		number = atoi(string_number);
+	}	
+
+	return number;
+}
+
+void usart_transmit_new_line(void)
+{
+	usart_send_blocking(USART2, '\r');
+	usart_send_blocking(USART2, '\n');
+}
+

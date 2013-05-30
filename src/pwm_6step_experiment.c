@@ -68,39 +68,33 @@ int main(void)
 		captured_H=H;
 
 		//sine frequency
-		usart_send_blocking(USART2, 'S');
-		usart_transmit_a_floating_number(captured_A);
-			
+		usart_transmit_a_tagged_floating_number("e_freq:", captured_A);		
 		//rotor frequency
-		usart_send_blocking(USART2, 'R');
-		usart_transmit_a_floating_number(captured_B);
-
+		usart_transmit_a_tagged_floating_number("speed:", captured_B);	
 		//offset
-		usart_send_blocking(USART2, 'O');
-		usart_transmit_a_floating_number(captured_C*1000.0f);
-			
+		usart_transmit_a_tagged_floating_number("offset:", captured_C*1000.0f);		
 		//attenuation
-		usart_send_blocking(USART2, 'A');
-		usart_transmit_a_floating_number(captured_D*100.0f);
-
+		usart_transmit_a_tagged_floating_number("att:", captured_D*100.0f);	
 		//phase U
-		usart_send_blocking(USART2, 'U');
-		usart_transmit_a_floating_number(captured_E);
-
+		usart_transmit_a_tagged_floating_number("U:", captured_E);	
 		//phase advance
-		usart_send_blocking(USART2, 'V');
-		usart_transmit_a_floating_number(captured_F);
-
+		usart_transmit_a_tagged_floating_number("advance:", captured_F);	
 		//close loop error
-		usart_send_blocking(USART2, 'E');
-		usart_transmit_a_floating_number(captured_G);
-		
-		//close loop error
-		usart_send_blocking(USART2, 'H');
-		usart_transmit_a_floating_number(captured_H);
+		usart_transmit_a_tagged_floating_number("error:",captured_G);		
+		//previous_hall_1
+		//usart_transmit_a_tagged_floating_number("hall1:",captured_H);	
 
-		usart_send_blocking(USART2, '\r');
-		usart_send_blocking(USART2, '\n');
+		float number=0.0f;		
+		number=usart_receive_a_floating_number();
+		usart_transmit_a_tagged_floating_number("number:",number);
+
+
+		usart_transmit_new_line();
+
+
+
+	
+
 
 	}	
 		return 0;
