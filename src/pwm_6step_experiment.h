@@ -154,6 +154,7 @@ float
 	E=0.0f,D=0.0f,F=0.0f,G=0.0f,H=0.0f;
 
 
+float desired_rotor_frequency=-30.0f;
 
 
 #endif

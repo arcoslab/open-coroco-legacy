@@ -118,6 +118,30 @@ float usart_receive_a_floating_number(void)
 	return number;
 }
 
+float usart_receive_controller_parameters(float P,float I,float desired_speed)
+{
+
+	static float number=0.0f;
+	char string_number[MAX_SIZE_FLOATING_NUMBER_CARACTERS];
+	char character;	
+	int j=0;
+
+	character=usart_recv(USART2);
+
+	if (character=='a')
+	{
+		for (j=0; (j<MAX_SIZE_FLOATING_NUMBER_CARACTERS) && (string_number[j-1]!='k');j++)
+		{
+			string_number[j]=usart_recv_blocking(USART2);
+		}
+
+		number = atoi(string_number);
+	}	
+
+	return number;
+}
+
+
 void usart_transmit_new_line(void)
 {
 	usart_send_blocking(USART2, '\r');

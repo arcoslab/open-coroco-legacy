@@ -149,32 +149,7 @@ void close_loop(float desired_rotor_frequency,float actual_rotor_frequency,bool 
 		*offset=phase_advance-0.1f;
 		//*offset=0.0f;
 
-//0.0	se acelera rápidamente hasta 400Hz y luego cae a 200
 
-
-
-//+20	-120	-140
-//+5	-166	-228
-//+1	-200	-300
-//+0.5	-220	-370
-//+0.1	-220	-400
-//+0.05	-220	-405
-//+0.01	-130	-278
-//0	-220	-410
-//-0.01	se acelera 
-
-//-0.05	-45-47  a veces llega 52 (rebote)
-//-0.1	-48	-52
-//-0.5	-48	-52
-//-0.1	-49	-54
-//-0.25	-47	-52
-//-0.5	-47	-52
-//-1	-45	-52
-//-5	-38	-57
-//-10	-33	-57
-//-15	
-//-25	-24	-56
-//-50	se bloquea
 
 		if (actual_rotor_frequency<0.0f)
 			*sine_frequency=-actual_rotor_frequency;
@@ -250,7 +225,7 @@ void PID_control_loop(float* attenuation)
 	static int rotor_speed_loop_state=OPEN_LOOP;
 	static float old_rotor_angle=0.0f;
 	static float last_read_rotor_angle=0.0f;
-	static float desired_rotor_frequency=-30.0f;	//-130.0f;
+	//static float desired_rotor_frequency=-30.0f;	//-130.0f;
 	static float offset=0.0f;
 	static float actual_sine_frequency=0.0f;
 	static float previous_hall_time=0.0f;
@@ -259,6 +234,9 @@ void PID_control_loop(float* attenuation)
 
 	//if (previous_rotor_angle!=rotor_angle)
 		//previous_rotor_angle=rotor_angle;
+	
+	
+
 	
 	
 	rotor_angle_update(&rotor_angle,&hall1_data.hall_update);

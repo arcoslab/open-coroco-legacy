@@ -68,25 +68,25 @@ int main(void)
 		captured_H=H;
 
 		//sine frequency
-		usart_transmit_a_tagged_floating_number("e_freq:", captured_A);		
+		usart_transmit_a_tagged_floating_number("freq", captured_A);		
 		//rotor frequency
-		usart_transmit_a_tagged_floating_number("speed:", captured_B);	
+		usart_transmit_a_tagged_floating_number("speed", captured_B);	
 		//offset
-		usart_transmit_a_tagged_floating_number("offset:", captured_C*1000.0f);		
+		usart_transmit_a_tagged_floating_number("off", captured_C*1000.0f);		
 		//attenuation
-		usart_transmit_a_tagged_floating_number("att:", captured_D*100.0f);	
+		usart_transmit_a_tagged_floating_number("att", captured_D*100.0f);	
 		//phase U
-		usart_transmit_a_tagged_floating_number("U:", captured_E);	
+		usart_transmit_a_tagged_floating_number("U", captured_E);	
 		//phase advance
-		usart_transmit_a_tagged_floating_number("advance:", captured_F);	
+		usart_transmit_a_tagged_floating_number("Ad", captured_F);	
 		//close loop error
-		usart_transmit_a_tagged_floating_number("error:",captured_G);		
+		usart_transmit_a_tagged_floating_number("er",captured_G);		
 		//previous_hall_1
-		//usart_transmit_a_tagged_floating_number("hall1:",captured_H);	
+		usart_transmit_a_tagged_floating_number("h1",captured_H);	
 
-		float number=0.0f;		
-		number=usart_receive_a_floating_number();
-		usart_transmit_a_tagged_floating_number("number:",number);
+		
+		desired_rotor_frequency=usart_receive_a_floating_number();
+		usart_transmit_a_tagged_floating_number("des_speed:",desired_rotor_frequency);
 
 
 		usart_transmit_new_line();
