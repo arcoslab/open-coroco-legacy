@@ -1,0 +1,6 @@
+[submodule "libopencm3"]
+	path = libopencm3
+	url = https://github.com/libopencm3/libopencm3.git
+[submodule "libopencm3-plus"]
+	path = libopencm3-plus
+	url = https://github.com/arcoslab/libopencm3-plus.git
