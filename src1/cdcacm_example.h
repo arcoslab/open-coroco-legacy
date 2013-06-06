@@ -17,3 +17,4 @@
  */
 
 void system_init(void);
+void leds_init(void);
