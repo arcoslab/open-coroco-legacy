@@ -32,9 +32,21 @@ void leds_init(void) {
   gpio_mode_setup(GPIOD, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO15);
 }
 
+void hall_init(void) {
+  /* Enable GPIOB and GPIOE clock. */
+  rcc_peripheral_enable_clock(&RCC_AHB1ENR, RCC_AHB1ENR_IOPBEN);
+  rcc_peripheral_enable_clock(&RCC_AHB1ENR, RCC_AHB1ENR_IOPEEN);
+  /* Set GPIO to 'input floating'. */
+
+  //Hall sensor 1
+  gpio_mode_setup(GPIOE, GPIO_MODE_INPUT, GPIO_PUPD_NONE, GPIO15);
+  gpio_set_af(GPIOE, GPIO_AF0, GPIO15);
+}
+
 void system_init(void) {
   rcc_clock_setup_hse_3v3(&hse_8mhz_3v3[CLOCK_3V3_168MHZ]);
   leds_init();
+  hall_init();
   cdcacm_init();
 }
 
@@ -47,7 +59,11 @@ int main(void)
   int n_char=0;
   setvbuf(stdin,NULL,_IONBF,0); // Sets stdin in unbuffered mode (normal for usart com)
   //printled(3, LRED);
+  int halla;
   while (1){
+    halla=gpio_get(GPIOE, GPIO15);
+    //halla=gpio_read(GPIOE);
+    printf("halla: %d\n", halla);
     //printled(1, LRED);
     /*
     //For reading until enter:
@@ -58,7 +74,7 @@ int main(void)
     */
 
     //For reading until white-spaces and non-words:
-    n_char=scanf("%s", buf);
+    //n_char=scanf("%s", buf);
 
     //For reading 10 chars and then printing them:
     /**for (i=0; i<10; i++) {
@@ -70,7 +86,6 @@ int main(void)
     }
     buf[++i]='\0'; */
     //printled(1, LRED);
-    printf("%s %d\n", buf, n_char);
-    printf("Hola  mundo\n");
+    //printf("%s %d\n", buf, n_char);
   }
 }
