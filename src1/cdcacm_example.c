@@ -215,10 +215,13 @@ int hall_a;
 uint ticks;
 uint period;
 
-int calc_freq(void) {
+#define MYUINT_MAX 536870912
+
+void calc_freq(void) {
   static first=true;
   static int hall_a_last=0;
   static uint last_fall_hall_a_ticks=0;
+  hall_a=HALL_A();
   if (first) {
     hall_a_last=hall_a;
     ticks=0;
@@ -231,14 +234,17 @@ int calc_freq(void) {
       ticks=0;
     }
     if ((hall_a_last > 0) && (hall_a == 0)) {
+      gpio_toggle(LGREEN);
       //hall falling edge: new cycle
       if (ticks > last_fall_hall_a_ticks) {
 	period=ticks-last_fall_hall_a_ticks;
       } else {
 	period=UINT_MAX-last_fall_hall_a_ticks+ticks;
       }
+      last_fall_hall_a_ticks=ticks;
     }
   }
+  hall_a_last=hall_a;
 }
 
 void tim1_up_tim10_isr(void) {
@@ -246,8 +252,7 @@ void tim1_up_tim10_isr(void) {
   // Clear the update interrupt flag
   timer_clear_flag(TIM1,  TIM_SR_UIF);
   gpio_toggle(LBLUE);
-  hall_a=HALL_A();
-  //calc_freq();
+  calc_freq();
   //printled(2,LBLUE);
   //printf("Aqui estoy\n");
 }
@@ -260,12 +265,15 @@ int main(void)
   int c;
   int n_char=0;
   setvbuf(stdin,NULL,_IONBF,0); // Sets stdin in unbuffered mode (normal for usart com)
+  setvbuf(stdout,NULL,_IONBF,0); // Sets stdin in unbuffered mode (normal for usart com)
   //printled(3, LRED);
   while (1){
     //halla=gpio_get(GPIOE, GPIO15);
     //halla=gpio_read(GPIOE);
     printf("ticks: %u, period %u, halla: %d\n", ticks, period, hall_a);
-    
+    //printf("ticks: %u, halla: %d\n", ticks, hall_a);
+    //printf("period: %u, halla: %d\n", period, hall_a);
+
     //printled(1, LRED);
     /*
     //For reading until enter:
