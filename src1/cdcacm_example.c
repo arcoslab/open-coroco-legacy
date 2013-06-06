@@ -28,12 +28,15 @@
 
 //pwm-related timer configuration
 #define SYSFREQ     168000000 //168MHz
-#define PWMFREQ        64000  //32000
-#define PWMFREQ_F       64000.0f //32000.0f
+#define PWMFREQ        32000  //32000
+#define PWMFREQ_F       ((float )(PWMFREQ)) //32000.0f
 #define PRESCALE        1                                       //freq_CK_CNT=freq_CK_PSC/(PSC[15:0]+1)
 #define PWM_PERIOD_ARR  SYSFREQ/( PWMFREQ*(PRESCALE+1) )
 #define deadtime_percentage 0.10f   //10% 87.2us de alto a bajo, 48.8us de bajo a alto 
 #define INIT_DUTY 0.5f
+#define PI 3.1416f
+
+float attenuation=0.3f;
 
 void leds_init(void) {
   rcc_peripheral_enable_clock(&RCC_AHB1ENR, RCC_AHB1ENR_IOPDEN);
@@ -204,7 +207,7 @@ void system_init(void) {
   leds_init();
   hall_init();
   cdcacm_init();
-  printled(2, LRED);
+  printled(4, LRED);
   tim_init();
 }
 
@@ -214,8 +217,12 @@ void system_init(void) {
 int hall_a;
 uint ticks;
 uint period;
+#define TICK_PERIOD 1.0f/PWMFREQ_F
 
 #define MYUINT_MAX 536870912
+
+uint temp_period;
+float est_angle=0;
 
 void calc_freq(void) {
   static first=true;
@@ -234,17 +241,162 @@ void calc_freq(void) {
       ticks=0;
     }
     if ((hall_a_last > 0) && (hall_a == 0)) {
-      gpio_toggle(LGREEN);
       //hall falling edge: new cycle
-      if (ticks > last_fall_hall_a_ticks) {
+      //new rotor position measurement
+      est_angle=0;
+      gpio_toggle(LGREEN);
+      if (ticks > last_fall_hall_a_ticks) { //updating period
 	period=ticks-last_fall_hall_a_ticks;
       } else {
 	period=UINT_MAX-last_fall_hall_a_ticks+ticks;
       }
       last_fall_hall_a_ticks=ticks;
+    } else {
+      //we update period only if is bigger than before
+      if (ticks > last_fall_hall_a_ticks) {
+	temp_period=ticks-last_fall_hall_a_ticks;
+      } else {
+	temp_period=UINT_MAX-last_fall_hall_a_ticks+ticks;
+      }
+      if (temp_period > period) {
+	period=temp_period;
+      }
+      //update estimated current angle
+      est_angle+=2.0f*PI*TICK_PERIOD/(period/TICK_PERIOD);
+      if (est_angle > 2.0f*PI) {
+	est_angle=0;
+      }
     }
   }
   hall_a_last=hall_a;
+}
+
+float duty_a=0.0f;
+float duty_b=0;
+float duty_c=0;
+float ref_freq=1;
+float cur_angle=0;
+#define t ticks/TICK_PERIOD
+int close_loop=false;
+#define P 0.05
+#define I 0.000001
+#define I_MAX 80*PI/180.0f
+#define P_MAX 80*PI/180.0f
+#define PI_MAX 80*PI/180.0f
+float final_ref_freq=40;
+float error, p_error;
+float i_error=0;
+float cmd_angle;
+float pi_control;
+
+void pi_controller(void) {
+  error=ref_freq-1.0f/(period/TICK_PERIOD); // ref_freq-cur_freq
+  p_error=P*error;
+  i_error+=I*error;
+  if (i_error > I_MAX){
+    i_error=I_MAX;
+  }
+  if (i_error < -I_MAX) {
+    i_error=-I_MAX;
+  }
+  if (p_error > P_MAX) {
+    p_error=P_MAX;
+  }
+  if (p_error < -P_MAX) {
+    p_error=-P_MAX;
+  }
+  pi_control=p_error+i_error;
+  if (pi_control > PI_MAX) {
+    pi_control = PI_MAX;
+  }
+  if (pi_control < -PI_MAX) {
+    pi_control = -PI_MAX;
+  }
+  cmd_angle+=pi_control;
+}
+
+#define CUR_FREQ 1.0f/(period/TICK_PERIOD)
+
+void calc_attenuation(void) {
+  if (CUR_FREQ < 10.0f) {
+    attenuation = 0.3f;
+  } else {
+    //attenuation=0.3f+(CUR_FREQ-10.0f)/(30.0f/0.7f);
+  }
+}
+
+void gen_pwm(void) {
+  calc_attenuation();
+
+
+  static float pi_times;
+  cur_angle+=2.0f*PI*TICK_PERIOD*ref_freq;
+  //converting big angles into something between 0 and 2pi
+  if (cur_angle >= (2.0f*PI)) {
+    cur_angle=cur_angle-(2.0f*PI);
+  }
+
+  cmd_angle=est_angle+10*PI/180.0f;
+
+  if (!close_loop) {
+    duty_a=sinf(cur_angle);
+    duty_b=sinf(cur_angle+2.0f*PI/3.0f);
+    duty_c=sinf(cur_angle+4.0f*PI/3.0f);
+  } else {
+    pi_controller();
+    duty_a=sinf(cmd_angle);
+    duty_b=sinf(cmd_angle+2.0f*PI/3.0f);
+    duty_c=sinf(cmd_angle+4.0f*PI/3.0f);
+  }
+
+  if (duty_a < 0.0f)
+    {
+      timer_set_oc_mode(TIM1, TIM_OC1, TIM_OCM_PWM1);
+      timer_disable_oc_output(TIM1,TIM_OC1);
+      timer_enable_oc_output (TIM1, TIM_OC1N);
+      duty_a=-duty_a;
+    }
+  else
+    {
+      timer_set_oc_mode(TIM1, TIM_OC1, TIM_OCM_PWM1);
+      timer_enable_oc_output(TIM1, TIM_OC1 );
+      timer_disable_oc_output (TIM1, TIM_OC1N);
+    }
+  if (duty_b < 0.0f)
+    {
+      timer_set_oc_mode(TIM1, TIM_OC2, TIM_OCM_PWM1);
+      timer_disable_oc_output(TIM1, TIM_OC2 );
+      timer_enable_oc_output (TIM1, TIM_OC2N);
+      duty_b=-duty_b;
+    }
+  else
+    {
+      timer_set_oc_mode(TIM1, TIM_OC2, TIM_OCM_PWM1);
+      timer_enable_oc_output(TIM1, TIM_OC2 );
+      timer_disable_oc_output (TIM1, TIM_OC2N);
+    }
+  if (duty_c < 0.0f)
+    {
+      timer_set_oc_mode(TIM1, TIM_OC3, TIM_OCM_PWM1);
+      timer_disable_oc_output(TIM1, TIM_OC3 );
+      timer_enable_oc_output (TIM1, TIM_OC3N);
+      duty_c=-duty_c;
+    }
+  else
+    {
+      timer_set_oc_mode(TIM1, TIM_OC3, TIM_OCM_PWM1);
+      timer_enable_oc_output(TIM1, TIM_OC3 );
+      timer_disable_oc_output (TIM1, TIM_OC3N);
+    }
+
+  /* Set the capture compare value for OC1. */
+  timer_set_oc_value(TIM1, TIM_OC1, duty_a*attenuation*PWM_PERIOD_ARR);
+  /* Set the capture compare value for OC1. */
+  timer_set_oc_value(TIM1, TIM_OC2, duty_b*attenuation*PWM_PERIOD_ARR);
+  /* Set the capture compare value for OC1. */
+  timer_set_oc_value(TIM1, TIM_OC3, duty_c*attenuation*PWM_PERIOD_ARR);
+  //tim_force_update_event(TIM1);
+
 }
 
 void tim1_up_tim10_isr(void) {
@@ -253,6 +405,7 @@ void tim1_up_tim10_isr(void) {
   timer_clear_flag(TIM1,  TIM_SR_UIF);
   gpio_toggle(LBLUE);
   calc_freq();
+  gen_pwm();
   //printled(2,LBLUE);
   //printf("Aqui estoy\n");
 }
@@ -267,13 +420,34 @@ int main(void)
   setvbuf(stdin,NULL,_IONBF,0); // Sets stdin in unbuffered mode (normal for usart com)
   setvbuf(stdout,NULL,_IONBF,0); // Sets stdin in unbuffered mode (normal for usart com)
   //printled(3, LRED);
+  int counter=0;
+  int new_freq=0;
   while (1){
+    counter++;
     //halla=gpio_get(GPIOE, GPIO15);
     //halla=gpio_read(GPIOE);
-    printf("ticks: %u, period %u, halla: %d\n", ticks, period, hall_a);
+    //printf("ticks: %7u, period %15u, halla: %6d, Period %6.2f, freq: %6.2f, counter %d\n", ticks, period, hall_a, period/TICK_PERIOD, 1.0f/(period/TICK_PERIOD), counter);
+    //printf("ticks: %7u, duty_a %6.2f, angle %6.1f\n", ticks, duty_a*attenuation*PWM_PERIOD_ARR, cur_angle);
+    printf("a: %6.1f, e_a: %6.1f, c_f: %6.2f, ref_f: %6.2f", cur_angle, est_angle, 1.0f/(period/TICK_PERIOD), ref_freq);
+    wait(10);
+    if (ref_freq < 9.0f) {
+      ref_freq+=0.2;
+    } else {
+      close_loop=true;
+      //pi_controller();
+    }
+    printf(" e: %6.2f, e_p %6.2f, e_i: %6.2f, c_a: %6.2f\n", error, p_error, i_error, pi_control*180.0f/PI);
+    if (close_loop) {
+      ref_freq=20.0f;
+      //printf("close loop\n");
+      scanf("%d", &new_freq);
+      printf("New freq: %d\n", new_freq);
+      ref_freq=new_freq;
+      //ref_freq+=0.2;
+    }
     //printf("ticks: %u, halla: %d\n", ticks, hall_a);
     //printf("period: %u, halla: %d\n", period, hall_a);
-
+    wait(10);
     //printled(1, LRED);
     /*
     //For reading until enter:
