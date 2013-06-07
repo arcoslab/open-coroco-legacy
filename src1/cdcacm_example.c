@@ -36,7 +36,7 @@
 #define INIT_DUTY 0.5f
 #define PI 3.1416f
 #define MIN_ATTENUATION 0.3f
-#define MAX_ATTENUATION 0.7f
+#define MAX_ATTENUATION 1.0f
 
 float attenuation=MIN_ATTENUATION;
 
