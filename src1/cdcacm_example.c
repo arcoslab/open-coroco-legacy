@@ -35,8 +35,10 @@
 #define deadtime_percentage 0.10f   //10% 87.2us de alto a bajo, 48.8us de bajo a alto 
 #define INIT_DUTY 0.5f
 #define PI 3.1416f
+#define MIN_ATTENUATION 0.3f
+#define MAX_ATTENUATION 0.7f
 
-float attenuation=0.3f;
+float attenuation=MIN_ATTENUATION;
 
 void leds_init(void) {
   rcc_peripheral_enable_clock(&RCC_AHB1ENR, RCC_AHB1ENR_IOPDEN);
@@ -278,12 +280,17 @@ float cur_angle=0;
 int close_loop=false;
 #define P 0.01
 #define P_DOWN 0.0001 //To control deacceleration speed and therefore braking current
+#define P_DOWN 0.01 //To control deacceleration speed and therefore braking current
 #define I 0.000001
+#define I 0.0000004 //NMB motor
 #define I_DOWN 0.00000001 //To control deacceleration speed and therefore braking current
+#define I_DOWN 0.0000001 //To control deacceleration speed and therefore braking current /NMB motors
+#define I 0.0000004 //NMB motor
+#define I_DOWN 0.0000004 //NMB motor
 #define I_MAX 80*PI/180.0f
 #define P_MAX 80*PI/180.0f
-#define PI_MAX 89*PI/180.0f
-#define PI_MIN -10*PI/180.0f
+#define PI_MAX 87*PI/180.0f
+#define PI_MIN -1*PI/180.0f
 float final_ref_freq=40;
 float error, p_error;
 float i_error=0;
@@ -318,19 +325,27 @@ void pi_controller(void) {
   if (pi_control > PI_MAX) {
     pi_control = PI_MAX;
   }
-  if (pi_control < -PI_MAX) {
-    pi_control = -PI_MAX;
+  if (pi_control < PI_MIN) {
+    pi_control = PI_MIN;
   }
   cmd_angle+=pi_control;
+  if (pi_control >= 0.0f) {
+    attenuation=MIN_ATTENUATION+pi_control/(PI_MAX/(MAX_ATTENUATION-MIN_ATTENUATION));
+  } else {
+    attenuation=MIN_ATTENUATION-pi_control/(PI_MAX/(MAX_ATTENUATION-MIN_ATTENUATION));
+  }
 }
 
 #define CUR_FREQ 1.0f/(period/TICK_PERIOD)
 
 void calc_attenuation(void) {
-  if (CUR_FREQ < 10.0f) {
+  if (CUR_FREQ < 20.0f) { //freq at which attenuation starts to increase
     attenuation = 0.3f;
   } else {
-    //attenuation=0.3f+(CUR_FREQ-10.0f)/(30.0f/0.7f);
+    attenuation=0.3f+(CUR_FREQ-20.0f)/(500.0f/0.7f); //500 top freq of motor
+    if (attenuation > 1.0f ) {
+      attenuation = 1.0f;
+    }
   }
 }
 
@@ -345,10 +360,10 @@ void gen_pwm(void) {
   }
 
   if ((cur_angle >= 89.0f*PI/180.0f) && (cur_angle <= 91.0f*PI/180.0f)) {
-    gpio_toggle(LBLUE);
+    //gpio_toggle(LBLUE); //To indicate start of electric cycle
   }
 
-  cmd_angle=est_angle+10.0f*PI/180.0f;
+  cmd_angle=est_angle+140.0f*PI/180.0f;
 
   if (!close_loop) {
     duty_a=sinf(cur_angle);
@@ -434,6 +449,7 @@ int main(void)
   //printled(3, LRED);
   int counter=0;
   int new_freq=0;
+  int first_closed=true;
   while (1){
     counter++;
     //halla=gpio_get(GPIOE, GPIO15);
@@ -444,14 +460,19 @@ int main(void)
     //printf("a: %6.1f, e_a: %6.1f, c_f: %6.2f, ref_f: %6.2f\n", cur_angle, est_angle, 1.0f/(period/TICK_PERIOD), ref_freq);
     //printf("cur_angle: %6.1f, est_angle: %6.1f\n", cur_angle, est_angle);
     wait(30);
-    if (ref_freq < 9.0f) {
-      ref_freq+=0.2f;
+    if (ref_freq < 15.0f) {
+      ref_freq+=0.8f;
     } else {
       close_loop=true;
+      //ref_freq=100.0f;
       //ref_freq=400.0f;
       //pi_controller();
     }
-    printf(" e: %6.2f, e_p %6.2f, e_i: %6.2f, c_a: %6.2f, c_f: %6.2f\n", error, p_error, i_error, pi_control*180.0f/PI, 1.0f/(period/TICK_PERIOD));
+    if (close_loop && first_closed) {
+      first_closed=false;
+      ref_freq=100.0f;
+    }
+    printf(" e: %6.2f, e_p %6.2f, e_i: %6.2f, adv: %6.2f, c_f: %6.2f, r_f: %6.2f, att: %6.2f, counter %d\n", error, p_error, i_error, pi_control*180.0f/PI, 1.0f/(period/TICK_PERIOD), ref_freq, attenuation, counter);
     if (close_loop) {
       //ref_freq=20.0f;
       printf("close loop. Enter new frequency.\n");
