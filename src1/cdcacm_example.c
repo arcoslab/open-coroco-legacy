@@ -57,7 +57,6 @@ void hall_init(void) {
   gpio_set_af(GPIOE, GPIO_AF0, GPIO15);
 }
 
-
 void tim_init(void)
 {
 	/* Enable TIM1 clock. and Port E clock (for outputs) */
@@ -201,7 +200,6 @@ void tim_init(void)
 
 }
 
-
 void system_init(void) {
   rcc_clock_setup_hse_3v3(&hse_8mhz_3v3[CLOCK_3V3_168MHZ]);
   leds_init();
@@ -278,11 +276,14 @@ float ref_freq=1;
 float cur_angle=0;
 #define t ticks/TICK_PERIOD
 int close_loop=false;
-#define P 0.05
+#define P 0.01
+#define P_DOWN 0.0001
 #define I 0.000001
+#define I_DOWN 0.00000001
 #define I_MAX 80*PI/180.0f
 #define P_MAX 80*PI/180.0f
-#define PI_MAX 80*PI/180.0f
+#define PI_MAX 89*PI/180.0f
+#define PI_MIN -10*PI/180.0f
 float final_ref_freq=40;
 float error, p_error;
 float i_error=0;
@@ -291,8 +292,16 @@ float pi_control;
 
 void pi_controller(void) {
   error=ref_freq-1.0f/(period/TICK_PERIOD); // ref_freq-cur_freq
-  p_error=P*error;
-  i_error+=I*error;
+  if (error > 0.0f) {
+    p_error=P*error;
+  } else {
+    p_error=P_DOWN*error;
+  }
+  if (error > 0.0f) {
+    i_error+=I*error;
+  } else {
+    i_error+=I_DOWN*error;
+  }
   if (i_error > I_MAX){
     i_error=I_MAX;
   }
@@ -303,7 +312,7 @@ void pi_controller(void) {
     p_error=P_MAX;
   }
   if (p_error < -P_MAX) {
-    p_error=-P_MAX;
+    p_error= -P_MAX;
   }
   pi_control=p_error+i_error;
   if (pi_control > PI_MAX) {
@@ -326,8 +335,7 @@ void calc_attenuation(void) {
 }
 
 void gen_pwm(void) {
-  calc_attenuation();
-
+  //calc_attenuation();
 
   static float pi_times;
   cur_angle+=2.0f*PI*TICK_PERIOD*ref_freq;
@@ -336,7 +344,11 @@ void gen_pwm(void) {
     cur_angle=cur_angle-(2.0f*PI);
   }
 
-  cmd_angle=est_angle+10*PI/180.0f;
+  if ((cur_angle >= 89.0f*PI/180.0f) && (cur_angle <= 91.0f*PI/180.0f)) {
+    gpio_toggle(LBLUE);
+  }
+
+  cmd_angle=est_angle+10.0f*PI/180.0f;
 
   if (!close_loop) {
     duty_a=sinf(cur_angle);
@@ -400,10 +412,10 @@ void gen_pwm(void) {
 }
 
 void tim1_up_tim10_isr(void) {
-
+  
   // Clear the update interrupt flag
   timer_clear_flag(TIM1,  TIM_SR_UIF);
-  gpio_toggle(LBLUE);
+  //gpio_toggle(LBLUE);
   calc_freq();
   gen_pwm();
   //printled(2,LBLUE);
@@ -428,26 +440,29 @@ int main(void)
     //halla=gpio_read(GPIOE);
     //printf("ticks: %7u, period %15u, halla: %6d, Period %6.2f, freq: %6.2f, counter %d\n", ticks, period, hall_a, period/TICK_PERIOD, 1.0f/(period/TICK_PERIOD), counter);
     //printf("ticks: %7u, duty_a %6.2f, angle %6.1f\n", ticks, duty_a*attenuation*PWM_PERIOD_ARR, cur_angle);
-    printf("a: %6.1f, e_a: %6.1f, c_f: %6.2f, ref_f: %6.2f", cur_angle, est_angle, 1.0f/(period/TICK_PERIOD), ref_freq);
-    wait(10);
+    //printf("hola\n");
+    //printf("a: %6.1f, e_a: %6.1f, c_f: %6.2f, ref_f: %6.2f\n", cur_angle, est_angle, 1.0f/(period/TICK_PERIOD), ref_freq);
+    //printf("cur_angle: %6.1f, est_angle: %6.1f\n", cur_angle, est_angle);
+    wait(30);
     if (ref_freq < 9.0f) {
-      ref_freq+=0.2;
+      ref_freq+=0.2f;
     } else {
       close_loop=true;
+      //ref_freq=400.0f;
       //pi_controller();
     }
-    printf(" e: %6.2f, e_p %6.2f, e_i: %6.2f, c_a: %6.2f\n", error, p_error, i_error, pi_control*180.0f/PI);
+    printf(" e: %6.2f, e_p %6.2f, e_i: %6.2f, c_a: %6.2f, c_f: %6.2f\n", error, p_error, i_error, pi_control*180.0f/PI, 1.0f/(period/TICK_PERIOD));
     if (close_loop) {
-      ref_freq=20.0f;
-      //printf("close loop\n");
-      scanf("%d", &new_freq);
+      //ref_freq=20.0f;
+      printf("close loop. Enter new frequency.\n");
+      scanf("%f", &ref_freq);
       printf("New freq: %d\n", new_freq);
-      ref_freq=new_freq;
+      //ref_freq=new_freq;
       //ref_freq+=0.2;
     }
     //printf("ticks: %u, halla: %d\n", ticks, hall_a);
     //printf("period: %u, halla: %d\n", period, hall_a);
-    wait(10);
+    //wait(10);
     //printled(1, LRED);
     /*
     //For reading until enter:
