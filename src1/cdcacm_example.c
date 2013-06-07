@@ -277,9 +277,9 @@ float cur_angle=0;
 #define t ticks/TICK_PERIOD
 int close_loop=false;
 #define P 0.01
-#define P_DOWN 0.0001
+#define P_DOWN 0.0001 //To control deacceleration speed and therefore braking current
 #define I 0.000001
-#define I_DOWN 0.00000001
+#define I_DOWN 0.00000001 //To control deacceleration speed and therefore braking current
 #define I_MAX 80*PI/180.0f
 #define P_MAX 80*PI/180.0f
 #define PI_MAX 89*PI/180.0f
@@ -456,7 +456,7 @@ int main(void)
       //ref_freq=20.0f;
       printf("close loop. Enter new frequency.\n");
       scanf("%f", &ref_freq);
-      printf("New freq: %d\n", new_freq);
+      printf("New freq: %f\n", ref_freq);
       //ref_freq=new_freq;
       //ref_freq+=0.2;
     }
