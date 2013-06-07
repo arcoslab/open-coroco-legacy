@@ -23,5 +23,8 @@ OBJS :=
 
 LDSCRIPT = ../libopencm3-plus/libopencm3_plus.ld
 
+OOCD_INTERFACE = stlink-v2
+OOCD_BOARD = stm32f4discovery
+
 include Makefile.include
 

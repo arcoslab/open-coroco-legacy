@@ -475,7 +475,7 @@ int main(void)
     //printf("hola\n");
     //printf("a: %6.1f, e_a: %6.1f, c_f: %6.2f, ref_f: %6.2f\n", cur_angle, est_angle, 1.0f/(period/TICK_PERIOD), ref_freq);
     //printf("cur_angle: %6.1f, est_angle: %6.1f\n", cur_angle, est_angle);
-    wait(1);
+    //wait(1);
     //if (ref_freq < 3.0f) {
     //  ref_freq+=0.8f;
     //} else {
@@ -487,9 +487,9 @@ int main(void)
     printf(" e: %6.2f, e_p %6.2f, e_i: %6.2f, adv: %6.2f, c_f: %6.2f, r_f: %6.2f, att: %6.2f, counter %d\n", error, p_error, i_error, pi_control*180.0f/PI, 1.0f/(period/TICK_PERIOD), ref_freq, attenuation, counter);
     if (close_loop) {
       //ref_freq=20.0f;
-      printf("close loop. Enter new frequency.\n");
-      scanf("%f", &ref_freq);
-      printf("New freq: %f\n", ref_freq);
+      //printf("close loop. Enter new frequency.\n");
+      //scanf("%f", &ref_freq);
+      //printf("New freq: %f\n", ref_freq);
       //ref_freq=new_freq;
       //ref_freq+=0.2;
     }
