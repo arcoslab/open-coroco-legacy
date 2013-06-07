@@ -349,6 +349,23 @@ void calc_attenuation(void) {
   }
 }
 
+int first_closed=false;
+
+void start_up(void) {
+  if (CUR_FREQ < 3.0f) {
+    //printf("Open loop\n");
+    ref_freq=5.0f;
+    close_loop=false;
+    first_closed=true;
+  } else {
+    close_loop=true;
+  }
+  if (close_loop && first_closed) {
+    first_closed=false;
+    ref_freq=100.0f;
+  }
+}
+
 void gen_pwm(void) {
   //calc_attenuation();
 
@@ -427,11 +444,11 @@ void gen_pwm(void) {
 }
 
 void tim1_up_tim10_isr(void) {
-  
   // Clear the update interrupt flag
   timer_clear_flag(TIM1,  TIM_SR_UIF);
   //gpio_toggle(LBLUE);
   calc_freq();
+  start_up();
   gen_pwm();
   //printled(2,LBLUE);
   //printf("Aqui estoy\n");
@@ -449,7 +466,6 @@ int main(void)
   //printled(3, LRED);
   int counter=0;
   int new_freq=0;
-  int first_closed=true;
   while (1){
     counter++;
     //halla=gpio_get(GPIOE, GPIO15);
@@ -459,19 +475,15 @@ int main(void)
     //printf("hola\n");
     //printf("a: %6.1f, e_a: %6.1f, c_f: %6.2f, ref_f: %6.2f\n", cur_angle, est_angle, 1.0f/(period/TICK_PERIOD), ref_freq);
     //printf("cur_angle: %6.1f, est_angle: %6.1f\n", cur_angle, est_angle);
-    wait(30);
-    if (ref_freq < 15.0f) {
-      ref_freq+=0.8f;
-    } else {
-      close_loop=true;
+    wait(1);
+    //if (ref_freq < 3.0f) {
+    //  ref_freq+=0.8f;
+    //} else {
+    //  close_loop=true;
       //ref_freq=100.0f;
       //ref_freq=400.0f;
       //pi_controller();
-    }
-    if (close_loop && first_closed) {
-      first_closed=false;
-      ref_freq=100.0f;
-    }
+    //}
     printf(" e: %6.2f, e_p %6.2f, e_i: %6.2f, adv: %6.2f, c_f: %6.2f, r_f: %6.2f, att: %6.2f, counter %d\n", error, p_error, i_error, pi_control*180.0f/PI, 1.0f/(period/TICK_PERIOD), ref_freq, attenuation, counter);
     if (close_loop) {
       //ref_freq=20.0f;
