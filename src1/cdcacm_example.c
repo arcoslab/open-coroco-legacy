@@ -20,11 +20,12 @@
 #include <libopencm3/stm32/f4/gpio.h>
 #include <libopencm3/stm32/f4/timer.h>
 #include <libopencm3/stm32/f4/nvic.h>
-#include "cdcacm_example.h"
-#include "cdcacm/cdcacm.h"
+#include <f4discovery/syscall.h>
+#include <cdcacm_example.h>
+#include <cdcacm/cdcacm.h>
 #include <stdio.h>
-#include "utils/mutex.h"
-#include "utils/misc.h"
+#include <utils/mutex.h>
+#include <utils/misc.h>
 
 //pwm-related timer configuration
 #define SYSFREQ     168000000 //168MHz
@@ -382,7 +383,7 @@ void gen_pwm(void) {
     //gpio_toggle(LBLUE); //To indicate start of electric cycle
   }
 
-  cmd_angle=est_angle+140.0f*PI/180.0f;
+  cmd_angle=est_angle+136.0f*PI/180.0f;
 
   if (!close_loop) {
     duty_a=sinf(cur_angle);
@@ -465,18 +466,78 @@ void tim1_up_tim10_isr(void) {
 int main(void)
 {
   system_init();
-  char buf[50]="hola_orig";
+  char cmd_s[50]="";
+  char cmd[10]="";
+  char confirm[10]="";
   int i, j;
-  int c;
+  int c=0;
   int n_char=0;
   setvbuf(stdin,NULL,_IONBF,0); // Sets stdin in unbuffered mode (normal for usart com)
   setvbuf(stdout,NULL,_IONBF,0); // Sets stdin in unbuffered mode (normal for usart com)
   //printled(3, LRED);
   int counter=0;
   int new_freq=0;
+  int eof;
+  float value;
+  while (poll(stdin) > 0) {
+    printf("Cleaning stdin\n");
+    getc(stdin);
+  }
+  int motor_stop=false;
+  motor_off=false;
   while (1){
-    motor_off=true;
     counter++;
-    printf(" e: %6.2f, e_p %6.2f, e_i: %6.2f, adv: %6.2f, c_f: %6.2f, r_f: %6.2f, att: %6.2f, counter %d\n\r", error, p_error, i_error, pi_control*180.0f/PI, 1.0f/(period/TICK_PERIOD), ref_freq, attenuation, counter);
+    //printled(1, LRED);
+    if (motor_stop) {
+      if (CUR_FREQ < 30.0f) {
+	printf("Motor Off\n");
+	motor_off=true;
+	close_loop=false;
+	ref_freq=1.0f;
+      }
+    }
+    if ((poll(stdin) > 0)) {
+      i=0;
+      if (poll(stdin) > 0) {
+	c=0;
+	while (c!='\r') {
+	  c=getc(stdin);
+	  cmd_s[i]=c;
+	  i++;
+	  putc(c, stdout);
+	//fflush(stdout);
+	}
+	cmd_s[i]='\0';
+      }
+      printf("%s", cmd_s);
+      sscanf(cmd_s, "%s %f", cmd, &value);
+      if (strcmp(cmd, "f") == 0){ //set ref freq
+	printf("New reference frequency: %f. Confirm? (Press \"y\")\n", value);
+	//scanf("%s", confirm);
+	//if ((strcmp(confirm, "y") ==0 )) {
+	//  printf("Confirmed!\n");
+	ref_freq=value;
+	if (value == 0.0f) {
+	  motor_stop=true;
+	} else {
+	  printf("Motor on\n");
+	  motor_stop=false;
+	  motor_off=false;
+	}
+	//} else {
+	//  printf("Cancelled!\n");
+	//}
+	//printled(2, LRED);
+      }
+      //c=getc(stdin);
+    }
+    if (!close_loop) {
+      while (poll(stdin) > 0) {
+	getc(stdin);
+      }
+    } else {
+      //printf("Close loop\n");
+    }
+    printf(" e: %6.2f, e_p %6.2f, e_i: %6.2f, adv: %6.2f, c_f: %6.2f, r_f: %6.2f, att: %6.2f, counter %d, eof %d, buf: %s, v %f\n", error, p_error, i_error, pi_control*180.0f/PI, 1.0f/(period/TICK_PERIOD), ref_freq, attenuation, counter, eof, cmd, value);
   }
 }
