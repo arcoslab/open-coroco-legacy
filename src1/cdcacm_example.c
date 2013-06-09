@@ -26,6 +26,9 @@
 #include <stdio.h>
 #include <utils/mutex.h>
 #include <utils/misc.h>
+#include <limits.h>
+#include <stdbool.h>
+#include "motor.h"
 
 //pwm-related timer configuration
 #define SYSFREQ     168000000 //168MHz
@@ -33,14 +36,34 @@
 #define PWMFREQ_F       ((float )(PWMFREQ)) //32000.0f
 #define PRESCALE        1                                       //freq_CK_CNT=freq_CK_PSC/(PSC[15:0]+1)
 #define PWM_PERIOD_ARR  SYSFREQ/( PWMFREQ*(PRESCALE+1) )
-#define deadtime_percentage 0.10f   //10% 87.2us de alto a bajo, 48.8us de bajo a alto 
 #define INIT_DUTY 0.5f
 #define PI 3.1416f
-#define MIN_ATTENUATION 0.1f
-#define MAX_ATTENUATION 1.0f
-#define MAX_MOTOR_FREQ 780.0f
+#define TICK_PERIOD 1.0f/PWMFREQ_F
+#define MYUINT_MAX 536870912
+#define t ticks/TICK_PERIOD
+#define CUR_FREQ 1.0f/(period/TICK_PERIOD)
+
+#define HALL_A() gpio_get(GPIOE, GPIO15);
 
 float attenuation=MIN_ATTENUATION;
+int hall_a;
+uint ticks;
+uint period;
+uint temp_period;
+float est_angle=0;
+float duty_a=0.0f;
+float duty_b=0;
+float duty_c=0;
+float ref_freq=1;
+float cur_angle=0;
+float final_ref_freq=40;
+float error, p_error;
+float i_error=0;
+float cmd_angle;
+float pi_control;
+int close_loop=false;
+int first_closed=false;
+int motor_off;
 
 void leds_init(void) {
   rcc_peripheral_enable_clock(&RCC_AHB1ENR, RCC_AHB1ENR_IOPDEN);
@@ -201,7 +224,6 @@ void tim_init(void)
 	//timer_enable_irq(TIM1, TIM_DIER_CC1IE);
 	timer_enable_irq(TIM1, TIM_DIER_UIE);
 	nvic_enable_irq(NVIC_TIM1_UP_TIM10_IRQ);
-
 }
 
 void system_init(void) {
@@ -212,19 +234,6 @@ void system_init(void) {
   printled(4, LRED);
   tim_init();
 }
-
-#include <limits.h>
-#include <stdbool.h>
-#define HALL_A() gpio_get(GPIOE, GPIO15);
-int hall_a;
-uint ticks;
-uint period;
-#define TICK_PERIOD 1.0f/PWMFREQ_F
-
-#define MYUINT_MAX 536870912
-
-uint temp_period;
-float est_angle=0;
 
 void calc_freq(void) {
   static first=true;
@@ -273,34 +282,8 @@ void calc_freq(void) {
   hall_a_last=hall_a;
 }
 
-float duty_a=0.0f;
-float duty_b=0;
-float duty_c=0;
-float ref_freq=1;
-float cur_angle=0;
-#define t ticks/TICK_PERIOD
-int close_loop=false;
-#define P 0.01
-#define P_DOWN 0.0001 //To control deacceleration speed and therefore braking current
-#define P_DOWN 0.01 //To control deacceleration speed and therefore braking current
-#define I 0.000001
-#define I 0.0000004 //NMB motor
-#define I_DOWN 0.00000001 //To control deacceleration speed and therefore braking current
-#define I_DOWN 0.0000001 //To control deacceleration speed and therefore braking current /NMB motors
-#define I 0.0000004 //NMB motor
-#define I_DOWN 0.0000004 //NMB motor
-#define I_MAX 80*PI/180.0f
-#define P_MAX 80*PI/180.0f
-#define PI_MAX 87*PI/180.0f
-#define PI_MIN -1*PI/180.0f
-float final_ref_freq=40;
-float error, p_error;
-float i_error=0;
-float cmd_angle;
-float pi_control;
-
 void pi_controller(void) {
-  error=ref_freq-1.0f/(period/TICK_PERIOD); // ref_freq-cur_freq
+  error=ref_freq-CUR_FREQ; // ref_freq-cur_freq
   if (error > 0.0f) {
     p_error=P*error;
   } else {
@@ -338,25 +321,21 @@ void pi_controller(void) {
   }
 }
 
-#define CUR_FREQ 1.0f/(period/TICK_PERIOD)
-
 void calc_attenuation(void) {
-  if (CUR_FREQ < 20.0f) { //freq at which attenuation starts to increase
-    attenuation = 0.3f;
+  if (CUR_FREQ < START_ATTENUATION_FREQ) { //freq at which attenuation starts to increase
+    attenuation = MIN_ATTENUATION;
   } else {
-    attenuation=0.3f+(CUR_FREQ-20.0f)/(500.0f/0.7f); //500 top freq of motor
-    if (attenuation > 1.0f ) {
-      attenuation = 1.0f;
+    attenuation=MIN_ATTENUATION+(CUR_FREQ-START_ATTENUATION_FREQ)/(MAX_MOTOR_FREQ/(MAX_ATTENUATION-MIN_ATTENUATION)); //500 top freq of motor
+    if (attenuation > MAX_ATTENUATION ) {
+      attenuation = MAX_ATTENUATION;
     }
   }
 }
 
-int first_closed=false;
-
 void start_up(void) {
-  if (CUR_FREQ < 3.0f) {
+  if (CUR_FREQ < MIN_CLOSE_LOOP_FREQ) {
     //printf("Open loop\n");
-    ref_freq=5.0f;
+    ref_freq=START_UP_REF_FREQ;
     close_loop=false;
     first_closed=true;
   } else {
@@ -364,11 +343,9 @@ void start_up(void) {
   }
   if (close_loop && first_closed) {
     first_closed=false;
-    ref_freq=100.0f;
+    ref_freq=FIRST_CLOSE_LOOP_REF_FREQ;
   }
 }
-
-int motor_off;
 
 void gen_pwm(void) {
   //calc_attenuation();
@@ -384,7 +361,7 @@ void gen_pwm(void) {
     //gpio_toggle(LBLUE); //To indicate start of electric cycle
   }
 
-  cmd_angle=est_angle+136.0f*PI/180.0f;
+  cmd_angle=est_angle+HALL_CAL_OFFSET*PI/180.0f;
 
   if (!close_loop) {
     duty_a=sinf(cur_angle);
@@ -450,18 +427,14 @@ void gen_pwm(void) {
   /* Set the capture compare value for OC1. */
   timer_set_oc_value(TIM1, TIM_OC3, duty_c*attenuation*PWM_PERIOD_ARR);
   //tim_force_update_event(TIM1);
-
 }
 
 void tim1_up_tim10_isr(void) {
   // Clear the update interrupt flag
   timer_clear_flag(TIM1,  TIM_SR_UIF);
-  //gpio_toggle(LBLUE);
   calc_freq();
   start_up();
   gen_pwm();
-  //printled(2,LBLUE);
-  //printf("Aqui estoy\n");
 }
 
 int main(void)
@@ -479,7 +452,7 @@ int main(void)
   int counter=0;
   int new_freq=0;
   int eof;
-  float value=100.0f;
+  float value=FIRST_CLOSE_LOOP_REF_FREQ;
   while (poll(stdin) > 0) {
     printf("Cleaning stdin\n");
     getc(stdin);
@@ -490,11 +463,11 @@ int main(void)
     counter++;
     //printled(1, LRED);
     if (motor_stop) {
-      if (CUR_FREQ < 30.0f) {
+      if (CUR_FREQ < FREQ_TO_STOP_MOTOR) {
 	printf("Motor Off\n");
 	motor_off=true;
 	close_loop=false;
-	ref_freq=1.0f;
+	ref_freq=START_UP_REF_FREQ; //before 1.0f
       }
     }
     if ((poll(stdin) > 0)) {
