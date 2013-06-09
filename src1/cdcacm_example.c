@@ -38,6 +38,7 @@
 #define PI 3.1416f
 #define MIN_ATTENUATION 0.3f
 #define MAX_ATTENUATION 1.0f
+#define MAX_MOTOR_FREQ 780.0f
 
 float attenuation=MIN_ATTENUATION;
 
@@ -478,7 +479,7 @@ int main(void)
   int counter=0;
   int new_freq=0;
   int eof;
-  float value;
+  float value=100.0f;
   while (poll(stdin) > 0) {
     printf("Cleaning stdin\n");
     getc(stdin);
@@ -536,6 +537,7 @@ int main(void)
 	getc(stdin);
       }
     } else {
+      ref_freq=value;
       //printf("Close loop\n");
     }
     printf(" e: %6.2f, e_p %6.2f, e_i: %6.2f, adv: %6.2f, c_f: %6.2f, r_f: %6.2f, att: %6.2f, counter %d, eof %d, buf: %s, v %f\n", error, p_error, i_error, pi_control*180.0f/PI, 1.0f/(period/TICK_PERIOD), ref_freq, attenuation, counter, eof, cmd, value);
