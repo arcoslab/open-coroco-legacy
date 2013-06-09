@@ -244,7 +244,7 @@ void calc_freq(void) {
       //hall falling edge: new cycle
       //new rotor position measurement
       est_angle=0;
-      gpio_toggle(LGREEN);
+      //gpio_toggle(LGREEN);
       if (ticks > last_fall_hall_a_ticks) { //updating period
 	period=ticks-last_fall_hall_a_ticks;
       } else {
@@ -366,6 +366,8 @@ void start_up(void) {
   }
 }
 
+int motor_off;
+
 void gen_pwm(void) {
   //calc_attenuation();
 
@@ -391,6 +393,12 @@ void gen_pwm(void) {
     duty_a=sinf(cmd_angle);
     duty_b=sinf(cmd_angle+2.0f*PI/3.0f);
     duty_c=sinf(cmd_angle+4.0f*PI/3.0f);
+  }
+
+  if (motor_off) {
+    duty_a=0;
+    duty_b=0;
+    duty_c=0;
   }
 
   if (duty_a < 0.0f)
@@ -467,57 +475,8 @@ int main(void)
   int counter=0;
   int new_freq=0;
   while (1){
+    motor_off=true;
     counter++;
-    //halla=gpio_get(GPIOE, GPIO15);
-    //halla=gpio_read(GPIOE);
-    //printf("ticks: %7u, period %15u, halla: %6d, Period %6.2f, freq: %6.2f, counter %d\n", ticks, period, hall_a, period/TICK_PERIOD, 1.0f/(period/TICK_PERIOD), counter);
-    //printf("ticks: %7u, duty_a %6.2f, angle %6.1f\n", ticks, duty_a*attenuation*PWM_PERIOD_ARR, cur_angle);
-    //printf("hola\n");
-    //printf("a: %6.1f, e_a: %6.1f, c_f: %6.2f, ref_f: %6.2f\n", cur_angle, est_angle, 1.0f/(period/TICK_PERIOD), ref_freq);
-    //printf("cur_angle: %6.1f, est_angle: %6.1f\n", cur_angle, est_angle);
-    //wait(1);
-    //if (ref_freq < 3.0f) {
-    //  ref_freq+=0.8f;
-    //} else {
-    //  close_loop=true;
-      //ref_freq=100.0f;
-      //ref_freq=400.0f;
-      //pi_controller();
-    //}
-    printf(" e: %6.2f, e_p %6.2f, e_i: %6.2f, adv: %6.2f, c_f: %6.2f, r_f: %6.2f, att: %6.2f, counter %d\n", error, p_error, i_error, pi_control*180.0f/PI, 1.0f/(period/TICK_PERIOD), ref_freq, attenuation, counter);
-    if (close_loop) {
-      //ref_freq=20.0f;
-      //printf("close loop. Enter new frequency.\n");
-      //scanf("%f", &ref_freq);
-      //printf("New freq: %f\n", ref_freq);
-      //ref_freq=new_freq;
-      //ref_freq+=0.2;
-    }
-    //printf("ticks: %u, halla: %d\n", ticks, hall_a);
-    //printf("period: %u, halla: %d\n", period, hall_a);
-    //wait(10);
-    //printled(1, LRED);
-    /*
-    //For reading until enter:
-    n_char=scanf("%[^\r]", buf); // minicom generates \r for enters
-    c=getc(stdin); //To remove the \r from the buffer. If not,
-                   //the next time scanf is called will always
-                   //read \r not print it and printing nothing as a result. Getting "stuck"
-    */
-
-    //For reading until white-spaces and non-words:
-    //n_char=scanf("%s", buf);
-
-    //For reading 10 chars and then printing them:
-    /**for (i=0; i<10; i++) {
-      c=getc(stdin);
-      buf[i]=c;
-      if (c=='\r') {
-	buf[++i]='\n';
-      }
-    }
-    buf[++i]='\0'; */
-    //printled(1, LRED);
-    //printf("%s %d\n", buf, n_char);
+    printf(" e: %6.2f, e_p %6.2f, e_i: %6.2f, adv: %6.2f, c_f: %6.2f, r_f: %6.2f, att: %6.2f, counter %d\n\r", error, p_error, i_error, pi_control*180.0f/PI, 1.0f/(period/TICK_PERIOD), ref_freq, attenuation, counter);
   }
 }
