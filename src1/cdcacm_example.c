@@ -36,7 +36,7 @@
 #define deadtime_percentage 0.10f   //10% 87.2us de alto a bajo, 48.8us de bajo a alto 
 #define INIT_DUTY 0.5f
 #define PI 3.1416f
-#define MIN_ATTENUATION 0.3f
+#define MIN_ATTENUATION 0.1f
 #define MAX_ATTENUATION 1.0f
 #define MAX_MOTOR_FREQ 780.0f
 
