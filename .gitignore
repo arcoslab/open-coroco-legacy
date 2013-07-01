@@ -10,3 +10,7 @@
 *.srec
 *.bin
 *.log
+
+src1/motor.h
+.gdb_history
+*/.gdb_history
