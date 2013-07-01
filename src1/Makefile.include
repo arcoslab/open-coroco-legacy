@@ -42,7 +42,7 @@ endif
 $(info tool $(TOOLCHAIN_DIR))
 
 LIBOPENCM3_PLUS ?= ../libopencm3-plus
-ifeq ($(wildcard ../libopencm3-plus/libopencm3_plus.a),)
+ifeq ($(wildcard ../libopencm3-plus/lib/libopencm3_plus_stm32f4discovery.a),)
 ifneq ($(strip $(shell which $(CC))),)
 LIBOPENCM3_PLUS := $(shell dirname `which $(CC)`)/../$(PREFIX)
 endif
@@ -58,12 +58,12 @@ CFLAGS		+= -Os -g \
 		   -Wall -Wextra -Wimplicit-function-declaration \
 		   -Wredundant-decls -Wmissing-prototypes -Wstrict-prototypes \
 		   -Wundef -Wshadow \
-		   -I$(TOOLCHAIN_DIR)/include -I$(LIBOPENCM3_PLUS)\
+		   -I$(TOOLCHAIN_DIR)/include -I$(LIBOPENCM3_PLUS)/include\
 		   -fno-common -mcpu=cortex-m4 -mthumb \
 		   -mfloat-abi=hard -mfpu=fpv4-sp-d16 -MD -DSTM32F4
 LDSCRIPT	?= $(BINARY).ld
 LDFLAGS		+= --static -lc -lm -lnosys -L$(TOOLCHAIN_DIR)/lib \
-			 -L$(TOOLCHAIN_DIR)/lib/stm32/f4 -L$(LIBOPENCM3_PLUS)\
+			 -L$(TOOLCHAIN_DIR)/lib/stm32/f4 -L$(LIBOPENCM3_PLUS)/lib\
 		   -T$(LDSCRIPT) -nostartfiles -Wl,--gc-sections \
 		   -mthumb -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16
 OBJS		+= $(BINARY).o
@@ -112,9 +112,9 @@ flash: $(BINARY).flash
 	@#printf "  OBJDUMP $(*).list\n"
 	$(Q)$(OBJDUMP) -S $(*).elf > $(*).list
 
-%.elf: $(OBJS) $(LDSCRIPT) $(TOOLCHAIN_DIR)/lib/libopencm3_stm32f4.a $(LIBOPENCM3_PLUS)/libopencm3_plus.a
+%.elf: $(OBJS) $(LDSCRIPT) $(TOOLCHAIN_DIR)/lib/libopencm3_stm32f4.a $(LIBOPENCM3_PLUS)/lib/libopencm3_plus_stm32f4discovery.a
 	@#printf "  LD      $(subst $(shell pwd)/,,$(@))\n"
-	$(Q)$(LD) -o $(*).elf $(OBJS) -lopencm3_plus -lopencm3_stm32f4 $(LDFLAGS)
+	$(Q)$(LD) -o $(*).elf $(OBJS) -lopencm3_plus_stm32f4discovery -lopencm3_stm32f4 $(LDFLAGS)
 
 %.o: %.c Makefile
 	@#printf "  CC      $(subst $(shell pwd)/,,$(@))\n"

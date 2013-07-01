@@ -20,12 +20,12 @@
 #include <libopencm3/stm32/f4/gpio.h>
 #include <libopencm3/stm32/f4/timer.h>
 #include <libopencm3/stm32/f4/nvic.h>
-#include <f4discovery/syscall.h>
+#include <libopencm3-plus/newlib/syscall.h>
 #include <cdcacm_example.h>
-#include <cdcacm/cdcacm.h>
+#include <libopencm3-plus/cdcacm_one_serial/cdcacm.h>
 #include <stdio.h>
-#include <utils/mutex.h>
-#include <utils/misc.h>
+#include <libopencm3-plus/utils/misc.h>
+#include <libopencm3-plus/stm32f4discovery/leds.h>
 #include <limits.h>
 #include <stdbool.h>
 #include "motor.h"
@@ -513,6 +513,6 @@ int main(void)
       ref_freq=value;
       //printf("Close loop\n");
     }
-    printf(" e: %6.2f, e_p %6.2f, e_i: %6.2f, adv: %6.2f, c_f: %6.2f, r_f: %6.2f, att: %6.2f, counter %d, eof %d, buf: %s, v %f\n", error, p_error, i_error, pi_control*180.0f/PI, 1.0f/(period/TICK_PERIOD), ref_freq, attenuation, counter, eof, cmd, value);
+    printf(" e: %7.2f, e_p %6.2f, e_i: %6.2f, adv: %6.2f, c_f: %6.2f, r_f: %6.2f, att: %6.2f, counter %d, eof %d, buf: %s, v %f\n", error, p_error, i_error, pi_control*180.0f/PI, 1.0f/(period/TICK_PERIOD), ref_freq, attenuation, counter, eof, cmd, value);
   }
 }
