@@ -81,8 +81,7 @@ float quadrature_stator_voltage_V_SQ (int S_B, int S_C,float U_d)
 #define w_cutoff 0.0f
 float direct_stator_flux_linkage_estimator_psi_sD     (float T,float V_sD,float i_sD)
 {
-  static float previous_psi_sD=0.0f;
-  return previous_psi_sD+
+
 }
 float quadrature_stator_flux_linkage_estimator_psi_sQ (float T,float V_sQ,float i_sQ)
 {

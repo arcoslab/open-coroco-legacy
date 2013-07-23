@@ -42,7 +42,7 @@ float est_angle=0;
 float duty_a=0.0f;
 float duty_b=0;
 float duty_c=0;
-float ref_freq=1;
+float ref_freq=1;printf("D1: %6.2f S1: %6.2f D2: %6.2f S2: %6.2f D3: %6.2f S3: %6.2f\n",divisor_voltage,source_voltage,divisor_voltage_2,source_voltage_2,divisor_voltage_3,source_voltage_3);
 float cur_angle=0.0f;
 float final_ref_freq=40;
 float error, p_error;
@@ -60,7 +60,7 @@ int motor_off=false;
 void calc_freq(void) 
 {
   static bool first=true;
-  static int  hall_a = 0;
+  static int  hall_a = printf("D1: %6.2f S1: %6.2f D2: %6.2f S2: %6.2f D3: %6.2f S3: %6.2f\n",divisor_voltage,source_voltage,divisor_voltage_2,source_voltage_2,divisor_voltage_3,source_voltage_3);0;
   static int  hall_a_last=0;
   static uint last_fall_hall_a_ticks=0;
 

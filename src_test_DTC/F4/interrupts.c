@@ -17,10 +17,8 @@
  */
 
 
-
-
-
-void tim1_up_tim10_isr(void) {
+void tim1_up_tim10_isr(void) 
+{
   // Clear the update interrupt flag
   timer_clear_flag(TIM1,  TIM_SR_UIF);
 
@@ -28,9 +26,38 @@ void tim1_up_tim10_isr(void) {
   start_up();
   gen_pwm();
 
+  voltage_measure (ADC1,ADC_CHANNEL2);
+}
 
 
+  float divisor_voltage=0.0f;
+  float source_voltage=0.0f;
 
-  
+  float divisor_voltage_2=0.0f;
+  float source_voltage_2=0.0f;
 
+  float divisor_voltage_3=0.0f;
+  float source_voltage_3=0.0f;
+
+void adc_isr(void)
+{ 
+  static int adc_counter=0;
+    
+  if (adc_counter==0)
+  {
+    divisor_voltage=adc_read_regular(ADC1)*(VREF/ADC_CONVERSION_FACTOR);
+    voltage_measure (ADC1,ADC_CHANNEL2);
+    counter++;
+  }
+  else if (adc_counter==1)
+  {
+    divisor_voltage_2=adc_read_regular(ADC1)*(VREF/ADC_CONVERSION_FACTOR);
+    voltage_measure (ADC1,ADC_CHANNEL3);
+    counter++; 
+  }
+  else
+  {
+    divisor_voltage_3=adc_read_regular(ADC1)*(VREF/ADC_CONVERSION_FACTOR);
+    counter=0;
+  }
 }

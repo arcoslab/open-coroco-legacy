@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2013 ARCOS-Lab Universidad de Costa Rica
- * Author: Federico Ruiz Ugalde <memeruiz@gmail.com>
+ * Author: Sebastian Chinchilla Gutierrez <tumacher@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +16,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#define ADC_CONVERSION_FACTOR 4096.0f
+#define VREF 2.966f	//ADC conversion reference voltage
 
-void leds_init(void);
-void hall_init(void);
-void tim_init(void);
-void adc_init(void);
-void system_init(void);
+
+void voltage_measure (uint32_t adc,uint8_t channel)
+{
+  uint8_t channels[16];
+	            
+  channels[0] = channel;
+  adc_set_regular_sequence(adc, 1, channels);	
+  adc_start_conversion_regular(adc);
+}

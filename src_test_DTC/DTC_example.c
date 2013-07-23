@@ -21,6 +21,7 @@
 #include <libopencm3/stm32/f4/gpio.h>
 #include <libopencm3/stm32/f4/timer.h>
 #include <libopencm3/stm32/f4/nvic.h>
+#include <libopencm3/stm32/f4/adc.h>
 
 
 //usb serial cdcacm
@@ -49,6 +50,8 @@
 #include "F4/initial_setup.c"
 #include "DTC/DTC.h"
 #include "DTC/DTC.c"
+#include "Shunt/shunt.h"
+#include "Shunt/shunt.c"
 #include "F4/interrupts.c"
 
 int main(void)
