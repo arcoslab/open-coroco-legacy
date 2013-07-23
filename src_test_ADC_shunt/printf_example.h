@@ -25,5 +25,5 @@ void adc_init(void);
 void clean_stdin(void);
 void stdin_init(void);
 bool receive_a_string(char*);
-float voltage_measure_ADC1 (uint8_t);
-float voltage_measure (uint32_t, uint8_t);
+void voltage_measure_ADC1 (uint8_t);
+void voltage_measure (uint32_t, uint8_t);

@@ -47,75 +47,50 @@
 void adc_isr(void)
 { 
   static int counter=0;
-  
-  // adc_disable_eoc_interrupt(ADC1);
-  // Clear the update interrupt flag
-  //timer_clear_flag(TIM1,  TIM_SR_UIF);
-  //printf("E\n");
-  //voltage_measure (ADC1,ADC_CHANNEL1);
-  //adc_disable_eoc_interrupt(ADC1);
-  //adc_enable_eoc_interrupt(ADC1);
-  //nvic_clear_pending_irq(NVIC_ADC_IRQ);
-
-  
-  //int over;
-  //over=adc_get_overrun_flag(ADC1);
-  //adc_clear_overrun_flag(ADC1);
-  //over=adc_get_overrun_flag(ADC1);
-  ///printf("voltage: %f",divisor_voltage);
-  
- if (counter==0)
- {
-   divisor_voltage=adc_read_regular(ADC1)*(VREF/ADC_CONVERSION_FACTOR);
-   voltage_measure (ADC1,ADC_CHANNEL2);
-   counter++;
- }
- else if (counter==1)
- {
-   divisor_voltage_2=adc_read_regular(ADC1)*(VREF/ADC_CONVERSION_FACTOR);
-   voltage_measure (ADC1,ADC_CHANNEL3);
-   counter++; 
- }
- else
- {
-   divisor_voltage_3=adc_read_regular(ADC1)*(VREF/ADC_CONVERSION_FACTOR);
-   counter=0;
- }
-
-  //adc_start_conversion_regular(ADC1);
+    
+  if (counter==0)
+  {
+    divisor_voltage=adc_read_regular(ADC1)*(VREF/ADC_CONVERSION_FACTOR);
+    voltage_measure (ADC1,ADC_CHANNEL2);
+    counter++;
+  }
+  else if (counter==1)
+  {
+    divisor_voltage_2=adc_read_regular(ADC1)*(VREF/ADC_CONVERSION_FACTOR);
+    voltage_measure (ADC1,ADC_CHANNEL3);
+    counter++; 
+  }
+  else
+  {
+    divisor_voltage_3=adc_read_regular(ADC1)*(VREF/ADC_CONVERSION_FACTOR);
+    counter=0;
+  }
 }
 
 
 void adc_init (void)
 {
+  rcc_peripheral_enable_clock(&RCC_APB2ENR, RCC_APB2ENR_ADC1EN);
+  rcc_peripheral_enable_clock(&RCC_AHB1ENR, RCC_AHB1ENR_IOPAEN);
 
-rcc_peripheral_enable_clock(&RCC_APB2ENR, RCC_APB2ENR_ADC1EN);
-rcc_peripheral_enable_clock(&RCC_AHB1ENR, RCC_AHB1ENR_IOPAEN);
+  gpio_mode_setup(GPIOA, GPIO_MODE_ANALOG, GPIO_PUPD_NONE, GPIO1);	//PA1
+  gpio_mode_setup(GPIOA, GPIO_MODE_ANALOG, GPIO_PUPD_NONE, GPIO2);	//PA2
+  gpio_mode_setup(GPIOA, GPIO_MODE_ANALOG, GPIO_PUPD_NONE, GPIO3);	//PA3
 
-gpio_mode_setup(GPIOA, GPIO_MODE_ANALOG, GPIO_PUPD_NONE, GPIO1);	//PA1
-gpio_mode_setup(GPIOA, GPIO_MODE_ANALOG, GPIO_PUPD_NONE, GPIO2);	//PA2
-gpio_mode_setup(GPIOA, GPIO_MODE_ANALOG, GPIO_PUPD_NONE, GPIO3);	//PA3
+  adc_set_clk_prescale(ADC_CCR_ADCPRE_BY2);
+  adc_disable_scan_mode(ADC1);
+  adc_set_single_conversion_mode(ADC1);
 
-adc_set_clk_prescale(ADC_CCR_ADCPRE_BY2);
-adc_disable_scan_mode(ADC1);
-//adc_set_continuous_conversion_mode(ADC1);
-adc_set_single_conversion_mode(ADC1);
+  adc_set_sample_time(ADC1, ADC_CHANNEL1, ADC_SMPR_SMP_3CYC);
+  adc_set_sample_time(ADC1, ADC_CHANNEL2, ADC_SMPR_SMP_3CYC);
+  adc_set_sample_time(ADC1, ADC_CHANNEL3, ADC_SMPR_SMP_3CYC);
 
-adc_set_sample_time(ADC1, ADC_CHANNEL1, ADC_SMPR_SMP_3CYC);
-adc_set_sample_time(ADC1, ADC_CHANNEL2, ADC_SMPR_SMP_3CYC);
-adc_set_sample_time(ADC1, ADC_CHANNEL3, ADC_SMPR_SMP_3CYC);
+  adc_set_multi_mode(ADC_CCR_MULTI_INDEPENDENT);
+  adc_power_on(ADC1);
 
-adc_set_multi_mode(ADC_CCR_MULTI_INDEPENDENT);
-adc_power_on(ADC1);
-
-//nvic_enable_irq(ADC_CR1_EOCIE);
-nvic_enable_irq(NVIC_ADC_IRQ);
-adc_enable_eoc_interrupt(ADC1);
-//adc_disable_eoc_interrupt(ADC1);
-
-//ADC_CR1_EOCIE
-//adc_enable_analog_watchdog_regular(ADC1);
-//adc_eoc_after_each(ADC1);
+  nvic_enable_irq(NVIC_ADC_IRQ);
+  adc_enable_eoc_interrupt(ADC1);
+  //adc_disable_eoc_interrupt(ADC1);
 }
 
 /*
@@ -157,35 +132,14 @@ float voltage_measure_ADC1 (uint8_t channel)
 	return voltage;
 }
 */
-float voltage_measure (uint32_t adc,uint8_t channel)
+
+void voltage_measure (uint32_t adc,uint8_t channel)
 {
-        uint8_t channels[16];
-	float voltage;
-            
-	channels[0] = channel;
-	channels[1] = channel;
-	channels[2] = channel;
-	channels[3] = channel;
-	channels[4] = channel;
-	channels[5] = channel;
-	channels[6] = channel;
-	channels[7] = channel;
-	channels[8] = channel;
-	channels[9] = channel;
-	channels[10] = channel;
-	channels[11] = channel;
-	channels[12] = channel;
-	channels[13] = channel;
-	channels[14] = channel;
-	channels[15] = channel;
-
-	adc_set_regular_sequence(adc, 1, channels);	
-	//ADC_SQR1(adc)=channel;
-
-      	adc_start_conversion_regular(adc);
-	//while (!adc_eoc(adc));
-	//voltage=adc_read_regular(adc)*(VREF/ADC_CONVERSION_FACTOR);
-	return voltage;
+  uint8_t channels[16];
+	            
+  channels[0] = channel;
+  adc_set_regular_sequence(adc, 1, channels);	
+  adc_start_conversion_regular(adc);
 }
 
 
@@ -269,44 +223,22 @@ int main(void)
   char user_string[25]="";
   float user_value=0.0f;
 
-  //char cmd[10]="";
 
 printf("\n**********************************\n");
  
-
-voltage_measure (ADC1,ADC_CHANNEL1);
-
 
   while (1)
   {  
 
       voltage_measure (ADC1,ADC_CHANNEL1);
-      //divisor_voltage = voltage_measure_ADC1 (ADC_CHANNEL1);
-/*      divisor_voltage   = voltage_measure_ADC1 (ADC_CHANNEL1);
-      source_voltage    = divisor_voltage*(R_divisor_sense+R2)/R_divisor_sense;
 
-      divisor_voltage_2 = voltage_measure_ADC1 (ADC_CHANNEL2);
+      source_voltage    = divisor_voltage  *(R_divisor_sense+R2)/R_divisor_sense;
       source_voltage_2  = divisor_voltage_2*(R_divisor_sense+R2)/R_divisor_sense;	 
-	 
-      divisor_voltage_3 = voltage_measure_ADC1 (ADC_CHANNEL3);
-      source_voltage_3  = divisor_voltage_3*(R_divisor_sense+R2)/R_divisor_sense;	 
-*/	 
-
-
-
-//      divisor_voltage   = voltage_measure (ADC1,ADC_CHANNEL1);
-      source_voltage    = divisor_voltage*(R_divisor_sense+R2)/R_divisor_sense;
-
-//      divisor_voltage_2 = voltage_measure (ADC1,ADC_CHANNEL2);
-      source_voltage_2  = divisor_voltage_2*(R_divisor_sense+R2)/R_divisor_sense;	 
-	 
-//      divisor_voltage_3 = voltage_measure (ADC1,ADC_CHANNEL3);
       source_voltage_3  = divisor_voltage_3*(R_divisor_sense+R2)/R_divisor_sense;
-
 
       if (user_string!='f')
       {
-      printf("D1: %6.2f S1: %6.2f D2: %6.2f S2: %6.2f D3: %6.2f S3: %6.2f\n", divisor_voltage,source_voltage,divisor_voltage_2,source_voltage_2,divisor_voltage_3,source_voltage_3);     
+        printf("D1: %6.2f S1: %6.2f D2: %6.2f S2: %6.2f D3: %6.2f S3: %6.2f\n",divisor_voltage,source_voltage,divisor_voltage_2,source_voltage_2,divisor_voltage_3,source_voltage_3);     
       }
 
       if ( receive_a_string(user_input) )
@@ -315,7 +247,6 @@ voltage_measure (ADC1,ADC_CHANNEL1);
         sscanf(user_input, "%s %f",user_string, &user_value);
 	
         //printf(" You typed: %s \nString: %s \n number: %f\n", user_input,user_string,user_value);
-
         
         if (strcmp(user_string, "f") == 0)
         { 
