@@ -19,6 +19,8 @@
 
 
 //-----------------voltage and current space vectors---------------------
+
+
 float direct_stator_current_i_sD     (float i_sA)
 {
   return i_sA;
@@ -65,7 +67,6 @@ void  switching_states (int* S_A, int* S_B, int* S_C)
 }
 
 
-
 float direct_stator_voltage_V_sD     (int S_A, int S_B, int S_C,float U_d)
 {
   return (2.0f/3.0f)*U_d*(S_A-0.5f*S_B-0.5*S_C);
@@ -78,23 +79,69 @@ float quadrature_stator_voltage_V_SQ (int S_B, int S_C,float U_d)
 
 
 //---------------------stator flux-linkage space vector estimation-------------------------------
-#define w_cutoff 0.0f
-float direct_stator_flux_linkage_estimator_psi_sD     (float T,float V_sD,float i_sD)
+#define W_CUTOFF 0.0f
+float direct_stator_flux_linkage_estimator_psi_sD     (float T,float V_sD,float i_sD,float R_s)
 {
-
+  static float previous_psi_sD=0.0f;
+  previous_psi_sD = ( previous_psi_sD+T*(V_sD-i_sD*R_s) )/(1+T*W_CUTOFF);
+  return previous_psi_sD;
 }
-float quadrature_stator_flux_linkage_estimator_psi_sQ (float T,float V_sQ,float i_sQ)
+float quadrature_stator_flux_linkage_estimator_psi_sQ (float T,float V_sQ,float i_sQ,float R_s)
 {
-
+  static float previous_psi_sQ=0.0f;
+  previous_psi_sQ = ( previous_psi_sQ+T*(V_sQ-i_sQ*R_s) )/(1+T*W_CUTOFF);
+  return previous_psi_sQ;
 }
+
 float stator_flux_linkage_magnite_psi_s               (float psi_sD,float psi_sQ)
 {
-
+  return sqrtf( (psi_sQ*psi_sQ+psi_sD*psi_sD) );
 }
 float stator_flux_linkage_sector_alpha                (float psi_sD, float psi_sQ)
 {
-
+  float psi_angle=0;
+  int psi_alpha=0;
+  psi_angle=vector_angle(psi_sQ,psi_sD);
+  
+  //sector selection
+  if      ( ( (psi_angle>=330.0f) && (psi_angle<=360.0f) ) ||
+            ( (psi_angle>=  0.0f) && (psi_angle<  30.0f) ) )
+  {   
+    psi_alpha=1;
+  }
+  else if   ( (psi_angle>= 30.0f) && (psi_angle<  90.0f) ) 
+  {   
+    psi_alpha=2;
+  } 
+  else if   ( (psi_angle>= 90.0f) && (psi_angle< 150.0f) ) 
+  {   
+    psi_alpha=3;
+  } 
+  else if   ( (psi_angle>=150.0f) && (psi_angle< 210.0f) ) 
+  {   
+    psi_alpha=4;
+  } 
+  else if   ( (psi_angle>=210.0f) && (psi_angle< 270.0f) ) 
+  {   
+    psi_alpha=5;
+  } 
+  else if   ( (psi_angle>=270.0f) && (psi_angle< 330.0f) ) 
+  {   
+    psi_alpha=6;
+  } 
+  else 
+  {
+    psi_alpha=0;
+  }
+  
+  return psi_alpha;
+  
 }
+
+
+
+
+
 /*
 //electromagnetic torque estimation
 float electromagnetic_torque_estimation_t_e(float psi_D,float is_Q, float psi_Q,float is_D);

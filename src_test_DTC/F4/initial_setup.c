@@ -212,6 +212,7 @@ void system_init(void) {
   cdcacm_init();
   printled(4, LRED);
   tim_init();
+  adc_init();
   stdin_init();
 }
 

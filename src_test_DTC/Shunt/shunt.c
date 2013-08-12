@@ -16,9 +16,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+//
 #define ADC_CONVERSION_FACTOR 4096.0f
 #define VREF 2.966f	//ADC conversion reference voltage
 
+//from 3V to the real current
+#define SHUNT_A_CONVERTION_FACTOR 1
+#define SHUNT_B_CONVERTION_FACTOR 1
+
+//from 3V to the real battery voltage
+#define BATTERY_VOLTAGE_CONVERTION_FACTOR 1
 
 void voltage_measure (uint32_t adc,uint8_t channel)
 {

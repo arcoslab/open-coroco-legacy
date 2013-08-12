@@ -16,6 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+float i_sA=0;
+float i_sB=0;
+float U_d;
 
 void tim1_up_tim10_isr(void) 
 {
@@ -26,18 +29,11 @@ void tim1_up_tim10_isr(void)
   start_up();
   gen_pwm();
 
-  voltage_measure (ADC1,ADC_CHANNEL2);
+  voltage_measure (ADC1,ADC_CHANNEL1);
 }
 
 
-  float divisor_voltage=0.0f;
-  float source_voltage=0.0f;
 
-  float divisor_voltage_2=0.0f;
-  float source_voltage_2=0.0f;
-
-  float divisor_voltage_3=0.0f;
-  float source_voltage_3=0.0f;
 
 void adc_isr(void)
 { 
@@ -45,19 +41,22 @@ void adc_isr(void)
     
   if (adc_counter==0)
   {
-    divisor_voltage=adc_read_regular(ADC1)*(VREF/ADC_CONVERSION_FACTOR);
+    i_sA=adc_read_regular(ADC1)*(VREF/ADC_CONVERSION_FACTOR)*SHUNT_A_CONVERTION_FACTOR;
     voltage_measure (ADC1,ADC_CHANNEL2);
-    counter++;
+    adc_counter++;
+    //printf ("\nFirst Convertion");
   }
   else if (adc_counter==1)
   {
-    divisor_voltage_2=adc_read_regular(ADC1)*(VREF/ADC_CONVERSION_FACTOR);
+    i_sB=adc_read_regular(ADC1)*(VREF/ADC_CONVERSION_FACTOR)*SHUNT_B_CONVERTION_FACTOR;
     voltage_measure (ADC1,ADC_CHANNEL3);
-    counter++; 
+    adc_counter++; 
+    //printf ("\nSecond Convertion");
   }
   else
   {
-    divisor_voltage_3=adc_read_regular(ADC1)*(VREF/ADC_CONVERSION_FACTOR);
-    counter=0;
+    U_d=adc_read_regular(ADC1)*(VREF/ADC_CONVERSION_FACTOR)*BATTERY_VOLTAGE_CONVERTION_FACTOR;
+    adc_counter=0;
+    //printf ("\nThird Convertion");
   }
 }

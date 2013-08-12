@@ -36,8 +36,8 @@ float quadrature_stator_voltage_V_SQ (int S_B, int S_C,float U_d);
 
 //stator flux-linkage space vector estimation
 #define w_cutoff 0.0f
-float direct_stator_flux_linkage_estimator_psi_sD     (float T,float V_sD,float i_sD);
-float quadrature_stator_flux_linkage_estimator_psi_sQ (float T,float V_sQ,float i_sQ);
+float direct_stator_flux_linkage_estimator_psi_sD     (float T,float V_sD,float i_sD,float R_s);
+float quadrature_stator_flux_linkage_estimator_psi_sQ (float T,float V_sQ,float i_sQ,float R_s);
 float stator_flux_linkage_magnite_psi_s               (float psi_sD,float psi_sQ);
 float stator_flux_linkage_sector_alpha                (float psi_sD, float psi_sQ);
 
