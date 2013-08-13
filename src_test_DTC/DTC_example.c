@@ -60,15 +60,6 @@ int main(void)
    
   printf ("\n\n****************************************************************************************************************\n");
 
-  while (1){
-   
-   frequency_input();
-
-
-   // printf(" e: %7.2f, e_p %6.2f, e_i: %6.2f, adv: %6.2f, c_f: %6.2f, r_f: %6.2f, att: %6.2f, counter %d, eof %d, buf: %s, v: %f, e_a: %f, cmd_a: %f\n", error, p_error, i_error, pi_control*180.0f/PI, 1.0f/(period/TICK_PERIOD), ref_freq, attenuation, counter, eof, cmd, value,est_angle*180.0f/PI,cmd_angle*180.0f/PI);
-
-    //printf(" e: %7.2f, e_p %6.2f, e_i: %6.2f, adv: %6.2f, c_f: %6.2f, r_f: %6.2f, att: %6.2f, counter  %d, buf: %s, v: %f, e_a: %f, cmd_a: %f\n", error, p_error, i_error, pi_control*180.0f/PI, 1.0f/(period/TICK_PERIOD), ref_freq, attenuation, counter, cmd, value,est_angle*180.0f/PI,cmd_angle*180.0f/PI);
-
 
 int S_A=0;
 int S_B=0;
@@ -93,29 +84,69 @@ float psi_sQ=0.0f;
 float psi_s=0.0f;
 float psi_alpha=0.0f;
 
-float R_s=0.0f;
+float t_e=0.0f;
+
+float psi_s_ref=0.0f;
+float t_e_ref=0.0f;
+
+int   d_psi=0.0f;
+int   d_te=0.0f;
+float psi_delta_percentage=10.0f;
+float t_e_delta_percentage=10.0f;
 
 
-switching_states (&S_A,&S_B,&S_C);
-V_sD=direct_stator_voltage_V_sD     (S_A,S_B,S_C,U_d);
-V_sQ=quadrature_stator_voltage_V_SQ (S_B,S_C,U_d);
-V_s =vector_magnitude(V_sQ,V_sD);
-cita_V_s=vector_angle    (V_sQ,V_sD);
+//motor parameters;
+float R_s=1.0f;
+float pole_pairs=1.0f;
+float L_sq=1.0f;
+float psi_F=1.0f;
 
-i_sD=direct_stator_current_i_sD     (i_sA);
-i_sQ=quadrature_stator_current_i_sQ (i_sA,i_sB);
-i_s =vector_magnitude(i_sQ,i_sD);
-cita_i_s=vector_angle(i_sQ,i_sD);
+
+  while (1){
+   
+   frequency_input();
+
+
+   // printf(" e: %7.2f, e_p %6.2f, e_i: %6.2f, adv: %6.2f, c_f: %6.2f, r_f: %6.2f, att: %6.2f, counter %d, eof %d, buf: %s, v: %f, e_a: %f, cmd_a: %f\n", error, p_error, i_error, pi_control*180.0f/PI, 1.0f/(period/TICK_PERIOD), ref_freq, attenuation, counter, eof, cmd, value,est_angle*180.0f/PI,cmd_angle*180.0f/PI);
+
+    //printf(" e: %7.2f, e_p %6.2f, e_i: %6.2f, adv: %6.2f, c_f: %6.2f, r_f: %6.2f, att: %6.2f, counter  %d, buf: %s, v: %f, e_a: %f, cmd_a: %f\n", error, p_error, i_error, pi_control*180.0f/PI, 1.0f/(period/TICK_PERIOD), ref_freq, attenuation, counter, cmd, value,est_angle*180.0f/PI,cmd_angle*180.0f/PI);
+
+
+
+
+
+
+switching_states                        (&S_A,&S_B,&S_C);
+V_sD    =direct_stator_voltage_V_sD     (S_A,S_B,S_C,U_d);
+V_sQ    =quadrature_stator_voltage_V_SQ (S_B,S_C,U_d);
+V_s     =vector_magnitude               (V_sQ,V_sD);
+cita_V_s=vector_angle                   (V_sQ,V_sD);
+
+i_sD    =direct_stator_current_i_sD     (i_sA);
+i_sQ    =quadrature_stator_current_i_sQ (i_sA,i_sB);
+i_s     =vector_magnitude               (i_sQ,i_sD);
+cita_i_s=vector_angle                   (i_sQ,i_sD);
 
 psi_sD   =direct_stator_flux_linkage_estimator_psi_sD     (TICK_PERIOD,V_sD,i_sD,R_s);
 psi_sQ   =quadrature_stator_flux_linkage_estimator_psi_sQ (TICK_PERIOD,V_sQ,i_sQ,R_s);
 psi_s    =stator_flux_linkage_magnite_psi_s               (psi_sD,psi_sQ);
 psi_alpha=stator_flux_linkage_sector_alpha                (psi_sD,psi_sQ);
+/*
+t_e      =electromagnetic_torque_estimation_t_e(psi_sD,i_sQ,psi_sQ,i_sD,pole_pairs);
+psi_s_ref=stator_flux_linkage_reference_psi_s_ref(psi_F,t_e_ref,L_sq,pole_pairs);
+
+
+d_psi=stator_flux_linkage_hysteresis_controller_d_psi   (psi_s_ref, psi_s,psi_delta_percentage);
+d_te =electromagnetic_torque_hysteresis_controller_d_te (t_e_ref  , t_e  ,t_e_delta_percentage);
+
+
+optimal_voltage_switching_vector_selection_table(d_psi,d_te,psi_alpha,&S_A,&S_B,&S_C);*/
+//voltage_switch_inverter_VSI(S_A,S_B,S_C);
+
 
 
 //if(S_A!=2 || S_B!=2 || S_C!=2)
-if(S_A!=2 && S_B!=2 && S_C!=2)
-{
+
 /*
   if (S_A==2) S_A=0;
   if (S_B==2) S_B=0;
@@ -123,7 +154,12 @@ if(S_A!=2 && S_B!=2 && S_C!=2)
 */
   //printf ("S_A: %4d S_1: %4d S_4: %4d S_B: %4d S_3: %4d S_6: %4d S_C: %4d S_5: %4d S_2: %4d V_sD: %6.2f V_sQ: %6.2f V_s: %6.2f cita: %6.2f\n", S_A,S1,S4,S_B,S3,S6,S_C,S5,S2,V_sD,V_sQ,V_s,cita_V_s);
   //printf ("S_A: %4d S_B: %4d S_C: %4d V_sD: %6.2f V_sQ: %6.2f V_s: %6.2f cita: %6.2f i_sD: %6.2f i_sQ: %6.2f i_s: %6.2f cita: %6.2f\n", S_A,S_B,S_C,V_sD,V_sQ,V_s,cita_V_s,i_sD,i_sQ,i_s,cita_i_s);
-  printf ("U_d: %6.2f V_sD: %6.2f V_sQ: %6.2f V_s: %6.2f cita: %6.2f i_sA: %6.2f i_sB: %6.2f i_sD: %6.2f i_sQ: %6.2f i_s: %6.2f cita: %6.2f freq: %6.2f\n", U_d,V_sD,V_sQ,V_s,cita_V_s,i_sA,i_sB,i_sD,i_sQ,i_s,cita_i_s,CUR_FREQ);
+if(S_A!=2 && S_B!=2 && S_C!=2)
+{
+  //printf ("U_d: %6.2f V_sD: %6.2f V_sQ: %6.2f V_s: %6.2f cita: %6.2f i_sA: %6.2f i_sB: %6.2f i_sD: %6.2f i_sQ: %6.2f i_s: %6.2f cita: %6.2f freq: %6.2f\n", U_d,V_sD,V_sQ,V_s,cita_V_s,i_sA,i_sB,i_sD,i_sQ,i_s,cita_i_s,CUR_FREQ);
+  printf ("i_sD: %6.2f i_sQ: %6.2f i_s: %6.2f cita: %6.2f freq: %6.2f psi_sD: %6.2f psi_sQ: %6.2f psi_s: %6.2f psi_alpha: %6.2f   \n",i_sD,i_sQ,i_s,cita_i_s,CUR_FREQ,psi_sD,psi_sQ,psi_s,psi_alpha);
+
+
 }
 
   }

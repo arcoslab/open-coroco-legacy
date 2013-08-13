@@ -142,22 +142,235 @@ float stator_flux_linkage_sector_alpha                (float psi_sD, float psi_s
 
 
 
-/*
+
+
 //electromagnetic torque estimation
-float electromagnetic_torque_estimation_t_e(float psi_D,float is_Q, float psi_Q,float is_D);
+float electromagnetic_torque_estimation_t_e(float psi_sD,float i_sQ, float psi_sQ,float i_sD,float pole_pairs)
+{
+  return (3.0/2.0f)*pole_pairs*(psi_sD*i_sQ-psi_sQ*i_sD);
+}
+
 
 
 //stator flux-linkage reference
-float stator_flux_linkage_reference_psi_s_ref(float psi_F,float te_ref,float L_sq,float pole_pairs);
+float stator_flux_linkage_reference_psi_s_ref(float psi_F,float te_ref,float L_sq,float pole_pairs)
+{
+  return sqrt ( psi_F*psi_F+L_sq*L_sq*(2.0f*te_ref/(3*pole_pairs*psi_F))*(2.0f*te_ref/(3*pole_pairs*psi_F)) );
+}
+
+
 
 //hysteresis windows
-int stator_flux_linkage_hysteresis_controller_d_psi(float psi_s_ref, float psi_s);
-int electromagnetic_torque_hysteresis_controller_d_psi(float t_e_ref, float t_e);
+int stator_flux_linkage_hysteresis_controller_d_psi(float psi_s_ref, float psi_s,float psi_delta_percentage)
+{
+  static int d_psi=0; 
+  if      (psi_s<=psi_s_ref*(1.0f-psi_delta_percentage/100.0f) )
+  {
+    d_psi=1;
+  }
+  else if (psi_s>=psi_s_ref*(1.0f+psi_delta_percentage/100.0f) )
+  {
+    d_psi=0;
+  }
+  else
+  {
+    d_psi=d_psi;
+  }
+  return d_psi;
+}
+
+
+int electromagnetic_torque_hysteresis_controller_d_te(float t_e_ref, float t_e, float t_e_delta_percentage)
+{
+  int d_te=0.0f;
+  
+  //forward rotation  
+  if (t_e_ref>=0.0f)
+  {
+    if      (t_e<=t_e_ref*(1.0f-t_e_delta_percentage))
+    {
+      d_te=1;
+    }
+    else if (t_e>=t_e_ref*(1.0f+t_e_delta_percentage))
+    {
+      d_te=-1;
+    }
+    else
+    {
+      d_te=0;
+    }
+  }
+  //clockwise rotation
+  else
+  {
+    if (t_e_ref<=t_e_ref*(1.0f+t_e_delta_percentage))
+    {
+      d_te=1;
+    }
+    else if (t_e>=t_e_ref*(1.0f-t_e_delta_percentage))
+    {
+      d_te=-1;
+    }
+    else 
+    {
+      d_te=0;
+    }
+  }  
+  
+  return d_te;
+}
+
+
 
 //output voltages
-void optimal_voltage_switching_vector_selection_table(int d_psi,int d_t_e,float alpha,int* S_A, int* S_B, int* S_C);
-void voltage_switch_inverter_VSI(int S_A, int S_B, int S_C);
 
+//vector voltages definition
+#define V_1  *S_A=1;*S_B=0;*S_C=0; //100
+#define V_2  *S_A=1;*S_B=1;*S_C=0; //110
+#define V_3  *S_A=0;*S_B=1;*S_C=0; //010
+#define V_4  *S_A=0;*S_B=1;*S_C=1; //011
+#define V_5  *S_A=0;*S_B=0;*S_C=1; //001
+#define V_6  *S_A=1;*S_B=0;*S_C=1; //101
+#define V_7  *S_A=1;*S_B=1;*S_C=1; //111
+#define V_8  *S_A=0;*S_B=0;*S_C=0; //000
+
+
+void optimal_voltage_switching_vector_selection_table(int d_psi,int d_te,float alpha,int* S_A, int* S_B, int* S_C)
+{
+
+  if (d_psi==1) { if      (d_te==1) { if           (alpha==1) { V_2 }
+                                      else if      (alpha==2) { V_3 }
+                                      else if      (alpha==3) { V_4 }
+                                      else if      (alpha==4) { V_5 }
+                                      else if      (alpha==5) { V_6 }
+                                      else if      (alpha==6) { V_1 }
+                                      else                    {     }                      
+                                    }
+                  else if (d_te==0) { if           (alpha==1) { V_7 }
+                                      else if      (alpha==2) { V_8 }
+                                      else if      (alpha==3) { V_7 }
+                                      else if      (alpha==4) { V_8 }
+                                      else if      (alpha==5) { V_7 }
+                                      else if      (alpha==6) { V_8 }
+                                      else                    {     }                      
+                                    }
+                  else if (d_te==-1){ if           (alpha==1) { V_6 }
+                                      else if      (alpha==2) { V_1 }
+                                      else if      (alpha==3) { V_2 }
+                                      else if      (alpha==4) { V_3 }
+                                      else if      (alpha==5) { V_4 }
+                                      else if      (alpha==6) { V_5 }
+                                      else                    {     }                      
+                                    }
+                }
+
+  else if (d_psi==1) { 
+                  if      (d_te==1) { if           (alpha==1) { V_3 }
+                                      else if      (alpha==2) { V_4 }
+                                      else if      (alpha==3) { V_5 }
+                                      else if      (alpha==4) { V_6 }
+                                      else if      (alpha==5) { V_1 }
+                                      else if      (alpha==6) { V_2 }
+                                      else                    {     }                      
+                                    }
+                  else if (d_te==0) { if           (alpha==1) { V_8 }
+                                      else if      (alpha==2) { V_7 }
+                                      else if      (alpha==3) { V_8 }
+                                      else if      (alpha==4) { V_7 }
+                                      else if      (alpha==5) { V_8 }
+                                      else if      (alpha==6) { V_7 }
+                                      else                    {     }                      
+                                    }
+                  else if (d_te==-1){ if           (alpha==1) { V_5 }
+                                      else if      (alpha==2) { V_6 }
+                                      else if      (alpha==3) { V_1 }
+                                      else if      (alpha==4) { V_2 }
+                                      else if      (alpha==5) { V_3 }
+                                      else if      (alpha==6) { V_4 }
+                                      else                    {     }                      
+                                    }
+                }
+
+}
+
+void voltage_switch_inverter_VSI(int S_A, int S_B, int S_C)
+{
+  /*
+  float duty_a=1.0f;
+  float duty_b=1.0f;
+  float duty_c=1.0f;
+  float attenuation =1.0f;
+  */
+  duty_a=1.0f;
+  duty_b=1.0f;
+  duty_c=1.0f;
+  attenuation =1.0f;
+
+/*      //PWM mode
+	TIM_OCM_FROZEN,
+	TIM_OCM_ACTIVE,
+	TIM_OCM_INACTIVE,
+	TIM_OCM_TOGGLE,
+	TIM_OCM_FORCE_LOW,
+	TIM_OCM_FORCE_HIGH,
+	TIM_OCM_PWM1,
+	TIM_OCM_PWM2,
+*/
+
+  //----------------SA: S1 and S4---------------------------------
+  if (S_A==1)
+    {
+      timer_set_oc_mode       (TIM1, TIM_OC1, TIM_OCM_FORCE_HIGH);
+      timer_enable_oc_output  (TIM1, TIM_OC1 );  //S1 on
+      timer_disable_oc_output (TIM1, TIM_OC1N);  //S4 off
+    }
+
+  else
+    {
+      timer_set_oc_mode       (TIM1, TIM_OC1, TIM_OCM_FORCE_HIGH);
+      timer_disable_oc_output (TIM1, TIM_OC1);  //S1 off
+      timer_enable_oc_output  (TIM1, TIM_OC1N); //S4 on
+    }
+  //-------------SB: S3 and S6------------------------------------
+  if (S_B==1)
+    {
+      timer_set_oc_mode(TIM1, TIM_OC2, TIM_OCM_FORCE_HIGH);
+      timer_enable_oc_output(TIM1, TIM_OC2 );    //S3 on
+      timer_disable_oc_output (TIM1, TIM_OC2N);  //S6 off
+    }
+
+
+  else
+    {
+      timer_set_oc_mode(TIM1, TIM_OC2, TIM_OCM_FORCE_HIGH);
+      timer_disable_oc_output(TIM1, TIM_OC2 );  //S3 off
+      timer_enable_oc_output (TIM1, TIM_OC2N);  //S6 on
+    }
+  //-----------SC: S5 and S2--------------------------------------
+  if (S_C==1)
+    {
+      timer_set_oc_mode(TIM1, TIM_OC3, TIM_OCM_PWM1);
+      timer_enable_oc_output(TIM1, TIM_OC3 );   //S5 on
+      timer_disable_oc_output (TIM1, TIM_OC3N); //S2 off
+    }
+  else
+    {
+      timer_set_oc_mode(TIM1, TIM_OC3, TIM_OCM_PWM1);
+      timer_disable_oc_output(TIM1, TIM_OC3 );  //S5 off
+      timer_enable_oc_output (TIM1, TIM_OC3N);  //S2 on
+    }
+
+
+  /* Set the capture compare value for OC1. */
+  timer_set_oc_value(TIM1, TIM_OC1, duty_a*attenuation*PWM_PERIOD_ARR);
+  /* Set the capture compare value for OC1. */
+  timer_set_oc_value(TIM1, TIM_OC2, duty_b*attenuation*PWM_PERIOD_ARR);
+  /* Set the capture compare value for OC1. */
+  timer_set_oc_value(TIM1, TIM_OC3, duty_c*attenuation*PWM_PERIOD_ARR);
+  //tim_force_update_event(TIM1);
+}
+
+/*
 //wrapper
 void DTC(float i_A,float i_B, float U_d,float L_sq,float psi_F,float t_e_ref);
 */

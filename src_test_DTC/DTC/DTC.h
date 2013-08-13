@@ -17,11 +17,11 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-float vector_magnitude(float quadrature_component, float direct_component);
-float vector_angle(float quadrature_component, float direct_component);
+float vector_magnitude              (float quadrature_component, float direct_component);
+float vector_angle                  (float quadrature_component, float direct_component);
 float A_inverse_clark_transformation(float V_sD);
-float B_inverse_clark_transformation(float V_sQ, float V_sD);
-float C_inverse_clark_transformation(float V_sQ, float V_sD);
+float B_inverse_clark_transformation(float V_sQ,                 float V_sD);
+float C_inverse_clark_transformation(float V_sQ,                 float V_sD);
 
 
 
@@ -42,15 +42,15 @@ float stator_flux_linkage_magnite_psi_s               (float psi_sD,float psi_sQ
 float stator_flux_linkage_sector_alpha                (float psi_sD, float psi_sQ);
 
 //electromagnetic torque estimation
-float electromagnetic_torque_estimation_t_e(float psi_D,float is_Q, float psi_Q,float is_D);
+float electromagnetic_torque_estimation_t_e(float psi_sD,float i_sQ, float psi_sQ,float i_sD,float pole_pairs);
 
 
 //stator flux-linkage reference
 float stator_flux_linkage_reference_psi_s_ref(float psi_F,float te_ref,float L_sq,float pole_pairs);
 
 //hysteresis windows
-int stator_flux_linkage_hysteresis_controller_d_psi(float psi_s_ref, float psi_s);
-int electromagnetic_torque_hysteresis_controller_d_psi(float t_e_ref, float t_e);
+int stator_flux_linkage_hysteresis_controller_d_psi   (float psi_s_ref, float psi_s,float psi_delta_percentage);
+int electromagnetic_torque_hysteresis_controller_d_te(float t_e_ref  , float t_e  ,float t_e_delta_percentage);
 
 //output voltages
 void optimal_voltage_switching_vector_selection_table(int d_psi,int d_t_e,float alpha,int* S_A, int* S_B, int* S_C);
