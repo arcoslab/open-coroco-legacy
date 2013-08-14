@@ -19,4 +19,9 @@
 #define MIN_CLOSE_LOOP_FREQ 3.0f
 #define FIRST_CLOSE_LOOP_REF_FREQ 60.0f
 #define HALL_CAL_OFFSET 136.0f //degrees
+#define HALL_CAL_OFFSET 136.0f //degrees (H1)
+#define HALL_CAL_OFFSET 140.0f //degrees (H3)
+#define HALL_CAL_OFFSET 300.0f //degrees (H2)
+#define HALL_CAL_OFFSET 136.0f //degrees (H1)
 #define FREQ_TO_STOP_MOTOR 30.0f
+#define R_s_0 0.2f//1.5-0.25-0.2

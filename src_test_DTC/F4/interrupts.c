@@ -28,7 +28,7 @@ void tim1_up_tim10_isr(void)
   calc_freq();
   start_up();
   gen_pwm();
-
+  //pwm_parameter_identification();
   voltage_measure (ADC1,ADC_CHANNEL1);
 }
 

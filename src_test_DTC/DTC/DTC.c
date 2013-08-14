@@ -349,13 +349,13 @@ void voltage_switch_inverter_VSI(int S_A, int S_B, int S_C)
   //-----------SC: S5 and S2--------------------------------------
   if (S_C==1)
     {
-      timer_set_oc_mode(TIM1, TIM_OC3, TIM_OCM_PWM1);
+      timer_set_oc_mode(TIM1, TIM_OC3, TIM_OCM_FORCE_HIGH);
       timer_enable_oc_output(TIM1, TIM_OC3 );   //S5 on
       timer_disable_oc_output (TIM1, TIM_OC3N); //S2 off
     }
   else
     {
-      timer_set_oc_mode(TIM1, TIM_OC3, TIM_OCM_PWM1);
+      timer_set_oc_mode(TIM1, TIM_OC3, TIM_OCM_FORCE_HIGH);
       timer_disable_oc_output(TIM1, TIM_OC3 );  //S5 off
       timer_enable_oc_output (TIM1, TIM_OC3N);  //S2 on
     }

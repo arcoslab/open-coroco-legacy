@@ -53,6 +53,8 @@
 #include "Shunt/shunt.h"
 #include "Shunt/shunt.c"
 #include "F4/interrupts.c"
+#include "Parameter_Identification/parameter_identification.h"
+#include "Parameter_Identification/parameter_identification.c"
 
 int main(void)
 {
@@ -96,7 +98,7 @@ float t_e_delta_percentage=10.0f;
 
 
 //motor parameters;
-float R_s=1.0f;
+float R_s=R_s_0;
 float pole_pairs=1.0f;
 float L_sq=1.0f;
 float psi_F=1.0f;
@@ -131,7 +133,7 @@ psi_sD   =direct_stator_flux_linkage_estimator_psi_sD     (TICK_PERIOD,V_sD,i_sD
 psi_sQ   =quadrature_stator_flux_linkage_estimator_psi_sQ (TICK_PERIOD,V_sQ,i_sQ,R_s);
 psi_s    =stator_flux_linkage_magnite_psi_s               (psi_sD,psi_sQ);
 psi_alpha=stator_flux_linkage_sector_alpha                (psi_sD,psi_sQ);
-/*
+
 t_e      =electromagnetic_torque_estimation_t_e(psi_sD,i_sQ,psi_sQ,i_sD,pole_pairs);
 psi_s_ref=stator_flux_linkage_reference_psi_s_ref(psi_F,t_e_ref,L_sq,pole_pairs);
 
@@ -140,7 +142,7 @@ d_psi=stator_flux_linkage_hysteresis_controller_d_psi   (psi_s_ref, psi_s,psi_de
 d_te =electromagnetic_torque_hysteresis_controller_d_te (t_e_ref  , t_e  ,t_e_delta_percentage);
 
 
-optimal_voltage_switching_vector_selection_table(d_psi,d_te,psi_alpha,&S_A,&S_B,&S_C);*/
+//optimal_voltage_switching_vector_selection_table(d_psi,d_te,psi_alpha,&S_A,&S_B,&S_C);
 //voltage_switch_inverter_VSI(S_A,S_B,S_C);
 
 
@@ -157,7 +159,8 @@ optimal_voltage_switching_vector_selection_table(d_psi,d_te,psi_alpha,&S_A,&S_B,
 if(S_A!=2 && S_B!=2 && S_C!=2)
 {
   //printf ("U_d: %6.2f V_sD: %6.2f V_sQ: %6.2f V_s: %6.2f cita: %6.2f i_sA: %6.2f i_sB: %6.2f i_sD: %6.2f i_sQ: %6.2f i_s: %6.2f cita: %6.2f freq: %6.2f\n", U_d,V_sD,V_sQ,V_s,cita_V_s,i_sA,i_sB,i_sD,i_sQ,i_s,cita_i_s,CUR_FREQ);
-  printf ("i_sD: %6.2f i_sQ: %6.2f i_s: %6.2f cita: %6.2f freq: %6.2f psi_sD: %6.2f psi_sQ: %6.2f psi_s: %6.2f psi_alpha: %6.2f   \n",i_sD,i_sQ,i_s,cita_i_s,CUR_FREQ,psi_sD,psi_sQ,psi_s,psi_alpha);
+//  printf ("i_sD: %6.2f i_sQ: %6.2f i_s: %6.2f cita: %6.2f freq: %6.2f psi_sD: %6.2f psi_sQ: %6.2f psi_s: %6.2f psi_alpha: %6.2f   \n",i_sD,i_sQ,i_s,cita_i_s,CUR_FREQ,psi_sD,psi_sQ,psi_s,psi_alpha);
+  printf ("freq: %6.2f psi_sD: %6.2f psi_sQ: %6.2f psi_s: %6.2f psi_alpha: %6.2f   \n", CUR_FREQ,psi_sD,psi_sQ,psi_s,psi_alpha);
 
 
 }
