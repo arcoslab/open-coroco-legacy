@@ -39,23 +39,38 @@ void adc_isr(void)
 { 
   static int adc_counter=0;
     
+  float V_stm32_A  = 0.0f;
+  float V_stm32_B  = 0.0f;
+  float V_stm32_Ud = 0.0f;
+  float V_shunt_A  = 0.0f;
+  float V_shunt_B  = 0.0f;
+  
+
   if (adc_counter==0)
   {
-    i_sA=adc_read_regular(ADC1)*(VREF/ADC_CONVERSION_FACTOR)*SHUNT_A_CONVERTION_FACTOR;
+    V_stm32_A = adc_read_regular(ADC1)*(VREF/ADC_CONVERSION_FACTOR);
+    V_shunt_A = (V_stm32_A-V_DIFFERENTIAL_AMPLIFIER_REFFERENCE)/G_OP_AMP_A;
+    i_sA      = V_shunt_A/R_SHUNT_A;
+    //i_sA=adc_read_regular(ADC1)*(VREF/ADC_CONVERSION_FACTOR)*SHUNT_A_CONVERTION_FACTOR;
     voltage_measure (ADC1,ADC_CHANNEL2);
     adc_counter++;
     //printf ("\nFirst Convertion");
   }
   else if (adc_counter==1)
   {
-    i_sB=adc_read_regular(ADC1)*(VREF/ADC_CONVERSION_FACTOR)*SHUNT_B_CONVERTION_FACTOR;
+    V_stm32_B = adc_read_regular(ADC1)*(VREF/ADC_CONVERSION_FACTOR);
+    V_shunt_B = (V_stm32_B-V_DIFFERENTIAL_AMPLIFIER_REFFERENCE)/G_OP_AMP_B;
+    i_sB      = V_shunt_B/R_SHUNT_B;
+    //i_sB=adc_read_regular(ADC1)*(VREF/ADC_CONVERSION_FACTOR)*SHUNT_B_CONVERTION_FACTOR;
     voltage_measure (ADC1,ADC_CHANNEL3);
     adc_counter++; 
     //printf ("\nSecond Convertion");
   }
   else
   {
-    U_d=adc_read_regular(ADC1)*(VREF/ADC_CONVERSION_FACTOR)*BATTERY_VOLTAGE_CONVERTION_FACTOR;
+    V_stm32_Ud = adc_read_regular(ADC1)*(VREF/ADC_CONVERSION_FACTOR);
+    U_d        = V_stm32_Ud*BATTERY_VOLTAGE_CONVERTION_FACTOR;
+    //U_d=adc_read_regular(ADC1)*(VREF/ADC_CONVERSION_FACTOR)*BATTERY_VOLTAGE_CONVERTION_FACTOR;
     adc_counter=0;
     //printf ("\nThird Convertion");
   }
