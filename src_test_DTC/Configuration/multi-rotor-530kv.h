@@ -15,4 +15,10 @@
 #define FIRST_CLOSE_LOOP_REF_FREQ 60.0f
 #define HALL_CAL_OFFSET -125.0f //degrees
 #define FREQ_TO_STOP_MOTOR 30.0f
-#define R_s_0 0.2f //0.2-0.25
+
+//motor parameters
+#define R_s_0          0.225f     //Ohms
+#define L_s_d_0          0.000036f  //H   0.000089f H
+#define L_s_q_0	       0.000036f  //H   0.000089f H
+#define psi_F_0        0.0051f    //Wb-t (weber-turn) (kg m2 s-2 A-1)
+#define pole_pairs_0   7	  //seven pole pairs (seven d-axis)

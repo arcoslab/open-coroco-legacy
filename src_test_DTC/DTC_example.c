@@ -98,10 +98,10 @@ float t_e_delta_percentage=10.0f;
 
 
 //motor parameters;
-float R_s=R_s_0;
-float pole_pairs=1.0f;
-float L_sq=1.0f;
-float psi_F=1.0f;
+float R_s        = R_s_0;
+float pole_pairs = pole_pairs_0;
+float L_sq       = L_s_q_0;
+float psi_F      = psi_F_0;
 
 
   while (1){
