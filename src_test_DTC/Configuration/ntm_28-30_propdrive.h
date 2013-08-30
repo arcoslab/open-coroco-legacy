@@ -27,8 +27,8 @@
 
 
 //motor parameters
-#define R_s_0          0.225f     //Ohms
-#define L_s_d_0          0.000036f  //H   0.000089f H
-#define L_s_q_0	       0.000036f  //H   0.000089f H
-#define psi_F_0        0.0051f    //Wb-t (weber-turn) (kg m2 s-2 A-1)
+#define R_s_0          0.26f     //Ohms
+#define L_s_d_0        0.000062f  //H   0.000089f H
+#define L_s_q_0	       0.000052f  //H   0.000089f H
+#define psi_F_0        0.0045f    //Wb-t (weber-turn) (kg m2 s-2 A-1)
 #define pole_pairs_0   6	  //six pole pairs (seven d-axis)

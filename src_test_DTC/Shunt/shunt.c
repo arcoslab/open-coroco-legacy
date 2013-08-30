@@ -21,8 +21,8 @@
 #define VREF 2.966f	//ADC conversion reference voltage
 
 //from 3V to the real current
-#define R_SHUNT_A 0.01f
-#define R_SHUNT_B 0.01f
+#define R_SHUNT_A 0.017f
+#define R_SHUNT_B 0.017f
 #define V_DIFFERENTIAL_AMPLIFIER_REFFERENCE 1.5f
 #define G_OP_AMP_A  100.0f
 #define G_OP_AMP_B  100.0f

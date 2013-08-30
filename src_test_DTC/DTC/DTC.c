@@ -158,7 +158,11 @@ float stator_flux_linkage_reference_psi_s_ref(float psi_F,float te_ref,float L_s
   return sqrt ( psi_F*psi_F+L_sq*L_sq*(2.0f*te_ref/(3*pole_pairs*psi_F))*(2.0f*te_ref/(3*pole_pairs*psi_F)) );
 }
 
-
+//quadrature rotor inductance
+float quadrature_rotor_inductance_L_sq (float psi_s,float psi_F,float t_e,float pole_pairs)
+{
+  return sqrt(psi_s*psi_s-psi_F*psi_F)/(2*t_e/(3*pole_pairs*psi_F));
+}
 
 //hysteresis windows
 int stator_flux_linkage_hysteresis_controller_d_psi(float psi_s_ref, float psi_s,float psi_delta_percentage)
