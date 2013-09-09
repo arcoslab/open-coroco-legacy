@@ -21,16 +21,28 @@
 #define VREF 2.966f	//ADC conversion reference voltage
 
 //from 3V to the real current
-#define R_SHUNT_A 0.017f
-#define R_SHUNT_B 0.017f
-#define V_DIFFERENTIAL_AMPLIFIER_REFFERENCE 1.5f
-#define G_OP_AMP_A  100.0f
-#define G_OP_AMP_B  100.0f
+#define R_SHUNT_A 0.05527f
+#define R_SHUNT_B 0.0555149f
+#define V_DIFFERENTIAL_AMPLIFIER_REFFERENCE 1.5015306f
+	//Ra=979Ohm
+	//Rb=981Ohm
+	//Rb/(Ra+Rb)=0.5005102
+	//0.5005102*3=1.5015306
+#define G_OP_AMP_A  2.0030675f 	
+	//Rf=981Ohm
+	//Ri=978Ohm
+	//G=1+Rf/Ri=2.0030675
+#define G_OP_AMP_B  2.0f
+	//Rf=979Ohm
+	//Ri=979Ohm
+	//G=2
 
 //from 3V to the real battery voltage
-#define R_A_Ud 1000.0f
-#define R_B_Ud 1000.0f
-#define BATTERY_VOLTAGE_CONVERTION_FACTOR (R_A_Ud+R_B_Ud)/R_A_Ud
+#define BATTERY_VOLTAGE_CONVERTION_FACTOR 4.951120  
+	//(R_A_Ud+R_B_Ud)/R_A_Ud
+	//R_A_Ud 3880Ohm
+	//R_B_Ud 982Ohm
+	
 
 
 void voltage_measure (uint32_t adc,uint8_t channel)

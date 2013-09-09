@@ -160,7 +160,8 @@ if(S_A!=2 && S_B!=2 && S_C!=2)
 {
   //printf ("U_d: %6.2f V_sD: %6.2f V_sQ: %6.2f V_s: %6.2f cita: %6.2f i_sA: %6.2f i_sB: %6.2f i_sD: %6.2f i_sQ: %6.2f i_s: %6.2f cita: %6.2f freq: %6.2f\n", U_d,V_sD,V_sQ,V_s,cita_V_s,i_sA,i_sB,i_sD,i_sQ,i_s,cita_i_s,CUR_FREQ);
 //  printf ("i_sD: %6.2f i_sQ: %6.2f i_s: %6.2f cita: %6.2f freq: %6.2f psi_sD: %6.2f psi_sQ: %6.2f psi_s: %6.2f psi_alpha: %6.2f   \n",i_sD,i_sQ,i_s,cita_i_s,CUR_FREQ,psi_sD,psi_sQ,psi_s,psi_alpha);
-  printf ("freq: %6.2f psi_sD: %6.2f psi_sQ: %6.2f psi_s: %6.2f psi_alpha: %6.2f   \n", CUR_FREQ,psi_sD,psi_sQ,psi_s,psi_alpha);
+//printf ("freq: %6.2f psi_sD: %6.2f psi_sQ: %6.2f psi_s: %6.2f psi_alpha: %6.2f   \n", CUR_FREQ,psi_sD,psi_sQ,psi_s,psi_alpha);
+printf ("freq: %6.2f i_sA: %6.2f i_sB: %6.2f U_d: %6.2f\n", CUR_FREQ,i_sA,i_sB,U_d);
 
 
 }

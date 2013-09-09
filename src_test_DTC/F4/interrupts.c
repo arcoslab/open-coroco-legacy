@@ -16,9 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-float i_sA=0;
-float i_sB=0;
-float U_d;
+float i_sA = 0.0f;
+float i_sB = 0.0f;
+float U_d  = 0.0f;
 
 void tim1_up_tim10_isr(void) 
 {
