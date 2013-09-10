@@ -52,15 +52,42 @@ void  switching_states (int* S_A, int* S_B, int* S_C)
 
   if      ( S1 && ~S4) *S_A=1;
   else if (~S1 &&  S4) *S_A=0;
-  else               *S_A=2;
+  else                 *S_A=2;
 
   if      ( S3 && ~S6) *S_B=1;
   else if (~S3 &&  S6) *S_B=0;
-  else               *S_B=2;
+  else                 *S_B=2;
 
   if      ( S5 && ~S2) *S_C=1;
   else if (~S5 &&  S2) *S_C=0;
   else                 *S_C=2;
+  
+  
+
+}
+
+void  floating_switching_states (float* S_A, float* S_B, float* S_C)
+{
+  //int S1,S2,S3,S4,S5,S6;
+  
+  S1=gpio_get(GPIOE, GPIO9 );
+  S4=gpio_get(GPIOE, GPIO8 );
+  S3=gpio_get(GPIOE, GPIO11);
+  S6=gpio_get(GPIOE, GPIO10);
+  S5=gpio_get(GPIOE, GPIO13);
+  S2=gpio_get(GPIOE, GPIO12);
+
+  if      ( S1 && ~S4) *S_A=1.0f;
+  else if (~S1 &&  S4) *S_A=0.0f;
+  else                 *S_A=0.5f;
+
+  if      ( S3 && ~S6) *S_B=1.0f;
+  else if (~S3 &&  S6) *S_B=0.0f;
+  else                 *S_B=0.5f;
+
+  if      ( S5 && ~S2) *S_C=1.0f;
+  else if (~S5 &&  S2) *S_C=0.0f;
+  else                 *S_C=0.5f;
   
   
 

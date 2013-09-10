@@ -31,6 +31,7 @@ float direct_stator_current_i_sD     (float i_sA);
 float quadrature_stator_current_i_sQ (float i_sA,float i_sB);
 
 void  switching_states               (int* S_A, int* S_B, int* S_C);
+void  floating_switching_states      (float* S_A, float* S_B, float* S_C);
 float direct_stator_voltage_V_sD     (int S_A, int S_B, int S_C,float U_d);
 float quadrature_stator_voltage_V_SQ (int S_B, int S_C,float U_d);
 

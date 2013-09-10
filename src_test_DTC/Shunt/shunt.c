@@ -38,7 +38,7 @@
 	//G=2
 
 //from 3V to the real battery voltage
-#define BATTERY_VOLTAGE_CONVERTION_FACTOR 4.951120  
+#define BATTERY_VOLTAGE_CONVERTION_FACTOR 4.951120f  
 	//(R_A_Ud+R_B_Ud)/R_A_Ud
 	//R_A_Ud 3880Ohm
 	//R_B_Ud 982Ohm

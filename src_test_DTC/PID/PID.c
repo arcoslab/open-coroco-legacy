@@ -34,7 +34,7 @@
 
 
 float attenuation=MIN_ATTENUATION;
-
+	
 uint ticks;
 uint period;
 uint temp_period;
@@ -57,8 +57,8 @@ int first_closed=false;
 int motor_off=false;
 
 
-
-
+//colecting current command
+bool collecting_current=false;
 
 void calc_freq(void) 
 {
@@ -217,6 +217,7 @@ void frequency_input(void)
         {
 	  printf("Motor Off now\n");
 	  counter_stop=1;
+
         }
          motor_off=true;
 	close_loop=false;
@@ -241,6 +242,12 @@ void frequency_input(void)
           counter_stop=0;
 	}
       }
+
+      //collecting current command
+      else if (strcmp(cmd, "s") == 0)
+      {
+        collecting_current=true;
+      }	 
 
     }
     if (!close_loop) {
