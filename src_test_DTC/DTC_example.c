@@ -48,11 +48,11 @@
 #include "PID/PID.c"
 #include "F4/initial_setup.h"
 #include "F4/initial_setup.c"
-#include "DTC/DTC.h"
-#include "DTC/DTC.c"
+
 #include "Shunt/shunt.h"
 #include "Shunt/shunt.c"
-
+#include "DTC/DTC.h"
+#include "DTC/DTC.c"
 #include "F4/interrupts.c"
 
 
@@ -66,110 +66,48 @@ int main(void)
   printf ("\n\n****************************************************************************************************************\n");
 
 
-int S_A=0;
-int S_B=0;
-int S_C=0;
 
 
 
-float i_sD=0.0f;
-float i_sQ=0.0f;
-float i_s=0.0f;
-float cita_i_s=0.0f;
-
-
-
-float V_sD=0.0f;
-float V_sQ=0.0f;
-float V_s =0.0f;
-float cita_V_s=0.0f;
-
-float psi_sD=0.0f;
-float psi_sQ=0.0f;
-float psi_s=0.0f;
-float psi_alpha=0.0f;
-
-float t_e=0.0f;
-
-float psi_s_ref=0.0f;
-float t_e_ref=0.0f;
-
-int   d_psi=0.0f;
-int   d_te=0.0f;
-float psi_delta_percentage=10.0f;
-float t_e_delta_percentage=10.0f;
-
-
-//motor parameters;
-float R_s        = R_s_0;
-float pole_pairs = pole_pairs_0;
-float L_sq       = L_s_q_0;
-float psi_F      = psi_F_0;
-
-
-  while (1){
+  while (1)
+  {
    
-   frequency_input();
+    frequency_input();
 
-//printf( "\ncuak" );
+    if (print_current==true )
+    {
+      current_counter=0;
+      while (current_counter<998)
+      {
+        printf("\n %d %6.2f   %6.2f   %6.2f %6.2f   %6.2f   %6.2f ",current_counter,current_data_i_sA[current_counter],current_data_i_sB[current_counter],-current_data_i_sA[current_counter]-current_data_i_sB[current_counter],U_d*switching_data_SA[current_counter],U_d*switching_data_SB[current_counter],U_d*switching_data_SC[current_counter]);
+        current_counter++;
+      }
+    
+      print_current=false;
+      current_counter=0;
+    }
+
+
+
 
    // printf(" e: %7.2f, e_p %6.2f, e_i: %6.2f, adv: %6.2f, c_f: %6.2f, r_f: %6.2f, att: %6.2f, counter %d, eof %d, buf: %s, v: %f, e_a: %f, cmd_a: %f\n", error, p_error, i_error, pi_control*180.0f/PI, 1.0f/(period/TICK_PERIOD), ref_freq, attenuation, counter, eof, cmd, value,est_angle*180.0f/PI,cmd_angle*180.0f/PI);
 
     //printf(" e: %7.2f, e_p %6.2f, e_i: %6.2f, adv: %6.2f, c_f: %6.2f, r_f: %6.2f, att: %6.2f, counter  %d, buf: %s, v: %f, e_a: %f, cmd_a: %f\n", error, p_error, i_error, pi_control*180.0f/PI, 1.0f/(period/TICK_PERIOD), ref_freq, attenuation, counter, cmd, value,est_angle*180.0f/PI,cmd_angle*180.0f/PI);
 
-if (print_current==true )
-{
-  current_counter=0;
-  while (current_counter<998)
-  {
-    printf("\n %d %6.2f   %6.2f   %6.2f %6.2f   %6.2f   %6.2f ",current_counter,current_data_i_sA[current_counter],current_data_i_sB[current_counter],-current_data_i_sA[current_counter]-current_data_i_sB[current_counter],U_d*switching_data_SA[current_counter],U_d*switching_data_SB[current_counter],U_d*switching_data_SC[current_counter]);
-    current_counter++;
-  }
-  print_current=false;
-  current_counter=0;
-}
+
 
 if (motor_stop==false)
 {
   //printf ("freq: %6.2f i_sA: %6.2f i_sB: %6.2f U_d: %6.2f\n", CUR_FREQ,i_sA,i_sB,U_d);
   //printf ("%6.2f \n",i_sA);
 }
-switching_states                        (&S_A,&S_B,&S_C);
-V_sD    =direct_stator_voltage_V_sD     (S_A,S_B,S_C,U_d);
-V_sQ    =quadrature_stator_voltage_V_SQ (S_B,S_C,U_d);
-V_s     =vector_magnitude               (V_sQ,V_sD);
-cita_V_s=vector_angle                   (V_sQ,V_sD);
-
-i_sD    =direct_stator_current_i_sD     (i_sA);
-i_sQ    =quadrature_stator_current_i_sQ (i_sA,i_sB);
-i_s     =vector_magnitude               (i_sQ,i_sD);
-cita_i_s=vector_angle                   (i_sQ,i_sD);
-
-psi_sD   =direct_stator_flux_linkage_estimator_psi_sD     (TICK_PERIOD,V_sD,i_sD,R_s);
-psi_sQ   =quadrature_stator_flux_linkage_estimator_psi_sQ (TICK_PERIOD,V_sQ,i_sQ,R_s);
-psi_s    =stator_flux_linkage_magnite_psi_s               (psi_sD,psi_sQ);
-psi_alpha=stator_flux_linkage_sector_alpha                (psi_sD,psi_sQ);
-
-t_e      =electromagnetic_torque_estimation_t_e(psi_sD,i_sQ,psi_sQ,i_sD,pole_pairs);
-psi_s_ref=stator_flux_linkage_reference_psi_s_ref(psi_F,t_e_ref,L_sq,pole_pairs);
-
-
-d_psi=stator_flux_linkage_hysteresis_controller_d_psi   (psi_s_ref, psi_s,psi_delta_percentage);
-d_te =electromagnetic_torque_hysteresis_controller_d_te (t_e_ref  , t_e  ,t_e_delta_percentage);
-
-
-//optimal_voltage_switching_vector_selection_table(d_psi,d_te,psi_alpha,&S_A,&S_B,&S_C);
-//voltage_switch_inverter_VSI(S_A,S_B,S_C);
 
 
 
-//if(S_A!=2 || S_B!=2 || S_C!=2)
 
-/*
-  if (S_A==2) S_A=0;
-  if (S_B==2) S_B=0;
-  if (S_C==2) S_C=0;
-*/
+
+
+
   //printf ("S_A: %4d S_1: %4d S_4: %4d S_B: %4d S_3: %4d S_6: %4d S_C: %4d S_5: %4d S_2: %4d V_sD: %6.2f V_sQ: %6.2f V_s: %6.2f cita: %6.2f\n", S_A,S1,S4,S_B,S3,S6,S_C,S5,S2,V_sD,V_sQ,V_s,cita_V_s);
   //printf ("S_A: %4d S_B: %4d S_C: %4d V_sD: %6.2f V_sQ: %6.2f V_s: %6.2f cita: %6.2f i_sD: %6.2f i_sQ: %6.2f i_s: %6.2f cita: %6.2f\n", S_A,S_B,S_C,V_sD,V_sQ,V_s,cita_V_s,i_sD,i_sQ,i_s,cita_i_s);
 

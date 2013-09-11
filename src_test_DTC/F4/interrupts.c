@@ -16,9 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-float i_sA = 0.0f;
-float i_sB = 0.0f;
-float U_d  = 0.0f;
+
 
 //printing buffers
 float current_data_i_sA[1000];
@@ -152,7 +150,16 @@ void adc_isr(void)
     V_stm32_Ud = adc_read_regular(ADC1)*(VREF/ADC_CONVERSION_FACTOR);
     U_d        = V_stm32_Ud*BATTERY_VOLTAGE_CONVERTION_FACTOR;    
     adc_counter=0;
+
+    //oscilloscope flag: start of DTC
+    gpio_set(GPIOD, GPIO9);
+
+    //DTC();
+  
+    //oscilloscope flag: end of DTC
+    gpio_clear(GPIOD, GPIO9);
+
   }
 
-  
+
 }

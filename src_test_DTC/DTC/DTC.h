@@ -17,6 +17,8 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+
+
 float vector_magnitude              (float quadrature_component, float direct_component);
 float vector_angle                  (float quadrature_component, float direct_component);
 float A_inverse_clark_transformation(float V_sD);
@@ -34,6 +36,8 @@ void  switching_states               (int* S_A, int* S_B, int* S_C);
 void  floating_switching_states      (float* S_A, float* S_B, float* S_C);
 float direct_stator_voltage_V_sD     (int S_A, int S_B, int S_C,float U_d);
 float quadrature_stator_voltage_V_SQ (int S_B, int S_C,float U_d);
+float floating_switches_direct_stator_voltage_V_sD     (float S_A, float S_B, float S_C,float U_d);
+float floating_switches_quadrature_stator_voltage_V_SQ (float S_B, float S_C,float U_d);
 
 //stator flux-linkage space vector estimation
 #define w_cutoff 0.0f
@@ -48,6 +52,7 @@ float electromagnetic_torque_estimation_t_e(float psi_sD,float i_sQ, float psi_s
 
 //stator flux-linkage reference
 float stator_flux_linkage_reference_psi_s_ref(float psi_F,float te_ref,float L_sq,float pole_pairs);
+float quadrature_rotor_inductance_L_sq (float psi_s,float psi_F,float t_e,float pole_pairs);
 
 //hysteresis windows
 int stator_flux_linkage_hysteresis_controller_d_psi   (float psi_s_ref, float psi_s,float psi_delta_percentage);
@@ -58,7 +63,7 @@ void optimal_voltage_switching_vector_selection_table(int d_psi,int d_t_e,float 
 void voltage_switch_inverter_VSI(int S_A, int S_B, int S_C);
 
 //wrapper
-void DTC(float i_A,float i_B, float U_d,float L_sq,float psi_F,float t_e_ref);
+void DTC(void);//(float i_A,float i_B, float U_d,float L_sq,float psi_F,float t_e_ref);
 
 
 

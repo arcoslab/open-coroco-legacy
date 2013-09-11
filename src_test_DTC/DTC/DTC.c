@@ -30,18 +30,18 @@ float quadrature_stator_current_i_sQ (float i_sA,float i_sB)
   return (1.0f/sqrt(3.0f))*(i_sA+2.0f*i_sB);
 }
 
-
+/*
   int S2;
   int S3;
   int S4;
   int S5;
   int S6;
   int S1;
-
+*/
 
 void  switching_states (int* S_A, int* S_B, int* S_C)
 {
-  //int S1,S2,S3,S4,S5,S6;
+  int S1,S2,S3,S4,S5,S6;
   
   S1=gpio_get(GPIOE, GPIO9 );
   S4=gpio_get(GPIOE, GPIO8 );
@@ -68,7 +68,7 @@ void  switching_states (int* S_A, int* S_B, int* S_C)
 
 void  floating_switching_states (float* S_A, float* S_B, float* S_C)
 {
-  //int S1,S2,S3,S4,S5,S6;
+  int S1,S2,S3,S4,S5,S6;
   
   S1=gpio_get(GPIOE, GPIO9 );
   S4=gpio_get(GPIOE, GPIO8 );
@@ -104,6 +104,16 @@ float quadrature_stator_voltage_V_SQ (int S_B, int S_C,float U_d)
   return (1.0f/sqrt(3))*U_d*(S_B-S_C);
 }
 
+
+float floating_switches_direct_stator_voltage_V_sD     (float S_A, float S_B, float S_C,float U_d)
+{
+  return (2.0f/3.0f)*U_d*(S_A-0.5f*S_B-0.5*S_C);
+}
+
+float floating_switches_quadrature_stator_voltage_V_SQ (float S_B, float S_C,float U_d)
+{ 
+  return (1.0f/sqrt(3))*U_d*(S_B-S_C);
+}
 
 //---------------------stator flux-linkage space vector estimation-------------------------------
 #define W_CUTOFF 0.0f
@@ -401,18 +411,6 @@ void voltage_switch_inverter_VSI(int S_A, int S_B, int S_C)
   //tim_force_update_event(TIM1);
 }
 
-/*
-//wrapper
-void DTC(float i_A,float i_B, float U_d,float L_sq,float psi_F,float t_e_ref);
-*/
-
-
-
-
-
-
-
-
 
 /*
 float direct_clark_transformation(float i_sA, float i_sB, float i_sC)
@@ -547,4 +545,85 @@ float stator_angle_to_phase_A(float stator_angle)
   	B=duty_cycle_to_angle(	B_inverse_clark_transformation(V_sD,V_sQ)	);
 	C=duty_cycle_to_angle(	C_inverse_clark_transformation(V_sD,V_sQ)	);
 */
+
+
+
+int S_A=0;
+int S_B=0;
+int S_C=0;
+
+float i_sA = 0.0f;
+float i_sB = 0.0f;
+float U_d  = 0.0f;
+
+float i_sD=0.0f;
+float i_sQ=0.0f;
+float i_s=0.0f;
+float cita_i_s=0.0f;
+
+float V_sD=0.0f;
+float V_sQ=0.0f;
+float V_s =0.0f;
+float cita_V_s=0.0f;
+
+float psi_sD=0.0f;
+float psi_sQ=0.0f;
+float psi_s=0.0f;
+float psi_alpha=0.0f;
+
+float t_e=0.0f;
+
+float psi_s_ref=0.0f;
+float t_e_ref=0.0f;
+
+int   d_psi=0.0f;
+int   d_te=0.0f;
+float psi_delta_percentage=10.0f;
+float t_e_delta_percentage=10.0f;
+
+
+//motor parameters;
+float R_s        = R_s_0;
+float pole_pairs = pole_pairs_0;
+float L_sq       = L_s_q_0;
+float psi_F      = psi_F_0;
+
+
+//wrapper
+void DTC(void)//(float i_sA,float i_sB, float U_d,float L_sq,float psi_F,float t_e_ref)
+{
+
+  //switching_states                        (&S_A,&S_B,&S_C);
+  //V_sD    =direct_stator_voltage_V_sD     (S_A,S_B,S_C,U_d);
+  //V_sQ    =quadrature_stator_voltage_V_SQ (S_B,S_C,U_d);
+  V_sD    =floating_switches_direct_stator_voltage_V_sD     (S_A,S_B,S_C,U_d);
+  V_sQ    =floating_switches_quadrature_stator_voltage_V_SQ (S_B,S_C,U_d);
+ 
+
+ V_s     =vector_magnitude               (V_sQ,V_sD);
+  cita_V_s=vector_angle                   (V_sQ,V_sD);
+
+  i_sD    =direct_stator_current_i_sD     (i_sA);
+  i_sQ    =quadrature_stator_current_i_sQ (i_sA,i_sB);
+  i_s     =vector_magnitude               (i_sQ,i_sD);
+  cita_i_s=vector_angle                   (i_sQ,i_sD);
+
+  psi_sD   =direct_stator_flux_linkage_estimator_psi_sD     (TICK_PERIOD,V_sD,i_sD,R_s);
+  psi_sQ   =quadrature_stator_flux_linkage_estimator_psi_sQ (TICK_PERIOD,V_sQ,i_sQ,R_s);
+  psi_s    =stator_flux_linkage_magnite_psi_s               (psi_sD,psi_sQ);
+  psi_alpha=stator_flux_linkage_sector_alpha                (psi_sD,psi_sQ);
+
+  t_e      =electromagnetic_torque_estimation_t_e(psi_sD,i_sQ,psi_sQ,i_sD,pole_pairs);
+  psi_s_ref=stator_flux_linkage_reference_psi_s_ref(psi_F,t_e_ref,L_sq,pole_pairs);
+
+
+  d_psi=stator_flux_linkage_hysteresis_controller_d_psi   (psi_s_ref, psi_s,psi_delta_percentage);
+  d_te =electromagnetic_torque_hysteresis_controller_d_te (t_e_ref  , t_e  ,t_e_delta_percentage);
+
+
+  optimal_voltage_switching_vector_selection_table(d_psi,d_te,psi_alpha,&S_A,&S_B,&S_C);
+  //voltage_switch_inverter_VSI(S_A,S_B,S_C);
+
+
+}
 
