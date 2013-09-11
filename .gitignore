@@ -10,6 +10,8 @@
 *.srec
 *.bin
 *.log
+*.pdf
+*.ods
 
 src1/motor.h
 .gdb_history

@@ -37,8 +37,8 @@
 
 //pwm-related timer configuration
 #define system_freq 	168000000 				//168MHz
-#define pwm_freq 	64000					//32000 
-#define pwmfreq_f 	64000.0f				//32000.0f
+#define pwm_freq 	32000					//64000					
+#define pwmfreq_f 	32000.0f 				//64000.0f				
 #define prescale 	1					//freq_CK_CNT=freq_CK_PSC/(PSC[15:0]+1)
 #define pwm_period_ARR 	system_freq/( pwm_freq*(prescale+1) )	
 #define repetition_counter_value 	0				
