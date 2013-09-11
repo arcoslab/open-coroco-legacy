@@ -111,12 +111,13 @@ float psi_F      = psi_F_0;
    
    frequency_input();
 
+//printf( "\ncuak" );
 
    // printf(" e: %7.2f, e_p %6.2f, e_i: %6.2f, adv: %6.2f, c_f: %6.2f, r_f: %6.2f, att: %6.2f, counter %d, eof %d, buf: %s, v: %f, e_a: %f, cmd_a: %f\n", error, p_error, i_error, pi_control*180.0f/PI, 1.0f/(period/TICK_PERIOD), ref_freq, attenuation, counter, eof, cmd, value,est_angle*180.0f/PI,cmd_angle*180.0f/PI);
 
     //printf(" e: %7.2f, e_p %6.2f, e_i: %6.2f, adv: %6.2f, c_f: %6.2f, r_f: %6.2f, att: %6.2f, counter  %d, buf: %s, v: %f, e_a: %f, cmd_a: %f\n", error, p_error, i_error, pi_control*180.0f/PI, 1.0f/(period/TICK_PERIOD), ref_freq, attenuation, counter, cmd, value,est_angle*180.0f/PI,cmd_angle*180.0f/PI);
 
-if (print_current==true)
+if (print_current==true )
 {
   current_counter=0;
   while (current_counter<998)

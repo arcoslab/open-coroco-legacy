@@ -247,6 +247,7 @@ void frequency_input(void)
       else if (strcmp(cmd, "s") == 0)
       {
         collecting_current=true;
+        printf("\nPrinting");
       }	 
 
     }

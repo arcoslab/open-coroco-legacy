@@ -42,9 +42,14 @@ void test_ports_init(void)
 {
   rcc_peripheral_enable_clock(&RCC_AHB1ENR, RCC_AHB1ENR_IOPBEN);
   rcc_peripheral_enable_clock(&RCC_AHB1ENR, RCC_AHB1ENR_IOPDEN);
+  //output ports
   gpio_mode_setup(GPIOB, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO15);  //PB15
   gpio_mode_setup(GPIOD, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO9);   //PD9
+  //input ports
   gpio_mode_setup(GPIOD, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO11);  //PD11
+  gpio_mode_setup(GPIOD, GPIO_MODE_INPUT , GPIO_PUPD_NONE, GPIO11);
+  gpio_set_af    (GPIOD, GPIO_AF0,                         GPIO11);
+  //gpio_clear(GPIOB, GPIO15);
 }
 
 
@@ -225,6 +230,7 @@ void system_init(void) {
   printled(4, LRED);
   tim_init();
   adc_init();
+  test_ports_init();
   stdin_init();
 }
 

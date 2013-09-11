@@ -21,4 +21,5 @@ void leds_init(void);
 void hall_init(void);
 void tim_init(void);
 void adc_init(void);
+void test_ports_init(void);
 void system_init(void);
