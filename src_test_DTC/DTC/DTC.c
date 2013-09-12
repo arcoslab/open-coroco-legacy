@@ -120,13 +120,14 @@ float floating_switches_quadrature_stator_voltage_V_SQ (float S_B, float S_C,flo
 float direct_stator_flux_linkage_estimator_psi_sD     (float T,float V_sD,float i_sD,float R_s)
 {
   static float previous_psi_sD=0.0f;
-  previous_psi_sD = ( previous_psi_sD+T*(V_sD-i_sD*R_s) )/(1+T*W_CUTOFF);
+  previous_psi_sD = ( previous_psi_sD+T*(V_sD-i_sD*R_s) )/(1.0f+T*W_CUTOFF);
   return previous_psi_sD;
 }
+
 float quadrature_stator_flux_linkage_estimator_psi_sQ (float T,float V_sQ,float i_sQ,float R_s)
 {
   static float previous_psi_sQ=0.0f;
-  previous_psi_sQ = ( previous_psi_sQ+T*(V_sQ-i_sQ*R_s) )/(1+T*W_CUTOFF);
+  previous_psi_sQ = ( previous_psi_sQ+T*(V_sQ-i_sQ*R_s) )/(1.0f+T*W_CUTOFF);
   return previous_psi_sQ;
 }
 
@@ -134,9 +135,10 @@ float stator_flux_linkage_magnite_psi_s               (float psi_sD,float psi_sQ
 {
   return sqrtf( (psi_sQ*psi_sQ+psi_sD*psi_sD) );
 }
-float stator_flux_linkage_sector_alpha                (float psi_sD, float psi_sQ)
+
+int stator_flux_linkage_sector_alpha                (float psi_sD, float psi_sQ)
 {
-  float psi_angle=0;
+  float psi_angle=0.0f;
   int psi_alpha=0;
   psi_angle=vector_angle(psi_sQ,psi_sD);
   
@@ -184,7 +186,7 @@ float stator_flux_linkage_sector_alpha                (float psi_sD, float psi_s
 //electromagnetic torque estimation
 float electromagnetic_torque_estimation_t_e(float psi_sD,float i_sQ, float psi_sQ,float i_sD,float pole_pairs)
 {
-  return (3.0/2.0f)*pole_pairs*(psi_sD*i_sQ-psi_sQ*i_sD);
+  return (3.0f/2.0f)*pole_pairs*(psi_sD*i_sQ-psi_sQ*i_sD);
 }
 
 
@@ -192,13 +194,13 @@ float electromagnetic_torque_estimation_t_e(float psi_sD,float i_sQ, float psi_s
 //stator flux-linkage reference
 float stator_flux_linkage_reference_psi_s_ref(float psi_F,float te_ref,float L_sq,float pole_pairs)
 {
-  return sqrt ( psi_F*psi_F+L_sq*L_sq*(2.0f*te_ref/(3*pole_pairs*psi_F))*(2.0f*te_ref/(3*pole_pairs*psi_F)) );
+  return sqrt ( psi_F*psi_F+L_sq*L_sq*(2.0f*te_ref/(3.0f*pole_pairs*psi_F))*(2.0f*te_ref/(3.0f*pole_pairs*psi_F)) );
 }
 
 //quadrature rotor inductance
 float quadrature_rotor_inductance_L_sq (float psi_s,float psi_F,float t_e,float pole_pairs)
 {
-  return sqrt(psi_s*psi_s-psi_F*psi_F)/(2*t_e/(3*pole_pairs*psi_F));
+  return sqrt(psi_s*psi_s-psi_F*psi_F)/(2.0f*t_e/(3.0f*pole_pairs*psi_F));
 }
 
 //hysteresis windows
@@ -223,7 +225,7 @@ int stator_flux_linkage_hysteresis_controller_d_psi(float psi_s_ref, float psi_s
 
 int electromagnetic_torque_hysteresis_controller_d_te(float t_e_ref, float t_e, float t_e_delta_percentage)
 {
-  int d_te=0.0f;
+  int d_te=0;
   
   //forward rotation  
   if (t_e_ref>=0.0f)
@@ -276,7 +278,7 @@ int electromagnetic_torque_hysteresis_controller_d_te(float t_e_ref, float t_e, 
 #define V_8  *S_A=0;*S_B=0;*S_C=0; //000
 
 
-void optimal_voltage_switching_vector_selection_table(int d_psi,int d_te,float alpha,int* S_A, int* S_B, int* S_C)
+void optimal_voltage_switching_vector_selection_table(int d_psi,int d_te,int alpha,int* S_A, int* S_B, int* S_C)
 {
 
   if (d_psi==1) { if      (d_te==1) { if           (alpha==1) { V_2 }
@@ -552,6 +554,10 @@ int S_A=0;
 int S_B=0;
 int S_C=0;
 
+float S_A_f=0;
+float S_B_f=0;
+float S_C_f=0;
+
 float i_sA = 0.0f;
 float i_sB = 0.0f;
 float U_d  = 0.0f;
@@ -568,13 +574,13 @@ float cita_V_s=0.0f;
 
 float psi_sD=0.0f;
 float psi_sQ=0.0f;
-float psi_s=0.0f;
-float psi_alpha=0.0f;
+float psi_s =0.0f;
+int psi_alpha=0;
 
 float t_e=0.0f;
 
 float psi_s_ref=0.0f;
-float t_e_ref=0.0f;
+float t_e_ref=10.0f;
 
 int   d_psi=0.0f;
 int   d_te=0.0f;
@@ -596,11 +602,11 @@ void DTC(void)//(float i_sA,float i_sB, float U_d,float L_sq,float psi_F,float t
   //switching_states                        (&S_A,&S_B,&S_C);
   //V_sD    =direct_stator_voltage_V_sD     (S_A,S_B,S_C,U_d);
   //V_sQ    =quadrature_stator_voltage_V_SQ (S_B,S_C,U_d);
-  V_sD    =floating_switches_direct_stator_voltage_V_sD     (S_A,S_B,S_C,U_d);
-  V_sQ    =floating_switches_quadrature_stator_voltage_V_SQ (S_B,S_C,U_d);
+  V_sD    =floating_switches_direct_stator_voltage_V_sD     (S_A_f,S_B_f,S_C_f,U_d);
+  V_sQ    =floating_switches_quadrature_stator_voltage_V_SQ (      S_B_f,S_C_f,U_d);
  
 
- V_s     =vector_magnitude               (V_sQ,V_sD);
+  V_s     =vector_magnitude               (V_sQ,V_sD);
   cita_V_s=vector_angle                   (V_sQ,V_sD);
 
   i_sD    =direct_stator_current_i_sD     (i_sA);

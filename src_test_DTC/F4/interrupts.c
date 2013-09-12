@@ -16,18 +16,70 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
+#define SAMPLES 500
 
 //printing buffers
-float current_data_i_sA[1000];
-float current_data_i_sB[1000];
-float switching_data_SA[1000];
-float switching_data_SB[1000];
-float switching_data_SC[1000];
+float current_data_i_sA[SAMPLES];
+float current_data_i_sB[SAMPLES];
+float switching_data_SA[SAMPLES];
+float switching_data_SB[SAMPLES];
+float switching_data_SC[SAMPLES];
+
 bool  inductance_measure=true;
 
 int current_counter=0;  
 bool print_current=false;
+
+float data_CUR_FREQ[SAMPLES];
+
+int data_S_A[SAMPLES];
+int data_S_B[SAMPLES];
+int data_S_C[SAMPLES];
+
+float data_S_A_f[SAMPLES];
+float data_S_B_f[SAMPLES];
+float data_S_C_f[SAMPLES];
+
+float data_i_sA [SAMPLES];
+float data_i_sB [SAMPLES];
+float data_U_d  [SAMPLES];
+
+float data_i_sD[SAMPLES];
+float data_i_sQ[SAMPLES];
+float data_i_s[SAMPLES];
+float data_cita_i_s[SAMPLES];
+
+float data_V_sD[SAMPLES];
+float data_V_sQ[SAMPLES];
+float data_V_s [SAMPLES];
+float data_cita_V_s[SAMPLES];
+
+float data_psi_sD[SAMPLES];
+float data_psi_sQ[SAMPLES];
+float data_psi_s [SAMPLES];
+int   data_psi_alpha[SAMPLES];
+
+float data_t_e[SAMPLES];
+
+float data_psi_s_ref[SAMPLES];
+float data_t_e_ref[SAMPLES];
+
+int   data_d_psi[SAMPLES];
+int   data_d_te[SAMPLES];
+float data_psi_delta_percentage[SAMPLES];
+float data_t_e_delta_percentage[SAMPLES];
+
+
+//motor parameters;
+float data_R_s[SAMPLES];
+float data_pole_pairs[SAMPLES];
+float data_L_sq[SAMPLES];
+float data_psi_F[SAMPLES];
+
+
+
+
+
 
 void tim1_up_tim10_isr(void) 
 {
@@ -36,6 +88,8 @@ void tim1_up_tim10_isr(void)
   gpio_set(GPIOD, GPIO9);
    
   floating_switching_states (&switching_data_SA[current_counter],&switching_data_SB[current_counter],&switching_data_SC[current_counter]);
+  
+  floating_switching_states (&S_A_f,&S_B_f,&S_C_f);
 
   //Clear the update interrupt flag
   timer_clear_flag(TIM1,  TIM_SR_UIF);
@@ -87,12 +141,13 @@ void adc_isr(void)
      }
  */
 
+/*
     //------------------------------------------
     //capturing current when user inputs s 100
     if (collecting_current==true)
     {
       //printf ("\nCollecting current!");
-      if (current_counter<1000)
+      if (current_counter<SAMPLES)
       {
         current_data_i_sA[current_counter]=i_sA;
         
@@ -106,7 +161,7 @@ void adc_isr(void)
       }
       //------------------------------------------
     }
-
+*/
   }
   else if (adc_counter==1)
   {
@@ -123,11 +178,13 @@ void adc_isr(void)
     voltage_measure (ADC1,ADC_CHANNEL3);
     adc_counter++; 
 
+
+/*
     //--------------------------------------------
     //capturing current when user inputs s 100
     if (collecting_current==true)
     {
-      if (current_counter<1000)
+      if (current_counter<SAMPLES)
       {
         current_data_i_sB[current_counter]=i_sB;
 	current_counter++;
@@ -140,7 +197,7 @@ void adc_isr(void)
       }
     }
     //--------------------------------------------
-
+*/
   }
   else
   {
@@ -154,8 +211,78 @@ void adc_isr(void)
     //oscilloscope flag: start of DTC
     gpio_set(GPIOD, GPIO9);
 
-    //DTC();
+    DTC();
   
+
+
+    //--------------------------------------------
+    //capturing current when user inputs s 100
+    if (collecting_current==true)
+    {
+      if (current_counter<SAMPLES)
+      {
+        current_data_i_sB[current_counter]=i_sB;
+
+	data_CUR_FREQ[current_counter]=CUR_FREQ;	
+
+        data_S_A[current_counter]=S_A;
+        data_S_B[current_counter]=S_B;
+        data_S_C[current_counter]=S_C;
+
+        data_S_A_f[current_counter]=S_A_f;
+        data_S_B_f[current_counter]=S_B_f;
+        data_S_C_f[current_counter]=S_C_f;
+
+        data_i_sA [current_counter]=i_sA;
+        data_i_sB [current_counter]=i_sB;
+        data_U_d  [current_counter]=U_d;
+
+        data_i_sD[current_counter]=i_sD;
+        data_i_sQ[current_counter]=i_sQ;
+        data_i_s[current_counter]=i_s;
+        data_cita_i_s[current_counter]=cita_i_s;
+
+        data_V_sD[current_counter]=V_sD;
+        data_V_sQ[current_counter]=V_sQ;
+        data_V_s [current_counter]=V_s;
+        data_cita_V_s[current_counter]=cita_V_s;
+
+        data_psi_sD[current_counter]=psi_sD;
+        data_psi_sQ[current_counter]=psi_sQ;
+        data_psi_s [current_counter]=psi_s;
+        data_psi_alpha[current_counter]=psi_alpha;
+
+        data_t_e[current_counter]=t_e;
+
+        data_psi_s_ref[current_counter]=psi_s_ref;
+        data_t_e_ref[current_counter]=t_e_ref;
+
+        data_d_psi[current_counter]=d_psi;
+        data_d_te[current_counter]=d_te;
+        data_psi_delta_percentage[current_counter]=psi_delta_percentage;
+        data_t_e_delta_percentage[current_counter]=t_e_delta_percentage;
+
+        data_R_s[current_counter]=R_s;
+        data_pole_pairs[current_counter]=pole_pairs;
+        data_L_sq[current_counter]=L_sq;
+        data_psi_F[current_counter]=psi_F;
+
+        
+	current_counter++;
+      }
+      else
+      {
+        current_counter=0;
+        collecting_current=false;
+        print_current=true;
+      }
+    }
+    //--------------------------------------------
+  
+    
+
+
+
     //oscilloscope flag: end of DTC
     gpio_clear(GPIOD, GPIO9);
 

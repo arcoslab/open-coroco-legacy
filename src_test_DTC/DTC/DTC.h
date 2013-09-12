@@ -44,7 +44,7 @@ float floating_switches_quadrature_stator_voltage_V_SQ (float S_B, float S_C,flo
 float direct_stator_flux_linkage_estimator_psi_sD     (float T,float V_sD,float i_sD,float R_s);
 float quadrature_stator_flux_linkage_estimator_psi_sQ (float T,float V_sQ,float i_sQ,float R_s);
 float stator_flux_linkage_magnite_psi_s               (float psi_sD,float psi_sQ);
-float stator_flux_linkage_sector_alpha                (float psi_sD, float psi_sQ);
+int stator_flux_linkage_sector_alpha                (float psi_sD, float psi_sQ);
 
 //electromagnetic torque estimation
 float electromagnetic_torque_estimation_t_e(float psi_sD,float i_sQ, float psi_sQ,float i_sD,float pole_pairs);
@@ -59,7 +59,7 @@ int stator_flux_linkage_hysteresis_controller_d_psi   (float psi_s_ref, float ps
 int electromagnetic_torque_hysteresis_controller_d_te(float t_e_ref  , float t_e  ,float t_e_delta_percentage);
 
 //output voltages
-void optimal_voltage_switching_vector_selection_table(int d_psi,int d_t_e,float alpha,int* S_A, int* S_B, int* S_C);
+void optimal_voltage_switching_vector_selection_table(int d_psi,int d_t_e,int alpha,int* S_A, int* S_B, int* S_C);
 void voltage_switch_inverter_VSI(int S_A, int S_B, int S_C);
 
 //wrapper

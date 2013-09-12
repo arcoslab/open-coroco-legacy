@@ -74,12 +74,83 @@ int main(void)
    
     frequency_input();
 
+    //------------------------------------------------------------------------------
     if (print_current==true )
     {
       current_counter=0;
-      while (current_counter<998)
+      while (current_counter<SAMPLES-2)
       {
-        printf("\n %d %6.2f   %6.2f   %6.2f %6.2f   %6.2f   %6.2f ",current_counter,current_data_i_sA[current_counter],current_data_i_sB[current_counter],-current_data_i_sA[current_counter]-current_data_i_sB[current_counter],U_d*switching_data_SA[current_counter],U_d*switching_data_SB[current_counter],U_d*switching_data_SC[current_counter]);
+        //printf("\n %d %6.2f   %6.2f   %6.2f %6.2f   %6.2f   %6.2f ",current_counter,current_data_i_sA[current_counter],current_data_i_sB[current_counter],-current_data_i_sA[current_counter]-current_data_i_sB[current_counter],U_d*switching_data_SA[current_counter],U_d*switching_data_SB[current_counter],U_d*switching_data_SC[current_counter]);
+
+        if (print_selection==0)
+        {
+          printf ("freq: %6.2f i_sA: %6.2f i_sB: %6.2f i_sD: %6.2f i_sQ: %6.2f i_s: %6.2f cita_i_s: %6.2f U_d: %6.2f \n", data_CUR_FREQ[current_counter],data_i_sA[current_counter],data_i_sB[current_counter],data_i_sD[current_counter],data_i_sQ[current_counter],data_i_s[current_counter],data_cita_i_s[current_counter],data_U_d[current_counter]);
+        }
+        else if (print_selection==1)
+        {
+          printf ("freq: %6.2f V_sD: %6.2f V_sQ: %6.2f V_s: %6.2f cita_V_s: %6.2f U_d: %6.2f \n", data_CUR_FREQ[current_counter],data_V_sD[current_counter],data_V_sQ[current_counter],data_V_s[current_counter],data_cita_V_s[current_counter],data_U_d[current_counter]);
+        }
+        else if (print_selection==2)
+        {
+          printf ("freq: %6.2f psi_sD: %6.2f psi_sQ: %6.2f psi_s: %6.2f psi_alpha: %4d U_d: %6.2f \n", data_CUR_FREQ[current_counter],data_psi_sD[current_counter],data_psi_sQ[current_counter],data_psi_s[current_counter],data_psi_alpha[current_counter],data_U_d[current_counter]);
+        }
+        else if (print_selection==3)
+        {
+          printf ("freq: %6.2f t_e: %8.2f psi_s_ref: %6.2f t_e_ref: %6.2f d_psi: %4d d_te: %4d psi_delta: %6.2f t_e_delta: %6.2f \n", data_CUR_FREQ[current_counter],data_t_e[current_counter],data_psi_s_ref[current_counter],data_t_e_ref[current_counter],data_d_psi[current_counter],data_d_te[current_counter],data_psi_delta_percentage[current_counter],data_t_e_delta_percentage[current_counter]);
+        }
+
+
+/*
+        data_S_A[current_counter]=S_A;
+        data_S_B[current_counter]=S_B;
+        data_S_C[current_counter]=S_C;
+
+        data_S_A_f[current_counter]=S_A_f;
+        data_S_B_f[current_counter]=S_B_f;
+        data_S_C_f[current_counter]=S_C_f;
+
+        data_i_sA [current_counter]=i_sA;
+        data_i_sB [current_counter]=i_sB;
+        data_U_d  [current_counter]=U_d;
+
+        data_i_sD[current_counter]=i_sD;
+        data_i_sQ[current_counter]=i_sQ;
+        data_i_s[current_counter]=i_s;
+        data_cita_i_s[current_counter]=cita_i_s;
+
+        data_V_sD[current_counter];
+        data_V_sQ[current_counter];
+        data_V_s [current_counter];
+        data_cita_V_s[current_counter];
+
+        data_psi_sD[current_counter];
+        data_psi_sQ[current_counter];
+        data_psi_s [current_counter];
+        data_psi_alpha[current_counter];
+
+        data_t_e[current_counter];
+
+        data_psi_s_ref[current_counter];
+        data_t_e_ref[current_counter];
+
+        data_d_psi[current_counter];
+        data_d_te[current_counter];
+        data_psi_delta_percentage[current_counter];
+        data_t_e_delta_percentage[current_counter];
+
+        data_R_s[current_counter];
+        data_pole_pairs[current_counter;
+        data_L_sq[current_counter];
+        data_psi_F[current_counter];
+
+*/
+
+
+
+
+
+
+
         current_counter++;
       }
     
@@ -88,38 +159,85 @@ int main(void)
     }
 
 
+/*2
+    if (motor_stop==false)
+    {
+
+      if (print_selection==0)
+      {
+        printf ("freq: %6.2f i_sA: %6.2f i_sB: %6.2f i_sD: %6.2f i_sQ: %6.2f i_s: %6.2f cita_i_s: %6.2f U_d: %6.2f \n", CUR_FREQ,i_sA,i_sB,i_sD,i_sQ,i_s,cita_i_s,U_d);
+      }
+      else if (print_selection==1)
+      {
+        printf ("freq: %6.2f V_sD: %6.2f V_sQ: %6.2f V_s: %6.2f cita_V_s: %6.2f U_d: %6.2f \n", CUR_FREQ,V_sD,V_sQ,V_s,cita_V_s,U_d);
+      }
+      else if (print_selection==2)
+      {
+        printf ("freq: %6.2f psi_sD: %6.2f psi_sQ: %6.2f psi_s: %6.2f psi_alpha: %4d U_d: %6.2f \n", CUR_FREQ,psi_sD,psi_sQ,psi_s,psi_alpha,U_d);
+      }
+      else if (print_selection==3)
+      {
+        printf ("freq: %6.2f t_e: %8.2f psi_s_ref: %6.2f t_e_ref: %6.2f d_psi: %4d d_te: %4d psi_delta: %6.2f t_e_delta: %6.2f \n", CUR_FREQ,t_e,psi_s_ref,t_e_ref,d_psi,d_te,psi_delta_percentage,t_e_delta_percentage);
+      }
+    }
+*/
 
 
-   // printf(" e: %7.2f, e_p %6.2f, e_i: %6.2f, adv: %6.2f, c_f: %6.2f, r_f: %6.2f, att: %6.2f, counter %d, eof %d, buf: %s, v: %f, e_a: %f, cmd_a: %f\n", error, p_error, i_error, pi_control*180.0f/PI, 1.0f/(period/TICK_PERIOD), ref_freq, attenuation, counter, eof, cmd, value,est_angle*180.0f/PI,cmd_angle*180.0f/PI);
 
-    //printf(" e: %7.2f, e_p %6.2f, e_i: %6.2f, adv: %6.2f, c_f: %6.2f, r_f: %6.2f, att: %6.2f, counter  %d, buf: %s, v: %f, e_a: %f, cmd_a: %f\n", error, p_error, i_error, pi_control*180.0f/PI, 1.0f/(period/TICK_PERIOD), ref_freq, attenuation, counter, cmd, value,est_angle*180.0f/PI,cmd_angle*180.0f/PI);
+/*
+S_A_f
+S_B_f
+S_C_f
+
+i_sA
+i_sB
+U_d  
+
+i_sD
+i_sQ
+i_s
+cita_i_s
+
+V_sD
+V_sQ
+V_s 
+cita_V_s
+
+psi_sD
+psi_sQ
+psi_s
+psi_alpha
+
+t_e
+
+psi_s_ref
+t_e_ref
+
+d_psi
+d_te
+psi_delta_percentage
+t_e_delta_percentage
+
+
+//motor parameters;
+R_s        
+pole_pairs 
+L_sq       
+psi_F      
+*/
 
 
 
-if (motor_stop==false)
-{
-  //printf ("freq: %6.2f i_sA: %6.2f i_sB: %6.2f U_d: %6.2f\n", CUR_FREQ,i_sA,i_sB,U_d);
-  //printf ("%6.2f \n",i_sA);
-}
+
+    
 
 
 
 
-
-
-
-  //printf ("S_A: %4d S_1: %4d S_4: %4d S_B: %4d S_3: %4d S_6: %4d S_C: %4d S_5: %4d S_2: %4d V_sD: %6.2f V_sQ: %6.2f V_s: %6.2f cita: %6.2f\n", S_A,S1,S4,S_B,S3,S6,S_C,S5,S2,V_sD,V_sQ,V_s,cita_V_s);
-  //printf ("S_A: %4d S_B: %4d S_C: %4d V_sD: %6.2f V_sQ: %6.2f V_s: %6.2f cita: %6.2f i_sD: %6.2f i_sQ: %6.2f i_s: %6.2f cita: %6.2f\n", S_A,S_B,S_C,V_sD,V_sQ,V_s,cita_V_s,i_sD,i_sQ,i_s,cita_i_s);
-
-if(S_A!=2 && S_B!=2 && S_C!=2)
-{
-  //printf ("U_d: %6.2f V_sD: %6.2f V_sQ: %6.2f V_s: %6.2f cita: %6.2f i_sA: %6.2f i_sB: %6.2f i_sD: %6.2f i_sQ: %6.2f i_s: %6.2f cita: %6.2f freq: %6.2f\n", U_d,V_sD,V_sQ,V_s,cita_V_s,i_sA,i_sB,i_sD,i_sQ,i_s,cita_i_s,CUR_FREQ);
-//  printf ("i_sD: %6.2f i_sQ: %6.2f i_s: %6.2f cita: %6.2f freq: %6.2f psi_sD: %6.2f psi_sQ: %6.2f psi_s: %6.2f psi_alpha: %6.2f   \n",i_sD,i_sQ,i_s,cita_i_s,CUR_FREQ,psi_sD,psi_sQ,psi_s,psi_alpha);
-//printf ("freq: %6.2f psi_sD: %6.2f psi_sQ: %6.2f psi_s: %6.2f psi_alpha: %6.2f   \n", CUR_FREQ,psi_sD,psi_sQ,psi_s,psi_alpha);
-//printf ("freq: %6.2f i_sA: %6.2f i_sB: %6.2f U_d: %6.2f\n", CUR_FREQ,i_sA,i_sB,U_d);
-
-
-}
+    if(S_A!=2 && S_B!=2 && S_C!=2)
+    {
+      //printf ("freq: %6.2f i_sA: %6.2f i_sB: %6.2f U_d: %6.2f\n", CUR_FREQ,i_sA,i_sB,U_d);
+    }
 
   }
 }

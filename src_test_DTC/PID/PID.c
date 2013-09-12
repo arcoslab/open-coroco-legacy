@@ -31,6 +31,7 @@
 }
 */
 
+int print_selection=0;
 
 
 float attenuation=MIN_ATTENUATION;
@@ -247,9 +248,31 @@ void frequency_input(void)
       else if (strcmp(cmd, "s") == 0)
       {
         collecting_current=true;
-        printf("\nPrinting");
+        
       }	 
-
+      //print current command
+      else if (strcmp(cmd, "i") == 0)
+      {
+        print_selection=0;
+      }	 
+      //print flux-linkage command
+      else if (strcmp(cmd, "v") == 0)
+      {
+        print_selection=1;
+      }	 
+      //print torque command
+      else if (strcmp(cmd, "m") == 0)
+      {
+        print_selection=2;
+      }	 
+      else if (strcmp(cmd, "t") == 0)
+      {
+        print_selection=3;
+      }	 
+      else if (strcmp(cmd, "n") == 0)
+      {
+        print_selection=4;
+      }	 
     }
     if (!close_loop) {
       while (poll(stdin) > 0) {
