@@ -31,8 +31,19 @@
 }
 */
 
-int print_selection=0;
-
+int  print_selection              = 5;
+bool flux_linkage_capture         = false;
+int  flux_linkage_capture_counter = 0;
+int  flux_linkage_capture_timer    = 0;
+int        flux_limit_counter_1=0;
+int        flux_limit_counter_2=0;
+int        flux_limit_counter_3=0;
+int        flux_limit_counter_4=0;
+int        flux_limit_counter_5=0;
+int        flux_limit_counter_6=0;
+int        flux_limit_counter_7=0;
+int        flux_limit_counter_8=0;
+int        flux_limit_counter_9=0;
 
 float attenuation=MIN_ATTENUATION;
 	
@@ -41,9 +52,9 @@ uint period;
 uint temp_period;
 float est_angle=0;
 float duty_a=0.0f;
-float duty_b=0;
-float duty_c=0;
-float ref_freq=1;
+float duty_b=0.0f;
+float duty_c=0.0f;
+float ref_freq=0.0f;//1;
 
 //printf("D1: %6.2f S1: %6.2f D2: %6.2f S2: %6.2f D3: %6.2f S3: %6.2f\n",divisor_voltage,source_voltage,divisor_voltage_2,source_voltage_2,divisor_voltage_3,source_voltage_3);
 
@@ -55,7 +66,7 @@ float cmd_angle;
 float pi_control;
 int close_loop=false;
 int first_closed=false;
-int motor_off=false;
+int motor_off=true;//false;
 
 
 //colecting current command
@@ -231,7 +242,9 @@ void frequency_input(void)
      if (receive_a_string(cmd_s) ){
       printf("%s", cmd_s);
       sscanf(cmd_s, "%s %f", cmd, &value);
-      if (strcmp(cmd, "f") == 0){ //set ref freq
+      
+      if (strcmp(cmd, "f") == 0)
+      { //set ref freq
 	printf("New reference frequency: %f. Confirm? (Press \"y\")\n", value);
 	ref_freq=value;
 	if (value == 0.0f) {
@@ -241,13 +254,29 @@ void frequency_input(void)
 	  motor_stop=false;
 	  motor_off=false;
           counter_stop=0;
+
+          //collecting_current=true;
+          //print_selection=5;
 	}
+      
       }
 
       //collecting current command
       else if (strcmp(cmd, "s") == 0)
       {
         collecting_current=true;
+        
+        //flux_linkage_capture=true;
+        flux_linkage_capture_counter=0;
+        flux_limit_counter_1=0;
+        flux_limit_counter_2=0;
+        flux_limit_counter_3=0;
+        flux_limit_counter_4=0;
+        flux_limit_counter_5=0;
+        flux_limit_counter_6=0;
+        flux_limit_counter_7=0;
+        flux_limit_counter_8=0;
+        flux_limit_counter_9=0;
         
       }	 
       //print current command
@@ -272,6 +301,10 @@ void frequency_input(void)
       else if (strcmp(cmd, "n") == 0)
       {
         print_selection=4;
+      }	 
+            else if (strcmp(cmd, "a") == 0)
+      {
+        print_selection=5;
       }	 
     }
     if (!close_loop) {
@@ -312,9 +345,9 @@ void gen_pwm(void) {
   }
 
   if (motor_off) {
-    duty_a=0;
-    duty_b=0;
-    duty_c=0;
+    duty_a=0.0f;
+    duty_b=0.0f;
+    duty_c=0.0f;
   }
 
   if (duty_a < 0.0f)
@@ -356,7 +389,13 @@ void gen_pwm(void) {
       timer_enable_oc_output(TIM1, TIM_OC3 );
       timer_disable_oc_output (TIM1, TIM_OC3N);
     }
-
+/*
+  if (~motor_off) {
+    duty_a=1.0f;
+    duty_b=1.0f;
+    duty_c=1.0f;
+  }
+*/
   /* Set the capture compare value for OC1. */
   timer_set_oc_value(TIM1, TIM_OC1, duty_a*attenuation*PWM_PERIOD_ARR);
   /* Set the capture compare value for OC1. */

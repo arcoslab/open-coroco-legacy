@@ -79,15 +79,15 @@ void  floating_switching_states (float* S_A, float* S_B, float* S_C)
 
   if      ( S1 && ~S4) *S_A=1.0f;
   else if (~S1 &&  S4) *S_A=0.0f;
-  else                 *S_A=0.5f;
+  else                 *S_A=0.5f;//0.5f;
 
   if      ( S3 && ~S6) *S_B=1.0f;
   else if (~S3 &&  S6) *S_B=0.0f;
-  else                 *S_B=0.5f;
+  else                 *S_B=0.5f;//0.5f;
 
   if      ( S5 && ~S2) *S_C=1.0f;
   else if (~S5 &&  S2) *S_C=0.0f;
-  else                 *S_C=0.5f;
+  else                 *S_C=0.5f;//0.5f;
   
   
 
@@ -116,18 +116,55 @@ float floating_switches_quadrature_stator_voltage_V_SQ (float S_B, float S_C,flo
 }
 
 //---------------------stator flux-linkage space vector estimation-------------------------------
-#define W_CUTOFF 0.0f
+#define W_CUTOFF 100.0f
+
+//#define a_sD (-0.000008721f+0.00000905405538680536f)*2.0f
+//#define b_sQ (-0.00000227445533769063f)*2.0f
+#define a_sD 0.0f
+#define b_sQ 0.0f
+
+
 float direct_stator_flux_linkage_estimator_psi_sD     (float T,float V_sD,float i_sD,float R_s)
 {
   static float previous_psi_sD=0.0f;
-  previous_psi_sD = ( previous_psi_sD+T*(V_sD-i_sD*R_s) )/(1.0f+T*W_CUTOFF);
+  //previous_psi_sD = ( previous_psi_sD+T*(V_sD-i_sD*R_s) )/(1.0f+T*W_CUTOFF)-a_sD;
+
+  float psi_increment_sD=0.0f;
+  
+  previous_psi_sD = ( previous_psi_sD+T*(V_sD) )/(1.0f+T*W_CUTOFF);
+  //previous_psi_sD = ( T*(V_sD) );
+/*
+  psi_increment_sD = T*(V_sD-i_sD*R_s); 
+  if (psi_increment_sD==0)  {  previous_psi_sD = ( previous_psi_sD+psi_increment_sD      ); }///(1.0f+T*W_CUTOFF);  }
+  else                      {  previous_psi_sD = ( previous_psi_sD+psi_increment_sD-a_sD ); }///(1.0f+T*W_CUTOFF);  }
+*/
+  //---------------------
+  //canceling the flux-linkage when the motor is off
+  //if (motor_off==true) {previous_psi_sD=0.0f;};
+  //--------------------- 
+
   return previous_psi_sD;
 }
 
 float quadrature_stator_flux_linkage_estimator_psi_sQ (float T,float V_sQ,float i_sQ,float R_s)
 {
   static float previous_psi_sQ=0.0f;
-  previous_psi_sQ = ( previous_psi_sQ+T*(V_sQ-i_sQ*R_s) )/(1.0f+T*W_CUTOFF);
+
+  //previous_psi_sQ = ( previous_psi_sQ+T*(V_sQ-i_sQ*R_s) )/(1.0f+T*W_CUTOFF)-b_sQ;
+  previous_psi_sQ = ( previous_psi_sQ+T*(V_sQ) )/(1.0f+T*W_CUTOFF);
+  //previous_psi_sQ = ( T*(V_sQ) );
+
+/*
+  float psi_increment_sQ=0.0f;
+  psi_increment_sQ=T*(V_sQ-i_sQ*R_s);
+  if (psi_increment_sQ==0.0f)  {  previous_psi_sQ = ( previous_psi_sQ+psi_increment_sQ      ); }///(1.0f+T*W_CUTOFF);  }
+  else                         {  previous_psi_sQ = ( previous_psi_sQ+psi_increment_sQ-b_sQ ); }///(1.0f+T*W_CUTOFF);  }
+*/  
+
+  //------------------------------------
+  //canceling the flux-linkage when the motor is off
+  //if (motor_off==true) {previous_psi_sQ=0.0f;}
+  //-------------------------------------
   return previous_psi_sQ;
 }
 
