@@ -116,7 +116,7 @@ float floating_switches_quadrature_stator_voltage_V_SQ (float S_B, float S_C,flo
 }
 
 //---------------------stator flux-linkage space vector estimation-------------------------------
-#define W_CUTOFF 100.0f
+#define W_CUTOFF 200.0f
 
 //#define a_sD (-0.000008721f+0.00000905405538680536f)*2.0f
 //#define b_sQ (-0.00000227445533769063f)*2.0f
@@ -127,11 +127,11 @@ float floating_switches_quadrature_stator_voltage_V_SQ (float S_B, float S_C,flo
 float direct_stator_flux_linkage_estimator_psi_sD     (float T,float V_sD,float i_sD,float R_s)
 {
   static float previous_psi_sD=0.0f;
-  //previous_psi_sD = ( previous_psi_sD+T*(V_sD-i_sD*R_s) )/(1.0f+T*W_CUTOFF)-a_sD;
+  previous_psi_sD = ( previous_psi_sD+T*(V_sD-i_sD*R_s) )/(1.0f+T*W_CUTOFF);
 
-  float psi_increment_sD=0.0f;
+  //float psi_increment_sD=0.0f;
   
-  previous_psi_sD = ( previous_psi_sD+T*(V_sD) )/(1.0f+T*W_CUTOFF);
+  //previous_psi_sD = ( previous_psi_sD+T*(V_sD) )/(1.0f+T*W_CUTOFF);
   //previous_psi_sD = ( T*(V_sD) );
 /*
   psi_increment_sD = T*(V_sD-i_sD*R_s); 
@@ -150,8 +150,8 @@ float quadrature_stator_flux_linkage_estimator_psi_sQ (float T,float V_sQ,float 
 {
   static float previous_psi_sQ=0.0f;
 
-  //previous_psi_sQ = ( previous_psi_sQ+T*(V_sQ-i_sQ*R_s) )/(1.0f+T*W_CUTOFF)-b_sQ;
-  previous_psi_sQ = ( previous_psi_sQ+T*(V_sQ) )/(1.0f+T*W_CUTOFF);
+  previous_psi_sQ = ( previous_psi_sQ+T*(V_sQ-i_sQ*R_s) )/(1.0f+T*W_CUTOFF);
+  //previous_psi_sQ = ( previous_psi_sQ+T*(V_sQ) )/(1.0f+T*W_CUTOFF);
   //previous_psi_sQ = ( T*(V_sQ) );
 
 /*
@@ -617,12 +617,12 @@ int psi_alpha=0;
 float t_e=0.0f;
 
 float psi_s_ref=0.0f;
-float t_e_ref=10.0f;
+float t_e_ref=0.15f;
 
 int   d_psi=0.0f;
 int   d_te=0.0f;
-float psi_delta_percentage=10.0f;
-float t_e_delta_percentage=10.0f;
+float psi_delta_percentage=0.1f;//10.0f;
+float t_e_delta_percentage=0.1f;//10.0f;
 
 
 //motor parameters;

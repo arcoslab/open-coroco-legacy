@@ -33,7 +33,7 @@ int current_counter=0;
 bool print_current=false;
 
 float data_CUR_FREQ[SAMPLES];
-/*
+
 int data_S_A[SAMPLES];
 int data_S_B[SAMPLES];
 int data_S_C[SAMPLES];
@@ -44,6 +44,7 @@ float data_S_C_f[SAMPLES];
 
 float data_i_sA [SAMPLES];
 float data_i_sB [SAMPLES];
+
 float data_U_d  [SAMPLES];
 
 float data_i_sD[SAMPLES];
@@ -55,13 +56,13 @@ float data_V_sD[SAMPLES];
 float data_V_sQ[SAMPLES];
 float data_V_s [SAMPLES];
 float data_cita_V_s[SAMPLES];
-*/
+
 float data_psi_sD[SAMPLES];
 float data_psi_sQ[SAMPLES];
 float data_psi_s [SAMPLES];
 int   data_psi_alpha[SAMPLES];
 int timer[SAMPLES];
-/*
+
 float data_t_e[SAMPLES];
 
 float data_psi_s_ref[SAMPLES];
@@ -78,7 +79,7 @@ float data_R_s[SAMPLES];
 float data_pole_pairs[SAMPLES];
 float data_L_sq[SAMPLES];
 float data_psi_F[SAMPLES];
-*/
+
 
 
 
@@ -209,20 +210,20 @@ void adc_isr(void)
 
     V_stm32_Ud = adc_read_regular(ADC1)*(VREF/ADC_CONVERSION_FACTOR);
     
-    U_d=12.0f;
-    //U_d        = V_stm32_Ud*BATTERY_VOLTAGE_CONVERTION_FACTOR;    
+    //U_d=12.0f;
+    U_d        = V_stm32_Ud*BATTERY_VOLTAGE_CONVERTION_FACTOR;    
     adc_counter=0;
 
     //oscilloscope flag: start of DTC
     gpio_set(GPIOD, GPIO9);
 
 
-
+/*
     if (i_sA<0.2f && i_sA>-0.2f)
       i_sA=0.0f;
     if (i_sB<0.2f && i_sB>-0.2f)
       i_sB=0.0f;
-    
+*/    
 
     DTC();
   
@@ -296,8 +297,57 @@ void adc_isr(void)
         data_psi_s [current_counter]=psi_s;
         data_psi_alpha[current_counter]=psi_alpha;
         data_CUR_FREQ[current_counter]=CUR_FREQ;
+        data_U_d  [current_counter]=U_d;
         timer[current_counter]=flux_linkage_capture_counter;
      
+        //---------------------------------------
+        current_data_i_sB[current_counter]=i_sB;
+
+	data_CUR_FREQ[current_counter]=CUR_FREQ;	
+
+        data_S_A[current_counter]=S_A;
+        data_S_B[current_counter]=S_B;
+        data_S_C[current_counter]=S_C;
+
+        data_S_A_f[current_counter]=S_A_f;
+        data_S_B_f[current_counter]=S_B_f;
+        data_S_C_f[current_counter]=S_C_f;
+
+        data_i_sA [current_counter]=i_sA;
+        data_i_sB [current_counter]=i_sB;
+        data_U_d  [current_counter]=U_d;
+
+        data_i_sD[current_counter]=i_sD;
+        data_i_sQ[current_counter]=i_sQ;
+        data_i_s[current_counter]=i_s;
+        data_cita_i_s[current_counter]=cita_i_s;
+
+        data_V_sD[current_counter]=V_sD;
+        data_V_sQ[current_counter]=V_sQ;
+        data_V_s [current_counter]=V_s;
+        data_cita_V_s[current_counter]=cita_V_s;
+
+        data_psi_sD[current_counter]=psi_sD;
+        data_psi_sQ[current_counter]=psi_sQ;
+        data_psi_s [current_counter]=psi_s;
+        data_psi_alpha[current_counter]=psi_alpha;
+
+        data_t_e[current_counter]=t_e;
+
+        data_psi_s_ref[current_counter]=psi_s_ref;
+        data_t_e_ref[current_counter]=t_e_ref;
+
+        data_d_psi[current_counter]=d_psi;
+        data_d_te[current_counter]=d_te;
+        data_psi_delta_percentage[current_counter]=psi_delta_percentage;
+        data_t_e_delta_percentage[current_counter]=t_e_delta_percentage;
+
+        data_R_s[current_counter]=R_s;
+        data_pole_pairs[current_counter]=pole_pairs;
+        data_L_sq[current_counter]=L_sq;
+        data_psi_F[current_counter]=psi_F;
+        //------------------------------------------
+
 	current_counter++;
         flux_limit_counter_1=flux_linkage_capture_counter;
         flux_linkage_capture_counter++;
@@ -315,7 +365,56 @@ void adc_isr(void)
         data_psi_s [current_counter]=psi_s;
         data_psi_alpha[current_counter]=psi_alpha;
         data_CUR_FREQ[current_counter]=CUR_FREQ;
+        data_U_d  [current_counter]=U_d;
         timer[current_counter]=flux_linkage_capture_counter;
+
+        //---------------------------------------
+        current_data_i_sB[current_counter]=i_sB;
+
+	data_CUR_FREQ[current_counter]=CUR_FREQ;	
+
+        data_S_A[current_counter]=S_A;
+        data_S_B[current_counter]=S_B;
+        data_S_C[current_counter]=S_C;
+
+        data_S_A_f[current_counter]=S_A_f;
+        data_S_B_f[current_counter]=S_B_f;
+        data_S_C_f[current_counter]=S_C_f;
+
+        data_i_sA [current_counter]=i_sA;
+        data_i_sB [current_counter]=i_sB;
+        data_U_d  [current_counter]=U_d;
+
+        data_i_sD[current_counter]=i_sD;
+        data_i_sQ[current_counter]=i_sQ;
+        data_i_s[current_counter]=i_s;
+        data_cita_i_s[current_counter]=cita_i_s;
+
+        data_V_sD[current_counter]=V_sD;
+        data_V_sQ[current_counter]=V_sQ;
+        data_V_s [current_counter]=V_s;
+        data_cita_V_s[current_counter]=cita_V_s;
+
+        data_psi_sD[current_counter]=psi_sD;
+        data_psi_sQ[current_counter]=psi_sQ;
+        data_psi_s [current_counter]=psi_s;
+        data_psi_alpha[current_counter]=psi_alpha;
+
+        data_t_e[current_counter]=t_e;
+
+        data_psi_s_ref[current_counter]=psi_s_ref;
+        data_t_e_ref[current_counter]=t_e_ref;
+
+        data_d_psi[current_counter]=d_psi;
+        data_d_te[current_counter]=d_te;
+        data_psi_delta_percentage[current_counter]=psi_delta_percentage;
+        data_t_e_delta_percentage[current_counter]=t_e_delta_percentage;
+
+        data_R_s[current_counter]=R_s;
+        data_pole_pairs[current_counter]=pole_pairs;
+        data_L_sq[current_counter]=L_sq;
+        data_psi_F[current_counter]=psi_F;
+        //------------------------------------------
 
 	current_counter++;
         flux_limit_counter_2=flux_linkage_capture_counter;
@@ -332,7 +431,56 @@ void adc_isr(void)
         data_psi_s [current_counter]=psi_s;
         data_psi_alpha[current_counter]=psi_alpha;
         data_CUR_FREQ[current_counter]=CUR_FREQ;
+        data_U_d  [current_counter]=U_d;
         timer[current_counter]=flux_linkage_capture_counter;
+
+        //---------------------------------------
+        current_data_i_sB[current_counter]=i_sB;
+
+	data_CUR_FREQ[current_counter]=CUR_FREQ;	
+
+        data_S_A[current_counter]=S_A;
+        data_S_B[current_counter]=S_B;
+        data_S_C[current_counter]=S_C;
+
+        data_S_A_f[current_counter]=S_A_f;
+        data_S_B_f[current_counter]=S_B_f;
+        data_S_C_f[current_counter]=S_C_f;
+
+        data_i_sA [current_counter]=i_sA;
+        data_i_sB [current_counter]=i_sB;
+        data_U_d  [current_counter]=U_d;
+
+        data_i_sD[current_counter]=i_sD;
+        data_i_sQ[current_counter]=i_sQ;
+        data_i_s[current_counter]=i_s;
+        data_cita_i_s[current_counter]=cita_i_s;
+
+        data_V_sD[current_counter]=V_sD;
+        data_V_sQ[current_counter]=V_sQ;
+        data_V_s [current_counter]=V_s;
+        data_cita_V_s[current_counter]=cita_V_s;
+
+        data_psi_sD[current_counter]=psi_sD;
+        data_psi_sQ[current_counter]=psi_sQ;
+        data_psi_s [current_counter]=psi_s;
+        data_psi_alpha[current_counter]=psi_alpha;
+
+        data_t_e[current_counter]=t_e;
+
+        data_psi_s_ref[current_counter]=psi_s_ref;
+        data_t_e_ref[current_counter]=t_e_ref;
+
+        data_d_psi[current_counter]=d_psi;
+        data_d_te[current_counter]=d_te;
+        data_psi_delta_percentage[current_counter]=psi_delta_percentage;
+        data_t_e_delta_percentage[current_counter]=t_e_delta_percentage;
+
+        data_R_s[current_counter]=R_s;
+        data_pole_pairs[current_counter]=pole_pairs;
+        data_L_sq[current_counter]=L_sq;
+        data_psi_F[current_counter]=psi_F;
+        //------------------------------------------
 
 	current_counter++;
         flux_limit_counter_3=flux_linkage_capture_counter;
@@ -349,7 +497,56 @@ void adc_isr(void)
         data_psi_s [current_counter]=psi_s;
         data_psi_alpha[current_counter]=psi_alpha;
         data_CUR_FREQ[current_counter]=CUR_FREQ;
+        data_U_d  [current_counter]=U_d;
         timer[current_counter]=flux_linkage_capture_counter;
+
+        //---------------------------------------
+        current_data_i_sB[current_counter]=i_sB;
+
+	data_CUR_FREQ[current_counter]=CUR_FREQ;	
+
+        data_S_A[current_counter]=S_A;
+        data_S_B[current_counter]=S_B;
+        data_S_C[current_counter]=S_C;
+
+        data_S_A_f[current_counter]=S_A_f;
+        data_S_B_f[current_counter]=S_B_f;
+        data_S_C_f[current_counter]=S_C_f;
+
+        data_i_sA [current_counter]=i_sA;
+        data_i_sB [current_counter]=i_sB;
+        data_U_d  [current_counter]=U_d;
+
+        data_i_sD[current_counter]=i_sD;
+        data_i_sQ[current_counter]=i_sQ;
+        data_i_s[current_counter]=i_s;
+        data_cita_i_s[current_counter]=cita_i_s;
+
+        data_V_sD[current_counter]=V_sD;
+        data_V_sQ[current_counter]=V_sQ;
+        data_V_s [current_counter]=V_s;
+        data_cita_V_s[current_counter]=cita_V_s;
+
+        data_psi_sD[current_counter]=psi_sD;
+        data_psi_sQ[current_counter]=psi_sQ;
+        data_psi_s [current_counter]=psi_s;
+        data_psi_alpha[current_counter]=psi_alpha;
+
+        data_t_e[current_counter]=t_e;
+
+        data_psi_s_ref[current_counter]=psi_s_ref;
+        data_t_e_ref[current_counter]=t_e_ref;
+
+        data_d_psi[current_counter]=d_psi;
+        data_d_te[current_counter]=d_te;
+        data_psi_delta_percentage[current_counter]=psi_delta_percentage;
+        data_t_e_delta_percentage[current_counter]=t_e_delta_percentage;
+
+        data_R_s[current_counter]=R_s;
+        data_pole_pairs[current_counter]=pole_pairs;
+        data_L_sq[current_counter]=L_sq;
+        data_psi_F[current_counter]=psi_F;
+        //------------------------------------------
 
 	current_counter++;
         flux_limit_counter_4=flux_linkage_capture_counter;
@@ -367,7 +564,56 @@ void adc_isr(void)
         data_psi_s [current_counter]=psi_s;
         data_psi_alpha[current_counter]=psi_alpha;
         data_CUR_FREQ[current_counter]=CUR_FREQ;
+        data_U_d  [current_counter]=U_d;
         timer[current_counter]=flux_linkage_capture_counter;
+
+        //---------------------------------------
+        current_data_i_sB[current_counter]=i_sB;
+
+	data_CUR_FREQ[current_counter]=CUR_FREQ;	
+
+        data_S_A[current_counter]=S_A;
+        data_S_B[current_counter]=S_B;
+        data_S_C[current_counter]=S_C;
+
+        data_S_A_f[current_counter]=S_A_f;
+        data_S_B_f[current_counter]=S_B_f;
+        data_S_C_f[current_counter]=S_C_f;
+
+        data_i_sA [current_counter]=i_sA;
+        data_i_sB [current_counter]=i_sB;
+        data_U_d  [current_counter]=U_d;
+
+        data_i_sD[current_counter]=i_sD;
+        data_i_sQ[current_counter]=i_sQ;
+        data_i_s[current_counter]=i_s;
+        data_cita_i_s[current_counter]=cita_i_s;
+
+        data_V_sD[current_counter]=V_sD;
+        data_V_sQ[current_counter]=V_sQ;
+        data_V_s [current_counter]=V_s;
+        data_cita_V_s[current_counter]=cita_V_s;
+
+        data_psi_sD[current_counter]=psi_sD;
+        data_psi_sQ[current_counter]=psi_sQ;
+        data_psi_s [current_counter]=psi_s;
+        data_psi_alpha[current_counter]=psi_alpha;
+
+        data_t_e[current_counter]=t_e;
+
+        data_psi_s_ref[current_counter]=psi_s_ref;
+        data_t_e_ref[current_counter]=t_e_ref;
+
+        data_d_psi[current_counter]=d_psi;
+        data_d_te[current_counter]=d_te;
+        data_psi_delta_percentage[current_counter]=psi_delta_percentage;
+        data_t_e_delta_percentage[current_counter]=t_e_delta_percentage;
+
+        data_R_s[current_counter]=R_s;
+        data_pole_pairs[current_counter]=pole_pairs;
+        data_L_sq[current_counter]=L_sq;
+        data_psi_F[current_counter]=psi_F;
+        //------------------------------------------
 
 	current_counter++;
         flux_limit_counter_5=flux_linkage_capture_counter;
@@ -385,7 +631,56 @@ void adc_isr(void)
         data_psi_s [current_counter]=psi_s;
         data_psi_alpha[current_counter]=psi_alpha;
         data_CUR_FREQ[current_counter]=CUR_FREQ;
+        data_U_d  [current_counter]=U_d;
         timer[current_counter]=flux_linkage_capture_counter;
+
+        //---------------------------------------
+        current_data_i_sB[current_counter]=i_sB;
+
+	data_CUR_FREQ[current_counter]=CUR_FREQ;	
+
+        data_S_A[current_counter]=S_A;
+        data_S_B[current_counter]=S_B;
+        data_S_C[current_counter]=S_C;
+
+        data_S_A_f[current_counter]=S_A_f;
+        data_S_B_f[current_counter]=S_B_f;
+        data_S_C_f[current_counter]=S_C_f;
+
+        data_i_sA [current_counter]=i_sA;
+        data_i_sB [current_counter]=i_sB;
+        data_U_d  [current_counter]=U_d;
+
+        data_i_sD[current_counter]=i_sD;
+        data_i_sQ[current_counter]=i_sQ;
+        data_i_s[current_counter]=i_s;
+        data_cita_i_s[current_counter]=cita_i_s;
+
+        data_V_sD[current_counter]=V_sD;
+        data_V_sQ[current_counter]=V_sQ;
+        data_V_s [current_counter]=V_s;
+        data_cita_V_s[current_counter]=cita_V_s;
+
+        data_psi_sD[current_counter]=psi_sD;
+        data_psi_sQ[current_counter]=psi_sQ;
+        data_psi_s [current_counter]=psi_s;
+        data_psi_alpha[current_counter]=psi_alpha;
+
+        data_t_e[current_counter]=t_e;
+
+        data_psi_s_ref[current_counter]=psi_s_ref;
+        data_t_e_ref[current_counter]=t_e_ref;
+
+        data_d_psi[current_counter]=d_psi;
+        data_d_te[current_counter]=d_te;
+        data_psi_delta_percentage[current_counter]=psi_delta_percentage;
+        data_t_e_delta_percentage[current_counter]=t_e_delta_percentage;
+
+        data_R_s[current_counter]=R_s;
+        data_pole_pairs[current_counter]=pole_pairs;
+        data_L_sq[current_counter]=L_sq;
+        data_psi_F[current_counter]=psi_F;
+        //------------------------------------------
 
 	current_counter++;
         flux_limit_counter_6=flux_linkage_capture_counter;
@@ -403,7 +698,56 @@ void adc_isr(void)
         data_psi_s [current_counter]=psi_s;
         data_psi_alpha[current_counter]=psi_alpha;
         data_CUR_FREQ[current_counter]=CUR_FREQ;
+        data_U_d  [current_counter]=U_d;
         timer[current_counter]=flux_linkage_capture_counter;
+
+        //---------------------------------------
+        current_data_i_sB[current_counter]=i_sB;
+
+	data_CUR_FREQ[current_counter]=CUR_FREQ;	
+
+        data_S_A[current_counter]=S_A;
+        data_S_B[current_counter]=S_B;
+        data_S_C[current_counter]=S_C;
+
+        data_S_A_f[current_counter]=S_A_f;
+        data_S_B_f[current_counter]=S_B_f;
+        data_S_C_f[current_counter]=S_C_f;
+
+        data_i_sA [current_counter]=i_sA;
+        data_i_sB [current_counter]=i_sB;
+        data_U_d  [current_counter]=U_d;
+
+        data_i_sD[current_counter]=i_sD;
+        data_i_sQ[current_counter]=i_sQ;
+        data_i_s[current_counter]=i_s;
+        data_cita_i_s[current_counter]=cita_i_s;
+
+        data_V_sD[current_counter]=V_sD;
+        data_V_sQ[current_counter]=V_sQ;
+        data_V_s [current_counter]=V_s;
+        data_cita_V_s[current_counter]=cita_V_s;
+
+        data_psi_sD[current_counter]=psi_sD;
+        data_psi_sQ[current_counter]=psi_sQ;
+        data_psi_s [current_counter]=psi_s;
+        data_psi_alpha[current_counter]=psi_alpha;
+
+        data_t_e[current_counter]=t_e;
+
+        data_psi_s_ref[current_counter]=psi_s_ref;
+        data_t_e_ref[current_counter]=t_e_ref;
+
+        data_d_psi[current_counter]=d_psi;
+        data_d_te[current_counter]=d_te;
+        data_psi_delta_percentage[current_counter]=psi_delta_percentage;
+        data_t_e_delta_percentage[current_counter]=t_e_delta_percentage;
+
+        data_R_s[current_counter]=R_s;
+        data_pole_pairs[current_counter]=pole_pairs;
+        data_L_sq[current_counter]=L_sq;
+        data_psi_F[current_counter]=psi_F;
+        //------------------------------------------
 
 	current_counter++;
         flux_limit_counter_7=flux_linkage_capture_counter;
@@ -421,7 +765,56 @@ void adc_isr(void)
         data_psi_s [current_counter]=psi_s;
         data_psi_alpha[current_counter]=psi_alpha;
         data_CUR_FREQ[current_counter]=CUR_FREQ;
+        data_U_d  [current_counter]=U_d;
         timer[current_counter]=flux_linkage_capture_counter;
+
+        //---------------------------------------
+        current_data_i_sB[current_counter]=i_sB;
+
+	data_CUR_FREQ[current_counter]=CUR_FREQ;	
+
+        data_S_A[current_counter]=S_A;
+        data_S_B[current_counter]=S_B;
+        data_S_C[current_counter]=S_C;
+
+        data_S_A_f[current_counter]=S_A_f;
+        data_S_B_f[current_counter]=S_B_f;
+        data_S_C_f[current_counter]=S_C_f;
+
+        data_i_sA [current_counter]=i_sA;
+        data_i_sB [current_counter]=i_sB;
+        data_U_d  [current_counter]=U_d;
+
+        data_i_sD[current_counter]=i_sD;
+        data_i_sQ[current_counter]=i_sQ;
+        data_i_s[current_counter]=i_s;
+        data_cita_i_s[current_counter]=cita_i_s;
+
+        data_V_sD[current_counter]=V_sD;
+        data_V_sQ[current_counter]=V_sQ;
+        data_V_s [current_counter]=V_s;
+        data_cita_V_s[current_counter]=cita_V_s;
+
+        data_psi_sD[current_counter]=psi_sD;
+        data_psi_sQ[current_counter]=psi_sQ;
+        data_psi_s [current_counter]=psi_s;
+        data_psi_alpha[current_counter]=psi_alpha;
+
+        data_t_e[current_counter]=t_e;
+
+        data_psi_s_ref[current_counter]=psi_s_ref;
+        data_t_e_ref[current_counter]=t_e_ref;
+
+        data_d_psi[current_counter]=d_psi;
+        data_d_te[current_counter]=d_te;
+        data_psi_delta_percentage[current_counter]=psi_delta_percentage;
+        data_t_e_delta_percentage[current_counter]=t_e_delta_percentage;
+
+        data_R_s[current_counter]=R_s;
+        data_pole_pairs[current_counter]=pole_pairs;
+        data_L_sq[current_counter]=L_sq;
+        data_psi_F[current_counter]=psi_F;
+        //------------------------------------------
 
 	current_counter++;
         flux_limit_counter_8=flux_linkage_capture_counter;
@@ -433,13 +826,64 @@ void adc_isr(void)
         flux_linkage_capture_counter++;
       }
       else if(current_counter<SAMPLES)
-      {
+      { 
         data_psi_sD[current_counter]=psi_sD;
         data_psi_sQ[current_counter]=psi_sQ;
         data_psi_s [current_counter]=psi_s;
         data_psi_alpha[current_counter]=psi_alpha;
         data_CUR_FREQ[current_counter]=CUR_FREQ;
+        data_U_d  [current_counter]=U_d;
         timer[current_counter]=flux_linkage_capture_counter;
+
+
+        //---------------------------------------
+        current_data_i_sB[current_counter]=i_sB;
+
+	data_CUR_FREQ[current_counter]=CUR_FREQ;	
+
+        data_S_A[current_counter]=S_A;
+        data_S_B[current_counter]=S_B;
+        data_S_C[current_counter]=S_C;
+
+        data_S_A_f[current_counter]=S_A_f;
+        data_S_B_f[current_counter]=S_B_f;
+        data_S_C_f[current_counter]=S_C_f;
+
+        data_i_sA [current_counter]=i_sA;
+        data_i_sB [current_counter]=i_sB;
+        data_U_d  [current_counter]=U_d;
+
+        data_i_sD[current_counter]=i_sD;
+        data_i_sQ[current_counter]=i_sQ;
+        data_i_s[current_counter]=i_s;
+        data_cita_i_s[current_counter]=cita_i_s;
+
+        data_V_sD[current_counter]=V_sD;
+        data_V_sQ[current_counter]=V_sQ;
+        data_V_s [current_counter]=V_s;
+        data_cita_V_s[current_counter]=cita_V_s;
+
+        data_psi_sD[current_counter]=psi_sD;
+        data_psi_sQ[current_counter]=psi_sQ;
+        data_psi_s [current_counter]=psi_s;
+        data_psi_alpha[current_counter]=psi_alpha;
+
+        data_t_e[current_counter]=t_e;
+
+        data_psi_s_ref[current_counter]=psi_s_ref;
+        data_t_e_ref[current_counter]=t_e_ref;
+
+        data_d_psi[current_counter]=d_psi;
+        data_d_te[current_counter]=d_te;
+        data_psi_delta_percentage[current_counter]=psi_delta_percentage;
+        data_t_e_delta_percentage[current_counter]=t_e_delta_percentage;
+
+        data_R_s[current_counter]=R_s;
+        data_pole_pairs[current_counter]=pole_pairs;
+        data_L_sq[current_counter]=L_sq;
+        data_psi_F[current_counter]=psi_F;
+        //------------------------------------------
+
 
 	current_counter++;
         flux_limit_counter_9=flux_linkage_capture_counter;

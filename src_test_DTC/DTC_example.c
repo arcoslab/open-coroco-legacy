@@ -82,7 +82,7 @@ int main(void)
       {
         //printf("\n %d %6.2f   %6.2f   %6.2f %6.2f   %6.2f   %6.2f ",current_counter,current_data_i_sA[current_counter],current_data_i_sB[current_counter],-current_data_i_sA[current_counter]-current_data_i_sB[current_counter],U_d*switching_data_SA[current_counter],U_d*switching_data_SB[current_counter],U_d*switching_data_SC[current_counter]);
 
-/*
+
         if (print_selection==0)
         {
           printf ("freq: %6.2f i_sA: %6.2f i_sB: %6.2f i_sD: %6.2f i_sQ: %6.2f i_s: %6.2f cita_i_s: %6.2f U_d: %6.2f \n", data_CUR_FREQ[current_counter],data_i_sA[current_counter],data_i_sB[current_counter],data_i_sD[current_counter],data_i_sQ[current_counter],data_i_s[current_counter],data_cita_i_s[current_counter],data_U_d[current_counter]);
@@ -97,12 +97,13 @@ int main(void)
         }
         else if (print_selection==3)
         {
-          printf ("freq: %6.2f t_e: %8.2f psi_s_ref: %6.2f t_e_ref: %6.2f d_psi: %4d d_te: %4d psi_delta: %6.2f t_e_delta: %6.2f \n", data_CUR_FREQ[current_counter],data_t_e[current_counter],data_psi_s_ref[current_counter],data_t_e_ref[current_counter],data_d_psi[current_counter],data_d_te[current_counter],data_psi_delta_percentage[current_counter],data_t_e_delta_percentage[current_counter]);
+          //printf ("freq: %6.2f t_e: %8.2f psi_s_ref: %6.2f t_e_ref: %6.2f d_psi: %4d d_te: %4d psi_delta: %6.2f t_e_delta: %6.2f time: %8d \n", data_CUR_FREQ[current_counter],data_t_e[current_counter],data_psi_s_ref[current_counter],data_t_e_ref[current_counter],data_d_psi[current_counter],data_d_te[current_counter],data_psi_delta_percentage[current_counter],data_t_e_delta_percentage[current_counter],timer[current_counter]);
+                    printf ("t_e: %8.2f psi_s_ref: %6.4f t_e_ref: %6.2f d_psi: %4d d_te: %4d time: %8d psi_s: %6.4f psi_alpha: %4d \n",data_t_e[current_counter],data_psi_s_ref[current_counter],data_t_e_ref[current_counter],data_d_psi[current_counter],data_d_te[current_counter],timer[current_counter],data_psi_s[current_counter],data_psi_alpha[current_counter]);
         }
 
 
 
-*/
+
 //else 
 if (print_selection==5 )//&& data_V_s[current_counter] > 0.0f)
         {
@@ -120,7 +121,7 @@ if (print_selection==5 )//&& data_V_s[current_counter] > 0.0f)
 /*
           printf ("V_sD: %6.2f V_sQ: %6.2f i_sD: %6.2f i_sQ: %6.2f psi_sD: %f psi_sQ: %f psi_s: %6.5f psi_alpha: %2d R_s: %6.3f\n", data_V_sD[current_counter],data_V_sQ[current_counter],data_i_sD[current_counter],data_i_sQ[current_counter],data_psi_sD[current_counter],data_psi_sQ[current_counter],data_psi_s[current_counter],data_psi_alpha[current_counter],data_R_s[current_counter]);
 */
-printf ("psi_sD: %9.6f psi_sQ: %9.6f psi_s: %6.5f angle: %6.2f psi_alpha: %2d psi_D_diff: %10.6f psi_Q_diff: %10.6f timer: %8d freq: %6.2f\n", data_psi_sD[current_counter],data_psi_sQ[current_counter],data_psi_s[current_counter],vector_angle(data_psi_sQ[current_counter],data_psi_sD[current_counter]),data_psi_alpha[current_counter],data_psi_sD[current_counter]-data_psi_sD[current_counter-1],data_psi_sQ[current_counter]-data_psi_sQ[current_counter-1], timer[current_counter], data_CUR_FREQ[current_counter]);
+printf ("psi_sD: %9.6f psi_sQ: %9.6f psi_s: %6.5f angle: %6.2f psi_alpha: %2d timer: %8d freq: %6.2f U_d: %6.2f\n", data_psi_sD[current_counter],data_psi_sQ[current_counter],data_psi_s[current_counter],vector_angle(data_psi_sQ[current_counter],data_psi_sD[current_counter]),data_psi_alpha[current_counter], timer[current_counter], data_CUR_FREQ[current_counter],data_U_d  [current_counter]);
 
         }
 
