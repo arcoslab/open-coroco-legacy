@@ -31,7 +31,7 @@
 }
 */
 
-int  print_selection              = 5;
+int  print_selection              = 3;
 bool flux_linkage_capture         = false;
 int  flux_linkage_capture_counter = 0;
 int  flux_linkage_capture_timer    = 0;

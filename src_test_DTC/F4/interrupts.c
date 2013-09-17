@@ -80,7 +80,7 @@ float data_pole_pairs[SAMPLES];
 float data_L_sq[SAMPLES];
 float data_psi_F[SAMPLES];
 
-
+int data_optimal_voltage_vector[SAMPLES];
 
 
 
@@ -346,6 +346,7 @@ void adc_isr(void)
         data_pole_pairs[current_counter]=pole_pairs;
         data_L_sq[current_counter]=L_sq;
         data_psi_F[current_counter]=psi_F;
+        data_optimal_voltage_vector[current_counter]=optimal_voltage_vector;
         //------------------------------------------
 
 	current_counter++;
@@ -414,6 +415,7 @@ void adc_isr(void)
         data_pole_pairs[current_counter]=pole_pairs;
         data_L_sq[current_counter]=L_sq;
         data_psi_F[current_counter]=psi_F;
+        data_optimal_voltage_vector[current_counter]=optimal_voltage_vector;
         //------------------------------------------
 
 	current_counter++;
@@ -480,6 +482,7 @@ void adc_isr(void)
         data_pole_pairs[current_counter]=pole_pairs;
         data_L_sq[current_counter]=L_sq;
         data_psi_F[current_counter]=psi_F;
+        data_optimal_voltage_vector[current_counter]=optimal_voltage_vector;
         //------------------------------------------
 
 	current_counter++;
@@ -546,6 +549,7 @@ void adc_isr(void)
         data_pole_pairs[current_counter]=pole_pairs;
         data_L_sq[current_counter]=L_sq;
         data_psi_F[current_counter]=psi_F;
+        data_optimal_voltage_vector[current_counter]=optimal_voltage_vector;
         //------------------------------------------
 
 	current_counter++;
@@ -613,6 +617,7 @@ void adc_isr(void)
         data_pole_pairs[current_counter]=pole_pairs;
         data_L_sq[current_counter]=L_sq;
         data_psi_F[current_counter]=psi_F;
+        data_optimal_voltage_vector[current_counter]=optimal_voltage_vector;
         //------------------------------------------
 
 	current_counter++;
@@ -680,6 +685,7 @@ void adc_isr(void)
         data_pole_pairs[current_counter]=pole_pairs;
         data_L_sq[current_counter]=L_sq;
         data_psi_F[current_counter]=psi_F;
+        data_optimal_voltage_vector[current_counter]=optimal_voltage_vector;
         //------------------------------------------
 
 	current_counter++;
@@ -747,6 +753,7 @@ void adc_isr(void)
         data_pole_pairs[current_counter]=pole_pairs;
         data_L_sq[current_counter]=L_sq;
         data_psi_F[current_counter]=psi_F;
+        data_optimal_voltage_vector[current_counter]=optimal_voltage_vector;
         //------------------------------------------
 
 	current_counter++;
@@ -814,6 +821,7 @@ void adc_isr(void)
         data_pole_pairs[current_counter]=pole_pairs;
         data_L_sq[current_counter]=L_sq;
         data_psi_F[current_counter]=psi_F;
+        data_optimal_voltage_vector[current_counter]=optimal_voltage_vector;
         //------------------------------------------
 
 	current_counter++;
@@ -882,6 +890,7 @@ void adc_isr(void)
         data_pole_pairs[current_counter]=pole_pairs;
         data_L_sq[current_counter]=L_sq;
         data_psi_F[current_counter]=psi_F;
+        data_optimal_voltage_vector[current_counter]=optimal_voltage_vector;
         //------------------------------------------
 
 

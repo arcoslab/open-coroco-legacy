@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+int optimal_voltage_vector=0;
 
 //-----------------voltage and current space vectors---------------------
 
@@ -318,56 +318,56 @@ int electromagnetic_torque_hysteresis_controller_d_te(float t_e_ref, float t_e, 
 void optimal_voltage_switching_vector_selection_table(int d_psi,int d_te,int alpha,int* S_A, int* S_B, int* S_C)
 {
 
-  if (d_psi==1) { if      (d_te==1) { if           (alpha==1) { V_2 }
-                                      else if      (alpha==2) { V_3 }
-                                      else if      (alpha==3) { V_4 }
-                                      else if      (alpha==4) { V_5 }
-                                      else if      (alpha==5) { V_6 }
-                                      else if      (alpha==6) { V_1 }
-                                      else                    {     }                      
+  if (d_psi==1) { if      (d_te==1) { if           (alpha==1) { V_2 optimal_voltage_vector=2;}
+                                      else if      (alpha==2) { V_3 optimal_voltage_vector=3;}
+                                      else if      (alpha==3) { V_4 optimal_voltage_vector=4;}
+                                      else if      (alpha==4) { V_5 optimal_voltage_vector=5;}
+                                      else if      (alpha==5) { V_6 optimal_voltage_vector=6;}
+                                      else if      (alpha==6) { V_1 optimal_voltage_vector=1;}
+                                      else                    {     optimal_voltage_vector=9;}                      
                                     }
-                  else if (d_te==0) { if           (alpha==1) { V_7 }
-                                      else if      (alpha==2) { V_8 }
-                                      else if      (alpha==3) { V_7 }
-                                      else if      (alpha==4) { V_8 }
-                                      else if      (alpha==5) { V_7 }
+                  else if (d_te==0) { if           (alpha==1) { V_7 optimal_voltage_vector=7;}
+                                      else if      (alpha==2) { V_8 optimal_voltage_vector=8;}
+                                      else if      (alpha==3) { V_7 optimal_voltage_vector=7;}
+                                      else if      (alpha==4) { V_8 optimal_voltage_vector=8;}
+                                      else if      (alpha==5) { V_7 optimal_voltage_vector=7;}
                                       else if      (alpha==6) { V_8 }
                                       else                    {     }                      
                                     }
-                  else if (d_te==-1){ if           (alpha==1) { V_6 }
-                                      else if      (alpha==2) { V_1 }
-                                      else if      (alpha==3) { V_2 }
-                                      else if      (alpha==4) { V_3 }
-                                      else if      (alpha==5) { V_4 }
-                                      else if      (alpha==6) { V_5 }
-                                      else                    {     }                      
+                  else if (d_te==-1){ if           (alpha==1) { V_6 optimal_voltage_vector=6;}
+                                      else if      (alpha==2) { V_1 optimal_voltage_vector=1;}
+                                      else if      (alpha==3) { V_2 optimal_voltage_vector=2;}
+                                      else if      (alpha==4) { V_3 optimal_voltage_vector=3;}
+                                      else if      (alpha==5) { V_4 optimal_voltage_vector=4;}
+                                      else if      (alpha==6) { V_5 optimal_voltage_vector=5;}
+                                      else                    {     optimal_voltage_vector=10;}                      
                                     }
                 }
 
   else if (d_psi==1) { 
-                  if      (d_te==1) { if           (alpha==1) { V_3 }
-                                      else if      (alpha==2) { V_4 }
-                                      else if      (alpha==3) { V_5 }
-                                      else if      (alpha==4) { V_6 }
-                                      else if      (alpha==5) { V_1 }
-                                      else if      (alpha==6) { V_2 }
-                                      else                    {     }                      
+                  if      (d_te==1) { if           (alpha==1) { V_3 optimal_voltage_vector=3;}
+                                      else if      (alpha==2) { V_4 optimal_voltage_vector=4;}
+                                      else if      (alpha==3) { V_5 optimal_voltage_vector=5;}
+                                      else if      (alpha==4) { V_6 optimal_voltage_vector=6;}
+                                      else if      (alpha==5) { V_1 optimal_voltage_vector=1;}
+                                      else if      (alpha==6) { V_2 optimal_voltage_vector=2;}
+                                      else                    {     optimal_voltage_vector=11;}                      
                                     }
-                  else if (d_te==0) { if           (alpha==1) { V_8 }
-                                      else if      (alpha==2) { V_7 }
-                                      else if      (alpha==3) { V_8 }
-                                      else if      (alpha==4) { V_7 }
-                                      else if      (alpha==5) { V_8 }
-                                      else if      (alpha==6) { V_7 }
-                                      else                    {     }                      
+                  else if (d_te==0) { if           (alpha==1) { V_8 optimal_voltage_vector=8;}
+                                      else if      (alpha==2) { V_7 optimal_voltage_vector=7;}
+                                      else if      (alpha==3) { V_8 optimal_voltage_vector=8;}
+                                      else if      (alpha==4) { V_7 optimal_voltage_vector=7;}
+                                      else if      (alpha==5) { V_8 optimal_voltage_vector=8;}
+                                      else if      (alpha==6) { V_7 optimal_voltage_vector=7;}
+                                      else                    {     optimal_voltage_vector=12;}                      
                                     }
-                  else if (d_te==-1){ if           (alpha==1) { V_5 }
-                                      else if      (alpha==2) { V_6 }
-                                      else if      (alpha==3) { V_1 }
-                                      else if      (alpha==4) { V_2 }
-                                      else if      (alpha==5) { V_3 }
-                                      else if      (alpha==6) { V_4 }
-                                      else                    {     }                      
+                  else if (d_te==-1){ if           (alpha==1) { V_5 optimal_voltage_vector=5;}
+                                      else if      (alpha==2) { V_6 optimal_voltage_vector=6;}
+                                      else if      (alpha==3) { V_1 optimal_voltage_vector=1;}
+                                      else if      (alpha==4) { V_2 optimal_voltage_vector=2;}
+                                      else if      (alpha==5) { V_3 optimal_voltage_vector=3;}
+                                      else if      (alpha==6) { V_4 optimal_voltage_vector=4;}
+                                      else                    {     optimal_voltage_vector=13;}                      
                                     }
                 }
 
@@ -630,6 +630,7 @@ float R_s        = R_s_0;
 float pole_pairs = pole_pairs_0;
 float L_sq       = L_s_q_0;
 float psi_F      = psi_F_0;
+
 
 
 //wrapper

@@ -98,7 +98,10 @@ int main(void)
         else if (print_selection==3)
         {
           //printf ("freq: %6.2f t_e: %8.2f psi_s_ref: %6.2f t_e_ref: %6.2f d_psi: %4d d_te: %4d psi_delta: %6.2f t_e_delta: %6.2f time: %8d \n", data_CUR_FREQ[current_counter],data_t_e[current_counter],data_psi_s_ref[current_counter],data_t_e_ref[current_counter],data_d_psi[current_counter],data_d_te[current_counter],data_psi_delta_percentage[current_counter],data_t_e_delta_percentage[current_counter],timer[current_counter]);
-                    printf ("t_e: %8.2f psi_s_ref: %6.4f t_e_ref: %6.2f d_psi: %4d d_te: %4d time: %8d psi_s: %6.4f psi_alpha: %4d \n",data_t_e[current_counter],data_psi_s_ref[current_counter],data_t_e_ref[current_counter],data_d_psi[current_counter],data_d_te[current_counter],timer[current_counter],data_psi_s[current_counter],data_psi_alpha[current_counter]);
+                    printf ("te: %8.2f psi_s_ref: %6.4f te_ref: %6.2f dpsi: %2d dte: %2d psi_s: %6.4f psi_a: %1d t: %6d SA: %2d SB: %2d 2C: %1d v: %2d\n",data_t_e[current_counter],data_psi_s_ref[current_counter],data_t_e_ref[current_counter],data_d_psi[current_counter],data_d_te[current_counter],data_psi_s[current_counter],data_psi_alpha[current_counter],timer[current_counter],data_S_A[current_counter],data_S_B[current_counter],
+data_S_C[current_counter],data_optimal_voltage_vector[current_counter]);
+
+
         }
 
 
