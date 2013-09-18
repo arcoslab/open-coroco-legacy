@@ -27,6 +27,7 @@
 #define TICK_PERIOD 1.0f/PWMFREQ_F
 #define MYUINT_MAX 536870912
 #define t ticks/TICK_PERIOD
+#define TIME_CITA ticks*TICK_PERIOD
 #define CUR_FREQ 1.0f/(period*TICK_PERIOD)//1.0f/(period/TICK_PERIOD)   //**********:S*******//
 #define CRAZY_FREQUENCY period/TICK_PERIOD
 #define HALL_A() gpio_get(GPIOE, GPIO15);

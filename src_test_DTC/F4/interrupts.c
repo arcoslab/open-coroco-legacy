@@ -20,7 +20,8 @@
 #define FLUX_LINKAGE_TIMER_DELAY 4000
 
 //printing buffers
-
+float hall_angle=0.0f;
+float PID_angle[SAMPLES];
 float current_data_i_sA[SAMPLES];
 float current_data_i_sB[SAMPLES];
 float switching_data_SA[SAMPLES];
@@ -31,7 +32,7 @@ bool  inductance_measure=true;
 
 int current_counter=0;  
 bool print_current=false;
-
+bool first_movement=false;
 float data_CUR_FREQ[SAMPLES];
 
 int data_S_A[SAMPLES];
@@ -91,16 +92,17 @@ void tim1_up_tim10_isr(void)
   //oscilloscope flag: start of calculations
   gpio_set(GPIOD, GPIO9);
    
-  floating_switching_states (&switching_data_SA[current_counter],&switching_data_SB[current_counter],&switching_data_SC[current_counter]);
+  //floating_switching_states (&switching_data_SA[current_counter],&switching_data_SB[current_counter],&switching_data_SC[current_counter]);
   
-  floating_switching_states (&S_A_f,&S_B_f,&S_C_f);
+  //floating_switching_states (&S_A_f,&S_B_f,&S_C_f);
+  switching_states (&S_A,&S_B,&S_C);
 
   //Clear the update interrupt flag
   timer_clear_flag(TIM1,  TIM_SR_UIF);
 
   calc_freq();
-  start_up();
-  gen_pwm();
+  //***start_up();
+  //***gen_pwm();
 
   //oscilloscope flag: end of calculations
   gpio_clear(GPIOD, GPIO9);
@@ -218,12 +220,12 @@ void adc_isr(void)
     gpio_set(GPIOD, GPIO9);
 
 
-/*
+
     if (i_sA<0.2f && i_sA>-0.2f)
       i_sA=0.0f;
     if (i_sB<0.2f && i_sB>-0.2f)
       i_sB=0.0f;
-*/    
+    
 
     DTC();
   
@@ -284,6 +286,11 @@ void adc_isr(void)
 
     //--------------------------------------------
     //capturing current when user inputs s 100
+
+
+    //angle_hall1+=2*PI*CUR_FREQ*TIME_CITA
+    PID_angle[current_counter]=angle_hall1;   
+
     if (collecting_current==true)
     {
       
@@ -299,7 +306,7 @@ void adc_isr(void)
         data_CUR_FREQ[current_counter]=CUR_FREQ;
         data_U_d  [current_counter]=U_d;
         timer[current_counter]=flux_linkage_capture_counter;
-     
+        
         //---------------------------------------
         current_data_i_sB[current_counter]=i_sB;
 
@@ -347,6 +354,7 @@ void adc_isr(void)
         data_L_sq[current_counter]=L_sq;
         data_psi_F[current_counter]=psi_F;
         data_optimal_voltage_vector[current_counter]=optimal_voltage_vector;
+        PID_angle[current_counter]=angle_hall1;   
         //------------------------------------------
 
 	current_counter++;
@@ -416,6 +424,7 @@ void adc_isr(void)
         data_L_sq[current_counter]=L_sq;
         data_psi_F[current_counter]=psi_F;
         data_optimal_voltage_vector[current_counter]=optimal_voltage_vector;
+        PID_angle[current_counter]=angle_hall1;   
         //------------------------------------------
 
 	current_counter++;
@@ -483,6 +492,7 @@ void adc_isr(void)
         data_L_sq[current_counter]=L_sq;
         data_psi_F[current_counter]=psi_F;
         data_optimal_voltage_vector[current_counter]=optimal_voltage_vector;
+        PID_angle[current_counter]=angle_hall1;   
         //------------------------------------------
 
 	current_counter++;
@@ -550,6 +560,7 @@ void adc_isr(void)
         data_L_sq[current_counter]=L_sq;
         data_psi_F[current_counter]=psi_F;
         data_optimal_voltage_vector[current_counter]=optimal_voltage_vector;
+        PID_angle[current_counter]=angle_hall1;   
         //------------------------------------------
 
 	current_counter++;
@@ -618,6 +629,7 @@ void adc_isr(void)
         data_L_sq[current_counter]=L_sq;
         data_psi_F[current_counter]=psi_F;
         data_optimal_voltage_vector[current_counter]=optimal_voltage_vector;
+        PID_angle[current_counter]=angle_hall1;   
         //------------------------------------------
 
 	current_counter++;
@@ -686,6 +698,7 @@ void adc_isr(void)
         data_L_sq[current_counter]=L_sq;
         data_psi_F[current_counter]=psi_F;
         data_optimal_voltage_vector[current_counter]=optimal_voltage_vector;
+        PID_angle[current_counter]=angle_hall1;   
         //------------------------------------------
 
 	current_counter++;
@@ -706,7 +719,7 @@ void adc_isr(void)
         data_CUR_FREQ[current_counter]=CUR_FREQ;
         data_U_d  [current_counter]=U_d;
         timer[current_counter]=flux_linkage_capture_counter;
-
+        
         //---------------------------------------
         current_data_i_sB[current_counter]=i_sB;
 
@@ -754,6 +767,8 @@ void adc_isr(void)
         data_L_sq[current_counter]=L_sq;
         data_psi_F[current_counter]=psi_F;
         data_optimal_voltage_vector[current_counter]=optimal_voltage_vector;
+        PID_angle[current_counter]=angle_hall1;   
+
         //------------------------------------------
 
 	current_counter++;
@@ -774,7 +789,7 @@ void adc_isr(void)
         data_CUR_FREQ[current_counter]=CUR_FREQ;
         data_U_d  [current_counter]=U_d;
         timer[current_counter]=flux_linkage_capture_counter;
-
+        
         //---------------------------------------
         current_data_i_sB[current_counter]=i_sB;
 
@@ -822,6 +837,7 @@ void adc_isr(void)
         data_L_sq[current_counter]=L_sq;
         data_psi_F[current_counter]=psi_F;
         data_optimal_voltage_vector[current_counter]=optimal_voltage_vector;
+        PID_angle[current_counter]=angle_hall1;   
         //------------------------------------------
 
 	current_counter++;
@@ -891,6 +907,7 @@ void adc_isr(void)
         data_L_sq[current_counter]=L_sq;
         data_psi_F[current_counter]=psi_F;
         data_optimal_voltage_vector[current_counter]=optimal_voltage_vector;
+        PID_angle[current_counter]=angle_hall1;   
         //------------------------------------------
 
 

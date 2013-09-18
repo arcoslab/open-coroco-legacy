@@ -30,7 +30,8 @@
   }
 }
 */
-
+float angle_hall1=0.0f;
+float t_e_ref=10.0f;
 int  print_selection              = 3;
 bool flux_linkage_capture         = false;
 int  flux_linkage_capture_counter = 0;
@@ -107,7 +108,9 @@ void calc_freq(void)
       //hall falling edge: new cycle
       //new rotor position measurement
       est_angle=0;
-      
+      angle_hall1=0.0f;  //***
+
+
       if (ticks > last_fall_hall_a_ticks) 
       { //updating period
 	period=ticks-last_fall_hall_a_ticks;
@@ -138,6 +141,12 @@ void calc_freq(void)
      
       //update estimated current angle
       //est_angle+=2.0f*PI*TICK_PERIOD/(period/TICK_PERIOD);
+
+      angle_hall1+=360.0f*TICK_PERIOD*CUR_FREQ;//***
+      if (angle_hall1>=360.0f)
+        { angle_hall1=45.0f; }
+
+
       est_angle+=2.0f*PI/period;///TICK_PERIOD);
       if (est_angle > 2.0f*PI) 
       {
@@ -146,6 +155,10 @@ void calc_freq(void)
     }
   }
   hall_a_last=hall_a;
+
+
+   
+      
 }
 
 
@@ -247,6 +260,7 @@ void frequency_input(void)
       { //set ref freq
 	printf("New reference frequency: %f. Confirm? (Press \"y\")\n", value);
 	ref_freq=value;
+        t_e_ref=value;
 	if (value == 0.0f) {
 	  motor_stop=true;
 	} else {
@@ -255,7 +269,7 @@ void frequency_input(void)
 	  motor_off=false;
           counter_stop=0;
 
-          //collecting_current=true;
+          collecting_current=true;
           //print_selection=5;
 	}
       

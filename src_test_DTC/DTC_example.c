@@ -74,6 +74,8 @@ int main(void)
    
     frequency_input();
 
+                   // printf ("V_s_an: %6.2f i_s_an: %6.2f psi_s_an: %6.2f hall_angle: %6.2f freq: %6.2f U_d: %6.2f\n", cita_V_s,cita_i_s, vector_angle(psi_sQ,psi_sD), angle_hall1,CUR_FREQ,U_d); 
+
     //------------------------------------------------------------------------------
     if (print_current==true )
     {
@@ -93,18 +95,21 @@ int main(void)
         }
         else if (print_selection==2)
         {
-          printf ("freq: %6.2f psi_sD: %6.2f psi_sQ: %6.2f psi_s: %6.2f psi_alpha: %4d U_d: %6.2f \n", data_CUR_FREQ[current_counter],data_psi_sD[current_counter],data_psi_sQ[current_counter],data_psi_s[current_counter],data_psi_alpha[current_counter],data_U_d[current_counter]);
+          printf ("freq: %6.2f psi_sD: %9.6f psi_sQ: %9.6f psi_s: %9.6f psi_alpha: %2d U_d: %8.6f \n", data_CUR_FREQ[current_counter],data_psi_sD[current_counter],data_psi_sQ[current_counter],data_psi_s[current_counter],data_psi_alpha[current_counter],data_U_d[current_counter]);
         }
         else if (print_selection==3)
         {
           //printf ("freq: %6.2f t_e: %8.2f psi_s_ref: %6.2f t_e_ref: %6.2f d_psi: %4d d_te: %4d psi_delta: %6.2f t_e_delta: %6.2f time: %8d \n", data_CUR_FREQ[current_counter],data_t_e[current_counter],data_psi_s_ref[current_counter],data_t_e_ref[current_counter],data_d_psi[current_counter],data_d_te[current_counter],data_psi_delta_percentage[current_counter],data_t_e_delta_percentage[current_counter],timer[current_counter]);
-                    printf ("te: %8.2f psi_s_ref: %6.4f te_ref: %6.2f dpsi: %2d dte: %2d psi_s: %6.4f psi_a: %1d t: %6d SA: %2d SB: %2d 2C: %1d v: %2d\n",data_t_e[current_counter],data_psi_s_ref[current_counter],data_t_e_ref[current_counter],data_d_psi[current_counter],data_d_te[current_counter],data_psi_s[current_counter],data_psi_alpha[current_counter],timer[current_counter],data_S_A[current_counter],data_S_B[current_counter],
+                    printf ("te: %5.2f psi_s_ref: %10.8f te_ref: %6.2f dpsi: %2d dte: %2d psi_s: %6.4f psi_a: %1d t: %6d SA: %2d SB: %2d SC: %1d v: %2d\n",data_t_e[current_counter],data_psi_s_ref[current_counter],data_t_e_ref[current_counter],data_d_psi[current_counter],data_d_te[current_counter],data_psi_s[current_counter],data_psi_alpha[current_counter],timer[current_counter],data_S_A[current_counter],data_S_B[current_counter],
 data_S_C[current_counter],data_optimal_voltage_vector[current_counter]);
 
 
         }
+ else if (print_selection==4)
+        {
+                    printf ("V_s_an: %6.2f i_s_an: %6.2f psi_s_an: %6.2f hall_angle: %6.2f freq: %6.2f U_d: %6.2f timer: %8d\n", data_cita_V_s[current_counter],data_cita_i_s[current_counter], vector_angle(data_psi_sQ[current_counter],data_psi_sD[current_counter]), PID_angle[current_counter],data_CUR_FREQ[current_counter],data_U_d  [current_counter],timer[current_counter]); 
 
-
+        }
 
 
 //else 

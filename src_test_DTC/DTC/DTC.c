@@ -231,8 +231,10 @@ float electromagnetic_torque_estimation_t_e(float psi_sD,float i_sQ, float psi_s
 //stator flux-linkage reference
 float stator_flux_linkage_reference_psi_s_ref(float psi_F,float te_ref,float L_sq,float pole_pairs)
 {
-  return sqrt ( psi_F*psi_F+L_sq*L_sq*(2.0f*te_ref/(3.0f*pole_pairs*psi_F))*(2.0f*te_ref/(3.0f*pole_pairs*psi_F)) );
+  return sqrt ( psi_F*psi_F+L_sq*L_sq*(2.0f*te_ref/(3.0f*pole_pairs*psi_F))*(2.0f*te_ref/(3.0f*pole_pairs*psi_F))            );
 }
+
+
 
 //quadrature rotor inductance
 float quadrature_rotor_inductance_L_sq (float psi_s,float psi_F,float t_e,float pole_pairs)
@@ -260,18 +262,18 @@ int stator_flux_linkage_hysteresis_controller_d_psi(float psi_s_ref, float psi_s
 }
 
 
-int electromagnetic_torque_hysteresis_controller_d_te(float t_e_ref, float t_e, float t_e_delta_percentage)
+int electromagnetic_torque_hysteresis_controller_d_te(float te_ref, float t_e, float t_e_delta_percentage)
 {
   int d_te=0;
   
   //forward rotation  
-  if (t_e_ref>=0.0f)
+  if (te_ref>=0.0f)
   {
-    if      (t_e<=t_e_ref*(1.0f-t_e_delta_percentage))
+    if      (t_e<=te_ref*(1.0f-t_e_delta_percentage))
     {
       d_te=1;
     }
-    else if (t_e>=t_e_ref*(1.0f+t_e_delta_percentage))
+    else if (t_e>=te_ref*(1.0f+t_e_delta_percentage))
     {
       d_te=-1;
     }
@@ -283,11 +285,11 @@ int electromagnetic_torque_hysteresis_controller_d_te(float t_e_ref, float t_e, 
   //clockwise rotation
   else
   {
-    if (t_e_ref<=t_e_ref*(1.0f+t_e_delta_percentage))
+    if (t_e<=te_ref*(1.0f+t_e_delta_percentage))
     {
       d_te=1;
     }
-    else if (t_e>=t_e_ref*(1.0f-t_e_delta_percentage))
+    else if (t_e>=te_ref*(1.0f-t_e_delta_percentage))
     {
       d_te=-1;
     }
@@ -344,7 +346,7 @@ void optimal_voltage_switching_vector_selection_table(int d_psi,int d_te,int alp
                                     }
                 }
 
-  else if (d_psi==1) { 
+  else if (d_psi==0) { 
                   if      (d_te==1) { if           (alpha==1) { V_3 optimal_voltage_vector=3;}
                                       else if      (alpha==2) { V_4 optimal_voltage_vector=4;}
                                       else if      (alpha==3) { V_5 optimal_voltage_vector=5;}
@@ -381,11 +383,21 @@ void voltage_switch_inverter_VSI(int S_A, int S_B, int S_C)
   float duty_c=1.0f;
   float attenuation =1.0f;
   */
-  duty_a=1.0f;
-  duty_b=1.0f;
-  duty_c=1.0f;
-  attenuation =1.0f;
-
+  
+  if (motor_off) 
+  {
+    duty_a=0.0f;
+    duty_b=0.0f;
+    duty_c=0.0f;
+    attenuation=1.0f;
+  }
+  else
+  {
+    duty_a=1.0f;
+    duty_b=1.0f;
+    duty_c=1.0f;
+    attenuation =1.0f;
+  }
 /*      //PWM mode
 	TIM_OCM_FROZEN,
 	TIM_OCM_ACTIVE,
@@ -400,46 +412,76 @@ void voltage_switch_inverter_VSI(int S_A, int S_B, int S_C)
   //----------------SA: S1 and S4---------------------------------
   if (S_A==1)
     {
-      timer_set_oc_mode       (TIM1, TIM_OC1, TIM_OCM_FORCE_HIGH);
+      timer_set_oc_mode(TIM1, TIM_OC1, TIM_OCM_PWM1);
+      //timer_set_oc_mode       (TIM1, TIM_OC1, TIM_OCM_FORCE_HIGH);
       timer_enable_oc_output  (TIM1, TIM_OC1 );  //S1 on
       timer_disable_oc_output (TIM1, TIM_OC1N);  //S4 off
     }
 
-  else
+  else if (S_A==0)
     {
-      timer_set_oc_mode       (TIM1, TIM_OC1, TIM_OCM_FORCE_HIGH);
+      timer_set_oc_mode(TIM1, TIM_OC1, TIM_OCM_PWM1);
+      //timer_set_oc_mode       (TIM1, TIM_OC1, TIM_OCM_FORCE_HIGH);
       timer_disable_oc_output (TIM1, TIM_OC1);  //S1 off
       timer_enable_oc_output  (TIM1, TIM_OC1N); //S4 on
+    }
+  else
+    {
+      duty_a=0.0f;
+      timer_set_oc_mode(TIM1, TIM_OC1, TIM_OCM_PWM1);
+      //timer_set_oc_mode       (TIM1, TIM_OC1, TIM_OCM_FORCE_HIGH);
+      timer_disable_oc_output (TIM1, TIM_OC1);  //S1 off
+      timer_disable_oc_output  (TIM1, TIM_OC1N); //S4 on
     }
   //-------------SB: S3 and S6------------------------------------
   if (S_B==1)
     {
-      timer_set_oc_mode(TIM1, TIM_OC2, TIM_OCM_FORCE_HIGH);
+      timer_set_oc_mode(TIM1, TIM_OC2, TIM_OCM_PWM1);
+      //timer_set_oc_mode(TIM1, TIM_OC2, TIM_OCM_FORCE_HIGH);
       timer_enable_oc_output(TIM1, TIM_OC2 );    //S3 on
       timer_disable_oc_output (TIM1, TIM_OC2N);  //S6 off
     }
 
 
-  else
+  else if (S_B==0)
     {
-      timer_set_oc_mode(TIM1, TIM_OC2, TIM_OCM_FORCE_HIGH);
+      timer_set_oc_mode(TIM1, TIM_OC2, TIM_OCM_PWM1);
+      //timer_set_oc_mode(TIM1, TIM_OC2, TIM_OCM_FORCE_HIGH);
       timer_disable_oc_output(TIM1, TIM_OC2 );  //S3 off
       timer_enable_oc_output (TIM1, TIM_OC2N);  //S6 on
+    }
+  else 
+    {
+      duty_b=0.0f;
+      timer_set_oc_mode(TIM1, TIM_OC2, TIM_OCM_PWM1);
+      //timer_set_oc_mode(TIM1, TIM_OC2, TIM_OCM_FORCE_HIGH);
+      timer_disable_oc_output(TIM1, TIM_OC2 );  //S3 off
+      timer_disable_oc_output (TIM1, TIM_OC2N);  //S6 on
     }
   //-----------SC: S5 and S2--------------------------------------
   if (S_C==1)
     {
-      timer_set_oc_mode(TIM1, TIM_OC3, TIM_OCM_FORCE_HIGH);
+      timer_set_oc_mode(TIM1, TIM_OC3, TIM_OCM_PWM1);
+      //timer_set_oc_mode(TIM1, TIM_OC3, TIM_OCM_FORCE_HIGH);
       timer_enable_oc_output(TIM1, TIM_OC3 );   //S5 on
       timer_disable_oc_output (TIM1, TIM_OC3N); //S2 off
     }
-  else
+  else if (S_C==0)
     {
-      timer_set_oc_mode(TIM1, TIM_OC3, TIM_OCM_FORCE_HIGH);
+
+      timer_set_oc_mode(TIM1, TIM_OC3, TIM_OCM_PWM1);
+      //timer_set_oc_mode(TIM1, TIM_OC3, TIM_OCM_FORCE_HIGH);
       timer_disable_oc_output(TIM1, TIM_OC3 );  //S5 off
       timer_enable_oc_output (TIM1, TIM_OC3N);  //S2 on
     }
-
+  else 
+    {
+      duty_c=0.0f;
+      timer_set_oc_mode(TIM1, TIM_OC3, TIM_OCM_PWM1);
+      //timer_set_oc_mode(TIM1, TIM_OC3, TIM_OCM_FORCE_HIGH);
+      timer_disable_oc_output(TIM1, TIM_OC3 );  //S5 off
+      timer_disable_oc_output (TIM1, TIM_OC3N);  //S2 on
+    }
 
   /* Set the capture compare value for OC1. */
   timer_set_oc_value(TIM1, TIM_OC1, duty_a*attenuation*PWM_PERIOD_ARR);
@@ -617,11 +659,11 @@ int psi_alpha=0;
 float t_e=0.0f;
 
 float psi_s_ref=0.0f;
-float t_e_ref=0.15f;
+//float t_e_ref=10.0f;
 
 int   d_psi=0.0f;
 int   d_te=0.0f;
-float psi_delta_percentage=0.1f;//10.0f;
+float psi_delta_percentage=0.4f;//10.0f;
 float t_e_delta_percentage=0.1f;//10.0f;
 
 
@@ -638,10 +680,10 @@ void DTC(void)//(float i_sA,float i_sB, float U_d,float L_sq,float psi_F,float t
 {
 
   //switching_states                        (&S_A,&S_B,&S_C);
-  //V_sD    =direct_stator_voltage_V_sD     (S_A,S_B,S_C,U_d);
-  //V_sQ    =quadrature_stator_voltage_V_SQ (S_B,S_C,U_d);
-  V_sD    =floating_switches_direct_stator_voltage_V_sD     (S_A_f,S_B_f,S_C_f,U_d);
-  V_sQ    =floating_switches_quadrature_stator_voltage_V_SQ (      S_B_f,S_C_f,U_d);
+  V_sD    =direct_stator_voltage_V_sD     (S_A,S_B,S_C,U_d);
+  V_sQ    =quadrature_stator_voltage_V_SQ (S_B,S_C,U_d);
+  //V_sD    =floating_switches_direct_stator_voltage_V_sD     (S_A_f,S_B_f,S_C_f,U_d);
+  //V_sQ    =floating_switches_quadrature_stator_voltage_V_SQ (      S_B_f,S_C_f,U_d);
  
 
   V_s     =vector_magnitude               (V_sQ,V_sD);
@@ -666,7 +708,7 @@ void DTC(void)//(float i_sA,float i_sB, float U_d,float L_sq,float psi_F,float t
 
 
   optimal_voltage_switching_vector_selection_table(d_psi,d_te,psi_alpha,&S_A,&S_B,&S_C);
-  //voltage_switch_inverter_VSI(S_A,S_B,S_C);
+  voltage_switch_inverter_VSI(S_A,S_B,S_C);
 
 
 }
