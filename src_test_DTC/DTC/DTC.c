@@ -116,7 +116,7 @@ float floating_switches_quadrature_stator_voltage_V_SQ (float S_B, float S_C,flo
 }
 
 //---------------------stator flux-linkage space vector estimation-------------------------------
-#define W_CUTOFF 200.0f
+#define W_CUTOFF 100.0f
 
 //#define a_sD (-0.000008721f+0.00000905405538680536f)*2.0f
 //#define b_sQ (-0.00000227445533769063f)*2.0f
@@ -680,10 +680,10 @@ void DTC(void)//(float i_sA,float i_sB, float U_d,float L_sq,float psi_F,float t
 {
 
   //switching_states                        (&S_A,&S_B,&S_C);
-  V_sD    =direct_stator_voltage_V_sD     (S_A,S_B,S_C,U_d);
-  V_sQ    =quadrature_stator_voltage_V_SQ (S_B,S_C,U_d);
-  //V_sD    =floating_switches_direct_stator_voltage_V_sD     (S_A_f,S_B_f,S_C_f,U_d);
-  //V_sQ    =floating_switches_quadrature_stator_voltage_V_SQ (      S_B_f,S_C_f,U_d);
+  //V_sD    =direct_stator_voltage_V_sD     (S_A,S_B,S_C,U_d);
+  //V_sQ    =quadrature_stator_voltage_V_SQ (S_B,S_C,U_d);
+  V_sD    =floating_switches_direct_stator_voltage_V_sD     (S_A_f,S_B_f,S_C_f,U_d);
+  V_sQ    =floating_switches_quadrature_stator_voltage_V_SQ (      S_B_f,S_C_f,U_d);
  
 
   V_s     =vector_magnitude               (V_sQ,V_sD);
@@ -708,7 +708,7 @@ void DTC(void)//(float i_sA,float i_sB, float U_d,float L_sq,float psi_F,float t
 
 
   optimal_voltage_switching_vector_selection_table(d_psi,d_te,psi_alpha,&S_A,&S_B,&S_C);
-  voltage_switch_inverter_VSI(S_A,S_B,S_C);
+  //voltage_switch_inverter_VSI(S_A,S_B,S_C);
 
 
 }

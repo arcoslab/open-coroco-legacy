@@ -92,17 +92,17 @@ void tim1_up_tim10_isr(void)
   //oscilloscope flag: start of calculations
   gpio_set(GPIOD, GPIO9);
    
-  //floating_switching_states (&switching_data_SA[current_counter],&switching_data_SB[current_counter],&switching_data_SC[current_counter]);
+  floating_switching_states (&switching_data_SA[current_counter],&switching_data_SB[current_counter],&switching_data_SC[current_counter]);
   
-  //floating_switching_states (&S_A_f,&S_B_f,&S_C_f);
-  switching_states (&S_A,&S_B,&S_C);
+  floating_switching_states (&S_A_f,&S_B_f,&S_C_f);
+  //switching_states (&S_A,&S_B,&S_C);
 
   //Clear the update interrupt flag
   timer_clear_flag(TIM1,  TIM_SR_UIF);
 
   calc_freq();
-  //***start_up();
-  //***gen_pwm();
+  start_up();
+  gen_pwm();
 
   //oscilloscope flag: end of calculations
   gpio_clear(GPIOD, GPIO9);
@@ -354,7 +354,7 @@ void adc_isr(void)
         data_L_sq[current_counter]=L_sq;
         data_psi_F[current_counter]=psi_F;
         data_optimal_voltage_vector[current_counter]=optimal_voltage_vector;
-        PID_angle[current_counter]=angle_hall1;   
+        PID_angle[current_counter]=cmd_angle;//angle_hall1;   
         //------------------------------------------
 
 	current_counter++;
@@ -424,7 +424,7 @@ void adc_isr(void)
         data_L_sq[current_counter]=L_sq;
         data_psi_F[current_counter]=psi_F;
         data_optimal_voltage_vector[current_counter]=optimal_voltage_vector;
-        PID_angle[current_counter]=angle_hall1;   
+        PID_angle[current_counter]=cmd_angle;//angle_hall1;   
         //------------------------------------------
 
 	current_counter++;
@@ -492,7 +492,7 @@ void adc_isr(void)
         data_L_sq[current_counter]=L_sq;
         data_psi_F[current_counter]=psi_F;
         data_optimal_voltage_vector[current_counter]=optimal_voltage_vector;
-        PID_angle[current_counter]=angle_hall1;   
+        PID_angle[current_counter]=cmd_angle;//angle_hall1;   
         //------------------------------------------
 
 	current_counter++;
@@ -560,7 +560,7 @@ void adc_isr(void)
         data_L_sq[current_counter]=L_sq;
         data_psi_F[current_counter]=psi_F;
         data_optimal_voltage_vector[current_counter]=optimal_voltage_vector;
-        PID_angle[current_counter]=angle_hall1;   
+        PID_angle[current_counter]=cmd_angle;//angle_hall1;   
         //------------------------------------------
 
 	current_counter++;
@@ -629,7 +629,7 @@ void adc_isr(void)
         data_L_sq[current_counter]=L_sq;
         data_psi_F[current_counter]=psi_F;
         data_optimal_voltage_vector[current_counter]=optimal_voltage_vector;
-        PID_angle[current_counter]=angle_hall1;   
+        PID_angle[current_counter]=cmd_angle;//angle_hall1;   
         //------------------------------------------
 
 	current_counter++;
@@ -698,7 +698,7 @@ void adc_isr(void)
         data_L_sq[current_counter]=L_sq;
         data_psi_F[current_counter]=psi_F;
         data_optimal_voltage_vector[current_counter]=optimal_voltage_vector;
-        PID_angle[current_counter]=angle_hall1;   
+        PID_angle[current_counter]=cmd_angle;//angle_hall1;   
         //------------------------------------------
 
 	current_counter++;
@@ -767,7 +767,7 @@ void adc_isr(void)
         data_L_sq[current_counter]=L_sq;
         data_psi_F[current_counter]=psi_F;
         data_optimal_voltage_vector[current_counter]=optimal_voltage_vector;
-        PID_angle[current_counter]=angle_hall1;   
+        PID_angle[current_counter]=cmd_angle;//angle_hall1;   
 
         //------------------------------------------
 
@@ -837,7 +837,7 @@ void adc_isr(void)
         data_L_sq[current_counter]=L_sq;
         data_psi_F[current_counter]=psi_F;
         data_optimal_voltage_vector[current_counter]=optimal_voltage_vector;
-        PID_angle[current_counter]=angle_hall1;   
+        PID_angle[current_counter]=cmd_angle;//angle_hall1;   
         //------------------------------------------
 
 	current_counter++;
@@ -907,7 +907,7 @@ void adc_isr(void)
         data_L_sq[current_counter]=L_sq;
         data_psi_F[current_counter]=psi_F;
         data_optimal_voltage_vector[current_counter]=optimal_voltage_vector;
-        PID_angle[current_counter]=angle_hall1;   
+        PID_angle[current_counter]=cmd_angle;//angle_hall1;   
         //------------------------------------------
 
 

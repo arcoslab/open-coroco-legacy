@@ -81,7 +81,7 @@ void tim_init(void)
 	 * - Direction up
 	 */
 	timer_set_mode(TIM1, TIM_CR1_CKD_CK_INT, //For dead time and filter sampling, not important for now.
-		       TIM_CR1_CMS_EDGE,	//TIM_CR1_CMS_EDGE
+		       TIM_CR1_CMS_CENTER_3,	//TIM_CR1_CMS_EDGE
 						//TIM_CR1_CMS_CENTER_1
 						//TIM_CR1_CMS_CENTER_2
 						//TIM_CR1_CMS_CENTER_3 la frequencia del pwm se divide a la mitad. (frecuencia senoidal)

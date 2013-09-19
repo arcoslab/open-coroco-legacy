@@ -144,13 +144,13 @@ void calc_freq(void)
 
       angle_hall1+=360.0f*TICK_PERIOD*CUR_FREQ;//***
       if (angle_hall1>=360.0f)
-        { angle_hall1=45.0f; }
+        { angle_hall1=0.0f; }
 
 
       est_angle+=2.0f*PI/period;///TICK_PERIOD);
       if (est_angle > 2.0f*PI) 
       {
-	est_angle=0;
+	est_angle=0.0f;
       }
     }
   }
@@ -346,6 +346,11 @@ void gen_pwm(void) {
   }
 
   cmd_angle=est_angle+HALL_CAL_OFFSET*PI/180.0f;
+/*  while (cmd_angle>=2.0f*PI)
+  {
+    cmd_angle=cmd_angle-2.0f*PI;
+  }*/
+
 
   if (!close_loop) {
     duty_a=sinf(cur_angle);
