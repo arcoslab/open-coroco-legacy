@@ -62,6 +62,7 @@ float data_psi_sD[SAMPLES];
 float data_psi_sQ[SAMPLES];
 float data_psi_s [SAMPLES];
 int   data_psi_alpha[SAMPLES];
+float data_w_r[SAMPLES];
 int timer[SAMPLES];
 
 float data_t_e[SAMPLES];
@@ -354,7 +355,8 @@ void adc_isr(void)
         data_L_sq[current_counter]=L_sq;
         data_psi_F[current_counter]=psi_F;
         data_optimal_voltage_vector[current_counter]=optimal_voltage_vector;
-        PID_angle[current_counter]=cmd_angle;//angle_hall1;   
+        PID_angle[current_counter]=cmd_angle;//angle_hall1;
+        data_w_r[current_counter]=w_r;   
         //------------------------------------------
 
 	current_counter++;
@@ -425,6 +427,7 @@ void adc_isr(void)
         data_psi_F[current_counter]=psi_F;
         data_optimal_voltage_vector[current_counter]=optimal_voltage_vector;
         PID_angle[current_counter]=cmd_angle;//angle_hall1;   
+        data_w_r[current_counter]=w_r;
         //------------------------------------------
 
 	current_counter++;
@@ -493,6 +496,7 @@ void adc_isr(void)
         data_psi_F[current_counter]=psi_F;
         data_optimal_voltage_vector[current_counter]=optimal_voltage_vector;
         PID_angle[current_counter]=cmd_angle;//angle_hall1;   
+        data_w_r[current_counter]=w_r;
         //------------------------------------------
 
 	current_counter++;
@@ -560,7 +564,8 @@ void adc_isr(void)
         data_L_sq[current_counter]=L_sq;
         data_psi_F[current_counter]=psi_F;
         data_optimal_voltage_vector[current_counter]=optimal_voltage_vector;
-        PID_angle[current_counter]=cmd_angle;//angle_hall1;   
+        PID_angle[current_counter]=cmd_angle;//angle_hall1;  
+        data_w_r[current_counter]=w_r; 
         //------------------------------------------
 
 	current_counter++;
@@ -629,7 +634,8 @@ void adc_isr(void)
         data_L_sq[current_counter]=L_sq;
         data_psi_F[current_counter]=psi_F;
         data_optimal_voltage_vector[current_counter]=optimal_voltage_vector;
-        PID_angle[current_counter]=cmd_angle;//angle_hall1;   
+        PID_angle[current_counter]=cmd_angle;//angle_hall1; 
+        data_w_r[current_counter]=w_r;  
         //------------------------------------------
 
 	current_counter++;
@@ -699,6 +705,7 @@ void adc_isr(void)
         data_psi_F[current_counter]=psi_F;
         data_optimal_voltage_vector[current_counter]=optimal_voltage_vector;
         PID_angle[current_counter]=cmd_angle;//angle_hall1;   
+        data_w_r[current_counter]=w_r;
         //------------------------------------------
 
 	current_counter++;
@@ -768,7 +775,7 @@ void adc_isr(void)
         data_psi_F[current_counter]=psi_F;
         data_optimal_voltage_vector[current_counter]=optimal_voltage_vector;
         PID_angle[current_counter]=cmd_angle;//angle_hall1;   
-
+        data_w_r[current_counter]=w_r;
         //------------------------------------------
 
 	current_counter++;
@@ -838,6 +845,7 @@ void adc_isr(void)
         data_psi_F[current_counter]=psi_F;
         data_optimal_voltage_vector[current_counter]=optimal_voltage_vector;
         PID_angle[current_counter]=cmd_angle;//angle_hall1;   
+        data_w_r[current_counter]=w_r;
         //------------------------------------------
 
 	current_counter++;
@@ -908,6 +916,7 @@ void adc_isr(void)
         data_psi_F[current_counter]=psi_F;
         data_optimal_voltage_vector[current_counter]=optimal_voltage_vector;
         PID_angle[current_counter]=cmd_angle;//angle_hall1;   
+        data_w_r[current_counter]=w_r;
         //------------------------------------------
 
 

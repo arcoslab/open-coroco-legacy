@@ -108,17 +108,25 @@ data_S_C[current_counter],data_optimal_voltage_vector[current_counter]);
  else if (print_selection==4)
         {
 
-while (PID_angle[current_counter]>(2.0f*PI) )
-  PID_angle[current_counter]=PID_angle[current_counter]-2.0*PI;
-/*
-if (PID_angle[current_counter]<0.0f)
-  PID_angle[current_counter]=PID_angle[current_counter]+2.0f*PI;
-*/
-float ang_PID=(180.0f/PI)*PID_angle[current_counter];
-if (ang_PID<0.0f)
-  ang_PID=ang_PID+360.0f;
+          while (PID_angle[current_counter]>(2.0f*PI) )
+            PID_angle[current_counter]=PID_angle[current_counter]-2.0*PI;
+          float ang_PID=(180.0f/PI)*PID_angle[current_counter];
+          if (ang_PID<0.0f)
+            ang_PID=ang_PID+360.0f;
+          float actual_hall_angle;
+          actual_hall_angle=ang_PID*-1.0f;
+          if (actual_hall_angle<0.0f)
+            actual_hall_angle=actual_hall_angle+360.0f;
+          if (actual_hall_angle>360.0f)
+            actual_hall_angle=actual_hall_angle-360.0f;
+          float diff;
+          diff=actual_hall_angle-vector_angle(data_psi_sQ[current_counter],data_psi_sD[current_counter]);
+          if (diff<0.0f)
+            diff=diff+360.0f;
+          if (actual_hall_angle>360.0f)
+            diff=diff-360.0f;          
 
-                    printf ("V_s_an: %6.2f i_s_an: %6.2f psi_s_an: %6.2f hall_angle: %8.2f freq: %6.2f U_d: %6.2f timer: %8d\n", data_cita_V_s[current_counter],data_cita_i_s[current_counter], vector_angle(data_psi_sQ[current_counter],data_psi_sD[current_counter]), ang_PID,data_CUR_FREQ[current_counter],data_U_d  [current_counter],timer[current_counter]); 
+          printf ("Vsa: %6.2f isa: %6.2f psisan: %6.2f ha: %8.2f f: %6.2f Ud: %6.2f t: %5d w_r: %9.2f a_h: %6.2f diff: %6.2f\n", data_cita_V_s[current_counter],data_cita_i_s[current_counter], flux_linkage_angle_psi_s_angle(PID_angle[current_counter]), ang_PID,data_CUR_FREQ[current_counter],data_U_d  [current_counter],timer[current_counter],data_w_r[current_counter]/(2.0f*PI),actual_hall_angle,diff); 
 
         }
 

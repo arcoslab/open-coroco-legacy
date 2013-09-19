@@ -44,7 +44,9 @@ float floating_switches_quadrature_stator_voltage_V_SQ (float S_B, float S_C,flo
 float direct_stator_flux_linkage_estimator_psi_sD     (float T,float V_sD,float i_sD,float R_s);
 float quadrature_stator_flux_linkage_estimator_psi_sQ (float T,float V_sQ,float i_sQ,float R_s);
 float stator_flux_linkage_magnite_psi_s               (float psi_sD,float psi_sQ);
+float flux_linkage_angle_psi_s_angle(float cmd_angle_PID);//float psi_sD, float psi_sQ)
 int stator_flux_linkage_sector_alpha                (float psi_sD, float psi_sQ);
+
 
 //electromagnetic torque estimation
 float electromagnetic_torque_estimation_t_e(float psi_sD,float i_sQ, float psi_sQ,float i_sD,float pole_pairs);
@@ -53,6 +55,7 @@ float electromagnetic_torque_estimation_t_e(float psi_sD,float i_sQ, float psi_s
 //stator flux-linkage reference
 float stator_flux_linkage_reference_psi_s_ref(float psi_F,float te_ref,float L_sq,float pole_pairs);
 float quadrature_rotor_inductance_L_sq (float psi_s,float psi_F,float t_e,float pole_pairs);
+float rotor_speed_w_r(float psi_sD, float psi_sQ, float T);
 
 //hysteresis windows
 int stator_flux_linkage_hysteresis_controller_d_psi   (float psi_s_ref, float psi_s,float psi_delta_percentage);

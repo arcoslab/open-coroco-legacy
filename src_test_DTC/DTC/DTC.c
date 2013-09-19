@@ -173,12 +173,39 @@ float stator_flux_linkage_magnite_psi_s               (float psi_sD,float psi_sQ
   return sqrtf( (psi_sQ*psi_sQ+psi_sD*psi_sD) );
 }
 
+
+float flux_linkage_angle_psi_s_angle(float cmd_angle_PID)//float psi_sD, float psi_sQ)
+{
+  float psi_angle=0.0f;
+ 
+  //return psi_angle=vector_angle(psi_sQ,psi_sD);
+  
+        float captured_cmd_angle;
+        captured_cmd_angle=cmd_angle_PID;
+        
+        while (captured_cmd_angle>(2.0f*PI) )
+          captured_cmd_angle=captured_cmd_angle-2.0*PI;
+        float ang_PID;
+        ang_PID=(180.0f/PI)*captured_cmd_angle;
+        if (ang_PID<0.0f)
+          ang_PID=ang_PID+360.0f;
+        float actual_hall_angle;
+        actual_hall_angle=ang_PID*-1.0f;
+        if (actual_hall_angle<0.0f)
+          actual_hall_angle=actual_hall_angle+360.0f;
+        if (actual_hall_angle>360.0f)
+          actual_hall_angle=actual_hall_angle-360.0f;
+        
+        return psi_angle=actual_hall_angle;
+}
+
 int stator_flux_linkage_sector_alpha                (float psi_sD, float psi_sQ)
 {
   float psi_angle=0.0f;
   int psi_alpha=0;
-  psi_angle=vector_angle(psi_sQ,psi_sD);
-  
+  //psi_angle=vector_angle(psi_sQ,psi_sD);
+  psi_angle=flux_linkage_angle_psi_s_angle(cmd_angle);
+
   //sector selection
   if      ( ( (psi_angle>=330.0f) && (psi_angle<=360.0f) ) ||
             ( (psi_angle>=  0.0f) && (psi_angle<  30.0f) ) )
@@ -214,7 +241,16 @@ int stator_flux_linkage_sector_alpha                (float psi_sD, float psi_sQ)
   
 }
 
-
+float rotor_speed_w_r(float psi_sD, float psi_sQ, float T)
+{
+  static float previous_psi_sD=0.0f;
+  static float previous_psi_sQ=0.0f;
+  float w_r=0.0f;
+  w_r=(previous_psi_sD*psi_sQ-previous_psi_sQ*psi_sD)/(T*(psi_sD*psi_sD+psi_sQ*psi_sQ));
+  previous_psi_sD=psi_sD;
+  previous_psi_sQ=psi_sQ;
+  return w_r;
+}
 
 
 
@@ -655,7 +691,7 @@ float psi_sD=0.0f;
 float psi_sQ=0.0f;
 float psi_s =0.0f;
 int psi_alpha=0;
-
+float w_r=0;
 float t_e=0.0f;
 
 float psi_s_ref=0.0f;
@@ -698,6 +734,7 @@ void DTC(void)//(float i_sA,float i_sB, float U_d,float L_sq,float psi_F,float t
   psi_sQ   =quadrature_stator_flux_linkage_estimator_psi_sQ (TICK_PERIOD,V_sQ,i_sQ,R_s);
   psi_s    =stator_flux_linkage_magnite_psi_s               (psi_sD,psi_sQ);
   psi_alpha=stator_flux_linkage_sector_alpha                (psi_sD,psi_sQ);
+  w_r=rotor_speed_w_r(psi_sD,psi_sQ,TICK_PERIOD);
 
   t_e      =electromagnetic_torque_estimation_t_e(psi_sD,i_sQ,psi_sQ,i_sD,pole_pairs);
   psi_s_ref=stator_flux_linkage_reference_psi_s_ref(psi_F,t_e_ref,L_sq,pole_pairs);
