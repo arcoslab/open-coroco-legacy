@@ -31,7 +31,7 @@
 }
 */
 float angle_hall1=0.0f;
-float t_e_ref=10.0f;
+float t_e_ref=-0.016f;
 int  print_selection              = 3;
 bool flux_linkage_capture         = false;
 int  flux_linkage_capture_counter = 0;
@@ -260,7 +260,7 @@ void frequency_input(void)
       { //set ref freq
 	printf("New reference frequency: %f. Confirm? (Press \"y\")\n", value);
 	ref_freq=value;
-        t_e_ref=value;
+        //t_e_ref=value;
 	if (value == 0.0f) {
 	  motor_stop=true;
 	} else {

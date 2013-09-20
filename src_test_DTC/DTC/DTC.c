@@ -203,8 +203,15 @@ int stator_flux_linkage_sector_alpha                (float psi_sD, float psi_sQ)
 {
   float psi_angle=0.0f;
   int psi_alpha=0;
-  //psi_angle=vector_angle(psi_sQ,psi_sD);
-  psi_angle=flux_linkage_angle_psi_s_angle(cmd_angle);
+  psi_angle=vector_angle(psi_sQ,psi_sD);//+178.23f;
+  //psi_angle=flux_linkage_angle_psi_s_angle(cmd_angle);
+/*
+  if(psi_angle>=360.0f)
+    psi_angle=psi_angle-360.0f;
+  if (psi_angle<0.0f)
+    psi_angle=psi_angle+360.0f;
+*/   
+
 
   //sector selection
   if      ( ( (psi_angle>=330.0f) && (psi_angle<=360.0f) ) ||
@@ -321,11 +328,11 @@ int electromagnetic_torque_hysteresis_controller_d_te(float te_ref, float t_e, f
   //clockwise rotation
   else
   {
-    if (t_e<=te_ref*(1.0f+t_e_delta_percentage))
+    if (t_e<=te_ref*(1.0f+t_e_delta_percentage))//(t_e<=te_ref*(1.0f+t_e_delta_percentage))
     {
       d_te=1;
     }
-    else if (t_e>=te_ref*(1.0f-t_e_delta_percentage))
+    else if (t_e>=te_ref*(1.0f-t_e_delta_percentage))//(t_e>=te_ref*(1.0f-t_e_delta_percentage))
     {
       d_te=-1;
     }
@@ -349,19 +356,20 @@ int electromagnetic_torque_hysteresis_controller_d_te(float te_ref, float t_e, f
 #define V_4  *S_A=0;*S_B=1;*S_C=1; //011
 #define V_5  *S_A=0;*S_B=0;*S_C=1; //001
 #define V_6  *S_A=1;*S_B=0;*S_C=1; //101
-#define V_7  *S_A=1;*S_B=1;*S_C=1; //111
-#define V_8  *S_A=0;*S_B=0;*S_C=0; //000
-
+//#define V_7  *S_A=1;*S_B=1;*S_C=1; //111
+//#define V_8  *S_A=0;*S_B=0;*S_C=0; //000
+#define V_7  *S_A=2;*S_B=2;*S_C=2; //111
+#define V_8  *S_A=2;*S_B=2;*S_C=2; //000
 
 void optimal_voltage_switching_vector_selection_table(int d_psi,int d_te,int alpha,int* S_A, int* S_B, int* S_C)
 {
 
-  if (d_psi==1) { if      (d_te==1) { if           (alpha==1) { V_2 optimal_voltage_vector=2;}
-                                      else if      (alpha==2) { V_3 optimal_voltage_vector=3;}
-                                      else if      (alpha==3) { V_4 optimal_voltage_vector=4;}
-                                      else if      (alpha==4) { V_5 optimal_voltage_vector=5;}
-                                      else if      (alpha==5) { V_6 optimal_voltage_vector=6;}
-                                      else if      (alpha==6) { V_1 optimal_voltage_vector=1;}
+  if (d_psi==1) { if      (d_te==1) { if           (alpha==1) { V_2 optimal_voltage_vector=60; }//2;}
+                                      else if      (alpha==2) { V_3 optimal_voltage_vector=120;}//3;}
+                                      else if      (alpha==3) { V_4 optimal_voltage_vector=180;}//4;}
+                                      else if      (alpha==4) { V_5 optimal_voltage_vector=240;}//5;}
+                                      else if      (alpha==5) { V_6 optimal_voltage_vector=300;}//6;}
+                                      else if      (alpha==6) { V_1 optimal_voltage_vector=0;  }//1;}
                                       else                    {     optimal_voltage_vector=9;}                      
                                     }
                   else if (d_te==0) { if           (alpha==1) { V_7 optimal_voltage_vector=7;}
@@ -369,27 +377,27 @@ void optimal_voltage_switching_vector_selection_table(int d_psi,int d_te,int alp
                                       else if      (alpha==3) { V_7 optimal_voltage_vector=7;}
                                       else if      (alpha==4) { V_8 optimal_voltage_vector=8;}
                                       else if      (alpha==5) { V_7 optimal_voltage_vector=7;}
-                                      else if      (alpha==6) { V_8 }
+                                      else if      (alpha==6) { V_8 optimal_voltage_vector=8;}
                                       else                    {     }                      
                                     }
-                  else if (d_te==-1){ if           (alpha==1) { V_6 optimal_voltage_vector=6;}
-                                      else if      (alpha==2) { V_1 optimal_voltage_vector=1;}
-                                      else if      (alpha==3) { V_2 optimal_voltage_vector=2;}
-                                      else if      (alpha==4) { V_3 optimal_voltage_vector=3;}
-                                      else if      (alpha==5) { V_4 optimal_voltage_vector=4;}
-                                      else if      (alpha==6) { V_5 optimal_voltage_vector=5;}
+                  else if (d_te==-1){ if           (alpha==1) { V_6 optimal_voltage_vector=300;}//6;}
+                                      else if      (alpha==2) { V_1 optimal_voltage_vector=0;  }//1;}
+                                      else if      (alpha==3) { V_2 optimal_voltage_vector=60; }//2;}
+                                      else if      (alpha==4) { V_3 optimal_voltage_vector=120;}//3;}
+                                      else if      (alpha==5) { V_4 optimal_voltage_vector=180;}//4;}
+                                      else if      (alpha==6) { V_5 optimal_voltage_vector=240;}//5;}
                                       else                    {     optimal_voltage_vector=10;}                      
                                     }
                 }
 
   else if (d_psi==0) { 
-                  if      (d_te==1) { if           (alpha==1) { V_3 optimal_voltage_vector=3;}
-                                      else if      (alpha==2) { V_4 optimal_voltage_vector=4;}
-                                      else if      (alpha==3) { V_5 optimal_voltage_vector=5;}
-                                      else if      (alpha==4) { V_6 optimal_voltage_vector=6;}
-                                      else if      (alpha==5) { V_1 optimal_voltage_vector=1;}
-                                      else if      (alpha==6) { V_2 optimal_voltage_vector=2;}
-                                      else                    {     optimal_voltage_vector=11;}                      
+                  if      (d_te==1) { if           (alpha==1) { V_3 optimal_voltage_vector=120;}//3;}
+                                      else if      (alpha==2) { V_4 optimal_voltage_vector=180;}//4;}
+                                      else if      (alpha==3) { V_5 optimal_voltage_vector=240;}//5;}
+                                      else if      (alpha==4) { V_6 optimal_voltage_vector=300;}//6;}
+                                      else if      (alpha==5) { V_1 optimal_voltage_vector=0;  }//1;}
+                                      else if      (alpha==6) { V_2 optimal_voltage_vector=60; }//2;}
+                                      else                    {     optimal_voltage_vector=11; }                      
                                     }
                   else if (d_te==0) { if           (alpha==1) { V_8 optimal_voltage_vector=8;}
                                       else if      (alpha==2) { V_7 optimal_voltage_vector=7;}
@@ -399,12 +407,12 @@ void optimal_voltage_switching_vector_selection_table(int d_psi,int d_te,int alp
                                       else if      (alpha==6) { V_7 optimal_voltage_vector=7;}
                                       else                    {     optimal_voltage_vector=12;}                      
                                     }
-                  else if (d_te==-1){ if           (alpha==1) { V_5 optimal_voltage_vector=5;}
-                                      else if      (alpha==2) { V_6 optimal_voltage_vector=6;}
-                                      else if      (alpha==3) { V_1 optimal_voltage_vector=1;}
-                                      else if      (alpha==4) { V_2 optimal_voltage_vector=2;}
-                                      else if      (alpha==5) { V_3 optimal_voltage_vector=3;}
-                                      else if      (alpha==6) { V_4 optimal_voltage_vector=4;}
+                  else if (d_te==-1){ if           (alpha==1) { V_5 optimal_voltage_vector=240;}//5;}
+                                      else if      (alpha==2) { V_6 optimal_voltage_vector=300;}//6;}
+                                      else if      (alpha==3) { V_1 optimal_voltage_vector=0;  }//1;}
+                                      else if      (alpha==4) { V_2 optimal_voltage_vector=60; }//2;}
+                                      else if      (alpha==5) { V_3 optimal_voltage_vector=120;}//3;}
+                                      else if      (alpha==6) { V_4 optimal_voltage_vector=180;}//4;}
                                       else                    {     optimal_voltage_vector=13;}                      
                                     }
                 }
@@ -429,10 +437,10 @@ void voltage_switch_inverter_VSI(int S_A, int S_B, int S_C)
   }
   else
   {
-    duty_a=1.0f;
-    duty_b=1.0f;
-    duty_c=1.0f;
-    attenuation =1.0f;
+    duty_a=0.5f;//1.0f;
+    duty_b=0.5f;//1.0f;
+    duty_c=0.5f;//1.0f;
+    attenuation =0.5f;//1.0f;
   }
 /*      //PWM mode
 	TIM_OCM_FROZEN,

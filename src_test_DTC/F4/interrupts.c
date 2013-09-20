@@ -93,7 +93,7 @@ void tim1_up_tim10_isr(void)
   //oscilloscope flag: start of calculations
   gpio_set(GPIOD, GPIO9);
    
-  floating_switching_states (&switching_data_SA[current_counter],&switching_data_SB[current_counter],&switching_data_SC[current_counter]);
+  //floating_switching_states (&switching_data_SA[current_counter],&switching_data_SB[current_counter],&switching_data_SC[current_counter]);
   
   floating_switching_states (&S_A_f,&S_B_f,&S_C_f);
   //switching_states (&S_A,&S_B,&S_C);
@@ -290,7 +290,7 @@ void adc_isr(void)
 
 
     //angle_hall1+=2*PI*CUR_FREQ*TIME_CITA
-    PID_angle[current_counter]=angle_hall1;   
+    //PID_angle[current_counter]=angle_hall1;   
 
     if (collecting_current==true)
     {
