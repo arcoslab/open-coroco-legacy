@@ -437,10 +437,10 @@ void voltage_switch_inverter_VSI(int S_A, int S_B, int S_C)
   }
   else
   {
-    duty_a=0.5f;//1.0f;
-    duty_b=0.5f;//1.0f;
-    duty_c=0.5f;//1.0f;
-    attenuation =0.5f;//1.0f;
+    duty_a=1.0f;
+    duty_b=1.0f;
+    duty_c=1.0f;
+    attenuation =1.0f;//0.5f;//1.0f;
   }
 /*      //PWM mode
 	TIM_OCM_FROZEN,
@@ -707,8 +707,8 @@ float psi_s_ref=0.0f;
 
 int   d_psi=0.0f;
 int   d_te=0.0f;
-float psi_delta_percentage=0.4f;//10.0f;
-float t_e_delta_percentage=0.1f;//10.0f;
+float psi_delta_percentage=0.7f;//10.0f;
+float t_e_delta_percentage=0.7f;//10.0f;
 
 
 //motor parameters;
@@ -753,7 +753,7 @@ void DTC(void)//(float i_sA,float i_sB, float U_d,float L_sq,float psi_F,float t
 
 
   optimal_voltage_switching_vector_selection_table(d_psi,d_te,psi_alpha,&S_A,&S_B,&S_C);
-  //voltage_switch_inverter_VSI(S_A,S_B,S_C);
+  voltage_switch_inverter_VSI(S_A,S_B,S_C);
 
 
 }

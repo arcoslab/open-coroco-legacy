@@ -80,6 +80,8 @@ int main(void)
     if (print_current==true )
     {
       current_counter=1;
+printf ("\n\n****************************************************************************************************************\n");
+
       while (current_counter<SAMPLES-2)
       {
         //printf("\n %d %6.2f   %6.2f   %6.2f %6.2f   %6.2f   %6.2f ",current_counter,current_data_i_sA[current_counter],current_data_i_sB[current_counter],-current_data_i_sA[current_counter]-current_data_i_sB[current_counter],U_d*switching_data_SA[current_counter],U_d*switching_data_SB[current_counter],U_d*switching_data_SC[current_counter]);
