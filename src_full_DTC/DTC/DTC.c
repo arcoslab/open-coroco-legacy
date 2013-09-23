@@ -434,6 +434,7 @@ void voltage_switch_inverter_VSI(int S_A, int S_B, int S_C)
     cur_angle=cur_angle-(2.0f*PI);
   }
 
+//close_loop=false;
 
   if (!close_loop) 
   {
@@ -470,7 +471,7 @@ void voltage_switch_inverter_VSI(int S_A, int S_B, int S_C)
 
 
 //dtc switching selection
-close_loop=false;
+
 if (close_loop)
 {
   //----------------SA: S1 and S4---------------------------------
@@ -776,8 +777,8 @@ float psi_s_ref=0.0f;
 
 int   d_psi=0.0f;
 int   d_te=0.0f;
-float psi_delta_percentage=0.7f;//10.0f;
-float t_e_delta_percentage=0.7f;//10.0f;
+float psi_delta_percentage=0.5f;//10.0f;
+float t_e_delta_percentage=0.5f;//10.0f;
 
 
 //motor parameters;

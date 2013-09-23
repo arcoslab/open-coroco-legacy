@@ -31,7 +31,7 @@
 }
 */
 float angle_hall1=0.0f;
-float t_e_ref=-1.6f;
+float t_e_ref=-0.1f;
 int  print_selection              = 3;
 bool flux_linkage_capture         = false;
 int  flux_linkage_capture_counter = 0;
@@ -163,16 +163,22 @@ void calc_freq(void)
 
 
 
-void start_up(void) {
-  if (CUR_FREQ < MIN_CLOSE_LOOP_FREQ) {
+void start_up(void) 
+{
+  if (CUR_FREQ < MIN_CLOSE_LOOP_FREQ) 
+  {
     //printf("Open loop\n");
     ref_freq=START_UP_REF_FREQ;
     close_loop=false;
     first_closed=true;
-  } else {
+  } 
+  else 
+  {
     close_loop=true;
   }
-  if (close_loop && first_closed) {
+
+  if (close_loop && first_closed) 
+  {
     first_closed=false;
     ref_freq=FIRST_CLOSE_LOOP_REF_FREQ;
   }
