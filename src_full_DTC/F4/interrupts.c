@@ -102,7 +102,7 @@ void tim1_up_tim10_isr(void)
   timer_clear_flag(TIM1,  TIM_SR_UIF);
 
   calc_freq();
-  //start_up();
+  start_up();
   //gen_pwm();
 
   //oscilloscope flag: end of calculations
