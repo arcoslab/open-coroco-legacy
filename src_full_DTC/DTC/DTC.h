@@ -50,7 +50,7 @@ int stator_flux_linkage_sector_alpha                (float psi_sD, float psi_sQ)
 
 //electromagnetic torque estimation
 float electromagnetic_torque_estimation_t_e(float psi_sD,float i_sQ, float psi_sQ,float i_sD,float pole_pairs);
-
+float DTC_torque_reference_PI(float w_r, float w_r_ref);
 
 //stator flux-linkage reference
 float stator_flux_linkage_reference_psi_s_ref(float psi_F,float te_ref,float L_sq,float pole_pairs);

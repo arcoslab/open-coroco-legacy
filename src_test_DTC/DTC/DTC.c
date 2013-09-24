@@ -646,6 +646,68 @@ float stator_angle_to_phase_A(float stator_angle)
 	return phase_A;	
 }
 
+#define P_DTC 0.0028f
+#define I_DTC 1.0f
+float DTC_torque_reference_PI(float w_r, float w_r_ref)
+{
+  float te_error=0.0f;
+  float te_ref=0.0f;
+
+  te_error=w_r_ref-w_r;
+
+  te_ref=-P_DTC*te_error;
+  
+  return te_ref;
+/*
+  if (error > 0.0f) 
+  {
+    p_error=P*error;
+  } 
+  else 
+  {
+    p_error=P_DOWN*error;
+  }
+
+  if (error > 0.0f) {
+    i_error+=I*error;
+  } 
+  else 
+  {
+    i_error+=I_DOWN*error;
+  }
+
+  if (i_error > I_MAX)
+  {
+    i_error=I_MAX;
+  }
+  if (i_error < -I_MAX) 
+  {
+    i_error=-I_MAX;
+  }
+  if (p_error > P_MAX) 
+  {
+    p_error=P_MAX;
+  }
+  if (p_error < -P_MAX) 
+  {
+    p_error= -P_MAX;
+  }
+
+  pi_control=p_error+i_error;
+
+  if (pi_control > PI_MAX) 
+  {
+    pi_control = PI_MAX;
+  }
+  if (pi_control < PI_MIN) 
+  {
+    pi_control = PI_MIN;
+  }
+*/
+
+
+}
+
 
 
 /*
@@ -745,6 +807,7 @@ void DTC(void)//(float i_sA,float i_sB, float U_d,float L_sq,float psi_F,float t
   w_r=rotor_speed_w_r(psi_sD,psi_sQ,TICK_PERIOD);
 
   t_e      =electromagnetic_torque_estimation_t_e(psi_sD,i_sQ,psi_sQ,i_sD,pole_pairs);
+  t_e_ref=DTC_torque_reference_PI(CUR_FREQ, ref_freq);
   psi_s_ref=stator_flux_linkage_reference_psi_s_ref(psi_F,t_e_ref,L_sq,pole_pairs);
 
 

@@ -115,8 +115,11 @@ data_U_d[current_counter]);
         else if (print_selection==3)
         {
           //printf ("freq: %6.2f t_e: %8.2f psi_s_ref: %6.2f t_e_ref: %6.2f d_psi: %4d d_te: %4d psi_delta: %6.2f t_e_delta: %6.2f time: %8d \n", data_CUR_FREQ[current_counter],data_t_e[current_counter],data_psi_s_ref[current_counter],data_t_e_ref[current_counter],data_d_psi[current_counter],data_d_te[current_counter],data_psi_delta_percentage[current_counter],data_t_e_delta_percentage[current_counter],timer[current_counter]);
-printf ("t:%5d:te_r:%8.4f:te:%8.4f:dte:%2d:psi_r:%8.6f:psi_s:%6.4f:psi_a:%1d:psi_an:%6.2f:dpsi:%2d:v:%3d:c:%6.2f\n",
+printf ("t:%5d:f:%6.2f:r:%6.2f:er:%7.2f:tr:%8.4f:te:%8.4f:dt:%2d:pr:%8.6f:ps:%6.4f:pa:%1d:pn:%6.2f:dp:%2d:v:%3d:c:%6.2f\n",
 timer[current_counter],
+data_CUR_FREQ[current_counter],
+ref_freq,
+data_CUR_FREQ[current_counter]-ref_freq,
 data_t_e_ref[current_counter],
 data_t_e[current_counter],
 data_d_te[current_counter],

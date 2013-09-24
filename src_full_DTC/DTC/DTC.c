@@ -358,8 +358,10 @@ int electromagnetic_torque_hysteresis_controller_d_te(float te_ref, float t_e, f
 #define V_6  *S_A=1;*S_B=0;*S_C=1; //101
 //#define V_7  *S_A=1;*S_B=1;*S_C=1; //111
 //#define V_8  *S_A=0;*S_B=0;*S_C=0; //000
-#define V_7  *S_A=2;*S_B=2;*S_C=2; //111
-#define V_8  *S_A=2;*S_B=2;*S_C=2; //000
+//#define V_7  *S_A=2;*S_B=2;*S_C=2; //111
+//#define V_8  *S_A=2;*S_B=2;*S_C=2; //000
+#define V_7  *S_A=*S_A;*S_B=*S_B;*S_C=*S_C; //111
+#define V_8  *S_A=*S_A;*S_B=*S_B;*S_C=*S_C; //000
 
 void optimal_voltage_switching_vector_selection_table(int d_psi,int d_te,int alpha,int* S_A, int* S_B, int* S_C)
 {
@@ -457,6 +459,19 @@ void voltage_switch_inverter_VSI(int S_A, int S_B, int S_C)
     duty_c=0.0f;
     attenuation=1.0f;
   }
+
+#define CURRENT_LIMIT 5.0f
+  if ( i_sA>CURRENT_LIMIT || i_sA<-CURRENT_LIMIT || 
+       i_sB>CURRENT_LIMIT || i_sB<-CURRENT_LIMIT || 
+       i_sC>CURRENT_LIMIT || i_sC<-CURRENT_LIMIT)
+  {
+    duty_a=0.0f;
+    duty_b=0.0f;
+    duty_c=0.0f;
+    attenuation=1.0f;
+    motor_stop=true;
+ }
+
   
 /*      //PWM mode
 	TIM_OCM_FROZEN,
@@ -740,8 +755,67 @@ float stator_angle_to_phase_A(float stator_angle)
   	B=duty_cycle_to_angle(	B_inverse_clark_transformation(V_sD,V_sQ)	);
 	C=duty_cycle_to_angle(	C_inverse_clark_transformation(V_sD,V_sQ)	);
 */
+#define P_DTC 0.0028f
+#define I_DTC 1.0f
+float DTC_torque_reference_PI(float w_r, float w_r_ref)
+{
+  float te_error=0.0f;
+  float te_ref=0.0f;
+
+  te_error=w_r_ref-w_r;
+
+  te_ref=-P_DTC*te_error;
+  
+  return te_ref;
+/*
+  if (error > 0.0f) 
+  {
+    p_error=P*error;
+  } 
+  else 
+  {
+    p_error=P_DOWN*error;
+  }
+
+  if (error > 0.0f) {
+    i_error+=I*error;
+  } 
+  else 
+  {
+    i_error+=I_DOWN*error;
+  }
+
+  if (i_error > I_MAX)
+  {
+    i_error=I_MAX;
+  }
+  if (i_error < -I_MAX) 
+  {
+    i_error=-I_MAX;
+  }
+  if (p_error > P_MAX) 
+  {
+    p_error=P_MAX;
+  }
+  if (p_error < -P_MAX) 
+  {
+    p_error= -P_MAX;
+  }
+
+  pi_control=p_error+i_error;
+
+  if (pi_control > PI_MAX) 
+  {
+    pi_control = PI_MAX;
+  }
+  if (pi_control < PI_MIN) 
+  {
+    pi_control = PI_MIN;
+  }
+*/
 
 
+}
 
 int S_A=0;
 int S_B=0;
@@ -777,8 +851,8 @@ float psi_s_ref=0.0f;
 
 int   d_psi=0.0f;
 int   d_te=0.0f;
-float psi_delta_percentage=0.5f;//10.0f;
-float t_e_delta_percentage=0.5f;//10.0f;
+float psi_delta_percentage=0.1f;//10.0f;
+float t_e_delta_percentage=0.4f;//10.0f;
 
 
 //motor parameters;
@@ -815,6 +889,7 @@ void DTC(void)//(float i_sA,float i_sB, float U_d,float L_sq,float psi_F,float t
   w_r=rotor_speed_w_r(psi_sD,psi_sQ,TICK_PERIOD);
 
   t_e      =electromagnetic_torque_estimation_t_e(psi_sD,i_sQ,psi_sQ,i_sD,pole_pairs);
+  t_e_ref=DTC_torque_reference_PI(CUR_FREQ, ref_freq);
   psi_s_ref=stator_flux_linkage_reference_psi_s_ref(psi_F,t_e_ref,L_sq,pole_pairs);
 
 
