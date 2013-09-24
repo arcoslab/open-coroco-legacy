@@ -63,7 +63,7 @@ int electromagnetic_torque_hysteresis_controller_d_te(float t_e_ref  , float t_e
 
 //output voltages
 void optimal_voltage_switching_vector_selection_table(int d_psi,int d_t_e,int alpha,int* S_A, int* S_B, int* S_C);
-void voltage_switch_inverter_VSI(int S_A, int S_B, int S_C);
+void voltage_switch_inverter_VSI(int S_A, int S_B, int S_C,float i_sA,float i_sB);
 
 //wrapper
 void DTC(void);//(float i_A,float i_B, float U_d,float L_sq,float psi_F,float t_e_ref);

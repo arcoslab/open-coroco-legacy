@@ -421,7 +421,7 @@ void optimal_voltage_switching_vector_selection_table(int d_psi,int d_te,int alp
 
 }
 
-void voltage_switch_inverter_VSI(int S_A, int S_B, int S_C)
+void voltage_switch_inverter_VSI(int S_A, int S_B, int S_C,float i_sA,float i_sB)
 {
   /*
   float duty_a=1.0f;
@@ -449,7 +449,7 @@ void voltage_switch_inverter_VSI(int S_A, int S_B, int S_C)
     duty_a=1.0f;
     duty_b=1.0f;
     duty_c=1.0f;
-    attenuation =1.0f;//0.5f;//1.0f;
+    attenuation =0.7f;//0.5f;//1.0f;
   }
 
   if (motor_off) 
@@ -460,16 +460,17 @@ void voltage_switch_inverter_VSI(int S_A, int S_B, int S_C)
     attenuation=1.0f;
   }
 
-#define CURRENT_LIMIT 5.0f
-  if ( i_sA>CURRENT_LIMIT || i_sA<-CURRENT_LIMIT || 
-       i_sB>CURRENT_LIMIT || i_sB<-CURRENT_LIMIT || 
-       i_sC>CURRENT_LIMIT || i_sC<-CURRENT_LIMIT)
+#define CURRENT_LIMIT 14.0f
+  if ( i_sA        >CURRENT_LIMIT || i_sA        <-CURRENT_LIMIT || 
+       i_sB        >CURRENT_LIMIT || i_sB        <-CURRENT_LIMIT || 
+       (-i_sA-i_sB)>CURRENT_LIMIT || (-i_sA-i_sB)<-CURRENT_LIMIT)
   {
     duty_a=0.0f;
     duty_b=0.0f;
     duty_c=0.0f;
     attenuation=1.0f;
     motor_stop=true;
+    //printf("\n\nMotor off, overcurrent...\n\n");
  }
 
   
@@ -755,7 +756,7 @@ float stator_angle_to_phase_A(float stator_angle)
   	B=duty_cycle_to_angle(	B_inverse_clark_transformation(V_sD,V_sQ)	);
 	C=duty_cycle_to_angle(	C_inverse_clark_transformation(V_sD,V_sQ)	);
 */
-#define P_DTC 0.0028f
+#define P_DTC 0.01f//0.000028f
 #define I_DTC 1.0f
 float DTC_torque_reference_PI(float w_r, float w_r_ref)
 {
@@ -851,8 +852,8 @@ float psi_s_ref=0.0f;
 
 int   d_psi=0.0f;
 int   d_te=0.0f;
-float psi_delta_percentage=0.1f;//10.0f;
-float t_e_delta_percentage=0.4f;//10.0f;
+float psi_delta_percentage=0.05f;//10.0f;
+float t_e_delta_percentage=0.8f;//10.0f;
 
 
 //motor parameters;
@@ -890,6 +891,7 @@ void DTC(void)//(float i_sA,float i_sB, float U_d,float L_sq,float psi_F,float t
 
   t_e      =electromagnetic_torque_estimation_t_e(psi_sD,i_sQ,psi_sQ,i_sD,pole_pairs);
   t_e_ref=DTC_torque_reference_PI(CUR_FREQ, ref_freq);
+
   psi_s_ref=stator_flux_linkage_reference_psi_s_ref(psi_F,t_e_ref,L_sq,pole_pairs);
 
 
@@ -898,7 +900,7 @@ void DTC(void)//(float i_sA,float i_sB, float U_d,float L_sq,float psi_F,float t
 
 
   optimal_voltage_switching_vector_selection_table(d_psi,d_te,psi_alpha,&S_A,&S_B,&S_C);
-  voltage_switch_inverter_VSI(S_A,S_B,S_C);
+  voltage_switch_inverter_VSI(S_A,S_B,S_C,i_sA,i_sB);
 
 
 }

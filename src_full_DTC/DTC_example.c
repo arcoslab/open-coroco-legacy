@@ -89,7 +89,7 @@ printf ("\n\n*******************************************************************
 
         if (print_selection==0)
         {
-          printf ("freq: %6.2f i_sA: %6.2f i_sB: %6.2f i_sD: %6.2f i_sQ: %6.2f i_s: %6.2f cita_i_s: %6.2f U_d: %6.2f \n", data_CUR_FREQ[current_counter],data_i_sA[current_counter],data_i_sB[current_counter],data_i_sD[current_counter],data_i_sQ[current_counter],data_i_s[current_counter],data_cita_i_s[current_counter],data_U_d[current_counter]);
+          printf (":t:%5d:freq: %6.2f :i_sA: %6.2f :i_sB: %6.2f :i_sD: %6.2f :i_sQ: %6.2f :i_s: %6.2f :cita_i_s: %6.2f :U_d: %6.2f \n",timer[current_counter], data_CUR_FREQ[current_counter],data_i_sA[current_counter],data_i_sB[current_counter],data_i_sD[current_counter],data_i_sQ[current_counter],data_i_s[current_counter],data_cita_i_s[current_counter],data_U_d[current_counter]);
         }
         else if (print_selection==1)
         {
