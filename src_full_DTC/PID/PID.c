@@ -31,7 +31,7 @@
 }
 */
 float angle_hall1=0.0f;
-float t_e_ref=-1.5f;//-1.6f;
+float t_e_ref=-0.15;//-1.6f;
 int  print_selection              = 3;
 bool flux_linkage_capture         = false;
 int  flux_linkage_capture_counter = 0;
@@ -168,8 +168,8 @@ void start_up(void)
   if (CUR_FREQ < MIN_CLOSE_LOOP_FREQ) 
   {
     //printf("Open loop\n");
-    ref_freq=START_UP_REF_FREQ;
-    close_loop=false;
+    //ref_freq=START_UP_REF_FREQ;
+    //close_loop=false;
     first_closed=true;
   } 
   else 
@@ -180,7 +180,7 @@ void start_up(void)
   if (close_loop && first_closed) 
   {
     first_closed=false;
-    ref_freq=FIRST_CLOSE_LOOP_REF_FREQ;
+    //ref_freq=FIRST_CLOSE_LOOP_REF_FREQ;
   }
 }
 
@@ -252,7 +252,7 @@ void frequency_input(void)
         }
          motor_off=true;
 	close_loop=false;
-	ref_freq=START_UP_REF_FREQ; //before 1.0f
+	//ref_freq=START_UP_REF_FREQ; //before 1.0f
       }
 
     }

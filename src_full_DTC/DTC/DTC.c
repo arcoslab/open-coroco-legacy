@@ -96,23 +96,23 @@ void  floating_switching_states (float* S_A, float* S_B, float* S_C)
 
 float direct_stator_voltage_V_sD     (int S_A, int S_B, int S_C,float U_d)
 {
-  return (2.0f/3.0f)*U_d*(S_A-0.5f*S_B-0.5*S_C);
+  return (2.0f/3.0f)*U_d*(S_A-0.5f*S_B-0.5f*S_C);
 }
 
 float quadrature_stator_voltage_V_SQ (int S_B, int S_C,float U_d)
 { 
-  return (1.0f/sqrt(3))*U_d*(S_B-S_C);
+  return (1.0f/sqrt(3.0f))*U_d*(S_B-S_C);
 }
-
+  
 
 float floating_switches_direct_stator_voltage_V_sD     (float S_A, float S_B, float S_C,float U_d)
 {
-  return (2.0f/3.0f)*U_d*(S_A-0.5f*S_B-0.5*S_C);
+  return (2.0f/3.0f)*U_d*(S_A-0.5f*S_B-0.5f*S_C);
 }
 
 float floating_switches_quadrature_stator_voltage_V_SQ (float S_B, float S_C,float U_d)
 { 
-  return (1.0f/sqrt(3))*U_d*(S_B-S_C);
+  return (1.0f/sqrt(3.0f))*U_d*(S_B-S_C);
 }
 
 //---------------------stator flux-linkage space vector estimation-------------------------------
@@ -429,7 +429,7 @@ void voltage_switch_inverter_VSI(int S_A, int S_B, int S_C,float i_sA,float i_sB
   float duty_c=1.0f;
   float attenuation =1.0f;
   */
-  
+  close_loop=true;
   cur_angle+=2.0f*PI*TICK_PERIOD*ref_freq;
   //converting big angles into something between 0 and 2pi
   if (cur_angle >= (2.0f*PI)) {
@@ -449,7 +449,7 @@ void voltage_switch_inverter_VSI(int S_A, int S_B, int S_C,float i_sA,float i_sB
     duty_a=1.0f;
     duty_b=1.0f;
     duty_c=1.0f;
-    attenuation =0.7f;//0.5f;//1.0f;
+    attenuation =1.0f;//0.5f;//1.0f;
   }
 
   if (motor_off) 
@@ -756,12 +756,14 @@ float stator_angle_to_phase_A(float stator_angle)
   	B=duty_cycle_to_angle(	B_inverse_clark_transformation(V_sD,V_sQ)	);
 	C=duty_cycle_to_angle(	C_inverse_clark_transformation(V_sD,V_sQ)	);
 */
+
+
 #define P_DTC 0.01f//0.000028f
 #define I_DTC 1.0f
 float DTC_torque_reference_PI(float w_r, float w_r_ref)
 {
   float te_error=0.0f;
-  float te_ref=0.0f;
+  float te_ref  =0.0f;
 
   te_error=w_r_ref-w_r;
 
@@ -852,8 +854,8 @@ float psi_s_ref=0.0f;
 
 int   d_psi=0.0f;
 int   d_te=0.0f;
-float psi_delta_percentage=0.05f;//10.0f;
-float t_e_delta_percentage=0.8f;//10.0f;
+float psi_delta_percentage=0.05f;
+float t_e_delta_percentage=0.1f;//0.8f;
 
 
 //motor parameters;
@@ -870,7 +872,7 @@ void DTC(void)//(float i_sA,float i_sB, float U_d,float L_sq,float psi_F,float t
 
   //switching_states                        (&S_A,&S_B,&S_C);
   //V_sD    =direct_stator_voltage_V_sD     (S_A,S_B,S_C,U_d);
-  //V_sQ    =quadrature_stator_voltage_V_SQ (S_B,S_C,U_d);
+  //V_sQ    =quadrature_stator_voltage_V_SQ (    S_B,S_C,U_d);
   V_sD    =floating_switches_direct_stator_voltage_V_sD     (S_A_f,S_B_f,S_C_f,U_d);
   V_sQ    =floating_switches_quadrature_stator_voltage_V_SQ (      S_B_f,S_C_f,U_d);
  
@@ -890,8 +892,11 @@ void DTC(void)//(float i_sA,float i_sB, float U_d,float L_sq,float psi_F,float t
   w_r=rotor_speed_w_r(psi_sD,psi_sQ,TICK_PERIOD);
 
   t_e      =electromagnetic_torque_estimation_t_e(psi_sD,i_sQ,psi_sQ,i_sD,pole_pairs);
-  t_e_ref=DTC_torque_reference_PI(CUR_FREQ, ref_freq);
-
+  //t_e_ref=DTC_torque_reference_PI(CUR_FREQ, ref_freq);
+/*
+  if (t_e_ref>0.0f)
+    t_e_ref=0.0f;
+*/
   psi_s_ref=stator_flux_linkage_reference_psi_s_ref(psi_F,t_e_ref,L_sq,pole_pairs);
 
 

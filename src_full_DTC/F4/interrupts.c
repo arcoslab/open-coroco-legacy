@@ -96,7 +96,7 @@ void tim1_up_tim10_isr(void)
   //floating_switching_states (&switching_data_SA[current_counter],&switching_data_SB[current_counter],&switching_data_SC[current_counter]);
   
   floating_switching_states (&S_A_f,&S_B_f,&S_C_f);
-  switching_states (&S_A,&S_B,&S_C);
+  //switching_states (&S_A,&S_B,&S_C);
 
   //Clear the update interrupt flag
   timer_clear_flag(TIM1,  TIM_SR_UIF);
@@ -104,6 +104,7 @@ void tim1_up_tim10_isr(void)
   calc_freq();
   start_up();
   //gen_pwm();
+  //close_loop=true;
 
   //oscilloscope flag: end of calculations
   gpio_clear(GPIOD, GPIO9);

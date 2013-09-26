@@ -176,7 +176,7 @@ if (print_selection==5 )//&& data_V_s[current_counter] > 0.0f)
 /*
           printf ("V_sD: %6.2f V_sQ: %6.2f i_sD: %6.2f i_sQ: %6.2f psi_sD: %f psi_sQ: %f psi_s: %6.5f psi_alpha: %2d R_s: %6.3f\n", data_V_sD[current_counter],data_V_sQ[current_counter],data_i_sD[current_counter],data_i_sQ[current_counter],data_psi_sD[current_counter],data_psi_sQ[current_counter],data_psi_s[current_counter],data_psi_alpha[current_counter],data_R_s[current_counter]);
 */
-printf ("psi_sD: %9.6f psi_sQ: %9.6f psi_s: %6.5f angle: %6.2f psi_alpha: %2d timer: %8d freq: %6.2f U_d: %6.2f\n", data_psi_sD[current_counter],data_psi_sQ[current_counter],data_psi_s[current_counter],vector_angle(data_psi_sQ[current_counter],data_psi_sD[current_counter]),data_psi_alpha[current_counter], timer[current_counter], data_CUR_FREQ[current_counter],data_U_d  [current_counter]);
+printf (":psi_sD:%9.6f:psi_sQ:%9.6f:psi_s:%6.5f:angle:%6.2f:psi_alpha:%2d:timer:%8d:freq: %6.2f:U_d: %6.2f\n", data_psi_sD[current_counter],data_psi_sQ[current_counter],data_psi_s[current_counter],vector_angle(data_psi_sQ[current_counter],data_psi_sD[current_counter]),data_psi_alpha[current_counter], timer[current_counter], data_CUR_FREQ[current_counter],data_U_d  [current_counter]);
 
         }
 
