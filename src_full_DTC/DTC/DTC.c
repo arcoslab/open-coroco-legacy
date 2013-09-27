@@ -184,7 +184,7 @@ float flux_linkage_angle_psi_s_angle(float cmd_angle_PID)//float psi_sD, float p
         captured_cmd_angle=cmd_angle_PID;
         
         while (captured_cmd_angle>(2.0f*PI) )
-          captured_cmd_angle=captured_cmd_angle-2.0*PI;
+          captured_cmd_angle=captured_cmd_angle-2.0f*PI;
         float ang_PID;
         ang_PID=(180.0f/PI)*captured_cmd_angle;
         if (ang_PID<0.0f)
@@ -317,11 +317,11 @@ int electromagnetic_torque_hysteresis_controller_d_te(float te_ref, float t_e, f
   //forward rotation  
   if (te_ref>=0.0f)
   {
-    if      (t_e<=te_ref*(1.0f-t_e_delta_percentage))
+    if      (t_e<=te_ref*(1.0f-t_e_delta_percentage/100.0f))
     {
       d_te=1;
     }
-    else if (t_e>=te_ref*(1.0f+t_e_delta_percentage))
+    else if (t_e>=te_ref*(1.0f+t_e_delta_percentage/100.0f))
     {
       d_te=-1;
     }
@@ -333,11 +333,11 @@ int electromagnetic_torque_hysteresis_controller_d_te(float te_ref, float t_e, f
   //clockwise rotation
   else
   {
-    if (t_e<=te_ref*(1.0f+t_e_delta_percentage))//(t_e<=te_ref*(1.0f+t_e_delta_percentage))
+    if (t_e<=te_ref*(1.0f+t_e_delta_percentage/100.0f))//(t_e<=te_ref*(1.0f+t_e_delta_percentage))
     {
       d_te=1;
     }
-    else if (t_e>=te_ref*(1.0f-t_e_delta_percentage))//(t_e>=te_ref*(1.0f-t_e_delta_percentage))
+    else if (t_e>=te_ref*(1.0f-t_e_delta_percentage/100.0f))//(t_e>=te_ref*(1.0f-t_e_delta_percentage))
     {
       d_te=-1;
     }
@@ -385,7 +385,7 @@ void optimal_voltage_switching_vector_selection_table(int d_psi,int d_te,int alp
                                       else if      (alpha==4) { V_8 optimal_voltage_vector=8;}
                                       else if      (alpha==5) { V_7 optimal_voltage_vector=7;}
                                       else if      (alpha==6) { V_8 optimal_voltage_vector=8;}
-                                      else                    {     }                      
+                                      else                    {     optimal_voltage_vector=14;}                      
                                     }
                   else if (d_te==-1){ if           (alpha==1) { V_6 optimal_voltage_vector=300;}//6;}
                                       else if      (alpha==2) { V_1 optimal_voltage_vector=0;  }//1;}
@@ -859,8 +859,8 @@ float psi_s_ref=0.0f;
 
 int   d_psi=0.0f;
 int   d_te=0.0f;
-float psi_delta_percentage=0.05f;
-float t_e_delta_percentage=0.05f;//0.8f;
+float psi_delta_percentage=5.0f;
+float t_e_delta_percentage=5.0f;//0.8f;
 
 
 //motor parameters;

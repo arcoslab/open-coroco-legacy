@@ -31,7 +31,7 @@
 }
 */
 float angle_hall1=0.0f;
-float t_e_ref=3.0f;//-1.5;//-0.9f;//-0.15;//-1.6f;
+float t_e_ref=1.0f;//-1.5;//-0.9f;//-0.15;//-1.6f;
 int  print_selection              = 3;
 bool flux_linkage_capture         = false;
 int  flux_linkage_capture_counter = 0;
