@@ -17,7 +17,7 @@
  */
 
 #define SAMPLES 400
-#define FLUX_LINKAGE_TIMER_DELAY 4000
+#define FLUX_LINKAGE_TIMER_DELAY 0//4000
 
 //printing buffers
 float hall_angle=0.0f;
@@ -222,12 +222,12 @@ void adc_isr(void)
     gpio_set(GPIOD, GPIO9);
 
 
-
+/*
     if (i_sA<0.2f && i_sA>-0.2f)
       i_sA=0.0f;
     if (i_sB<0.2f && i_sB>-0.2f)
       i_sB=0.0f;
-    
+*/    
 
     DTC();
   

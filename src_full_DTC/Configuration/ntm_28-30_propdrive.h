@@ -31,4 +31,4 @@
 #define L_s_d_0        0.0000417428f//0.000062f  //H   0.000089f H
 #define L_s_q_0	       0.0000500913f//0.000052f  //H   0.000089f H
 #define psi_F_0        0.0045f    //Wb-t (weber-turn) (kg m2 s-2 A-1)
-#define pole_pairs_0   6	  //six pole pairs (seven d-axis)
+#define pole_pairs_0   6.0f	  //six pole pairs (seven d-axis)

@@ -17,7 +17,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 int optimal_voltage_vector=0;
-
+#define CURRENT_LIMIT 14.99f
 //-----------------voltage and current space vectors---------------------
 
 
@@ -266,7 +266,12 @@ float rotor_speed_w_r(float psi_sD, float psi_sQ, float T)
 //electromagnetic torque estimation
 float electromagnetic_torque_estimation_t_e(float psi_sD,float i_sQ, float psi_sQ,float i_sD,float pole_pairs)
 {
-  return (3.0f/2.0f)*pole_pairs*(psi_sD*i_sQ-psi_sQ*i_sD);
+  float t_e=0.0f;
+  t_e=(3.0f/2.0f)*pole_pairs*(psi_sD*i_sQ-psi_sQ*i_sD);
+  //t_e=pole_pairs*(psi_sD*i_sQ-psi_sQ*i_sD);
+  //t_e=psi_sD*i_sQ;//-psi_sQ*i_sD);
+  //t_e=-psi_sQ*i_sD;
+  return t_e;
 }
 
 
@@ -459,8 +464,8 @@ void voltage_switch_inverter_VSI(int S_A, int S_B, int S_C,float i_sA,float i_sB
     duty_c=0.0f;
     attenuation=1.0f;
   }
-
-#define CURRENT_LIMIT 14.0f
+/*
+//#define CURRENT_LIMIT 14.0f
   if ( i_sA        >CURRENT_LIMIT || i_sA        <-CURRENT_LIMIT || 
        i_sB        >CURRENT_LIMIT || i_sB        <-CURRENT_LIMIT || 
        (-i_sA-i_sB)>CURRENT_LIMIT || (-i_sA-i_sB)<-CURRENT_LIMIT)
@@ -472,7 +477,7 @@ void voltage_switch_inverter_VSI(int S_A, int S_B, int S_C,float i_sA,float i_sB
     motor_stop=true;
     //printf("\n\nMotor off, overcurrent...\n\n");
  }
-
+*/
   
 /*      //PWM mode
 	TIM_OCM_FROZEN,
@@ -855,7 +860,7 @@ float psi_s_ref=0.0f;
 int   d_psi=0.0f;
 int   d_te=0.0f;
 float psi_delta_percentage=0.05f;
-float t_e_delta_percentage=0.1f;//0.8f;
+float t_e_delta_percentage=0.05f;//0.8f;
 
 
 //motor parameters;
