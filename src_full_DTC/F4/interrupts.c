@@ -16,8 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#define SAMPLES 400
-#define FLUX_LINKAGE_TIMER_DELAY 0//4000
+#define SAMPLES 500
+#define FLUX_LINKAGE_TIMER_DELAY 4000
 
 //printing buffers
 float hall_angle=0.0f;
@@ -103,9 +103,32 @@ void tim1_up_tim10_isr(void)
 
   calc_freq();
   start_up();
-  //gen_pwm();
+/*
+if (CUR_FREQ>=600.0f)
+{
+  dtc_on=true;
+  if (first_dtc==true)
+  {
+    first_dtc=false;
+    collecting_current=true;
+  }
+}
+*/
+if (dtc_on==false)
+{
+  gen_pwm();
   //close_loop=true;
-
+}
+/*
+else
+{
+  timer_set_oc_value(TIM1, TIM_OC1, 0.0f*PWM_PERIOD_ARR);
+  // Set the capture compare value for OC1. 
+  timer_set_oc_value(TIM1, TIM_OC2, 0.0f*PWM_PERIOD_ARR);
+  // Set the capture compare value for OC1. 
+  timer_set_oc_value(TIM1, TIM_OC3, 0.0f*PWM_PERIOD_ARR);
+}
+*/
   //oscilloscope flag: end of calculations
   gpio_clear(GPIOD, GPIO9);
 

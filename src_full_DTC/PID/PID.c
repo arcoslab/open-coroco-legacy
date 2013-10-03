@@ -31,7 +31,7 @@
 }
 */
 float angle_hall1=0.0f;
-float t_e_ref=1.0f;//-1.5;//-0.9f;//-0.15;//-1.6f;
+float t_e_ref=-0.5f;//-1.5;//-0.9f;//-0.15;//-1.6f;
 int  print_selection              = 3;
 bool flux_linkage_capture         = false;
 int  flux_linkage_capture_counter = 0;
@@ -168,8 +168,8 @@ void start_up(void)
   if (CUR_FREQ < MIN_CLOSE_LOOP_FREQ) 
   {
     //printf("Open loop\n");
-    //ref_freq=START_UP_REF_FREQ;
-    //close_loop=false;
+    ref_freq=START_UP_REF_FREQ;
+    close_loop=false;
     first_closed=true;
   } 
   else 
@@ -180,7 +180,7 @@ void start_up(void)
   if (close_loop && first_closed) 
   {
     first_closed=false;
-    //ref_freq=FIRST_CLOSE_LOOP_REF_FREQ;
+    ref_freq=FIRST_CLOSE_LOOP_REF_FREQ;
   }
 }
 
@@ -234,6 +234,10 @@ void pi_controller(void) {
     int counter=0;
     //motor_off=false;
 
+
+bool first_dtc=true;
+bool dtc_on=false;
+
 void frequency_input(void)
 {
 
@@ -248,7 +252,7 @@ void frequency_input(void)
         {
 	  printf("Motor Off now\n");
 	  counter_stop=1;
-
+          first_dtc=true;
         }
          motor_off=true;
 	close_loop=false;
@@ -275,8 +279,8 @@ void frequency_input(void)
 	  motor_off=false;
           counter_stop=0;
 
-          collecting_current=true;
-          //print_selection=5;
+          //collecting_current=true;
+          
 	}
       
       }
@@ -325,6 +329,16 @@ void frequency_input(void)
             else if (strcmp(cmd, "a") == 0)
       {
         print_selection=5;
+      }	 
+      else if (strcmp(cmd, "d") == 0)
+      {
+        //print_selection=5;
+        dtc_on=true;
+        if (first_dtc==true)
+        {
+          first_dtc=false;
+          collecting_current=true;
+        }
       }	 
     }
     if (!close_loop) {

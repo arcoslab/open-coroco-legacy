@@ -267,7 +267,7 @@ float rotor_speed_w_r(float psi_sD, float psi_sQ, float T)
 float electromagnetic_torque_estimation_t_e(float psi_sD,float i_sQ, float psi_sQ,float i_sD,float pole_pairs)
 {
   float t_e=0.0f;
-  t_e=(3.0f/2.0f)*pole_pairs*(psi_sD*i_sQ-psi_sQ*i_sD);
+  t_e=(3.0f/2.0f)*pole_pairs* (psi_sD*i_sQ-psi_sQ*i_sD);
   //t_e=pole_pairs*(psi_sD*i_sQ-psi_sQ*i_sD);
   //t_e=psi_sD*i_sQ;//-psi_sQ*i_sD);
   //t_e=-psi_sQ*i_sD;
@@ -571,6 +571,7 @@ if (close_loop)
 }
 
 //open loop switching selection
+/*
 else 
 {
 
@@ -615,7 +616,7 @@ else
     }
 
 }
-
+*/
 
 
   /* Set the capture compare value for OC1. */
@@ -860,7 +861,7 @@ float psi_s_ref=0.0f;
 int   d_psi=0.0f;
 int   d_te=0.0f;
 float psi_delta_percentage=5.0f;
-float t_e_delta_percentage=5.0f;//0.8f;
+float t_e_delta_percentage=25.0f;//0.8f;
 
 
 //motor parameters;
@@ -868,6 +869,7 @@ float R_s        = R_s_0;
 float pole_pairs = pole_pairs_0;
 float L_sq       = L_s_q_0;
 float psi_F      = psi_F_0;
+
 
 
 
@@ -910,7 +912,12 @@ void DTC(void)//(float i_sA,float i_sB, float U_d,float L_sq,float psi_F,float t
 
 
   optimal_voltage_switching_vector_selection_table(d_psi,d_te,psi_alpha,&S_A,&S_B,&S_C);
+
+if (dtc_on)
+{
   voltage_switch_inverter_VSI(S_A,S_B,S_C,i_sA,i_sB);
+  
+}
 
 
 }
