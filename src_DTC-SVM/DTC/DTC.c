@@ -826,53 +826,10 @@ float DTC_torque_reference_PI(float w_r, float w_r_ref)
 
 }
 
-int S_A=0;
-int S_B=0;
-int S_C=0;
-
-float S_A_f=0;
-float S_B_f=0;
-float S_C_f=0;
-
-float i_sA = 0.0f;
-float i_sB = 0.0f;
-float U_d  = 0.0f;
-
-float i_sD=0.0f;
-float i_sQ=0.0f;
-float i_s=0.0f;
-float cita_i_s=0.0f;
-
-float V_sD=0.0f;
-float V_sQ=0.0f;
-float V_s =0.0f;
-float cita_V_s=0.0f;
-
-float psi_sD=0.0f;
-float psi_sQ=0.0f;
-float psi_s =0.0f;
-int psi_alpha=0;
-float w_r=0;
-float t_e=0.0f;
-
-float psi_s_ref=0.0f;
-//float t_e_ref=10.0f;
-
-int   d_psi=0.0f;
-int   d_te=0.0f;
-float psi_delta_percentage=5.0f;
-float t_e_delta_percentage=25.0f;//0.8f;
-
-
-//motor parameters;
-float R_s        = R_s_0;
-float pole_pairs = pole_pairs_0;
-float L_sq       = L_s_q_0;
-float psi_F      = psi_F_0;
 
 
 
-
+/*
 //wrapper
 void DTC(void)//(float i_sA,float i_sB, float U_d,float L_sq,float psi_F,float t_e_ref)
 {
@@ -900,10 +857,7 @@ void DTC(void)//(float i_sA,float i_sB, float U_d,float L_sq,float psi_F,float t
 
   t_e      =electromagnetic_torque_estimation_t_e(psi_sD,i_sQ,psi_sQ,i_sD,pole_pairs);
   //t_e_ref=DTC_torque_reference_PI(CUR_FREQ, ref_freq);
-/*
-  if (t_e_ref>0.0f)
-    t_e_ref=0.0f;
-*/
+
   psi_s_ref=stator_flux_linkage_reference_psi_s_ref(psi_F,t_e_ref,L_sq,pole_pairs);
 
 
@@ -920,5 +874,5 @@ if (dtc_on)
 }
 
 
-}
+}*/
 

@@ -26,7 +26,7 @@
 
 //usb serial cdcacm
 #include <libopencm3-plus/newlib/syscall.h>
-#include <DTC_example.h>
+#include <example.h>
 #include <libopencm3-plus/cdcacm_one_serial/cdcacm.h>
 #include <libopencm3-plus/utils/misc.h>
 #include <libopencm3-plus/stm32f4discovery/leds.h>
@@ -53,6 +53,8 @@
 #include "Shunt/shunt.c"
 #include "DTC/DTC.h"
 #include "DTC/DTC.c"
+#include "SVM/SVM.h"
+#include "SVM/SVM.c"
 #include "F4/interrupts.c"
 
 

@@ -252,7 +252,7 @@ void adc_isr(void)
       i_sB=0.0f;
 */    
 
-    DTC();
+    //DTC();
   
 /*
     if (flux_linkage_capture==true)

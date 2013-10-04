@@ -21,6 +21,7 @@ void leds_init(void);
 void hall_init(void);
 void PID_tim_init(void);
 void DTC_tim_init(void);
+void DTC_SVM_tim_init(void);
 void adc_init(void);
 void test_ports_init(void);
 void system_init(void);

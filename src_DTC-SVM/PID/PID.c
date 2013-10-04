@@ -383,12 +383,9 @@ void gen_pwm(void) {
     duty_c=sinf(cmd_angle+4.0f*PI/3.0f);
   }
 
-  if (motor_off) {
-    duty_a=0.0f;
-    duty_b=0.0f;
-    duty_c=0.0f;
-  }
 
+
+/*
   if (duty_a < 0.0f)
     {
       timer_set_oc_mode(TIM1, TIM_OC1, TIM_OCM_PWM1);
@@ -428,13 +425,41 @@ void gen_pwm(void) {
       timer_enable_oc_output(TIM1, TIM_OC3 );
       timer_disable_oc_output (TIM1, TIM_OC3N);
     }
-/*
-  if (~motor_off) {
+*/
+  if (motor_off) {
+    duty_a=0.0f;
+    duty_b=0.0f;
+    duty_c=0.0f;
+    attenuation=0.0f;
+  }
+
+  else 
+  { 
+    /*
+    duty_a=0.8f;//1.0f;
+    duty_b=0.8f;//1.0f;
+    duty_c=0.8f;//1.0f;
+    attenuation=1.0f;
+    */
+/*    
     duty_a=1.0f;
     duty_b=1.0f;
     duty_c=1.0f;
+    attenuation=1.0f;
+*/    
+    duty_a=0.0f;
+    duty_b=0.0f;
+    duty_c=0.0f;
+    attenuation=1.0f;
+    
   }
-*/
+
+      timer_set_oc_mode(TIM1, TIM_OC1, TIM_OCM_PWM1);
+      timer_enable_oc_output(TIM1,TIM_OC1);
+      timer_enable_oc_output (TIM1, TIM_OC1N);
+     
+
+
   /* Set the capture compare value for OC1. */
   timer_set_oc_value(TIM1, TIM_OC1, duty_a*attenuation*PWM_PERIOD_ARR);
   /* Set the capture compare value for OC1. */
