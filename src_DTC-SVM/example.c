@@ -55,8 +55,10 @@
 #include "DTC/DTC.c"
 #include "SVM/SVM.h"
 #include "SVM/SVM.c"
-#include "F4/interrupts.c"
+#include "Print/collecting_data.h"
 
+#include "F4/interrupts.c"
+#include "Print/collecting_data.c"
 
 #include "Parameter_Identification/parameter_identification.h"
 #include "Parameter_Identification/parameter_identification.c"
@@ -66,13 +68,21 @@ int main(void)
   system_init();
    
   printf ("\n\n****************************************************************************************************************\n");
+/*
+float V_DD;
+float V_QQ;
+float V_SS;
+float v_a;
 
-
-
-
-
+V_DD=floating_switches_direct_stator_voltage_V_sD     (1.0,0.0f,0.0f,1.0f);
+V_QQ=floating_switches_quadrature_stator_voltage_V_SQ (    0.0f,0.0f,1.0f);
+V_SS=vector_magnitude                                 (V_QQ,V_DD);
+v_a =vector_angle                                     (V_QQ,V_DD);
+printf ("\n\nV_sD: %6.2f V_sQ: %6.2f V_s: %6.2f  cita: %6.2f \n\n",V_DD,V_QQ,V_SS,v_a);
+*/
   while (1)
   {
+    printf("\nduty_a: %6.4f duty_b: %6.4f duty_c: %6.4f T1: %6.4f T2: %6.4f relative: %6.4f cita: %6.2f\n",duty_a,duty_b,duty_c,T1,T2,V_s_ref_relative_angle,cita_V_s);
    
     frequency_input();
 

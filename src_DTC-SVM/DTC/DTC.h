@@ -45,7 +45,7 @@ float direct_stator_flux_linkage_estimator_psi_sD     (float T,float V_sD,float 
 float quadrature_stator_flux_linkage_estimator_psi_sQ (float T,float V_sQ,float i_sQ,float R_s);
 float stator_flux_linkage_magnite_psi_s               (float psi_sD,float psi_sQ);
 float flux_linkage_angle_psi_s_angle(float cmd_angle_PID);//float psi_sD, float psi_sQ)
-int stator_flux_linkage_sector_alpha                (float psi_sD, float psi_sQ);
+int   stator_flux_linkage_sector_alpha                (float psi_sD, float psi_sQ);
 
 
 //electromagnetic torque estimation
@@ -63,7 +63,7 @@ int electromagnetic_torque_hysteresis_controller_d_te(float t_e_ref  , float t_e
 
 //output voltages
 void optimal_voltage_switching_vector_selection_table(int d_psi,int d_t_e,int alpha,int* S_A, int* S_B, int* S_C);
-void voltage_switch_inverter_VSI(int S_A, int S_B, int S_C,float i_sA,float i_sB);
+void voltage_switch_inverter_VSI(int S_A, int S_B, int S_C);
 
 //wrapper
 void DTC(void);//(float i_A,float i_B, float U_d,float L_sq,float psi_F,float t_e_ref);

@@ -19,13 +19,22 @@
 
 float SVM_V_s_ref_D(float psi_s_ref, float psi_s, float psi_s_angle, float phase_advance,float i_sD, float R_s,float T_s);
 float SVM_V_s_ref_Q(float psi_s_ref, float psi_s, float psi_s_angle, float phase_advance,float i_sQ, float R_s,float T_s);
+float SVM_V_s_relative_angle(float V_s_angle);
 float SVM_T1(float T_s,float U_s, float U1, float V_s_ref_relative_angle);
 float SVM_T2(float T_s,float U_s, float U2, float V_s_ref_relative_angle);
+/*
 float SVM_Taon(float T_s, float T1, float T2);
 float SVM_Tbon(float Taon, float T1);
 float SVM_Tcon(float Tbon, float T2);
+*/
+float SVM_T_min_on(float T_s, float T1, float T2);
+float SVM_T_med_on(float T_min_on, float T1,float T2,float V_s_ref_angle);
+float SVM_T_max_on(float T_med_on, float T1,float T2,float V_s_ref_angle);
+
 void  SVM_phase_duty_cycles(float *duty_A, float *duty_B, float *duty_C,float V_s_ref_angle,float Taon, float Tbon,float Tcon);
+void  SVM_voltage_switch_inverter_VSI(float duty_A,float duty_B,float duty_C,float Attenuation);
 void  DTC_SVM(void);
 
+void speed_PID_no_SVM(void);
 
 

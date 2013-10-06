@@ -426,7 +426,7 @@ void optimal_voltage_switching_vector_selection_table(int d_psi,int d_te,int alp
 
 }
 
-void voltage_switch_inverter_VSI(int S_A, int S_B, int S_C,float i_sA,float i_sB)
+void voltage_switch_inverter_VSI(int S_A, int S_B, int S_C)
 {
   /*
   float duty_a=1.0f;
