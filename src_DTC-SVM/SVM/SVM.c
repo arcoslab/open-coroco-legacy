@@ -289,15 +289,16 @@ void  DTC_SVM(void)
 
   //--------------------------------SVM algorithm--------------------------------------------//
 
+  phase_advance_SVM=25.0;
 
   V_sD     = SVM_V_s_ref_D    (psi_s_ref,psi_s,psi_s_alpha_SVM,phase_advance_SVM,i_sD,R_s,TICK_PERIOD);
   V_sQ     = SVM_V_s_ref_Q    (psi_s_ref,psi_s,psi_s_alpha_SVM,phase_advance_SVM,i_sQ,R_s,TICK_PERIOD);
-//  V_s      = vector_magnitude (V_sQ,V_sD);
-//  cita_V_s = vector_angle     (V_sQ,V_sD);
-//  V_s_ref_relative_angle=SVM_V_s_relative_angle(cita_V_s);
-  V_s      = 2.0f/3.0f*U_d*0.5f;
-  cita_V_s =345.0f;
+  V_s      = vector_magnitude (V_sQ,V_sD);
+  cita_V_s = vector_angle     (V_sQ,V_sD);
   V_s_ref_relative_angle=SVM_V_s_relative_angle(cita_V_s);
+  //V_s      = 2.0f/3.0f*U_d*0.5f;
+  //cita_V_s =345.0f;
+  //V_s_ref_relative_angle=SVM_V_s_relative_angle(cita_V_s);
 
 
 //  T1       = SVM_T1           (TICK_PERIOD,V_s,U_d*2.0f/3.0f, V_s_ref_relative_angle);
