@@ -385,7 +385,6 @@ void gen_pwm(void) {
 
 
 
-/*
   if (duty_a < 0.0f)
     {
       timer_set_oc_mode(TIM1, TIM_OC1, TIM_OCM_PWM1);
@@ -425,7 +424,7 @@ void gen_pwm(void) {
       timer_enable_oc_output(TIM1, TIM_OC3 );
       timer_disable_oc_output (TIM1, TIM_OC3N);
     }
-*/
+
   if (motor_off) {
     duty_a=0.0f;
     duty_b=0.0f;
@@ -446,17 +445,16 @@ void gen_pwm(void) {
     duty_b=1.0f;
     duty_c=1.0f;
     attenuation=1.0f;
-*/    
+*/  
+/*  
     duty_a=0.0f;
     duty_b=0.0f;
     duty_c=0.0f;
+*/
     attenuation=1.0f;
-    
+
   }
 
-      timer_set_oc_mode(TIM1, TIM_OC1, TIM_OCM_PWM1);
-      timer_enable_oc_output(TIM1,TIM_OC1);
-      timer_enable_oc_output (TIM1, TIM_OC1N);
      
 
 

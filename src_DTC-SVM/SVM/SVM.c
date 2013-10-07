@@ -27,6 +27,12 @@ float SVM_V_s_ref_Q(float psi_s_ref, float psi_s, float psi_s_angle, float phase
   return ( psi_s_ref*sinf(psi_s_angle+phase_advance) - psi_s*sin(psi_s_angle) )/T_s  +  i_sQ*R_s; 
 }
 
+void SVM_Maximum_allowed_V_s_ref(float* V_s_ref,float U_d)
+{
+  if   (*V_s_ref<=U_d/sqrt(3.0f)) { *V_s_ref = *V_s_ref;       }
+  else                            { *V_s_ref = U_d/sqrt(3.0f); }
+}
+
 float SVM_V_s_relative_angle(float V_s_ref_angle)
 {
   float V_s_relative_angle=0.0f;
@@ -260,21 +266,12 @@ float psi_F      = psi_F_0;
 
 void  DTC_SVM(void)
 {
-  /*
-  V_sD     = floating_switches_direct_stator_voltage_V_sD     (S_A_f,S_B_f,S_C_f,U_d);
-  V_sQ     = floating_switches_quadrature_stator_voltage_V_SQ (      S_B_f,S_C_f,U_d);
-  V_s      = vector_magnitude               (V_sQ,V_sD);
-  cita_V_s = vector_angle                   (V_sQ,V_sD);
-  */
-
   //---------------------------------DTC algorithm--------------------------------------------//
-
 
   i_sD     = direct_stator_current_i_sD     (i_sA);
   i_sQ     = quadrature_stator_current_i_sQ (i_sA,i_sB);
   i_s      = vector_magnitude               (i_sQ,i_sD);
   cita_i_s = vector_angle                   (i_sQ,i_sD);
-
 
   psi_sD          = direct_stator_flux_linkage_estimator_psi_sD     (TICK_PERIOD,V_sD,i_sD,R_s);
   psi_sQ          = quadrature_stator_flux_linkage_estimator_psi_sQ (TICK_PERIOD,V_sQ,i_sQ,R_s);
@@ -291,24 +288,18 @@ void  DTC_SVM(void)
 
   phase_advance_SVM=25.0;
 
-  V_sD     = SVM_V_s_ref_D    (psi_s_ref,psi_s,psi_s_alpha_SVM,phase_advance_SVM,i_sD,R_s,TICK_PERIOD);
-  V_sQ     = SVM_V_s_ref_Q    (psi_s_ref,psi_s,psi_s_alpha_SVM,phase_advance_SVM,i_sQ,R_s,TICK_PERIOD);
-  V_s      = vector_magnitude (V_sQ,V_sD);
-  cita_V_s = vector_angle     (V_sQ,V_sD);
-  V_s_ref_relative_angle=SVM_V_s_relative_angle(cita_V_s);
-  //V_s      = 2.0f/3.0f*U_d*0.5f;
-  //cita_V_s =345.0f;
-  //V_s_ref_relative_angle=SVM_V_s_relative_angle(cita_V_s);
+  V_sD                   = SVM_V_s_ref_D               (psi_s_ref,psi_s,psi_s_alpha_SVM,phase_advance_SVM,i_sD,R_s,TICK_PERIOD);
+  V_sQ                   = SVM_V_s_ref_Q               (psi_s_ref,psi_s,psi_s_alpha_SVM,phase_advance_SVM,i_sQ,R_s,TICK_PERIOD);
+  V_s                    = vector_magnitude            (V_sQ,V_sD);
+  cita_V_s               = vector_angle                (V_sQ,V_sD);
+  V_s_ref_relative_angle = SVM_V_s_relative_angle      (cita_V_s);
+                           SVM_Maximum_allowed_V_s_ref (&V_s,U_d);
 
-
-//  T1       = SVM_T1           (TICK_PERIOD,V_s,U_d*2.0f/3.0f, V_s_ref_relative_angle);
-//  T2       = SVM_T2           (TICK_PERIOD,V_s,U_d*2.0f/3.0f, V_s_ref_relative_angle);
-  T1       = SVM_T1           (1.0f,V_s,U_d*2.0f/3.0f, V_s_ref_relative_angle);
-  T2       = SVM_T2           (1.0f,V_s,U_d*2.0f/3.0f, V_s_ref_relative_angle);
-
-  T_min_on = SVM_T_min_on         (1.0f, T1, T2);
-  T_med_on = SVM_T_med_on         (T_min_on, T1,T2,cita_V_s);
-  T_max_on = SVM_T_max_on(T_med_on,T1,T2,cita_V_s);
+  T1       = SVM_T1       (1.0f,V_s,U_d*2.0f/3.0f, V_s_ref_relative_angle);
+  T2       = SVM_T2       (1.0f,V_s,U_d*2.0f/3.0f, V_s_ref_relative_angle);
+  T_min_on = SVM_T_min_on (1.0f, T1, T2);
+  T_med_on = SVM_T_med_on (T_min_on, T1,T2,cita_V_s);
+  T_max_on = SVM_T_max_on (T_med_on,T1,T2,cita_V_s);
    
 
   if (dtc_on)
@@ -318,9 +309,7 @@ void  DTC_SVM(void)
     SVM_voltage_switch_inverter_VSI ( duty_a,  duty_b,  duty_c, attenuation);
   }
 
-  attenuation=1.0f;
-  SVM_phase_duty_cycles           (&duty_a, &duty_b, &duty_c, cita_V_s,T_max_on,T_med_on,T_min_on);
-  SVM_voltage_switch_inverter_VSI ( duty_a,  duty_b,  duty_c, attenuation);
+
 }
 
 

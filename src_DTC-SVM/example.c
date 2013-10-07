@@ -51,13 +51,16 @@
 
 #include "Shunt/shunt.h"
 #include "Shunt/shunt.c"
+
 #include "DTC/DTC.h"
 #include "DTC/DTC.c"
+
 #include "SVM/SVM.h"
 #include "SVM/SVM.c"
-#include "Print/collecting_data.h"
 
+#include "Print/collecting_data.h"
 #include "F4/interrupts.c"
+
 #include "Print/collecting_data.c"
 
 #include "Parameter_Identification/parameter_identification.h"
@@ -68,37 +71,21 @@ int main(void)
   system_init();
    
   printf ("\n\n****************************************************************************************************************\n");
-/*
-float V_DD;
-float V_QQ;
-float V_SS;
-float v_a;
 
-V_DD=floating_switches_direct_stator_voltage_V_sD     (1.0,0.0f,0.0f,1.0f);
-V_QQ=floating_switches_quadrature_stator_voltage_V_SQ (    0.0f,0.0f,1.0f);
-V_SS=vector_magnitude                                 (V_QQ,V_DD);
-v_a =vector_angle                                     (V_QQ,V_DD);
-printf ("\n\nV_sD: %6.2f V_sQ: %6.2f V_s: %6.2f  cita: %6.2f \n\n",V_DD,V_QQ,V_SS,v_a);
-*/
   while (1)
   {
-    printf("\nduty_a: %6.4f duty_b: %6.4f duty_c: %6.4f T1: %6.4f T2: %6.4f relative: %6.4f cita: %6.2f\n",duty_a,duty_b,duty_c,T1,T2,V_s_ref_relative_angle,cita_V_s);
+    //printf("\nduty_a: %6.4f duty_b: %6.4f duty_c: %6.4f T1: %6.4f T2: %6.4f relative: %6.4f cita: %6.2f\n",duty_a,duty_b,duty_c,T1,T2,V_s_ref_relative_angle,cita_V_s);
    
     frequency_input();
 
-                   // printf ("V_s_an: %6.2f i_s_an: %6.2f psi_s_an: %6.2f hall_angle: %6.2f freq: %6.2f U_d: %6.2f\n", cita_V_s,cita_i_s, vector_angle(psi_sQ,psi_sD), angle_hall1,CUR_FREQ,U_d); 
 
-    //------------------------------------------------------------------------------
     if (print_current==true )
     {
       current_counter=1;
-printf ("\n\n****************************************************************************************************************\n");
+      printf ("\n\n****************************************************************************************************************\n");
 
       while (current_counter<SAMPLES-2)
       {
-        //printf("\n %d %6.2f   %6.2f   %6.2f %6.2f   %6.2f   %6.2f ",current_counter,current_data_i_sA[current_counter],current_data_i_sB[current_counter],-current_data_i_sA[current_counter]-current_data_i_sB[current_counter],U_d*switching_data_SA[current_counter],U_d*switching_data_SB[current_counter],U_d*switching_data_SC[current_counter]);
-
-
         if (print_selection==0)
         {
           printf (":t:%5d:freq: %6.2f :i_sA: %6.2f :i_sB: %6.2f :i_sD: %6.2f :i_sQ: %6.2f :i_s: %6.2f :cita_i_s: %6.2f :U_d: %6.2f \n",timer[current_counter], data_CUR_FREQ[current_counter],data_i_sA[current_counter],data_i_sB[current_counter],data_i_sD[current_counter],data_i_sQ[current_counter],data_i_s[current_counter],data_cita_i_s[current_counter],data_U_d[current_counter]);
@@ -210,57 +197,6 @@ printf (":psi_sD:%9.6f:psi_sQ:%9.6f:psi_s:%6.5f:angle:%6.2f:psi_alpha:%2d:timer:
 
         }
 
-/*
-        data_S_A[current_counter]=S_A;
-        data_S_B[current_counter]=S_B;
-        data_S_C[current_counter]=S_C;
-
-        data_S_A_f[current_counter]=S_A_f;
-        data_S_B_f[current_counter]=S_B_f;
-        data_S_C_f[current_counter]=S_C_f;
-
-        data_i_sA [current_counter]=i_sA;
-        data_i_sB [current_counter]=i_sB;
-        data_U_d  [current_counter]=U_d;
-
-        data_i_sD[current_counter]=i_sD;
-        data_i_sQ[current_counter]=i_sQ;
-        data_i_s[current_counter]=i_s;
-        data_cita_i_s[current_counter]=cita_i_s;
-
-        data_V_sD[current_counter];
-        data_V_sQ[current_counter];
-        data_V_s [current_counter];
-        data_cita_V_s[current_counter];
-
-        data_psi_sD[current_counter];
-        data_psi_sQ[current_counter];
-        data_psi_s [current_counter];
-        data_psi_alpha[current_counter];
-
-        data_t_e[current_counter];
-
-        data_psi_s_ref[current_counter];
-        data_t_e_ref[current_counter];
-
-        data_d_psi[current_counter];
-        data_d_te[current_counter];
-        data_psi_delta_percentage[current_counter];
-        data_t_e_delta_percentage[current_counter];
-
-        data_R_s[current_counter];
-        data_pole_pairs[current_counter;
-        data_L_sq[current_counter];
-        data_psi_F[current_counter];
-
-*/
-
-
-
-
-
-
-
         current_counter++;
       }
     
@@ -268,86 +204,6 @@ printf (":psi_sD:%9.6f:psi_sQ:%9.6f:psi_s:%6.5f:angle:%6.2f:psi_alpha:%2d:timer:
       current_counter=0;
     }
 
-
-/*2
-    if (motor_stop==false)
-    {
-
-      if (print_selection==0)
-      {
-        printf ("freq: %6.2f i_sA: %6.2f i_sB: %6.2f i_sD: %6.2f i_sQ: %6.2f i_s: %6.2f cita_i_s: %6.2f U_d: %6.2f \n", CUR_FREQ,i_sA,i_sB,i_sD,i_sQ,i_s,cita_i_s,U_d);
-      }
-      else if (print_selection==1)
-      {
-        printf ("freq: %6.2f V_sD: %6.2f V_sQ: %6.2f V_s: %6.2f cita_V_s: %6.2f U_d: %6.2f \n", CUR_FREQ,V_sD,V_sQ,V_s,cita_V_s,U_d);
-      }
-      else if (print_selection==2)
-      {
-        printf ("freq: %6.2f psi_sD: %6.2f psi_sQ: %6.2f psi_s: %6.2f psi_alpha: %4d U_d: %6.2f \n", CUR_FREQ,psi_sD,psi_sQ,psi_s,psi_alpha,U_d);
-      }
-      else if (print_selection==3)
-      {
-        printf ("freq: %6.2f t_e: %8.2f psi_s_ref: %6.2f t_e_ref: %6.2f d_psi: %4d d_te: %4d psi_delta: %6.2f t_e_delta: %6.2f \n", CUR_FREQ,t_e,psi_s_ref,t_e_ref,d_psi,d_te,psi_delta_percentage,t_e_delta_percentage);
-      }
-    }
-*/
-
-
-
-/*
-S_A_f
-S_B_f
-S_C_f
-
-i_sA
-i_sB
-U_d  
-
-i_sD
-i_sQ
-i_s
-cita_i_s
-
-V_sD
-V_sQ
-V_s 
-cita_V_s
-
-psi_sD
-psi_sQ
-psi_s
-psi_alpha
-
-t_e
-
-psi_s_ref
-t_e_ref
-
-d_psi
-d_te
-psi_delta_percentage
-t_e_delta_percentage
-
-
-//motor parameters;
-R_s        
-pole_pairs 
-L_sq       
-psi_F      
-*/
-
-
-
-
-    
-
-
-
-
-    if(S_A!=2 && S_B!=2 && S_C!=2)
-    {
-      //printf ("freq: %6.2f i_sA: %6.2f i_sB: %6.2f U_d: %6.2f\n", CUR_FREQ,i_sA,i_sB,U_d);
-    }
 
   }
 }

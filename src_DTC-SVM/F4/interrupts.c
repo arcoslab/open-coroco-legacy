@@ -16,8 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#define SAMPLES 500
-#define FLUX_LINKAGE_TIMER_DELAY 4000
+#define SAMPLES 300
+#define FLUX_LINKAGE_TIMER_DELAY 1000
 
 //printing buffers
 float hall_angle=0.0f;
@@ -84,6 +84,17 @@ float data_psi_F[SAMPLES];
 
 int data_optimal_voltage_vector[SAMPLES];
 
+float data_duty_a[SAMPLES];
+float data_duty_b[SAMPLES];
+float data_duty_c[SAMPLES];
+
+float data_phase_advance_SVM[SAMPLES];
+float data_V_s_ref_relative_angle[SAMPLES];
+float data_T1[SAMPLES];
+float data_T2[SAMPLES];
+float data_T_min_on[SAMPLES];
+float data_T_med_on[SAMPLES];
+float data_T_max_on[SAMPLES];
 
 
 
@@ -181,8 +192,8 @@ void adc_isr(void)
     gpio_set(GPIOD, GPIO9);
 
     //taking measurements
-    DTC_SVM();
-    collecting_data();
+    //DTC_SVM();
+    //collecting_data();
     
     //oscilloscope flag: end of DTC
     gpio_clear(GPIOD, GPIO9);
