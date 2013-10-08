@@ -92,7 +92,7 @@ int main(void)
         }
         else if (print_selection==1)
         {
-          printf ("freq: %6.2f V_sA: %6.2f V_sB: %6.2f VsC: %6.2f V_sD: %6.2f V_sQ: %6.2f V_s: %6.2f cita_V_s: %6.2f U_d: %6.2f \n", data_CUR_FREQ[current_counter],data_S_A_f[current_counter]*data_U_d[current_counter],data_S_B_f[current_counter]*data_U_d[current_counter],data_S_C_f[current_counter]*data_U_d[current_counter],data_V_sD[current_counter],data_V_sQ[current_counter],data_V_s[current_counter],data_cita_V_s[current_counter],data_U_d[current_counter]);
+          //printf ("freq: %6.2f V_sA: %6.2f V_sB: %6.2f VsC: %6.2f V_sD: %6.2f V_sQ: %6.2f V_s: %6.2f cita_V_s: %6.2f U_d: %6.2f \n", data_CUR_FREQ[current_counter],data_S_A_f[current_counter]*data_U_d[current_counter],data_S_B_f[current_counter]*data_U_d[current_counter],data_S_C_f[current_counter]*data_U_d[current_counter],data_V_sD[current_counter],data_V_sQ[current_counter],data_V_s[current_counter],data_cita_V_s[current_counter],data_U_d[current_counter]);
         }
         else if (print_selection==2)
         {
@@ -114,7 +114,7 @@ data_U_d[current_counter]);
         else if (print_selection==3)
         {
 //printf ("t:%5d:f:%6.2f:r:%6.2f:er:%7.2f:tr:%8.4f:te:%8.4f:dt:%2d:pr:%8.6f:ps:%6.4f:pa:%1d:pn:%6.2f:dp:%2d:v:%3d:c:%6.2f",
-printf ("t:%5d:f:%6.2f:tr:%8.4f:te:%8.4f:dt:%2d:pr:%8.6f:ps:%6.4f:pa:%1d:pn:%6.2f:dp:%2d:v:%3d:c:%6.2f",
+/*/printf ("t:%5d:f:%6.2f:tr:%8.4f:te:%8.4f:dt:%2d:pr:%8.6f:ps:%6.4f:pa:%1d:pn:%6.2f:dp:%2d:v:%3d:c:%6.2f",
 timer[current_counter],
 data_CUR_FREQ[current_counter],
 data_t_e_ref[current_counter],
@@ -130,14 +130,13 @@ data_cita_V_s[current_counter]);
 //data_S_A[current_counter],data_S_B[current_counter],data_S_C[current_counter],
 //:SA:%1d:SB:%1d:SC:
 
-
+*/
 
          printf (":iA:%6.2f:B:%6.2f:D:%6.2f:Q:%6.2f:s:%6.2f:c:%6.2f:U:%6.2f",
 data_i_sA[current_counter],data_i_sB[current_counter],data_i_sD[current_counter],data_i_sQ[current_counter],data_i_s[current_counter],data_cita_i_s[current_counter],data_U_d[current_counter]);
 
 
-         printf (":VA:%6.2f:B:%6.2f:C:%6.2f:D:%6.2f:Q: %6.2f:s:%6.2f:c:%6.2f", 
-data_S_A_f[current_counter]*data_U_d[current_counter],data_S_B_f[current_counter]*data_U_d[current_counter],data_S_C_f[current_counter]*data_U_d[current_counter],data_V_sD[current_counter],data_V_sQ[current_counter],data_V_s[current_counter],data_cita_V_s[current_counter]);
+        // printf (":VA:%6.2f:B:%6.2f:C:%6.2f:D:%6.2f:Q: %6.2f:s:%6.2f:c:%6.2f", data_S_A_f[current_counter]*data_U_d[current_counter],data_S_B_f[current_counter]*data_U_d[current_counter],data_S_C_f[current_counter]*data_U_d[current_counter],data_V_sD[current_counter],data_V_sQ[current_counter],data_V_s[current_counter],data_cita_V_s[current_counter]);
         
 
 
@@ -199,7 +198,7 @@ printf (":psi_sD:%9.6f:psi_sQ:%9.6f:psi_s:%6.5f:angle:%6.2f:psi_alpha:%2d:timer:
 
 else if (print_selection==6)
 {
-printf ("t:%5d:pa:%6.1f:iA:%6.2f:B:%6.2f:C:%6.2f:D:%6.2f:Q:%6.2f:S:%6.2f:c:%6.2f:pD:%7.4f:Q:%7.4f:s:%6.4f:a:%6.2f:r:%6.4f:te:%6.2f:VD:%6.2f:Q:%6.2f:s:%6.2f:c:%6.2f:r:%6.2f:T1:%4.2f:2:%4.2f:n:%5.2f:d:%4.2f:x:%4.2f:da:%4.2f:b:%4.2f:c:%4.2f:f:%6.2f:U:%6.2f:at:%6.2f\n",
+printf ("t:%5d:pa:%6.4f:iA:%6.2f:B:%6.2f:C:%6.2f:D:%6.2f:Q:%6.2f:S:%6.2f:c:%6.2f:pD:%7.4f:Q:%7.4f:s:%6.4f:a:%6.2f:r:%6.4f:w:%6.2f:te:%6.2f:VD:%6.2f:Q:%6.2f:s:%6.2f:c:%6.2f:r:%6.2f:T1:%4.2f:2:%4.2f:n:%5.2f:d:%4.2f:x:%4.2f:da:%4.2f:b:%4.2f:c:%4.2f:f:%6.2f:U:%6.2f:at:%6.2f\n",
 timer[current_counter],
 
 data_phase_advance_SVM[current_counter],
@@ -217,6 +216,7 @@ data_psi_sQ[current_counter],
 data_psi_s[current_counter],
 data_psi_s_alpha_SVM[current_counter],
 data_psi_s_ref[current_counter],
+data_w_r[current_counter],
 
 data_t_e[current_counter],
 

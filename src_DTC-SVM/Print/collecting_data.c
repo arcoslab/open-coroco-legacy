@@ -32,7 +32,7 @@ void collecting_samples(int sample_counter)
         current_data_i_sB[sample_counter]=i_sB;
 
 	data_CUR_FREQ[sample_counter]=CUR_FREQ;	
-
+/*
         data_S_A[sample_counter]=S_A;
         data_S_B[sample_counter]=S_B;
         data_S_C[sample_counter]=S_C;
@@ -40,7 +40,7 @@ void collecting_samples(int sample_counter)
         data_S_A_f[sample_counter]=S_A_f;
         data_S_B_f[sample_counter]=S_B_f;
         data_S_C_f[sample_counter]=S_C_f;
-
+*/
         data_i_sA [sample_counter]=i_sA;
         data_i_sB [sample_counter]=i_sB;
         data_U_d  [sample_counter]=U_d;
@@ -71,12 +71,13 @@ void collecting_samples(int sample_counter)
         data_d_te[sample_counter]=d_te;
         data_psi_delta_percentage[sample_counter]=psi_delta_percentage;
         data_t_e_delta_percentage[sample_counter]=t_e_delta_percentage;
-
+/*
         data_R_s[sample_counter]=R_s;
         data_pole_pairs[sample_counter]=pole_pairs;
         data_L_sq[sample_counter]=L_sq;
         data_psi_F[sample_counter]=psi_F;
         data_optimal_voltage_vector[sample_counter]=optimal_voltage_vector;
+*/
         PID_angle[sample_counter]=cmd_angle;//angle_hall1;
         data_w_r[sample_counter]=w_r;   
 

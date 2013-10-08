@@ -16,8 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#define SAMPLES 300
-#define FLUX_LINKAGE_TIMER_DELAY 10
+#define SAMPLES 400
+#define FLUX_LINKAGE_TIMER_DELAY 0
 
 //printing buffers
 float hall_angle=0.0f;
@@ -34,7 +34,7 @@ int current_counter=0;
 bool print_current=false;
 bool first_movement=false;
 float data_CUR_FREQ[SAMPLES];
-
+/*
 int data_S_A[SAMPLES];
 int data_S_B[SAMPLES];
 int data_S_C[SAMPLES];
@@ -42,7 +42,7 @@ int data_S_C[SAMPLES];
 float data_S_A_f[SAMPLES];
 float data_S_B_f[SAMPLES];
 float data_S_C_f[SAMPLES];
-
+*/
 float data_i_sA [SAMPLES];
 float data_i_sB [SAMPLES];
 
@@ -79,13 +79,14 @@ float data_t_e_delta_percentage[SAMPLES];
 
 
 //motor parameters;
+/*
 float data_R_s[SAMPLES];
 float data_pole_pairs[SAMPLES];
 float data_L_sq[SAMPLES];
 float data_psi_F[SAMPLES];
 
 int data_optimal_voltage_vector[SAMPLES];
-
+*/
 float data_duty_a[SAMPLES];
 float data_duty_b[SAMPLES];
 float data_duty_c[SAMPLES];
@@ -194,7 +195,7 @@ void adc_isr(void)
     gpio_set(GPIOD, GPIO9);
 
     //taking measurements
-    //DTC_SVM();
+    DTC_SVM();
     collecting_data();
     
     //oscilloscope flag: end of DTC
