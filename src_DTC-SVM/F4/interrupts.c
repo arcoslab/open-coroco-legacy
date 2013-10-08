@@ -117,7 +117,7 @@ void tim1_up_tim10_isr(void)
   calc_freq();
   start_up();
 
-  /*
+/*  
   if (CUR_FREQ>=600.0f)
   {
     dtc_on=true;
@@ -127,7 +127,7 @@ void tim1_up_tim10_isr(void)
       collecting_current=true;
     }
   }
-  */
+*/  
 
   if (dtc_on==false)
   {
@@ -194,7 +194,7 @@ void adc_isr(void)
     gpio_set(GPIOD, GPIO9);
 
     //taking measurements
-    DTC_SVM();
+    //DTC_SVM();
     collecting_data();
     
     //oscilloscope flag: end of DTC

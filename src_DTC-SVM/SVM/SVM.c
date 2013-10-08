@@ -287,7 +287,7 @@ void  DTC_SVM(void)
 
   //--------------------------------SVM algorithm--------------------------------------------//
 
-  phase_advance_SVM=25.0;
+  phase_advance_SVM=5.0f;
 
   V_sD                   = SVM_V_s_ref_D               (psi_s_ref,psi_s,psi_s_alpha_SVM,phase_advance_SVM,i_sD,R_s,TICK_PERIOD);
   V_sQ                   = SVM_V_s_ref_Q               (psi_s_ref,psi_s,psi_s_alpha_SVM,phase_advance_SVM,i_sQ,R_s,TICK_PERIOD);
@@ -308,6 +308,12 @@ void  DTC_SVM(void)
     attenuation=1.0f;
     SVM_phase_duty_cycles           (&duty_a, &duty_b, &duty_c, cita_V_s,T_max_on,T_med_on,T_min_on);
     SVM_voltage_switch_inverter_VSI ( duty_a,  duty_b,  duty_c, attenuation);
+ 
+    if (first_dtc==true)
+    {
+      first_dtc=false;
+      collecting_current=true;
+    }
   }
 
 

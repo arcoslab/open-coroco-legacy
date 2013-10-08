@@ -334,11 +334,7 @@ void frequency_input(void)
       {
         //print_selection=5;
         dtc_on=true;
-        if (first_dtc==true)
-        {
-          first_dtc=false;
-          collecting_current=true;
-        }
+
       }	 
     }
     if (!close_loop) {
@@ -429,7 +425,7 @@ void gen_pwm(void) {
     duty_a=0.0f;
     duty_b=0.0f;
     duty_c=0.0f;
-    attenuation=0.0f;
+    //attenuation=0.0f;
   }
 
   else 
@@ -451,7 +447,7 @@ void gen_pwm(void) {
     duty_b=0.0f;
     duty_c=0.0f;
 */
-    attenuation=1.0f;
+    //attenuation=1.0f;
 
   }
 

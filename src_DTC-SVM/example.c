@@ -199,11 +199,14 @@ printf (":psi_sD:%9.6f:psi_sQ:%9.6f:psi_s:%6.5f:angle:%6.2f:psi_alpha:%2d:timer:
 
 else if (print_selection==6)
 {
-printf ("t:%5d:pa:%6.1f:iD:%6.2f:iQ:%6.2f:iS:%6.2f:ic:%6.2f:pD:%7.4f:pQ:%7.4f:ps:%6.4f:pa:%6.2f:pr:%6.4f:te:%6.2f:VD:%6.2f:VQ:%6.2f:Vs:%6.2f:Vc:%6.2f:Vr:%6.2f:T1:%4.2f:T2:%4.2f:mn:%4.2f:md:%4.2f:mx:%4.2f:da:%4.2f:db:%4.2f:dc:%4.2f:a:%4.2f:f:%6.2f\n",
+printf ("t:%5d:pa:%6.1f:iA:%6.2f:B:%6.2f:C:%6.2f:D:%6.2f:Q:%6.2f:S:%6.2f:c:%6.2f:pD:%7.4f:Q:%7.4f:s:%6.4f:a:%6.2f:r:%6.4f:te:%6.2f:VD:%6.2f:Q:%6.2f:s:%6.2f:c:%6.2f:r:%6.2f:T1:%4.2f:2:%4.2f:n:%5.2f:d:%4.2f:x:%4.2f:da:%4.2f:b:%4.2f:c:%4.2f:f:%6.2f:U:%6.2f:at:%6.2f\n",
 timer[current_counter],
 
 data_phase_advance_SVM[current_counter],
 
+data_i_sA [current_counter],
+data_i_sB [current_counter],
+-data_i_sA[current_counter]-data_i_sB[current_counter],
 data_i_sD[current_counter],
 data_i_sQ[current_counter],
 data_i_s[current_counter],
@@ -232,9 +235,10 @@ data_T_max_on[current_counter],
 data_duty_a[current_counter],
 data_duty_b[current_counter],
 data_duty_c[current_counter],
-data_attenuation[current_counter],
 
-data_CUR_FREQ[current_counter]
+data_CUR_FREQ[current_counter],
+data_U_d[current_counter],
+data_attenuation[current_counter]
 );
 }
 
