@@ -32,7 +32,7 @@
 */
 float angle_hall1=0.0f;
 float t_e_ref=-0.5f;//-1.5;//-0.9f;//-0.15;//-1.6f;
-int  print_selection              = 3;
+int  print_selection              = 6;
 bool flux_linkage_capture         = false;
 int  flux_linkage_capture_counter = 0;
 int  flux_linkage_capture_timer    = 0;
@@ -326,7 +326,7 @@ void frequency_input(void)
       {
         print_selection=4;
       }	 
-            else if (strcmp(cmd, "a") == 0)
+      else if (strcmp(cmd, "a") == 0)
       {
         print_selection=5;
       }	 

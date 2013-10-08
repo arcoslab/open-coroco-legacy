@@ -17,7 +17,7 @@
  */
 
 #define SAMPLES 300
-#define FLUX_LINKAGE_TIMER_DELAY 1000
+#define FLUX_LINKAGE_TIMER_DELAY 10
 
 //printing buffers
 float hall_angle=0.0f;
@@ -57,11 +57,13 @@ float data_V_sD[SAMPLES];
 float data_V_sQ[SAMPLES];
 float data_V_s [SAMPLES];
 float data_cita_V_s[SAMPLES];
+float data_cita_V_s_relative_angle[SAMPLES];
 
 float data_psi_sD[SAMPLES];
 float data_psi_sQ[SAMPLES];
 float data_psi_s [SAMPLES];
 int   data_psi_alpha[SAMPLES];
+float data_psi_s_alpha_SVM[SAMPLES];
 float data_w_r[SAMPLES];
 int timer[SAMPLES];
 
@@ -96,7 +98,7 @@ float data_T_min_on[SAMPLES];
 float data_T_med_on[SAMPLES];
 float data_T_max_on[SAMPLES];
 
-
+float data_attenuation[SAMPLES];
 
 void tim1_up_tim10_isr(void) 
 {
@@ -192,8 +194,8 @@ void adc_isr(void)
     gpio_set(GPIOD, GPIO9);
 
     //taking measurements
-    //DTC_SVM();
-    //collecting_data();
+    DTC_SVM();
+    collecting_data();
     
     //oscilloscope flag: end of DTC
     gpio_clear(GPIOD, GPIO9);

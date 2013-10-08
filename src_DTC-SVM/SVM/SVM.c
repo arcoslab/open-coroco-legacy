@@ -19,12 +19,12 @@
 
 float SVM_V_s_ref_D(float psi_s_ref, float psi_s, float psi_s_angle, float phase_advance,float i_sD, float R_s,float T_s)
 {
-  return ( psi_s_ref*cosf(psi_s_angle+phase_advance) - psi_s*cos(psi_s_angle) )/T_s  +  i_sD*R_s; 
+  return ( psi_s_ref*cosf((psi_s_angle+phase_advance)*PI/180.0f) - psi_s*cos(psi_s_angle*PI/180.0f) )/T_s  +  i_sD*R_s; 
 }
 
 float SVM_V_s_ref_Q(float psi_s_ref, float psi_s, float psi_s_angle, float phase_advance,float i_sQ, float R_s,float T_s)
 {
-  return ( psi_s_ref*sinf(psi_s_angle+phase_advance) - psi_s*sin(psi_s_angle) )/T_s  +  i_sQ*R_s; 
+  return ( psi_s_ref*sinf((psi_s_angle+phase_advance)*PI/180.0f) - psi_s*sin(psi_s_angle*PI/180.0f) )/T_s  +  i_sQ*R_s; 
 }
 
 void SVM_Maximum_allowed_V_s_ref(float* V_s_ref,float U_d)
@@ -281,7 +281,8 @@ void  DTC_SVM(void)
 
   t_e       = electromagnetic_torque_estimation_t_e   (psi_sD,i_sQ,psi_sQ,i_sD,pole_pairs);
   //t_e_ref = DTC_torque_reference_PI                 (CUR_FREQ, ref_freq);
-  psi_s_ref = stator_flux_linkage_reference_psi_s_ref (psi_F,t_e_ref,L_sq,pole_pairs);
+  //psi_s_ref = stator_flux_linkage_reference_psi_s_ref (psi_F,t_e_ref,L_sq,pole_pairs);
+  psi_s_ref = psi_F;
 
 
   //--------------------------------SVM algorithm--------------------------------------------//

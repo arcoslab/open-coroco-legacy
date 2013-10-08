@@ -177,7 +177,7 @@ data_psi_sQ[current_counter]
 
 
 //else 
-if (print_selection==5 )//&& data_V_s[current_counter] > 0.0f)
+else if (print_selection==5 )//&& data_V_s[current_counter] > 0.0f)
         {
 /*
           float angle_delay=0.0f;
@@ -196,6 +196,49 @@ if (print_selection==5 )//&& data_V_s[current_counter] > 0.0f)
 printf (":psi_sD:%9.6f:psi_sQ:%9.6f:psi_s:%6.5f:angle:%6.2f:psi_alpha:%2d:timer:%8d:freq: %6.2f:U_d: %6.2f\n", data_psi_sD[current_counter],data_psi_sQ[current_counter],data_psi_s[current_counter],vector_angle(data_psi_sQ[current_counter],data_psi_sD[current_counter]),data_psi_alpha[current_counter], timer[current_counter], data_CUR_FREQ[current_counter],data_U_d  [current_counter]);
 
         }
+
+else if (print_selection==6)
+{
+printf ("t:%5d:pa:%6.1f:iD:%6.2f:iQ:%6.2f:iS:%6.2f:ic:%6.2f:pD:%7.4f:pQ:%7.4f:ps:%6.4f:pa:%6.2f:pr:%6.4f:te:%6.2f:VD:%6.2f:VQ:%6.2f:Vs:%6.2f:Vc:%6.2f:Vr:%6.2f:T1:%4.2f:T2:%4.2f:mn:%4.2f:md:%4.2f:mx:%4.2f:da:%4.2f:db:%4.2f:dc:%4.2f:a:%4.2f:f:%6.2f\n",
+timer[current_counter],
+
+data_phase_advance_SVM[current_counter],
+
+data_i_sD[current_counter],
+data_i_sQ[current_counter],
+data_i_s[current_counter],
+data_cita_i_s[current_counter],
+
+data_psi_sD[current_counter],
+data_psi_sQ[current_counter],
+data_psi_s[current_counter],
+data_psi_s_alpha_SVM[current_counter],
+data_psi_s_ref[current_counter],
+
+data_t_e[current_counter],
+
+data_V_sD                    [current_counter],
+data_V_sQ                    [current_counter],
+data_V_s                     [current_counter],
+data_cita_V_s                [current_counter],
+data_cita_V_s_relative_angle [current_counter],
+
+data_T1[current_counter],
+data_T2[current_counter],
+data_T_min_on[current_counter],
+data_T_med_on[current_counter],
+data_T_max_on[current_counter],
+
+data_duty_a[current_counter],
+data_duty_b[current_counter],
+data_duty_c[current_counter],
+data_attenuation[current_counter],
+
+data_CUR_FREQ[current_counter]
+);
+}
+
+
 
         current_counter++;
       }

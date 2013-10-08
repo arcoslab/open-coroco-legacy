@@ -54,11 +54,13 @@ void collecting_samples(int sample_counter)
         data_V_sQ[sample_counter]=V_sQ;
         data_V_s [sample_counter]=V_s;
         data_cita_V_s[sample_counter]=cita_V_s;
+        data_cita_V_s_relative_angle[sample_counter]=cita_V_s;
 
         data_psi_sD[sample_counter]=psi_sD;
         data_psi_sQ[sample_counter]=psi_sQ;
         data_psi_s [sample_counter]=psi_s;
         data_psi_alpha[sample_counter]=psi_alpha;
+        data_psi_s_alpha_SVM[sample_counter]=psi_s_alpha_SVM;
 
         data_t_e[sample_counter]=t_e;
 
@@ -89,6 +91,7 @@ void collecting_samples(int sample_counter)
         data_T_min_on[sample_counter]=T_min_on;
         data_T_med_on[sample_counter]=T_med_on;
         data_T_max_on[sample_counter]=T_max_on;
+        data_attenuation[sample_counter]=attenuation;
 }
 
 
