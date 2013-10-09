@@ -283,12 +283,16 @@ void  DTC_SVM(void)
   t_e       = electromagnetic_torque_estimation_t_e   (psi_sD,i_sQ,psi_sQ,i_sD,pole_pairs);
   //t_e_ref = DTC_torque_reference_PI                 (CUR_FREQ, ref_freq);
   //psi_s_ref = stator_flux_linkage_reference_psi_s_ref (psi_F,t_e_ref,L_sq,pole_pairs);
+
+  
+
   psi_s_ref = psi_F;
 
 
   //--------------------------------SVM algorithm--------------------------------------------//
 
-  phase_advance_SVM=-100.0f/80.0f;
+  //phase_advance_SVM=-100.0f/80.0f;
+  sensorless_pi_controller(ref_freq,w_r/(2.0f*PI),&attenuation,&phase_advance_SVM);
 
   V_sD                   = SVM_V_s_ref_D               (psi_s_ref,psi_s,psi_s_alpha_SVM,phase_advance_SVM,i_sD,R_s,TICK_PERIOD);
   V_sQ                   = SVM_V_s_ref_Q               (psi_s_ref,psi_s,psi_s_alpha_SVM,phase_advance_SVM,i_sQ,R_s,TICK_PERIOD);
@@ -300,8 +304,8 @@ void  DTC_SVM(void)
 
   T1       = SVM_T1       (1.0f,V_s,U_d*2.0f/3.0f, V_s_ref_relative_angle);
   T2       = SVM_T2       (1.0f,V_s,U_d*2.0f/3.0f, V_s_ref_relative_angle);
-//  T1       = SVM_T1       (1.0f,V_s,attenuation*U_d*2.0f/3.0f, V_s_ref_relative_angle);
-//  T2       = SVM_T2       (1.0f,V_s,attenuation*U_d*2.0f/3.0f, V_s_ref_relative_angle);
+//T1       = SVM_T1       (1.0f,V_s,attenuation*U_d*2.0f/3.0f, V_s_ref_relative_angle);
+//T2       = SVM_T2       (1.0f,V_s,attenuation*U_d*2.0f/3.0f, V_s_ref_relative_angle);
 
   T_min_on = SVM_T_min_on (1.0f, T1, T2);
   T_med_on = SVM_T_med_on (T_min_on, T1,T2,cita_V_s);
@@ -310,9 +314,8 @@ void  DTC_SVM(void)
 
   if (dtc_on)
   {
-    //attenuation=1.0f;
     SVM_phase_duty_cycles           (&duty_a, &duty_b, &duty_c, cita_V_s,T_max_on,T_med_on,T_min_on);
-    //SVM_voltage_switch_inverter_VSI ( duty_a,  duty_b,  duty_c, attenuation);
+  //SVM_voltage_switch_inverter_VSI ( duty_a,  duty_b,  duty_c, attenuation);
     SVM_voltage_switch_inverter_VSI ( duty_a,  duty_b,  duty_c, 1.0f);
  
     if (first_dtc==true)

@@ -52,6 +52,9 @@
 #include "Shunt/shunt.h"
 #include "Shunt/shunt.c"
 
+#include "PID/sensorless_PID.h"
+#include "PID/sensorless_PID.c"
+
 #include "DTC/DTC.h"
 #include "DTC/DTC.c"
 
