@@ -80,7 +80,7 @@ int main(void)
   {
     //printf("\nduty_a: %6.4f duty_b: %6.4f duty_c: %6.4f T1: %6.4f T2: %6.4f relative: %6.4f cita: %6.2f\n",duty_a,duty_b,duty_c,T1,T2,V_s_ref_relative_angle,cita_V_s);
    
-    printf("ref_freq: %8.4f\n",ref_freq_SVM);
+    printf("freq: %8.4f\n",w_r);
 
     frequency_input();
 
@@ -202,7 +202,7 @@ printf (":psi_sD:%9.6f:psi_sQ:%9.6f:psi_s:%6.5f:angle:%6.2f:psi_alpha:%2d:timer:
 
         }
 
-else if (print_selection==6)
+else if (print_selection==20)//6)
 {
 printf ("t:%5d:pa:%6.4f:iA:%6.2f:B:%6.2f:C:%6.2f:D:%6.2f:Q:%6.2f:S:%6.2f:c:%6.2f:pD:%7.4f:Q:%7.4f:s:%6.4f:a:%6.2f:r:%6.4f:w:%6.2f:te:%6.2f:VD:%6.2f:Q:%6.2f:s:%6.2f:c:%6.2f:r:%6.2f:T1:%4.2f:2:%4.2f:n:%5.2f:d:%4.2f:x:%4.2f:da:%4.2f:b:%4.2f:c:%4.2f:f:%6.2f:U:%6.2f:at:%6.2f\n",
 timer[current_counter],

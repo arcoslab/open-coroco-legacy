@@ -279,7 +279,7 @@ void  DTC_SVM(void)
   psi_s           = stator_flux_linkage_magnite_psi_s               (psi_sD,psi_sQ);
   psi_s_alpha_SVM = vector_angle                                    (psi_sQ,psi_sD);
   w_r             = (1.0f/(2.0f*PI))*rotor_speed_w_r                                 (psi_sD,psi_sQ,TICK_PERIOD);
-
+  
 
   t_e       = electromagnetic_torque_estimation_t_e   (psi_sD,i_sQ,psi_sQ,i_sD,pole_pairs);
   //t_e_ref = DTC_torque_reference_PI                 (CUR_FREQ, ref_freq);
@@ -305,9 +305,13 @@ void  DTC_SVM(void)
       //phase_advance_SVM = psi_advance_calculator(ref_freq_SVM,PWMFREQ_F);
       psi_rotating_angle =  psi_advance_calculator(ref_freq_SVM,PWMFREQ_F);
     }
-*/
+
     sensorless_open_loop(&ref_freq_SVM, &attenuation,PWMFREQ_F,120.0f,0.5f);
     psi_rotating_angle_SVM = psi_advance_calculator(ref_freq_SVM,PWMFREQ_F);
+*/
+
+    psi_finitite_state_machine (ref_freq_SVM,w_r, &psi_rotating_angle_SVM);
+
   }
 
 //V_sD                   = SVM_V_s_ref_D               (psi_s_ref,psi_s,psi_s_alpha_SVM,phase_advance_SVM,i_sD,R_s,TICK_PERIOD);

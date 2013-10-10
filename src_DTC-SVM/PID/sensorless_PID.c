@@ -27,12 +27,13 @@
 #define PI_MIN_SENSORLESS            -80.0f            //-80*PI/180.0f     //braking torque
 
 void sensorless_pi_controller(
-                           float reference_frequency, float frequency,float* sensorless_attenuation, float* sensorless_phase_advance) 
+                           float reference_frequency, float frequency,float interrupt_frequency,float* sensorless_attenuation, float* rotating_angle) 
 {
-  float        sensorless_error      = 0.0f;
-  float        p_sensorless_error    = 0.0f;
-  static float i_sensorless_error    = 0.0f;
-  float        pi_control_sensorless = 0.0f;
+  float        sensorless_error         = 0.0f;
+  float        p_sensorless_error       = 0.0f;
+  static float i_sensorless_error       = 0.0f;
+  float        pi_control_sensorless    = 0.0f;
+  float        sensorless_phase_advance = 0.0f;  
 
   sensorless_error=reference_frequency-frequency;
 
@@ -53,12 +54,14 @@ void sensorless_pi_controller(
   else if (pi_control_sensorless < PI_MIN_SENSORLESS) { pi_control = PI_MIN_SENSORLESS; }
 
   //cmd_angle+=pi_control;
-  *sensorless_phase_advance+=pi_control;
+  sensorless_phase_advance+=pi_control;
 
   if   (pi_control >= 0.0f) 
   { *sensorless_attenuation=MIN_ATTENUATION+pi_control/(PI_MAX_SENSORLESS/(MAX_ATTENUATION-MIN_ATTENUATION)); } 
   else                      
   { *sensorless_attenuation=MIN_ATTENUATION-pi_control/(PI_MAX_SENSORLESS/(MAX_ATTENUATION-MIN_ATTENUATION)); }
+
+  *rotating_angle=*rotating_angle+sensorless_phase_advance*reference_frequency/interrupt_frequency;
 
 }
 
@@ -87,5 +90,41 @@ float psi_advance_calculator(float reference_frequency, float interrupt_frequenc
   return 360.0f*reference_frequency/interrupt_frequency;
 }
 
+#define OPEN_LOOP   0
+#define CLOSE_LOOP  1
 
+#define START_UP_SVM_FREQUENCY        30.0f
+#define FINAL_OPEN_LOOP_SVM_FREQUENCY 50.0f
+#define OPEN_LOOP_FREQUENCY_INCREMENT  0.5f
+
+void psi_finitite_state_machine (float reference_frequency, float actual_frequency, float* rotating_angle)
+{
+   static int   state=OPEN_LOOP;
+   static float open_loop_frequency=START_UP_SVM_FREQUENCY;//START_UP_SVM_FREQUENCY;
+
+   //counter-clock start up
+   if      ( state==OPEN_LOOP && reference_frequency>0.0 && FINAL_OPEN_LOOP_SVM_FREQUENCY>=actual_frequency )
+   {
+      sensorless_open_loop(&open_loop_frequency, &attenuation,PWMFREQ_F,FINAL_OPEN_LOOP_SVM_FREQUENCY,OPEN_LOOP_FREQUENCY_INCREMENT);
+      *rotating_angle = psi_advance_calculator(open_loop_frequency,PWMFREQ_F);
+      state=OPEN_LOOP;
+   }
+   //clock-wise start up
+   else if ( state==OPEN_LOOP && reference_frequency<0.0 && -FINAL_OPEN_LOOP_SVM_FREQUENCY<=actual_frequency )
+   {
+      sensorless_open_loop(&open_loop_frequency, &attenuation,PWMFREQ_F,-FINAL_OPEN_LOOP_SVM_FREQUENCY,-OPEN_LOOP_FREQUENCY_INCREMENT);
+      *rotating_angle = psi_advance_calculator(open_loop_frequency,PWMFREQ_F);
+      state=OPEN_LOOP;
+   }
+   else if (state==OPEN_LOOP)
+   {
+     *rotating_angle = psi_advance_calculator(open_loop_frequency,PWMFREQ_F); 
+     state=CLOSE_LOOP;
+   }
+   else if (state==CLOSE_LOOP)
+   {
+     //sensorless_pi_controller(reference_frequency,actual_frequency,PWMFREQ_F,&attenuation,rotating_angle);
+   }   
+        
+}
 
