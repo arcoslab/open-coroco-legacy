@@ -20,3 +20,8 @@
 
 void sensorless_pi_controller(
                              float reference_frequency, float frequency,float* sensorless_attenuation, float* sensorless_phase_advance);
+
+void sensorless_open_loop(
+     float *reference_frequency, float* sensorless_attenuation,float interrupt_frequency,float max_frequency,float frequency_increment);
+
+float psi_advance_calculator(float reference_frequency, float interrupt_frequency);

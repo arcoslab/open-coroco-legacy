@@ -107,34 +107,13 @@ void tim1_up_tim10_isr(void)
   //oscilloscope flag: start of calculations
   gpio_set(GPIOD, GPIO9);
    
-  //floating_switching_states (&switching_data_SA[current_counter],&switching_data_SB[current_counter],&switching_data_SC[current_counter]);
-  
-  //floating_switching_states (&S_A_f,&S_B_f,&S_C_f);
-  //switching_states (&S_A,&S_B,&S_C);
-
   //Clear the update interrupt flag
   timer_clear_flag(TIM1,  TIM_SR_UIF);
 
   calc_freq();
-  start_up();
+  //start_up(); 
 
-/*  
-  if (CUR_FREQ>=600.0f)
-  {
-    dtc_on=true;
-    if (first_dtc==true)
-    {
-      first_dtc=false;
-      collecting_current=true;
-    }
-  }
-*/  
-
-  if (dtc_on==false)
-  {
-    gen_pwm();
-    //close_loop=true;
-  }
+  if (dtc_on==false) { gen_pwm(); }
 
   //oscilloscope flag: end of calculations
   gpio_clear(GPIOD, GPIO9);
@@ -143,6 +122,7 @@ void tim1_up_tim10_isr(void)
   gpio_set(GPIOB, GPIO15);
 
   voltage_measure (ADC1,ADC_CHANNEL1);
+
 }
 
 
@@ -194,7 +174,6 @@ void adc_isr(void)
     //oscilloscope flag: start of DTC
     gpio_set(GPIOD, GPIO9);
 
-    //taking measurements
     DTC_SVM();
     collecting_data();
     

@@ -62,3 +62,30 @@ void sensorless_pi_controller(
 
 }
 
+
+void sensorless_open_loop(
+     float *reference_frequency, float* sensorless_attenuation,float interrupt_frequency,float max_frequency,float frequency_increment)
+{
+  static int cicle_counter=0.0f;
+
+  *sensorless_attenuation=MIN_ATTENUATION;
+
+
+  if (cicle_counter >= interrupt_frequency/10.0f && *reference_frequency <= max_frequency)
+  {
+    cicle_counter=0;
+    *reference_frequency=*reference_frequency+frequency_increment;
+  } 
+
+   cicle_counter=cicle_counter+1;
+
+}
+
+
+float psi_advance_calculator(float reference_frequency, float interrupt_frequency)
+{
+  return 360.0f*reference_frequency/interrupt_frequency;
+}
+
+
+

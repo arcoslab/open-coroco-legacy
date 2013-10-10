@@ -235,7 +235,8 @@ float psi_sD=0.0f;
 float psi_sQ=0.0f;
 float psi_s =0.0f;
 int psi_alpha=0;
-float psi_s_alpha_SVM=0;
+float psi_s_alpha_SVM=0.0f;
+float psi_rotating_angle_SVM=0.0f;
 float w_r=0;
 float t_e=0.0f;
 
@@ -292,10 +293,28 @@ void  DTC_SVM(void)
   //--------------------------------SVM algorithm--------------------------------------------//
 
   //phase_advance_SVM=-100.0f/80.0f;
-  sensorless_pi_controller(ref_freq,w_r/(2.0f*PI),&attenuation,&phase_advance_SVM);
+  //sensorless_pi_controller(ref_freq,w_r/(2.0f*PI),&attenuation,&phase_advance_SVM);
+  //ref_freq=30.0f;
 
-  V_sD                   = SVM_V_s_ref_D               (psi_s_ref,psi_s,psi_s_alpha_SVM,phase_advance_SVM,i_sD,R_s,TICK_PERIOD);
-  V_sQ                   = SVM_V_s_ref_Q               (psi_s_ref,psi_s,psi_s_alpha_SVM,phase_advance_SVM,i_sQ,R_s,TICK_PERIOD);
+  if (dtc_on)
+  {
+/*
+    if (w_r/(2.0f*PI < ref_freq)) 
+    {  
+      //sensorless_open_loop(&ref_freq_SVM, &attenuation,PWMFREQ_F,120.0f,0.5f);
+      //phase_advance_SVM = psi_advance_calculator(ref_freq_SVM,PWMFREQ_F);
+      psi_rotating_angle =  psi_advance_calculator(ref_freq_SVM,PWMFREQ_F);
+    }
+*/
+    sensorless_open_loop(&ref_freq_SVM, &attenuation,PWMFREQ_F,120.0f,0.5f);
+    psi_rotating_angle_SVM = psi_advance_calculator(ref_freq_SVM,PWMFREQ_F);
+  }
+
+//V_sD                   = SVM_V_s_ref_D               (psi_s_ref,psi_s,psi_s_alpha_SVM,phase_advance_SVM,i_sD,R_s,TICK_PERIOD);
+//V_sQ                   = SVM_V_s_ref_Q               (psi_s_ref,psi_s,psi_s_alpha_SVM,phase_advance_SVM,i_sQ,R_s,TICK_PERIOD);
+  V_sD                   = SVM_V_s_ref_D               (psi_s_ref,psi_s,psi_s_alpha_SVM,psi_rotating_angle_SVM,i_sD,R_s,TICK_PERIOD);
+  V_sQ                   = SVM_V_s_ref_Q               (psi_s_ref,psi_s,psi_s_alpha_SVM,psi_rotating_angle_SVM,i_sQ,R_s,TICK_PERIOD);
+
   V_s                    = vector_magnitude            (V_sQ,V_sD);
   cita_V_s               = vector_angle                (V_sQ,V_sD);
   V_s_ref_relative_angle = SVM_V_s_relative_angle      (cita_V_s);

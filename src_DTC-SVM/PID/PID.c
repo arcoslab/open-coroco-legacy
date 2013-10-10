@@ -30,6 +30,10 @@
   }
 }
 */
+
+
+float ref_freq_SVM=0.0f;
+
 float angle_hall1=0.0f;
 float t_e_ref=-0.5f;//-1.5;//-0.9f;//-0.15;//-1.6f;
 int  print_selection              = 6;
@@ -334,7 +338,13 @@ void frequency_input(void)
       {
         //print_selection=5;
         dtc_on=true;
+        ref_freq_SVM=value;
 
+        if (ref_freq_SVM==0.0f) 
+        { 
+          dtc_on=false; motor_off=true; 
+          printf("\nSVM and motor off\n");
+        }
       }	 
     }
     if (!close_loop) {
