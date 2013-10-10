@@ -93,6 +93,7 @@ void collecting_samples(int sample_counter)
         data_T_med_on[sample_counter]=T_med_on;
         data_T_max_on[sample_counter]=T_max_on;
         data_attenuation[sample_counter]=attenuation;
+        data_pi_control_SVM[sample_counter]=SVM_pi_control;
 }
 
 

@@ -26,6 +26,9 @@
 #define PI_MAX_SENSORLESS             87.0f            // 87.0f*PI/180.0f   //acceleration torque
 #define PI_MIN_SENSORLESS            -80.0f            //-80*PI/180.0f     //braking torque
 
+
+float SVM_pi_control=0.0f;
+
 void sensorless_pi_controller(
                            float reference_frequency, float frequency,float interrupt_frequency,float* sensorless_attenuation, float* rotating_angle) 
 {
@@ -48,21 +51,29 @@ void sensorless_pi_controller(
   if      (p_sensorless_error >  P_MAX_SENSORLESS) { p_sensorless_error =  P_MAX_SENSORLESS; }
   else if (p_sensorless_error < -P_MAX_SENSORLESS) { p_sensorless_error = -P_MAX_SENSORLESS; }
 
-  pi_control=p_sensorless_error+i_sensorless_error;
+  pi_control_sensorless=p_sensorless_error+i_sensorless_error;
 
-  if      (pi_control_sensorless > PI_MAX_SENSORLESS) { pi_control = PI_MAX_SENSORLESS; }
-  else if (pi_control_sensorless < PI_MIN_SENSORLESS) { pi_control = PI_MIN_SENSORLESS; }
+  if      (pi_control_sensorless > PI_MAX_SENSORLESS) { pi_control_sensorless = PI_MAX_SENSORLESS; }
+  else if (pi_control_sensorless < PI_MIN_SENSORLESS) { pi_control_sensorless = PI_MIN_SENSORLESS; }
 
   //cmd_angle+=pi_control;
-  sensorless_phase_advance+=pi_control;
+  sensorless_phase_advance+=pi_control_sensorless;
 
   if   (pi_control >= 0.0f) 
-  { *sensorless_attenuation=MIN_ATTENUATION+pi_control/(PI_MAX_SENSORLESS/(MAX_ATTENUATION-MIN_ATTENUATION)); } 
+  { 
+  //*sensorless_attenuation=MIN_ATTENUATION+pi_control/(PI_MAX_SENSORLESS/(MAX_ATTENUATION-MIN_ATTENUATION)); 
+    *sensorless_attenuation=MIN_ATTENUATION+pi_control_sensorless/(PI_MAX_SENSORLESS/(MAX_ATTENUATION-MIN_ATTENUATION)); 
+
+  } 
   else                      
-  { *sensorless_attenuation=MIN_ATTENUATION-pi_control/(PI_MAX_SENSORLESS/(MAX_ATTENUATION-MIN_ATTENUATION)); }
+  { 
+  //*sensorless_attenuation=MIN_ATTENUATION-pi_control/(PI_MAX_SENSORLESS/(MAX_ATTENUATION-MIN_ATTENUATION)); 
+    *sensorless_attenuation=MIN_ATTENUATION-pi_control_sensorless*1.0f/(PI_MAX_SENSORLESS/(MAX_ATTENUATION-MIN_ATTENUATION)); 
+  }
 
   *rotating_angle=*rotating_angle+sensorless_phase_advance*reference_frequency/interrupt_frequency;
 
+  SVM_pi_control=pi_control_sensorless;
 }
 
 
@@ -93,8 +104,8 @@ float psi_advance_calculator(float reference_frequency, float interrupt_frequenc
 #define OPEN_LOOP   0
 #define CLOSE_LOOP  1
 
-#define START_UP_SVM_FREQUENCY        30.0f
-#define FINAL_OPEN_LOOP_SVM_FREQUENCY 50.0f
+#define START_UP_SVM_FREQUENCY        25.0f
+#define FINAL_OPEN_LOOP_SVM_FREQUENCY 30.0f
 #define OPEN_LOOP_FREQUENCY_INCREMENT  0.5f
 
 void psi_finitite_state_machine (float reference_frequency, float actual_frequency, float* rotating_angle)
@@ -108,6 +119,7 @@ void psi_finitite_state_machine (float reference_frequency, float actual_frequen
       sensorless_open_loop(&open_loop_frequency, &attenuation,PWMFREQ_F,FINAL_OPEN_LOOP_SVM_FREQUENCY,OPEN_LOOP_FREQUENCY_INCREMENT);
       *rotating_angle = psi_advance_calculator(open_loop_frequency,PWMFREQ_F);
       state=OPEN_LOOP;
+      attenuation=0.1f;
    }
    //clock-wise start up
    else if ( state==OPEN_LOOP && reference_frequency<0.0 && -FINAL_OPEN_LOOP_SVM_FREQUENCY<=actual_frequency )
@@ -115,15 +127,19 @@ void psi_finitite_state_machine (float reference_frequency, float actual_frequen
       sensorless_open_loop(&open_loop_frequency, &attenuation,PWMFREQ_F,-FINAL_OPEN_LOOP_SVM_FREQUENCY,-OPEN_LOOP_FREQUENCY_INCREMENT);
       *rotating_angle = psi_advance_calculator(open_loop_frequency,PWMFREQ_F);
       state=OPEN_LOOP;
+      attenuation=0.1f;
    }
    else if (state==OPEN_LOOP)
    {
      *rotating_angle = psi_advance_calculator(open_loop_frequency,PWMFREQ_F); 
      state=CLOSE_LOOP;
+     attenuation=0.2f;
    }
    else if (state==CLOSE_LOOP)
    {
-     //sensorless_pi_controller(reference_frequency,actual_frequency,PWMFREQ_F,&attenuation,rotating_angle);
+     sensorless_pi_controller(reference_frequency,actual_frequency,PWMFREQ_F,&attenuation,rotating_angle);
+     //state=CLOSE_LOOP;
+     attenuation=1.0f;
    }   
         
 }

@@ -323,7 +323,7 @@ void  DTC_SVM(void)
   cita_V_s               = vector_angle                (V_sQ,V_sD);
   V_s_ref_relative_angle = SVM_V_s_relative_angle      (cita_V_s);
                            //SVM_Maximum_allowed_V_s_ref (&V_s,U_d);
-			   SVM_Maximum_allowed_V_s_ref (&V_s,U_d*attenuation);
+			   SVM_Maximum_allowed_V_s_ref (&V_s,U_d);//+++++++++++++++++++*attenuation);
 
   T1       = SVM_T1       (1.0f,V_s,U_d*2.0f/3.0f, V_s_ref_relative_angle);
   T2       = SVM_T2       (1.0f,V_s,U_d*2.0f/3.0f, V_s_ref_relative_angle);
@@ -339,7 +339,7 @@ void  DTC_SVM(void)
   {
     SVM_phase_duty_cycles           (&duty_a, &duty_b, &duty_c, cita_V_s,T_max_on,T_med_on,T_min_on);
   //SVM_voltage_switch_inverter_VSI ( duty_a,  duty_b,  duty_c, attenuation);
-    SVM_voltage_switch_inverter_VSI ( duty_a,  duty_b,  duty_c, 1.0f);
+    SVM_voltage_switch_inverter_VSI ( duty_a,  duty_b,  duty_c, attenuation);
  
     if (first_dtc==true)
     {

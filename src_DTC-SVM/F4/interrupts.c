@@ -100,6 +100,7 @@ float data_T_med_on[SAMPLES];
 float data_T_max_on[SAMPLES];
 
 float data_attenuation[SAMPLES];
+float data_pi_control_SVM[SAMPLES];
 
 void tim1_up_tim10_isr(void) 
 {
