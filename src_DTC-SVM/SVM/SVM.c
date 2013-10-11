@@ -325,6 +325,8 @@ void  DTC_SVM(void)
                            //SVM_Maximum_allowed_V_s_ref (&V_s,U_d);
 			   SVM_Maximum_allowed_V_s_ref (&V_s,U_d);//+++++++++++++++++++*attenuation);
 
+  
+
   T1       = SVM_T1       (1.0f,V_s,U_d*2.0f/3.0f, V_s_ref_relative_angle);
   T2       = SVM_T2       (1.0f,V_s,U_d*2.0f/3.0f, V_s_ref_relative_angle);
 //T1       = SVM_T1       (1.0f,V_s,attenuation*U_d*2.0f/3.0f, V_s_ref_relative_angle);
@@ -344,7 +346,7 @@ void  DTC_SVM(void)
     if (first_dtc==true)
     {
       first_dtc=false;
-      collecting_current=true;
+      //collecting_current=true;
     }
   }
 

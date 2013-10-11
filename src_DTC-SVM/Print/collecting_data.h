@@ -17,5 +17,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+void collecting_floating_data(void);
+void collecting_speed_data (void);
 void collecting_samples(int counter);
 void collecting_data(void);

@@ -18,6 +18,74 @@
  */
 
 
+#define COLLECTING_SPEED_DELAY 5
+
+void collecting_floating_data(void)
+{
+
+  static int countaa=0;
+  static int delay  =0;
+  static int absotule_time=0;
+  
+  if (collecting_speed==true)
+  {
+
+    if (countaa<SAMPLES)
+    {
+
+      if (delay>COLLECTING_SPEED_DELAY || (absotule_time==0) ) 
+      {
+        data_V_s          [countaa] = V_s;
+        data_w_r          [countaa] = w_r;
+        data_ref_freq_SVM [countaa] = ref_freq_SVM;
+        timer             [countaa] = absotule_time;
+        data_state_SVM    [countaa] = state;
+        data_CUR_FREQ     [countaa] = CUR_FREQ;
+        countaa++;
+        delay=0;
+      }
+      delay++;
+    }
+
+    else 
+    {
+      collecting_speed=false;
+      print_current=true;
+    }
+    absotule_time++;
+  }
+  
+  else 
+  {
+    absotule_time=0;
+    countaa=0;
+    delay=0;    
+  }
+  
+
+}
+/*
+void collecting_speed_data(void)
+{
+  bool fin;
+  fin=collecting_floating_data(true);
+
+  if (collecting_speed==true)
+  {
+    if (fin)==false)
+    {
+
+    }
+    else 
+    {
+      collecting_floating_data(false);
+      collecting_speed = false;
+      print_current      = true;
+    }
+  }
+
+}
+*/
 void collecting_samples(int sample_counter)
 {
         data_psi_sD    [sample_counter]=psi_sD;
@@ -93,7 +161,7 @@ void collecting_samples(int sample_counter)
         data_T_med_on[sample_counter]=T_med_on;
         data_T_max_on[sample_counter]=T_max_on;
         data_attenuation[sample_counter]=attenuation;
-        data_pi_control_SVM[sample_counter]=SVM_pi_control;
+        data_pi_control_SVM[sample_counter]	=SVM_pi_control;
 }
 
 

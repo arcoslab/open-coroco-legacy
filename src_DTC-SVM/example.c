@@ -78,7 +78,7 @@ int main(void)
   printf ("\n\n****************************************************************************************************************\n\n");
   while (1)
   {
-    //printf("\nduty_a: %6.4f duty_b: %6.4f duty_c: %6.4f T1: %6.4f T2: %6.4f relative: %6.4f cita: %6.2f\n",duty_a,duty_b,duty_c,T1,T2,V_s_ref_relative_angle,cita_V_s);
+    //printf("freq_ref:%6.2f :freq: %6.2f :Vs: %6.2f\n",ref_freq_SVM,w_r,V_s);
    
     //*****+++++++++++printf("freq: %8.4f\n",w_r);
 
@@ -87,7 +87,7 @@ int main(void)
 
     if (print_current==true )
     {
-      current_counter=1;
+      current_counter=0;
       printf ("\n\n****************************************************************************************************************\n");
 
       while (current_counter<SAMPLES-2)
@@ -249,7 +249,16 @@ data_pi_control_SVM[current_counter]
 );
 }
 
-
+else if (print_selection==7 && data_ref_freq_SVM [current_counter] !=0.0f )
+{
+printf("t:%10d :freq_ref:%6.2f :freq: %6.2f :hall_freq:6.2%f :Vs: %6.2f :state:%2d\n",
+timer             [current_counter],
+data_ref_freq_SVM [current_counter],
+data_w_r          [current_counter],
+data_CUR_FREQ[current_counter],
+data_V_s          [current_counter],
+data_state_SVM    [current_counter]);
+}
 
         current_counter++;
       }

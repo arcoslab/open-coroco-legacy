@@ -101,6 +101,8 @@ float data_T_max_on[SAMPLES];
 
 float data_attenuation[SAMPLES];
 float data_pi_control_SVM[SAMPLES];
+float data_ref_freq_SVM[SAMPLES];
+int data_state_SVM[SAMPLES];
 
 void tim1_up_tim10_isr(void) 
 {
@@ -177,6 +179,8 @@ void adc_isr(void)
 
     DTC_SVM();
     collecting_data();
+    collecting_floating_data();
+    //collecting_speed_data();
     
     //oscilloscope flag: end of DTC
     gpio_clear(GPIOD, GPIO9);

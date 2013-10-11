@@ -36,7 +36,7 @@ float ref_freq_SVM=0.0f;
 
 float angle_hall1=0.0f;
 float t_e_ref=-0.5f;//-1.5;//-0.9f;//-0.15;//-1.6f;
-int  print_selection              = 6;
+int  print_selection              = 7;
 bool flux_linkage_capture         = false;
 int  flux_linkage_capture_counter = 0;
 int  flux_linkage_capture_timer    = 0;
@@ -76,6 +76,7 @@ int motor_off=true;//false;
 
 //colecting current command
 bool collecting_current=false;
+bool collecting_speed  =false;
 
 void calc_freq(void) 
 {
@@ -292,7 +293,7 @@ void frequency_input(void)
       //collecting current command
       else if (strcmp(cmd, "s") == 0)
       {
-        collecting_current=true;
+        //collecting_current=true;
         
         //flux_linkage_capture=true;
         flux_linkage_capture_counter=0;
@@ -345,6 +346,9 @@ void frequency_input(void)
           dtc_on=false; motor_off=true; 
           printf("\nSVM and motor off\n");
         }
+        
+        collecting_speed=true;
+
       }	 
     }
     if (!close_loop) {

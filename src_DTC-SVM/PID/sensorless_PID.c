@@ -17,14 +17,14 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#define P_SENSORLESS                   0.01f
-#define P_DOWN_SENSORLESS              0.01f           // To control deacceleration speed and therefore braking current
-#define I_SENSORLESS                   0.000001f
-#define I_DOWN_SENSORLESS              0.000001f       // To control deacceleration speed and therefore braking current
-#define I_MAX_SENSORLESS              80.0f            // 80.0f*PI/180.0f
-#define P_MAX_SENSORLESS              80.0f            // 80.0f*PI/180.0f
-#define PI_MAX_SENSORLESS             87.0f            // 87.0f*PI/180.0f   //acceleration torque
-#define PI_MIN_SENSORLESS            -80.0f            //-80*PI/180.0f     //braking torque
+#define P_SENSORLESS                   0.00001//0.01f
+#define P_DOWN_SENSORLESS              0.00001//0.01f           // To control deacceleration speed and therefore braking current
+#define I_SENSORLESS                   //0.0000000001f  //0.000001f
+#define I_DOWN_SENSORLESS              //0.0000000001f  //0.000001f       // To control deacceleration speed and therefore braking current
+#define I_MAX_SENSORLESS             // 80.0f            // 80.0f*PI/180.0f
+#define P_MAX_SENSORLESS             // 80.0f            // 80.0f*PI/180.0f
+#define PI_MAX_SENSORLESS            // 87.0f            // 87.0f*PI/180.0f   //acceleration torque
+#define PI_MIN_SENSORLESS            //-80.0f            //-80*PI/180.0f     //braking torque
 
 
 float SVM_pi_control=0.0f;
@@ -62,13 +62,13 @@ void sensorless_pi_controller(
   if   (pi_control >= 0.0f) 
   { 
   //*sensorless_attenuation=MIN_ATTENUATION+pi_control/(PI_MAX_SENSORLESS/(MAX_ATTENUATION-MIN_ATTENUATION)); 
-    *sensorless_attenuation=MIN_ATTENUATION+pi_control_sensorless/(PI_MAX_SENSORLESS/(MAX_ATTENUATION-MIN_ATTENUATION)); 
+    //*sensorless_attenuation=MIN_ATTENUATION+pi_control_sensorless/(PI_MAX_SENSORLESS/(MAX_ATTENUATION-MIN_ATTENUATION)); 
 
   } 
   else                      
   { 
   //*sensorless_attenuation=MIN_ATTENUATION-pi_control/(PI_MAX_SENSORLESS/(MAX_ATTENUATION-MIN_ATTENUATION)); 
-    *sensorless_attenuation=MIN_ATTENUATION-pi_control_sensorless*1.0f/(PI_MAX_SENSORLESS/(MAX_ATTENUATION-MIN_ATTENUATION)); 
+    //*sensorless_attenuation=MIN_ATTENUATION-pi_control_sensorless*1.0f/(PI_MAX_SENSORLESS/(MAX_ATTENUATION-MIN_ATTENUATION)); 
   }
 
   *rotating_angle=*rotating_angle+sensorless_phase_advance*reference_frequency/interrupt_frequency;
@@ -108,9 +108,11 @@ float psi_advance_calculator(float reference_frequency, float interrupt_frequenc
 #define FINAL_OPEN_LOOP_SVM_FREQUENCY 30.0f
 #define OPEN_LOOP_FREQUENCY_INCREMENT  0.5f
 
+int   state=OPEN_LOOP;
+
 void psi_finitite_state_machine (float reference_frequency, float actual_frequency, float* rotating_angle)
 {
-   static int   state=OPEN_LOOP;
+   //static int   state=OPEN_LOOP;
    static float open_loop_frequency=START_UP_SVM_FREQUENCY;//START_UP_SVM_FREQUENCY;
 
    //counter-clock start up
