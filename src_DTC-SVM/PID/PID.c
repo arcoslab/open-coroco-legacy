@@ -340,10 +340,12 @@ void frequency_input(void)
         //print_selection=5;
         dtc_on=true;
         ref_freq_SVM=value;
+        motor_off=false;
 
         if (ref_freq_SVM==0.0f) 
         { 
-          dtc_on=false; motor_off=true; 
+          dtc_on=true;//false; 
+          //motor_off=true; 
           printf("\nSVM and motor off\n");
         }
         

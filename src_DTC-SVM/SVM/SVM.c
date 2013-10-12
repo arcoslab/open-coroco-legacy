@@ -280,57 +280,30 @@ void  DTC_SVM(void)
   psi_s_alpha_SVM = vector_angle                                    (psi_sQ,psi_sD);
   w_r             = (1.0f/(2.0f*PI))*rotor_speed_w_r                                 (psi_sD,psi_sQ,TICK_PERIOD);
   
-
   t_e       = electromagnetic_torque_estimation_t_e   (psi_sD,i_sQ,psi_sQ,i_sD,pole_pairs);
   //t_e_ref = DTC_torque_reference_PI                 (CUR_FREQ, ref_freq);
   //psi_s_ref = stator_flux_linkage_reference_psi_s_ref (psi_F,t_e_ref,L_sq,pole_pairs);
-
-  
 
   psi_s_ref = psi_F;
 
 
   //--------------------------------SVM algorithm--------------------------------------------//
 
-  //phase_advance_SVM=-100.0f/80.0f;
-  //sensorless_pi_controller(ref_freq,w_r/(2.0f*PI),&attenuation,&phase_advance_SVM);
-  //ref_freq=30.0f;
-
-  if (dtc_on)
+    if (dtc_on)
   {
-/*
-    if (w_r/(2.0f*PI < ref_freq)) 
-    {  
-      //sensorless_open_loop(&ref_freq_SVM, &attenuation,PWMFREQ_F,120.0f,0.5f);
-      //phase_advance_SVM = psi_advance_calculator(ref_freq_SVM,PWMFREQ_F);
-      psi_rotating_angle =  psi_advance_calculator(ref_freq_SVM,PWMFREQ_F);
-    }
-
-    sensorless_open_loop(&ref_freq_SVM, &attenuation,PWMFREQ_F,120.0f,0.5f);
-    psi_rotating_angle_SVM = psi_advance_calculator(ref_freq_SVM,PWMFREQ_F);
-*/
-
-    psi_finitite_state_machine (ref_freq_SVM,w_r, &psi_rotating_angle_SVM);
-
+    sensorless_pi_controller(ref_freq_SVM,w_r,PWMFREQ_F,&psi_rotating_angle_SVM);
+    attenuation=1.0f; 
   }
 
-//V_sD                   = SVM_V_s_ref_D               (psi_s_ref,psi_s,psi_s_alpha_SVM,phase_advance_SVM,i_sD,R_s,TICK_PERIOD);
-//V_sQ                   = SVM_V_s_ref_Q               (psi_s_ref,psi_s,psi_s_alpha_SVM,phase_advance_SVM,i_sQ,R_s,TICK_PERIOD);
   V_sD                   = SVM_V_s_ref_D               (psi_s_ref,psi_s,psi_s_alpha_SVM,psi_rotating_angle_SVM,i_sD,R_s,TICK_PERIOD);
   V_sQ                   = SVM_V_s_ref_Q               (psi_s_ref,psi_s,psi_s_alpha_SVM,psi_rotating_angle_SVM,i_sQ,R_s,TICK_PERIOD);
-
   V_s                    = vector_magnitude            (V_sQ,V_sD);
   cita_V_s               = vector_angle                (V_sQ,V_sD);
   V_s_ref_relative_angle = SVM_V_s_relative_angle      (cita_V_s);
-                           //SVM_Maximum_allowed_V_s_ref (&V_s,U_d);
-			   SVM_Maximum_allowed_V_s_ref (&V_s,U_d);//+++++++++++++++++++*attenuation);
-
-  
+			   SVM_Maximum_allowed_V_s_ref (&V_s,U_d);
 
   T1       = SVM_T1       (1.0f,V_s,U_d*2.0f/3.0f, V_s_ref_relative_angle);
   T2       = SVM_T2       (1.0f,V_s,U_d*2.0f/3.0f, V_s_ref_relative_angle);
-//T1       = SVM_T1       (1.0f,V_s,attenuation*U_d*2.0f/3.0f, V_s_ref_relative_angle);
-//T2       = SVM_T2       (1.0f,V_s,attenuation*U_d*2.0f/3.0f, V_s_ref_relative_angle);
 
   T_min_on = SVM_T_min_on (1.0f, T1, T2);
   T_med_on = SVM_T_med_on (T_min_on, T1,T2,cita_V_s);
@@ -340,7 +313,19 @@ void  DTC_SVM(void)
   if (dtc_on)
   {
     SVM_phase_duty_cycles           (&duty_a, &duty_b, &duty_c, cita_V_s,T_max_on,T_med_on,T_min_on);
-  //SVM_voltage_switch_inverter_VSI ( duty_a,  duty_b,  duty_c, attenuation);
+
+  
+    static int shutdown=0;
+        
+    if      ( shutdown==0 && ref_freq_SVM==0.0f && w_r>-0.5f && w_r<0.5f) { shutdown = 1;}
+    else if ( shutdown==1 && ref_freq_SVM==0.0f)                          { shutdown = 1;}
+    else                                                                  { shutdown = 0;}
+
+    if (shutdown ==0) { attenuation=1.0f;}
+    else              { attenuation=0.0f;}
+
+
+
     SVM_voltage_switch_inverter_VSI ( duty_a,  duty_b,  duty_c, attenuation);
  
     if (first_dtc==true)
@@ -349,6 +334,8 @@ void  DTC_SVM(void)
       //collecting_current=true;
     }
   }
+  
+  
 
 
 }

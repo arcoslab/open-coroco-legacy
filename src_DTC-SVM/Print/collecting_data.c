@@ -18,7 +18,7 @@
  */
 
 
-#define COLLECTING_SPEED_DELAY 5
+#define COLLECTING_SPEED_DELAY 1
 
 void collecting_floating_data(void)
 {
@@ -35,12 +35,17 @@ void collecting_floating_data(void)
 
       if (delay>COLLECTING_SPEED_DELAY || (absotule_time==0) ) 
       {
+/*
         data_V_s          [countaa] = V_s;
         data_w_r          [countaa] = w_r;
         data_ref_freq_SVM [countaa] = ref_freq_SVM;
-        timer             [countaa] = absotule_time;
+        
         data_state_SVM    [countaa] = state;
         data_CUR_FREQ     [countaa] = CUR_FREQ;
+*/
+        
+        collecting_samples(countaa);
+        timer[countaa] = absotule_time;
         countaa++;
         delay=0;
       }
@@ -88,6 +93,14 @@ void collecting_speed_data(void)
 */
 void collecting_samples(int sample_counter)
 {
+
+        data_V_s          [sample_counter] = V_s;
+        data_w_r          [sample_counter] = w_r;
+        data_ref_freq_SVM [sample_counter] = ref_freq_SVM;
+        //timer             [sample_counter] = absotule_time;
+        data_state_SVM    [sample_counter] = state;
+        data_CUR_FREQ     [sample_counter] = CUR_FREQ;
+
         data_psi_sD    [sample_counter]=psi_sD;
         data_psi_sQ    [sample_counter]=psi_sQ;
         data_psi_s     [sample_counter]=psi_s;

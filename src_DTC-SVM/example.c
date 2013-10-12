@@ -78,7 +78,7 @@ int main(void)
   printf ("\n\n****************************************************************************************************************\n\n");
   while (1)
   {
-    //printf("freq_ref:%6.2f :freq: %6.2f :Vs: %6.2f\n",ref_freq_SVM,w_r,V_s);
+    printf("freq_ref:%6.2f :freq: %6.2f :Vs: %6.2f\n",ref_freq_SVM,w_r,V_s);
    
     //*****+++++++++++printf("freq: %8.4f\n",w_r);
 
@@ -249,15 +249,67 @@ data_pi_control_SVM[current_counter]
 );
 }
 
-else if (print_selection==7 && data_ref_freq_SVM [current_counter] !=0.0f )
+else if (print_selection==77 && data_ref_freq_SVM [current_counter] !=0.0f )
 {
-printf("t:%10d :freq_ref:%6.2f :freq: %6.2f :hall_freq:6.2%f :Vs: %6.2f :state:%2d\n",
+printf("t:%10d :freq_ref:%6.2f :freq: %6.2f :hall_freq:%6.2f :Vs: %6.2f :state:%2d ",
 timer             [current_counter],
 data_ref_freq_SVM [current_counter],
 data_w_r          [current_counter],
 data_CUR_FREQ[current_counter],
 data_V_s          [current_counter],
 data_state_SVM    [current_counter]);
+
+
+
+
+printf (":t:%5d:pa:%6.4f:iA:%6.2f:B:%6.2f:C:%6.2f:D:%6.2f:Q:%6.2f:S:%6.2f:c:%6.2f:pD:%7.4f:Q:%7.4f:s:%6.4f:a:%6.2f:r:%6.4f:w:%6.2f:te:%6.2f:VD:%6.2f:Q:%6.2f:s:%6.2f:c:%6.2f:r:%6.2f:T1:%4.2f:2:%4.2f:n:%5.2f:d:%4.2f:x:%4.2f:da:%4.2f:b:%4.2f:c:%4.2f:f:%6.2f:U:%6.2f:at:%10.8f:pi:%10.8f\n",
+timer[current_counter],
+
+data_phase_advance_SVM[current_counter],
+
+data_i_sA [current_counter],
+data_i_sB [current_counter],
+-data_i_sA[current_counter]-data_i_sB[current_counter],
+data_i_sD[current_counter],
+data_i_sQ[current_counter],
+data_i_s[current_counter],
+data_cita_i_s[current_counter],
+
+data_psi_sD[current_counter],
+data_psi_sQ[current_counter],
+data_psi_s[current_counter],
+data_psi_s_alpha_SVM[current_counter],
+data_psi_s_ref[current_counter],
+data_w_r[current_counter],
+
+data_t_e[current_counter],
+
+data_V_sD                    [current_counter],
+data_V_sQ                    [current_counter],
+data_V_s                     [current_counter],
+data_cita_V_s                [current_counter],
+data_cita_V_s_relative_angle [current_counter],
+
+data_T1[current_counter],
+data_T2[current_counter],
+data_T_min_on[current_counter],
+data_T_med_on[current_counter],
+data_T_max_on[current_counter],
+
+data_duty_a[current_counter],
+data_duty_b[current_counter],
+data_duty_c[current_counter],
+
+data_CUR_FREQ[current_counter],
+data_U_d[current_counter],
+data_attenuation[current_counter],
+data_pi_control_SVM[current_counter]
+);
+
+
+
+
+
 }
 
         current_counter++;
