@@ -180,11 +180,11 @@ void speed_PID_no_SVM(void)
 void  SVM_voltage_switch_inverter_VSI(float duty_A,float duty_B,float duty_C,bool shutdown)
 {
   //DTC-SVM switching selection
-
+  float Attenuation;
 
   if (shutdown==false)
   {
-    attenuation=1.0f;
+    Attenuation=1.0f;
 
     //-------------SA: S1 and S4------------------------------------
     timer_set_oc_mode      (TIM1, TIM_OC1, TIM_OCM_PWM1);
@@ -205,7 +205,7 @@ void  SVM_voltage_switch_inverter_VSI(float duty_A,float duty_B,float duty_C,boo
 
   else
   {
-    attenuation=0.0f;
+    Attenuation=0.0f;
 
     //-------------SA: S1 and S4------------------------------------
     timer_set_oc_mode      (TIM1, TIM_OC1, TIM_OCM_PWM1);
@@ -224,11 +224,11 @@ void  SVM_voltage_switch_inverter_VSI(float duty_A,float duty_B,float duty_C,boo
     timer_disable_oc_output (TIM1, TIM_OC3N);  //S2 off
   }  
 
-  /* Set the capture compare value for OC1. */
+  //Set the capture compare value for OC1.
   timer_set_oc_value(TIM1, TIM_OC1, duty_A*Attenuation*PWM_PERIOD_ARR);
-  /* Set the capture compare value for OC1. */
+  //Set the capture compare value for OC1.
   timer_set_oc_value(TIM1, TIM_OC2, duty_B*Attenuation*PWM_PERIOD_ARR);
-  /* Set the capture compare value for OC1. */
+  //Set the capture compare value for OC1.
   timer_set_oc_value(TIM1, TIM_OC3, duty_C*Attenuation*PWM_PERIOD_ARR);
 }
 
@@ -288,11 +288,11 @@ float L_sq       = L_s_q_0;
 float psi_F      = psi_F_0;
 
 #define MINIMUM_SVM_FREQUENCY 0.5f
-void shutdown_SVM (float ref_freq,bool* shutdown)
+void shutdown_SVM (float reference_frequency,float actual_frequency,bool* shutdown)
 {
-    if      ( *shutdown==false && ref_freq==0.0f && w_r>-MINIMUM_SVM_FREQUENCY && w_r<MINIMUM_SVM_FREQUENCY) { *shutdown = true ;}
-    else if ( *shutdown==true  && ref_freq==0.0f)                                                            { *shutdown = true ;}
-    else                                                                                                     { *shutdown = false;}
+    if      ( *shutdown==false && reference_frequency==0.0f && actual_frequency>-MINIMUM_SVM_FREQUENCY && actual_frequency<MINIMUM_SVM_FREQUENCY) { *shutdown = true ;}
+    else if ( *shutdown==true  && reference_frequency==0.0f)                                                                                      { *shutdown = true ;}
+    else                                                                                                                                          { *shutdown = false;}
 }
 
 void  DTC_SVM(void)
@@ -347,7 +347,8 @@ void  DTC_SVM(void)
   
     static bool shutdown=true;
         
-    shutdown_SVM (ref_freq_SVM,&shutdown,&attenuation);
+    //shutdown_SVM (ref_freq_SVM,&shutdown,&attenuation);
+    shutdown_SVM (ref_freq_SVM,w_r,&shutdown);
 
     SVM_voltage_switch_inverter_VSI ( duty_a,  duty_b,  duty_c,shutdown);
  

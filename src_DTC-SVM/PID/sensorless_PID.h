@@ -28,4 +28,4 @@ float psi_advance_calculator(float reference_frequency, float interrupt_frequenc
 
 void psi_finitite_state_machine (float reference_frequency, float real_frequency, float* rotating_angle);
 
-void shutdown_SVM (float ref_freq,bool* shutdown,bool* attenuation);
+
