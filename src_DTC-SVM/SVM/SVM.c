@@ -177,28 +177,52 @@ void speed_PID_no_SVM(void)
 
 
 
-void  SVM_voltage_switch_inverter_VSI(float duty_A,float duty_B,float duty_C,float Attenuation)
+void  SVM_voltage_switch_inverter_VSI(float duty_A,float duty_B,float duty_C,bool shutdown)
 {
   //DTC-SVM switching selection
 
 
-  //-------------SA: S1 and S4------------------------------------
-  timer_set_oc_mode      (TIM1, TIM_OC1, TIM_OCM_PWM1);
-  timer_enable_oc_output (TIM1, TIM_OC1 );  //S1
-  timer_enable_oc_output (TIM1, TIM_OC1N);  //S4
+  if (shutdown==false)
+  {
+    attenuation=1.0f;
+
+    //-------------SA: S1 and S4------------------------------------
+    timer_set_oc_mode      (TIM1, TIM_OC1, TIM_OCM_PWM1);
+    timer_enable_oc_output (TIM1, TIM_OC1 );  //S1
+    timer_enable_oc_output (TIM1, TIM_OC1N);  //S4}
+
+    //-------------SB: S3 and S6------------------------------------
+    timer_set_oc_mode      (TIM1, TIM_OC2, TIM_OCM_PWM1);
+    timer_enable_oc_output (TIM1, TIM_OC2 );  //S3
+    timer_enable_oc_output (TIM1, TIM_OC2N);  //S6
 
 
-  //-------------SB: S3 and S6------------------------------------
-  timer_set_oc_mode      (TIM1, TIM_OC2, TIM_OCM_PWM1);
-  timer_enable_oc_output (TIM1, TIM_OC2 );  //S3
-  timer_enable_oc_output (TIM1, TIM_OC2N);  //S6
+    //-------------SC: S5 and S2-------------------------------------
+    timer_set_oc_mode(TIM1, TIM_OC3, TIM_OCM_PWM1);
+    timer_enable_oc_output (TIM1, TIM_OC3 );  //S5 on
+    timer_enable_oc_output (TIM1, TIM_OC3N);  //S2 off
+  }  
+
+  else
+  {
+    attenuation=0.0f;
+
+    //-------------SA: S1 and S4------------------------------------
+    timer_set_oc_mode      (TIM1, TIM_OC1, TIM_OCM_PWM1);
+    timer_disable_oc_output (TIM1, TIM_OC1 );  //S1
+    timer_disable_oc_output (TIM1, TIM_OC1N);  //S4}
+
+    //-------------SB: S3 and S6------------------------------------
+    timer_set_oc_mode      (TIM1, TIM_OC2, TIM_OCM_PWM1);
+    timer_disable_oc_output (TIM1, TIM_OC2 );  //S3
+    timer_disable_oc_output (TIM1, TIM_OC2N);  //S6
 
 
-  //-------------SC: S5 and S2-------------------------------------
-  timer_set_oc_mode(TIM1, TIM_OC3, TIM_OCM_PWM1);
-  timer_enable_oc_output (TIM1, TIM_OC3 );  //S5 on
-  timer_enable_oc_output (TIM1, TIM_OC3N);  //S2 off
-  
+    //-------------SC: S5 and S2-------------------------------------
+    timer_set_oc_mode(TIM1, TIM_OC3, TIM_OCM_PWM1);
+    timer_disable_oc_output (TIM1, TIM_OC3 );  //S5 on
+    timer_disable_oc_output (TIM1, TIM_OC3N);  //S2 off
+  }  
 
   /* Set the capture compare value for OC1. */
   timer_set_oc_value(TIM1, TIM_OC1, duty_A*Attenuation*PWM_PERIOD_ARR);
@@ -263,7 +287,13 @@ float pole_pairs = pole_pairs_0;
 float L_sq       = L_s_q_0;
 float psi_F      = psi_F_0;
 
-
+#define MINIMUM_SVM_FREQUENCY 0.5f
+void shutdown_SVM (float ref_freq,bool* shutdown)
+{
+    if      ( *shutdown==false && ref_freq==0.0f && w_r>-MINIMUM_SVM_FREQUENCY && w_r<MINIMUM_SVM_FREQUENCY) { *shutdown = true ;}
+    else if ( *shutdown==true  && ref_freq==0.0f)                                                            { *shutdown = true ;}
+    else                                                                                                     { *shutdown = false;}
+}
 
 void  DTC_SVM(void)
 {
@@ -315,18 +345,11 @@ void  DTC_SVM(void)
     SVM_phase_duty_cycles           (&duty_a, &duty_b, &duty_c, cita_V_s,T_max_on,T_med_on,T_min_on);
 
   
-    static int shutdown=0;
+    static bool shutdown=true;
         
-    if      ( shutdown==0 && ref_freq_SVM==0.0f && w_r>-0.5f && w_r<0.5f) { shutdown = 1;}
-    else if ( shutdown==1 && ref_freq_SVM==0.0f)                          { shutdown = 1;}
-    else                                                                  { shutdown = 0;}
+    shutdown_SVM (ref_freq_SVM,&shutdown,&attenuation);
 
-    if (shutdown ==0) { attenuation=1.0f;}
-    else              { attenuation=0.0f;}
-
-
-
-    SVM_voltage_switch_inverter_VSI ( duty_a,  duty_b,  duty_c, attenuation);
+    SVM_voltage_switch_inverter_VSI ( duty_a,  duty_b,  duty_c,shutdown);
  
     if (first_dtc==true)
     {
