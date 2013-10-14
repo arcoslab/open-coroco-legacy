@@ -260,7 +260,7 @@ float psi_sQ=0.0f;
 float psi_s =0.0f;
 int psi_alpha=0;
 float psi_s_alpha_SVM=0.0f;
-float psi_rotating_angle_SVM=0.0f;
+
 float w_r=0;
 float t_e=0.0f;
 
@@ -273,7 +273,7 @@ float psi_delta_percentage=5.0f;
 float t_e_delta_percentage=25.0f;//0.8f;
 
 //SVM variables
-float phase_advance_SVM=0.0f;
+
 float T1=0.0f;
 float T2=0.0f;
 float T_min_on=0.0f;

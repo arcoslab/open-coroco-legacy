@@ -337,6 +337,9 @@ void frequency_input(void)
       }	 
       else if (strcmp(cmd, "d") == 0)
       {
+        printf ("\n\n****************************************************************************************************************\n");
+        printf("t:t:freq_ref:freq_ref :freq:freq:hall_freq:hall_freq:Vs:Vs");
+printf (":phase_adv:phase_advance:isA:isA:isB:isB:isC:isC:isD:isD:isQ:isQ:is:is:iscita:is_cita:psisD:psisD:psisQ:psisQ:psis:psis:psisa: psisa:psiref:psisref:te:te:VsD:VsD:VsQ:VsQ:Vs:Vs:Vscita:Vscita:Vscitar:Vscitar:T1:T1:T2:T2:Tmin:Tmin:Tmed:Tmed:Tmax:Tmax:duta:dutya:dutb: dutyb:dutc:dutyc:Ud:Ud:pi:pi:pimax:pimax:\n");
         //print_selection=5;
         dtc_on=true;
         ref_freq_SVM=value;
@@ -346,7 +349,7 @@ void frequency_input(void)
         { 
           dtc_on=true;//false; 
           //motor_off=true; 
-          printf("\nSVM and motor off\n");
+          //printf("\nSVM and motor off\n");
         }
         
         collecting_speed=true;

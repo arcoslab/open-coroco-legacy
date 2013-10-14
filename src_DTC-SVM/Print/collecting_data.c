@@ -18,7 +18,7 @@
  */
 
 
-#define COLLECTING_SPEED_DELAY 1
+#define COLLECTING_SPEED_DELAY 20
 
 void collecting_floating_data(void)
 {
@@ -175,6 +175,7 @@ void collecting_samples(int sample_counter)
         data_T_max_on[sample_counter]=T_max_on;
         data_attenuation[sample_counter]=attenuation;
         data_pi_control_SVM[sample_counter]	=SVM_pi_control;
+        data_rotating_angle_SVM[sample_counter] =psi_rotating_angle_SVM;
 }
 
 

@@ -103,6 +103,8 @@ float data_attenuation[SAMPLES];
 float data_pi_control_SVM[SAMPLES];
 float data_ref_freq_SVM[SAMPLES];
 int data_state_SVM[SAMPLES];
+float data_rotating_angle_SVM[SAMPLES];
+
 
 void tim1_up_tim10_isr(void) 
 {

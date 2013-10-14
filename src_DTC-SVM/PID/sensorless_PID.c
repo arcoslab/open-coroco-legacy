@@ -25,14 +25,16 @@
 //#define P_MAX_SENSORLESS             (9.0f*reference_frequency/interrupt_frequency) // 80.0f            // 80.0f*PI/180.0f
 //#define PI_MAX_SENSORLESS            (9.0f*reference_frequency/interrupt_frequency) // 87.0f            // 87.0f*PI/180.0f   //
 
-#define I_MAX_SENSORLESS             (9.0f*400.0f/interrupt_frequency) // 80.0f            // 80.0f*PI/180.0f
-#define P_MAX_SENSORLESS             (9.0f*400.0f/interrupt_frequency) // 80.0f            // 80.0f*PI/180.0f
-#define PI_MAX_SENSORLESS            (9.0f*400.0f/interrupt_frequency) // 87.0f            // 87.0f*PI/180.0f   /acceleration torque
-#define PI_MIN_SENSORLESS           -(9.0f*400.0f/interrupt_frequency) //-80.0f            //-80*PI/180.0f     //braking torque
+#define I_MAX_SENSORLESS              90000.0f//(90.0f*1000.0f/interrupt_frequency)//(9.0f*400.0f/interrupt_frequency) // 80.0f            // 80.0f*PI/180.0f
+#define P_MAX_SENSORLESS              90000.0f//(90.0f*1000.0f/interrupt_frequency)//(9.0f*400.0f/interrupt_frequency) // 80.0f            // 80.0f*PI/180.0f
+#define PI_MAX_SENSORLESS             90000.0f//(90.0f*1000.0f/interrupt_frequency)//(9.0f*400.0f/interrupt_frequency) // 87.0f            // 87.0f*PI/180.0f   /acceleration torque
+#define PI_MIN_SENSORLESS            -90000.0f//-(90.0f*1000.0f/interrupt_frequency)//-(9.0f*400.0f/interrupt_frequency) //-80.0f            //-80*PI/180.0f     //braking torque
 
 
 float SVM_pi_control=0.0f;
-
+float psi_rotating_angle_SVM=0.0f;
+float phase_advance_SVM=0.0f;
+float pi_max=0.0f;
 void sensorless_pi_controller(
                            float reference_frequency, float frequency,float interrupt_frequency, float* rotating_angle) 
 {
@@ -40,7 +42,7 @@ void sensorless_pi_controller(
   float        p_sensorless_error       = 0.0f;
   static float i_sensorless_error       = 0.0f;
   float        pi_control_sensorless    = 0.0f;
-  float        sensorless_phase_advance = 0.0f;  
+  //float        sensorless_phase_advance = 0.0f;  
 
   sensorless_error=reference_frequency-frequency;
 
@@ -60,14 +62,17 @@ void sensorless_pi_controller(
   if      (pi_control_sensorless > PI_MAX_SENSORLESS) { pi_control_sensorless = PI_MAX_SENSORLESS; }
   else if (pi_control_sensorless < PI_MIN_SENSORLESS) { pi_control_sensorless = PI_MIN_SENSORLESS; }
 
-  sensorless_phase_advance+=pi_control_sensorless;
+    //sensorless_phase_advance+=pi_control_sensorless;
 
   
     //*rotating_angle=*rotating_angle+sensorless_phase_advance*reference_frequency/interrupt_frequency;
-    *rotating_angle=*rotating_angle+sensorless_phase_advance*500.0f/interrupt_frequency;
 
+    //*rotating_angle=*rotating_angle+sensorless_phase_advance*500.0f/interrupt_frequency;
+    *rotating_angle=*rotating_angle+pi_control_sensorless*500.0f/interrupt_frequency;
 
   SVM_pi_control=pi_control_sensorless;
+  phase_advance_SVM=pi_control_sensorless*500.0f/interrupt_frequency;
+  pi_max=P_MAX_SENSORLESS;
 }
 
 
