@@ -18,7 +18,7 @@
  */
 
 
-#define COLLECTING_SPEED_DELAY 20
+#define COLLECTING_SPEED_DELAY 0	
 
 void collecting_floating_data(void)
 {

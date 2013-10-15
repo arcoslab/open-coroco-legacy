@@ -17,18 +17,21 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#define P_SENSORLESS                   0.001//0.01f
-#define P_DOWN_SENSORLESS              0.001//0.01f           // To control deacceleration speed and therefore braking current
-#define I_SENSORLESS                   0.0f//0.0000000001f  //0.000001f
-#define I_DOWN_SENSORLESS              0.0f//0.0000000001f  //0.000001f       // To control deacceleration speed and therefore braking current
+
+
+
+#define P_SENSORLESS             (0.0004f*600.0f/interrupt_frequency)  //0.001//0.01f
+#define P_DOWN_SENSORLESS        (0.0004f*600.0f/interrupt_frequency)  //0.001//0.01f           // To control deacceleration speed and therefore braking current
+#define I_SENSORLESS             0.0f//(0.000000001f*600.0f/interrupt_frequency)  //0.0f//0.0000000001f  //0.000001f
+#define I_DOWN_SENSORLESS        0.0f//(0.000000001f*600.0f/interrupt_frequency)  //0.0f//0.0000000001f  //0.000001f       // To control deacceleration speed and therefore braking current
 //#define I_MAX_SENSORLESS             (9.0f*reference_frequency/interrupt_frequency) // 80.0f            // 80.0f*PI/180.0f
 //#define P_MAX_SENSORLESS             (9.0f*reference_frequency/interrupt_frequency) // 80.0f            // 80.0f*PI/180.0f
 //#define PI_MAX_SENSORLESS            (9.0f*reference_frequency/interrupt_frequency) // 87.0f            // 87.0f*PI/180.0f   //
 
-#define I_MAX_SENSORLESS              90000.0f//(90.0f*1000.0f/interrupt_frequency)//(9.0f*400.0f/interrupt_frequency) // 80.0f            // 80.0f*PI/180.0f
-#define P_MAX_SENSORLESS              90000.0f//(90.0f*1000.0f/interrupt_frequency)//(9.0f*400.0f/interrupt_frequency) // 80.0f            // 80.0f*PI/180.0f
-#define PI_MAX_SENSORLESS             90000.0f//(90.0f*1000.0f/interrupt_frequency)//(9.0f*400.0f/interrupt_frequency) // 87.0f            // 87.0f*PI/180.0f   /acceleration torque
-#define PI_MIN_SENSORLESS            -90000.0f//-(90.0f*1000.0f/interrupt_frequency)//-(9.0f*400.0f/interrupt_frequency) //-80.0f            //-80*PI/180.0f     //braking torque
+#define I_MAX_SENSORLESS              0.45f//90.0f*600.0f/interrupt_frequency)//(9.0f*400.0f/interrupt_frequency) // 80.0f            // 80.0f*PI/180.0f
+#define P_MAX_SENSORLESS              0.45f//(90.0f*600.0f/interrupt_frequency)//(9.0f*400.0f/interrupt_frequency) // 80.0f            // 80.0f*PI/180.0f
+#define PI_MAX_SENSORLESS             0.45f//(90.0f*600.0f/interrupt_frequency)//(9.0f*400.0f/interrupt_frequency) // 87.0f            // 87.0f*PI/180.0f   /acceleration torque
+#define PI_MIN_SENSORLESS           -0.45f//-(90.0f*600.0f/interrupt_frequency)//-(9.0f*400.0f/interrupt_frequency) //-80.0f            //-80*PI/180.0f     //braking torque
 
 
 float SVM_pi_control=0.0f;
@@ -66,12 +69,14 @@ void sensorless_pi_controller(
 
   
     //*rotating_angle=*rotating_angle+sensorless_phase_advance*reference_frequency/interrupt_frequency;
-
     //*rotating_angle=*rotating_angle+sensorless_phase_advance*500.0f/interrupt_frequency;
-    *rotating_angle=*rotating_angle+pi_control_sensorless*500.0f/interrupt_frequency;
+    //*rotating_angle=*rotating_angle+pi_control_sensorless*500.0f/interrupt_frequency;
+    *rotating_angle=*rotating_angle+pi_control_sensorless;
+
 
   SVM_pi_control=pi_control_sensorless;
   phase_advance_SVM=pi_control_sensorless*500.0f/interrupt_frequency;
+  phase_advance_SVM=pi_control_sensorless;//*500.0f/interrupt_frequency;
   pi_max=P_MAX_SENSORLESS;
 }
 

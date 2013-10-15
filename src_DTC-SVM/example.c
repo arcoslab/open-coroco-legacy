@@ -79,7 +79,7 @@ int main(void)
 
   while (1)
   {
-    //printf("freq_ref:%6.2f :freq: %6.2f :Vs: %6.2f\n",ref_freq_SVM,w_r,V_s);
+    printf("freq_ref:%6.2f :freq: %6.2f hall: %6.2f :Ud: %6.2f\n",ref_freq_SVM,w_r,CUR_FREQ,U_d);
    
     frequency_input();
 
@@ -202,7 +202,7 @@ data_pi_control_SVM[current_counter]
 );
 }
 
-else if (print_selection==7)// && data_ref_freq_SVM [current_counter] !=0.0f )
+else if (print_selection==77)// && data_ref_freq_SVM [current_counter] !=0.0f )
 {
 
 
