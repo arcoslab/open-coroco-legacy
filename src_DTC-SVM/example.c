@@ -22,7 +22,7 @@
 #include <libopencm3/stm32/f4/timer.h>
 #include <libopencm3/stm32/f4/nvic.h>
 #include <libopencm3/stm32/f4/adc.h>
-
+#include "/home/tumacher/local/src/repositories/arcoslab/experiment/open-coroco/libopencm3/lib/stm32/f4/vector_chipset.c"
 
 //usb serial cdcacm
 #include <libopencm3-plus/newlib/syscall.h>

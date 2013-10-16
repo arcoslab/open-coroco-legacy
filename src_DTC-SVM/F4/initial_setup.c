@@ -518,5 +518,9 @@ void system_init(void) {
   adc_init();
   test_ports_init();
   stdin_init();
+  
+  //floating point unit
+  pre_main();  
+  
 }
 
