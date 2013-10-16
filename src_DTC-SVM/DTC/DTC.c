@@ -27,17 +27,11 @@ float direct_stator_current_i_sD     (float i_sA)
 }
 float quadrature_stator_current_i_sQ (float i_sA,float i_sB)
 {
-  return (1.0f/sqrt(3.0f))*(i_sA+2.0f*i_sB);
+  //return (1.0f/sqrtf(3.0f))*(i_sA+2.0f*i_sB);
+  return 0.57735026918962576451f*(i_sA+2.0f*i_sB);
 }
 
-/*
-  int S2;
-  int S3;
-  int S4;
-  int S5;
-  int S6;
-  int S1;
-*/
+
 
 void  switching_states (int* S_A, int* S_B, int* S_C)
 {
@@ -101,7 +95,7 @@ float direct_stator_voltage_V_sD     (int S_A, int S_B, int S_C,float U_d)
 
 float quadrature_stator_voltage_V_SQ (int S_B, int S_C,float U_d)
 { 
-  return (1.0f/sqrt(3.0f))*U_d*(S_B-S_C);
+  return (1.0f/sqrtf(3.0f))*U_d*(S_B-S_C);
 }
   
 
@@ -112,7 +106,7 @@ float floating_switches_direct_stator_voltage_V_sD     (float S_A, float S_B, fl
 
 float floating_switches_quadrature_stator_voltage_V_SQ (float S_B, float S_C,float U_d)
 { 
-  return (1.0f/sqrt(3.0f))*U_d*(S_B-S_C);
+  return (1.0f/sqrtf(3.0f))*U_d*(S_B-S_C);
 }
 
 //---------------------stator flux-linkage space vector estimation-------------------------------
@@ -279,7 +273,7 @@ float electromagnetic_torque_estimation_t_e(float psi_sD,float i_sQ, float psi_s
 //stator flux-linkage reference
 float stator_flux_linkage_reference_psi_s_ref(float psi_F,float te_ref,float L_sq,float pole_pairs)
 {
-  return sqrt ( psi_F*psi_F+L_sq*L_sq*(2.0f*te_ref/(3.0f*pole_pairs*psi_F))*(2.0f*te_ref/(3.0f*pole_pairs*psi_F))            );
+  return sqrtf ( psi_F*psi_F+L_sq*L_sq*(2.0f*te_ref/(3.0f*pole_pairs*psi_F))*(2.0f*te_ref/(3.0f*pole_pairs*psi_F))            );
 }
 
 
@@ -287,7 +281,7 @@ float stator_flux_linkage_reference_psi_s_ref(float psi_F,float te_ref,float L_s
 //quadrature rotor inductance
 float quadrature_rotor_inductance_L_sq (float psi_s,float psi_F,float t_e,float pole_pairs)
 {
-  return sqrt(psi_s*psi_s-psi_F*psi_F)/(2.0f*t_e/(3.0f*pole_pairs*psi_F));
+  return sqrtf(psi_s*psi_s-psi_F*psi_F)/(2.0f*t_e/(3.0f*pole_pairs*psi_F));
 }
 
 //hysteresis windows
@@ -657,8 +651,10 @@ float vector_magnitude(float quadrature_component, float direct_component)
 float vector_angle(float quadrature_component, float direct_component)
 {
 	float angle;
-	angle=180.0f/PI*atanf(quadrature_component/direct_component);
+	//angle=180.0f/PI*atanf(quadrature_component/direct_component);
+	angle=57.295779513082320*atanf(quadrature_component/direct_component);
 	
+
 	if (angle>=360.0f)
 		angle=angle-360.0f;
 	else if (angle<0.0f)

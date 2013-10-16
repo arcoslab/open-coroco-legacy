@@ -116,9 +116,6 @@ void tim1_up_tim10_isr(void)
   timer_clear_flag(TIM1,  TIM_SR_UIF);
 
   calc_freq();
-  //start_up(); 
-
-  if (dtc_on==false) { gen_pwm(); }
 
   //oscilloscope flag: end of calculations
   gpio_clear(GPIOD, GPIO9);
@@ -177,15 +174,17 @@ void adc_isr(void)
     adc_counter=0;
 
     //oscilloscope flag: start of DTC
-    gpio_set(GPIOD, GPIO9);
+    //gpio_set(GPIOD, GPIO9);
 
     DTC_SVM();
+
     collecting_data();
+
     collecting_floating_data();
-    //collecting_speed_data();
+
     
     //oscilloscope flag: end of DTC
-    gpio_clear(GPIOD, GPIO9);
+    //gpio_clear(GPIOD, GPIO9);
 
   }
 

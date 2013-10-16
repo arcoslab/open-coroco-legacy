@@ -241,7 +241,7 @@ void pi_controller(void) {
 
 
 bool first_dtc=true;
-bool dtc_on=false;
+bool dtc_on=true;
 
 void frequency_input(void)
 {

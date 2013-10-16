@@ -29,8 +29,8 @@ float SVM_V_s_ref_Q(float psi_s_ref, float psi_s, float psi_s_angle, float phase
 
 void SVM_Maximum_allowed_V_s_ref(float* V_s_ref,float U_d)
 {
-  if   (*V_s_ref<=U_d/sqrt(3.0f)) { *V_s_ref = *V_s_ref;       }
-  else                            { *V_s_ref = U_d/sqrt(3.0f); }
+  if   (*V_s_ref<=U_d/sqrtf(3.0f)) { *V_s_ref = *V_s_ref;       }
+  else                            { *V_s_ref = U_d/sqrtf(3.0f); }
 }
 
 float SVM_V_s_relative_angle(float V_s_ref_angle)
@@ -206,6 +206,9 @@ void  SVM_voltage_switch_inverter_VSI(float duty_A,float duty_B,float duty_C,boo
   else
   {
     Attenuation=0.0f;
+    duty_A=0.0f;
+    duty_B=0.0f;
+    duty_C=0.0f;
 
     //-------------SA: S1 and S4------------------------------------
     timer_set_oc_mode      (TIM1, TIM_OC1, TIM_OCM_PWM1);
@@ -290,9 +293,18 @@ float psi_F      = psi_F_0;
 #define MINIMUM_SVM_FREQUENCY 0.5f
 void shutdown_SVM (float reference_frequency,float actual_frequency,bool* shutdown)
 {
-    if      ( *shutdown==false && reference_frequency==0.0f && actual_frequency>-MINIMUM_SVM_FREQUENCY && actual_frequency<MINIMUM_SVM_FREQUENCY) { *shutdown = true ;}
-    else if ( *shutdown==true  && reference_frequency==0.0f)                                                                                      { *shutdown = true ;}
-    else                                                                                                                                          { *shutdown = false;}
+    if      ( *shutdown           == false && 
+              reference_frequency == 0.0f  && 
+              actual_frequency>-MINIMUM_SVM_FREQUENCY && 
+              actual_frequency<MINIMUM_SVM_FREQUENCY) 
+    { *shutdown = true ;}
+    
+    else if ( *shutdown           == true  &&  
+              reference_frequency == 0.0f)                                                                                      
+    { *shutdown = true ;}
+ 
+    else                                                                                                                         
+    { *shutdown = false;}
 }
 
 void  DTC_SVM(void)
@@ -300,10 +312,13 @@ void  DTC_SVM(void)
   //---------------------------------DTC algorithm--------------------------------------------//
 
   i_sD     = direct_stator_current_i_sD     (i_sA);
-  i_sQ     = quadrature_stator_current_i_sQ (i_sA,i_sB);
-  i_s      = vector_magnitude               (i_sQ,i_sD);
-  cita_i_s = vector_angle                   (i_sQ,i_sD);
 
+  i_sQ     = quadrature_stator_current_i_sQ (i_sA,i_sB);
+
+  i_s      = vector_magnitude               (i_sQ,i_sD);
+gpio_set(GPIOD, GPIO9);
+  cita_i_s = vector_angle                   (i_sQ,i_sD);
+gpio_clear(GPIOD, GPIO9);
   psi_sD          = direct_stator_flux_linkage_estimator_psi_sD     (TICK_PERIOD,V_sD,i_sD,R_s);
   psi_sQ          = quadrature_stator_flux_linkage_estimator_psi_sQ (TICK_PERIOD,V_sQ,i_sQ,R_s);
   psi_s           = stator_flux_linkage_magnite_psi_s               (psi_sD,psi_sQ);
@@ -318,12 +333,7 @@ void  DTC_SVM(void)
 
 
   //--------------------------------SVM algorithm--------------------------------------------//
-
-    if (dtc_on)
-  {
-    sensorless_pi_controller(ref_freq_SVM,w_r,PWMFREQ_F,&psi_rotating_angle_SVM);
-    attenuation=1.0f; 
-  }
+  sensorless_pi_controller(ref_freq_SVM,w_r,PWMFREQ_F,&psi_rotating_angle_SVM);
 
   V_sD                   = SVM_V_s_ref_D               (psi_s_ref,psi_s,psi_s_alpha_SVM,psi_rotating_angle_SVM,i_sD,R_s,TICK_PERIOD);
   V_sQ                   = SVM_V_s_ref_Q               (psi_s_ref,psi_s,psi_s_alpha_SVM,psi_rotating_angle_SVM,i_sQ,R_s,TICK_PERIOD);
@@ -338,30 +348,11 @@ void  DTC_SVM(void)
   T_min_on = SVM_T_min_on (1.0f, T1, T2);
   T_med_on = SVM_T_med_on (T_min_on, T1,T2,cita_V_s);
   T_max_on = SVM_T_max_on (T_med_on,T1,T2,cita_V_s);
-   
 
-  if (dtc_on)
-  {
-    SVM_phase_duty_cycles           (&duty_a, &duty_b, &duty_c, cita_V_s,T_max_on,T_med_on,T_min_on);
-
-  
-    static bool shutdown=true;
-        
-    //shutdown_SVM (ref_freq_SVM,&shutdown,&attenuation);
-    shutdown_SVM (ref_freq_SVM,w_r,&shutdown);
-
-    SVM_voltage_switch_inverter_VSI ( duty_a,  duty_b,  duty_c,shutdown);
- 
-    if (first_dtc==true)
-    {
-      first_dtc=false;
-      //collecting_current=true;
-    }
-  }
-  
-  
-
-
+  SVM_phase_duty_cycles           (&duty_a, &duty_b, &duty_c, cita_V_s,T_max_on,T_med_on,T_min_on);
+  static bool shutdown=true; 
+  shutdown_SVM (ref_freq_SVM,w_r,&shutdown);
+  SVM_voltage_switch_inverter_VSI ( duty_a,  duty_b,  duty_c,shutdown);
 }
 
 
