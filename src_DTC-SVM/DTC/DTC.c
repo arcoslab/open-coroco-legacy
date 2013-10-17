@@ -123,20 +123,6 @@ float direct_stator_flux_linkage_estimator_psi_sD     (float T,float V_sD,float 
   static float previous_psi_sD=0.0f;
   previous_psi_sD = ( previous_psi_sD+T*(V_sD-i_sD*R_s) )/(1.0f+T*W_CUTOFF);
 
-  //float psi_increment_sD=0.0f;
-  
-  //previous_psi_sD = ( previous_psi_sD+T*(V_sD) )/(1.0f+T*W_CUTOFF);
-  //previous_psi_sD = ( T*(V_sD) );
-/*
-  psi_increment_sD = T*(V_sD-i_sD*R_s); 
-  if (psi_increment_sD==0)  {  previous_psi_sD = ( previous_psi_sD+psi_increment_sD      ); }///(1.0f+T*W_CUTOFF);  }
-  else                      {  previous_psi_sD = ( previous_psi_sD+psi_increment_sD-a_sD ); }///(1.0f+T*W_CUTOFF);  }
-*/
-  //---------------------
-  //canceling the flux-linkage when the motor is off
-  //if (motor_off==true) {previous_psi_sD=0.0f;};
-  //--------------------- 
-
   return previous_psi_sD;
 }
 
@@ -145,26 +131,14 @@ float quadrature_stator_flux_linkage_estimator_psi_sQ (float T,float V_sQ,float 
   static float previous_psi_sQ=0.0f;
 
   previous_psi_sQ = ( previous_psi_sQ+T*(V_sQ-i_sQ*R_s) )/(1.0f+T*W_CUTOFF);
-  //previous_psi_sQ = ( previous_psi_sQ+T*(V_sQ) )/(1.0f+T*W_CUTOFF);
-  //previous_psi_sQ = ( T*(V_sQ) );
 
-/*
-  float psi_increment_sQ=0.0f;
-  psi_increment_sQ=T*(V_sQ-i_sQ*R_s);
-  if (psi_increment_sQ==0.0f)  {  previous_psi_sQ = ( previous_psi_sQ+psi_increment_sQ      ); }///(1.0f+T*W_CUTOFF);  }
-  else                         {  previous_psi_sQ = ( previous_psi_sQ+psi_increment_sQ-b_sQ ); }///(1.0f+T*W_CUTOFF);  }
-*/  
-
-  //------------------------------------
-  //canceling the flux-linkage when the motor is off
-  //if (motor_off==true) {previous_psi_sQ=0.0f;}
-  //-------------------------------------
   return previous_psi_sQ;
 }
 
 float stator_flux_linkage_magnite_psi_s               (float psi_sD,float psi_sQ)
 {
   return sqrtf( (psi_sQ*psi_sQ+psi_sD*psi_sD) );
+  //return sqrtf( ( powf(psi_sQ,2.0f)+powf(psi_sD,2.0f) ) );
 }
 
 
@@ -260,12 +234,9 @@ float rotor_speed_w_r(float psi_sD, float psi_sQ, float T)
 //electromagnetic torque estimation
 float electromagnetic_torque_estimation_t_e(float psi_sD,float i_sQ, float psi_sQ,float i_sD,float pole_pairs)
 {
-  float t_e=0.0f;
-  t_e=(3.0f/2.0f)*pole_pairs* (psi_sD*i_sQ-psi_sQ*i_sD);
-  //t_e=pole_pairs*(psi_sD*i_sQ-psi_sQ*i_sD);
-  //t_e=psi_sD*i_sQ;//-psi_sQ*i_sD);
-  //t_e=-psi_sQ*i_sD;
-  return t_e;
+  //float t_e=0.0f;
+  //t_e=(3.0f/2.0f)*pole_pairs* (psi_sD*i_sQ-psi_sQ*i_sD);
+  return ( 1.5f*pole_pairs* (psi_sD*i_sQ-psi_sQ*i_sD) );//t_e;
 }
 
 

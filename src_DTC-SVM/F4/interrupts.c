@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#define SAMPLES 400
+#define SAMPLES 5
 #define FLUX_LINKAGE_TIMER_DELAY 0
 
 //printing buffers

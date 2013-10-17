@@ -42,6 +42,7 @@
 #include "Configuration/motor.h"
 #include "Configuration/pwm-related_timer_configuration.h"
 //functions
+#include "Trigonometric_Functions/Trigonometric_Functions.h"
 #include "Print/Print.h"
 #include "Print/Print.c"
 #include "PID/PID.h"
@@ -76,11 +77,22 @@ int main(void)
   printf ("\n\n****************************************************************************************************************\n");
   printf ("\n\n*************************************DTC-SVM example************************************************************\n");
   printf ("\n\n****************************************************************************************************************\n\n");
+  
+  //printf("sine: %f \n",fast_sine(ref_freq_SVM));
+  float angulus=0.0f;
+  while (angulus<360.0f)
+  { 
+  printf(":angle:%f :tan:%f\n",angulus,tanf((PI/180.0f)*angulus));
+  angulus=angulus+1.0f;
+  }
 
   while (1)
   {
-    printf("freq_ref:%6.2f :freq: %6.2f hall: %6.2f :Ud: %6.2f\n",ref_freq_SVM,w_r,CUR_FREQ,U_d);
-   
+    //printf("freq_ref:%6.2f :freq: %6.2f hall: %6.2f :Ud: %6.2f\n",ref_freq_SVM,w_r,CUR_FREQ,U_d);
+    //printf ("pow 5^3: %f\n",powf(5.0f,3.0f));
+    
+       
+
     frequency_input();
 
 
