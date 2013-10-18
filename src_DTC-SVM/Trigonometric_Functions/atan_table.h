@@ -16,7 +16,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#define ATAN_TABLE_SIZE   450    //1000
+#define ATAN_TABLE_SIZE   451    //1000
 #define ATAN_TABLE_SIZE_F 450.0f //1000.0f
 
 /*
@@ -1477,5 +1477,6 @@ float atan_table [ATAN_TABLE_SIZE] =
 44.74422f,
 44.80838f,
 44.87239f,
-44.93627f
+44.93627f,
+45.0f
 };

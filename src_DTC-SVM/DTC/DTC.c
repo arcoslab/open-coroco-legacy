@@ -645,18 +645,25 @@ float vector_angle(float quadrature_component, float direct_component)
 float fast_vector_angle(float y, float x)
 {
   float angle;
-
-  if      (x>=0.0f && y>=0.0f &&  x> y) { angle =        fast_atan( y/ x); }  //1st quadrant
-  else if (x>=0.0f && y>=0.0f &&  y> x) { angle =  90.0f-fast_atan( x/ y); }  //2nd quadrant
-  else if (x< 0.0f && y>=0.0f &&  y>-x) { angle =  90.0f+fast_atan(-x/ y); }  //3rd quadrant
-  else if (x< 0.0f && y>=0.0f && -x> y) { angle = 180.0f-fast_atan( y/-x); }  //4th quadrant
-  else if (x< 0.0f && y< 0.0f && -x>-y) { angle = 180.0f+fast_atan(-y/-x); }  //5th quadrant
-  else if (x< 0.0f && y< 0.0f && -y>-x) { angle = 270.0f-fast_atan(-x/-y); }  //6th quadrant
-  else if (x>=0.0f && y< 0.0f && -y> x) { angle = 270.0f+fast_atan( x/-y); }  //7th quadrant 
-  else if (x>=0.0f && y< 0.0f &&  x>-y) { angle = 360.0f-fast_atan(-y/ x); }  //8th quadrant 
-  else                                  { angle =   0.0f                 ; }  //lost quadrant
-
-  //if (angle>=360.0f) angle=angle-360.0f;
+/*
+  if      (x>=0.0f && y>=0.0f &&  x>= y) { angle =        fast_atan( y/ x); }  //1st quadrant
+  else if (x>=0.0f && y>=0.0f &&  y> x)  { angle =  90.0f-fast_atan( x/ y); }  //2nd quadrant
+  else if (x< 0.0f && y>=0.0f &&  y>=-x) { angle =  90.0f+fast_atan(-x/ y); }  //3rd quadrant
+  else if (x< 0.0f && y>=0.0f && -x> y)  { angle = 180.0f-fast_atan( y/-x); }  //4th quadrant
+  else if (x< 0.0f && y< 0.0f && -x>=-y) { angle = 180.0f+fast_atan(-y/-x); }  //5th quadrant
+  else if (x< 0.0f && y< 0.0f && -y>-x)  { angle = 270.0f-fast_atan(-x/-y); }  //6th quadrant
+  else if (x>=0.0f && y< 0.0f && -y>= x) { angle = 270.0f+fast_atan( x/-y); }  //7th quadrant 
+  else if (x>=0.0f && y< 0.0f &&  x>-y)  { angle = 360.0f-fast_atan(-y/ x); }  //8th quadrant 
+  else                                   { angle =   0.0f                 ; }  //lost quadrant
+*/
+  if      (x>=0.0f && y>=0.0f &&  x>= y) { angle =        fast_atan( y/ x); }  //1st quadrant
+  else if (x>=0.0f && y>=0.0f &&  y> x)  { angle =  90.0f-fast_atan( x/ y); }  //2nd quadrant
+  else if (x< 0.0f && y>=0.0f &&  y>=-x) { angle =  90.0f+fast_atan(-x/ y); }  //3rd quadrant
+  else if (x< 0.0f && y>=0.0f && -x> y)  { angle = 180.0f-fast_atan( y/-x); }  //4th quadrant
+  else if (x< 0.0f && y< 0.0f && -x>=-y) { angle = 180.0f+fast_atan(-y/-x); }  //5th quadrant
+  else if (x< 0.0f && y< 0.0f && -y>-x)  { angle = 270.0f-fast_atan(-x/-y); }  //6th quadrant
+  else if (x>=0.0f && y< 0.0f && -y>= x) { angle = 270.0f+fast_atan( x/-y); }  //7th quadrant 
+  else if (x>=0.0f && y< 0.0f &&  x>-y)  { angle = 360.0f-fast_atan(-y/ x); }  //8th quadrant 
 
   return angle;
 }

@@ -17,7 +17,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "sine_table.h"
-#include "cos_table.h"
+//#include "cos_table.h"
 #include "atan_table.h"
 
 float fast_sine(float angle);
@@ -31,12 +31,12 @@ float fast_sine(float angle)
   while (angle>=360.0f) { angle=angle-360.0f; }
   while (angle<   0.0f) { angle=angle+360.0f; }
   
-  rounded_angle=(( int )(angle*10.0f));
+  rounded_angle=(( int )(angle*SIN_TABLE_SIZE_F/360.0f));
   
   return sine_table[rounded_angle];
 
 }
-
+/*
 float fast_cos(float angle)
 {
   int rounded_angle; 
@@ -46,18 +46,34 @@ float fast_cos(float angle)
   while (angle<   0.0f) { angle=angle+360.0f; }
 
  
-  rounded_angle=(( int )(angle*10.0f));
+  rounded_angle=(( int )(angle*COS_TABLE_SIZE_F/360.0f));
 
   
 
   return cos_table[rounded_angle];
 }
+*/
+
+float fast_cos(float angle)
+{
+  //int rounded_angle; 
+
+ 
+  //rounded_angle=(( int )( (angle+90.0f)*SIN_TABLE_SIZE_F/360.0f));
+
+  
+
+  return fast_sine(angle+90.0f);//sine_table[rounded_angle];
+}
+
+
+
 
 float fast_atan(float tan_value)
 {
   int rounded_tan;
   rounded_tan=(( int )(tan_value*ATAN_TABLE_SIZE_F));
-  printf("\n rounded value: %d ", rounded_tan); 
+
   
   if  (rounded_tan<0.0f || rounded_tan>ATAN_TABLE_SIZE) { return 0.0f; }
   else                                                  { return atan_table[rounded_tan]; }

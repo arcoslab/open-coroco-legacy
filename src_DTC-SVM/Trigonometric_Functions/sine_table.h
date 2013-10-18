@@ -16,9 +16,10 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+#define SIN_TABLE_SIZE   3600
+#define SIN_TABLE_SIZE_F 3600
 
-
-float sine_table [3600] =  
+float sine_table [SIN_TABLE_SIZE] =  
 {
 0.0f,
 0.0017453284f,

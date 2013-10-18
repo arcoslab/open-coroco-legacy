@@ -182,6 +182,23 @@ void adc_isr(void)
 
     collecting_floating_data();
 
+
+
+
+float test_angle_1;
+float test_angle_2;
+float test_angle_3;
+
+test_angle_1=fast_sine         (ref_freq_SVM);
+gpio_set(GPIOD, GPIO9);
+test_angle_2=fast_cos          (ref_freq_SVM);
+gpio_clear(GPIOD, GPIO9);
+//test_angle_3=fast_vector_angle  (fast_sine(ref_freq_SVM), fast_cos(ref_freq_SVM));
+test_angle_3=fast_vector_angle  (ref_freq_SVM,ref_freq_SVM/2.0f);
+
+duty_a= test_angle_1+test_angle_2+test_angle_3;
+
+
     
     //oscilloscope flag: end of DTC
     //gpio_clear(GPIOD, GPIO9);
