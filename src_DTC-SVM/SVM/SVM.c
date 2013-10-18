@@ -325,8 +325,8 @@ void  DTC_SVM(void)
 
   i_sD     = direct_stator_current_i_sD     (i_sA);
   i_sQ     = quadrature_stator_current_i_sQ (i_sA,i_sB);
-  i_s      = vector_magnitude               (i_sQ,i_sD);
-  cita_i_s = vector_angle                   (i_sQ,i_sD);
+  //i_s      = vector_magnitude               (i_sQ,i_sD);
+  //cita_i_s = vector_angle                   (i_sQ,i_sD);
 
   psi_sD          = direct_stator_flux_linkage_estimator_psi_sD     (TICK_PERIOD,V_sD,i_sD,R_s);
   psi_sQ          = quadrature_stator_flux_linkage_estimator_psi_sQ (TICK_PERIOD,V_sQ,i_sQ,R_s);

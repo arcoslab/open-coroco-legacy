@@ -22,7 +22,8 @@
 
 float fast_sine(float angle);
 float fast_cos(float angle); 
-
+float fast_atan(float tan_value);
+//float fast_vector_angle(float quadrature, float direct);
 float fast_sine(float angle)
 {
   int rounded_angle; 
@@ -30,13 +31,8 @@ float fast_sine(float angle)
   while (angle>=360.0f) { angle=angle-360.0f; }
   while (angle<   0.0f) { angle=angle+360.0f; }
   
-  gpio_set(GPIOD, GPIO9);
-
   rounded_angle=(( int )(angle*10.0f));
-
-  gpio_clear(GPIOD, GPIO9);
-
-
+  
   return sine_table[rounded_angle];
 
 }
@@ -44,15 +40,27 @@ float fast_sine(float angle)
 float fast_cos(float angle)
 {
   int rounded_angle; 
- 
+
+
   while (angle>=360.0f) { angle=angle-360.0f; }
   while (angle<   0.0f) { angle=angle+360.0f; }
-  
+
+ 
   rounded_angle=(( int )(angle*10.0f));
 
   
 
   return cos_table[rounded_angle];
+}
+
+float fast_atan(float tan_value)
+{
+  int rounded_tan;
+  rounded_tan=(( int )(tan_value*ATAN_TABLE_SIZE_F));
+  printf("\n rounded value: %d ", rounded_tan); 
+  
+  if  (rounded_tan<0.0f || rounded_tan>ATAN_TABLE_SIZE) { return 0.0f; }
+  else                                                  { return atan_table[rounded_tan]; }
 }
 
 
