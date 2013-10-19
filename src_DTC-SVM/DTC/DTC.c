@@ -664,6 +664,7 @@ float fast_vector_angle(float y, float x)
   else if (x< 0.0f && y< 0.0f && -y>-x)  { angle = 270.0f-fast_atan(-x/-y); }  //6th quadrant
   else if (x>=0.0f && y< 0.0f && -y>= x) { angle = 270.0f+fast_atan( x/-y); }  //7th quadrant 
   else if (x>=0.0f && y< 0.0f &&  x>-y)  { angle = 360.0f-fast_atan(-y/ x); }  //8th quadrant 
+  else                                   { angle =   0.0f                 ; }
 
   return angle;
 }
