@@ -104,7 +104,7 @@ fast_vector_angle  (fast_sine(ref_freq_SVM), fast_cos(ref_freq_SVM))
     if (print_current==true )
     {
       current_counter=0;
-      //printf ("\n\n****************************************************************************************************************\n");
+      printf ("\n\n****************************************************************************************************************\n");
 
       while (current_counter<SAMPLES-2)
       {

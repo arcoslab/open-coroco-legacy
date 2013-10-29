@@ -21,14 +21,16 @@ float SVM_V_s_ref_D(float psi_s_ref, float psi_s, float psi_s_angle, float phase
 {
   //return ( psi_s_ref*cosf((psi_s_angle+phase_advance)*PI/180.0f) - psi_s*cosf(psi_s_angle*PI/180.0f) )/T_s  +  i_sD*R_s;
   //return ( psi_s_ref*cosf((psi_s_angle+phase_advance)*0.01745329251994329576f) - psi_s*cosf(psi_s_angle*0.01745329251994329576f) )/T_s  +  i_sD*R_s;
-  return ( psi_s_ref*fast_cos((psi_s_angle+phase_advance)*0.01745329251994329576f) - psi_s*fast_cos(psi_s_angle*0.01745329251994329576f) )/T_s  +  i_sD*R_s;
+  ////return ( psi_s_ref*fast_cos((psi_s_angle+phase_advance)*0.01745329251994329576f) - psi_s*fast_cos(psi_s_angle*0.01745329251994329576f) )/T_s  +  i_sD*R_s;
+  return ( psi_s_ref*fast_cos((psi_s_angle+phase_advance)) - psi_s*fast_cos(psi_s_angle) )/T_s  +  i_sD*R_s;
 }
 
 float SVM_V_s_ref_Q(float psi_s_ref, float psi_s, float psi_s_angle, float phase_advance,float i_sQ, float R_s,float T_s)
 {
   //return ( psi_s_ref*sinf((psi_s_angle+phase_advance)*PI/180.0f) - psi_s*sinf(psi_s_angle*PI/180.0f) )/T_s  +  i_sQ*R_s; 
   //return ( psi_s_ref*sinf((psi_s_angle+phase_advance)*0.01745329251994329576f) - psi_s*sinf(psi_s_angle*0.01745329251994329576f) )/T_s  +  i_sQ*R_s; 
-  return ( psi_s_ref*fast_sine((psi_s_angle+phase_advance)*0.01745329251994329576f) - psi_s*fast_sine(psi_s_angle*0.01745329251994329576f) )/T_s  +  i_sQ*R_s;
+  //return ( psi_s_ref*fast_sine((psi_s_angle+phase_advance)*0.01745329251994329576f) - psi_s*fast_sine(psi_s_angle*0.01745329251994329576f) )/T_s  +  i_sQ*R_s;
+  return ( psi_s_ref*fast_sine((psi_s_angle+phase_advance)) - psi_s*fast_sine(psi_s_angle) )/T_s  +  i_sQ*R_s;
 }
 
 void SVM_Maximum_allowed_V_s_ref(float* V_s_ref,float U_d)
@@ -59,15 +61,17 @@ float SVM_V_s_relative_angle(float V_s_ref_angle)
 float SVM_T1(float T_s,float U_s, float U1, float V_s_ref_relative_angle)
 {
   //return T_s*(U_s/U1)*( sinf( (PI/180.0f)*(60.0f-V_s_ref_relative_angle) )/sinf(60.0f*PI/180.0f) );
-  //return T_s*(U_s/U1)*( sinf( 0.01745329251994329576f*(60.0f-V_s_ref_relative_angle) )/0.86602540378443864676f );
-  return T_s*(U_s/U1)*( fast_sine( 0.01745329251994329576f*(60.0f-V_s_ref_relative_angle) )/0.86602540378443864676f );
+  //return T_s*(U_s/U1)*( sinf     ( 0.01745329251994329576f*(60.0f-V_s_ref_relative_angle) )/0.86602540378443864676f );
+  //return T_s*(U_s/U1)*( fast_sine( 0.01745329251994329576f*(60.0f-V_s_ref_relative_angle) )/0.86602540378443864676f );
+  return T_s*(U_s/U1)*( fast_sine( (60.0f-V_s_ref_relative_angle) )/0.86602540378443864676f );
 }
 
 float SVM_T2(float T_s,float U_s, float U2, float V_s_ref_relative_angle)
 {
   //return T_s*(U_s/U2)*( sinf(V_s_ref_relative_angle*PI/180.0f)/sinf(60.0f*PI/180.0f) );
   //return T_s*(U_s/U2)*( sinf(V_s_ref_relative_angle*0.01745329251994329576f)/0.86602540378443864676f );
-  return T_s*(U_s/U2)*( fast_sine(V_s_ref_relative_angle*0.01745329251994329576f)/0.86602540378443864676f );
+  //return T_s*(U_s/U2)*( fast_sine(V_s_ref_relative_angle*0.01745329251994329576f)/0.86602540378443864676f );
+  return T_s*(U_s/U2)*( fast_sine(V_s_ref_relative_angle)/0.86602540378443864676f );
 }
 /*
 float SVM_Taon(float T_s, float T1, float T2)
@@ -331,7 +335,9 @@ void  DTC_SVM(void)
   psi_sD          = direct_stator_flux_linkage_estimator_psi_sD     (TICK_PERIOD,V_sD,i_sD,R_s);
   psi_sQ          = quadrature_stator_flux_linkage_estimator_psi_sQ (TICK_PERIOD,V_sQ,i_sQ,R_s);
   psi_s           = stator_flux_linkage_magnite_psi_s               (psi_sD,psi_sQ);
-  psi_s_alpha_SVM = vector_angle                                    (psi_sQ,psi_sD);
+  ////psi_s_alpha_SVM = vector_angle                                    (psi_sQ,psi_sD);
+  psi_s_alpha_SVM = fast_vector_angle                               (psi_sQ,psi_sD);
+
   //w_r             = (1.0f/(2.0f*PI))*rotor_speed_w_r                                 (psi_sD,psi_sQ,TICK_PERIOD);
   w_r             = 0.15915494309189533576f*rotor_speed_w_r                                 (psi_sD,psi_sQ,TICK_PERIOD);
   
@@ -344,11 +350,13 @@ void  DTC_SVM(void)
   //--------------------------------SVM algorithm--------------------------------------------//
 
   sensorless_pi_controller(ref_freq_SVM,w_r,PWMFREQ_F,&psi_rotating_angle_SVM);
+  //sensorless_open_loop(&ref_freq_SVM,&attenuation,16000.0f,120.0f,0.01);
 
   V_sD                   = SVM_V_s_ref_D               (psi_s_ref,psi_s,psi_s_alpha_SVM,psi_rotating_angle_SVM,i_sD,R_s,TICK_PERIOD);
   V_sQ                   = SVM_V_s_ref_Q               (psi_s_ref,psi_s,psi_s_alpha_SVM,psi_rotating_angle_SVM,i_sQ,R_s,TICK_PERIOD);
   V_s                    = vector_magnitude            (V_sQ,V_sD);
-  cita_V_s               = vector_angle                (V_sQ,V_sD);
+  ////cita_V_s               = vector_angle                (V_sQ,V_sD);
+  cita_V_s               = fast_vector_angle                (V_sQ,V_sD);
   V_s_ref_relative_angle = SVM_V_s_relative_angle      (cita_V_s);
 			   SVM_Maximum_allowed_V_s_ref (&V_s,U_d);
 

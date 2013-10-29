@@ -16,8 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#define SAMPLES 5
-#define FLUX_LINKAGE_TIMER_DELAY 0
+#define SAMPLES 300
+#define FLUX_LINKAGE_TIMER_DELAY 10
 
 //printing buffers
 float hall_angle=0.0f;
