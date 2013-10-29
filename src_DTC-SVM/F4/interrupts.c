@@ -183,7 +183,7 @@ void adc_isr(void)
     collecting_floating_data();
 
     //oscilloscope flag: end of DTC
-    gpio_clear(GPIOD, GPIO9);
+    //gpio_clear(GPIOD, GPIO9);
 
   }
 

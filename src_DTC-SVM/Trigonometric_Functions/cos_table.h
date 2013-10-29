@@ -18,6 +18,8 @@
  */
 #define COS_TABLE_SIZE 3600
 #define COS_TABLE_SIZE_F 3600.0f
+
+/*
 float cos_table [COS_TABLE_SIZE] =  
 {
 1.0f,
@@ -3621,3 +3623,4 @@ float cos_table [COS_TABLE_SIZE] =
 0.9999939077f,
 0.9999984769f
 };
+*/

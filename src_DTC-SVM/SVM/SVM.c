@@ -350,15 +350,19 @@ void  DTC_SVM(void)
   //--------------------------------SVM algorithm--------------------------------------------//
 
   sensorless_pi_controller(ref_freq_SVM,w_r,PWMFREQ_F,&psi_rotating_angle_SVM);
-  //sensorless_open_loop(&ref_freq_SVM,&attenuation,16000.0f,120.0f,0.01);
 
   V_sD                   = SVM_V_s_ref_D               (psi_s_ref,psi_s,psi_s_alpha_SVM,psi_rotating_angle_SVM,i_sD,R_s,TICK_PERIOD);
   V_sQ                   = SVM_V_s_ref_Q               (psi_s_ref,psi_s,psi_s_alpha_SVM,psi_rotating_angle_SVM,i_sQ,R_s,TICK_PERIOD);
+ 
+gpio_clear(GPIOD, GPIO9);
+
   V_s                    = vector_magnitude            (V_sQ,V_sD);
   ////cita_V_s               = vector_angle                (V_sQ,V_sD);
   cita_V_s               = fast_vector_angle                (V_sQ,V_sD);
   V_s_ref_relative_angle = SVM_V_s_relative_angle      (cita_V_s);
 			   SVM_Maximum_allowed_V_s_ref (&V_s,U_d);
+
+gpio_clear(GPIOD, GPIO9);
 
   //T1       = SVM_T1       (1.0f,V_s,U_d*2.0f/3.0f, V_s_ref_relative_angle);
   T1       = SVM_T1       (1.0f,V_s,U_d*0.66666666666666666666f, V_s_ref_relative_angle);
