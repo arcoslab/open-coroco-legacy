@@ -53,3 +53,11 @@ void voltage_measure (uint32_t adc,uint8_t channel)
   adc_set_regular_sequence(adc, 1, channels);	
   adc_start_conversion_regular(adc);
 }
+
+
+
+
+
+
+
+

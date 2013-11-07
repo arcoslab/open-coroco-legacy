@@ -121,9 +121,20 @@ void tim1_up_tim10_isr(void)
   gpio_clear(GPIOD, GPIO9);
 
   //oscilloscope flag: start of ADC current measuring
+  //gpio_set(GPIOB, GPIO15);
+
+
+
+if (center_aligned_state==FIRST_HALF)
+{
   gpio_set(GPIOB, GPIO15);
 
   voltage_measure (ADC1,ADC_CHANNEL1);
+}
+else 
+{
+  DTC_SVM();
+}
 
 }
 

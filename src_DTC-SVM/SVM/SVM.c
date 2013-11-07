@@ -323,10 +323,16 @@ void shutdown_SVM (float reference_frequency,float actual_frequency,bool* shutdo
     { *shutdown = false;}
 }
 
+
+#define FIRST_HALF  0
+#define SECOND_HALF 1
+float center_aligned_state=FIRST_HALF;
+
 void  DTC_SVM(void)
 {
   //---------------------------------DTC algorithm--------------------------------------------//
-
+if (center_aligned_state==FIRST_HALF)
+{
   i_sD     = direct_stator_current_i_sD     (i_sA);
   i_sQ     = quadrature_stator_current_i_sQ (i_sA,i_sB);
   //i_s      = vector_magnitude               (i_sQ,i_sD);
@@ -353,16 +359,23 @@ void  DTC_SVM(void)
 
   V_sD                   = SVM_V_s_ref_D               (psi_s_ref,psi_s,psi_s_alpha_SVM,psi_rotating_angle_SVM,i_sD,R_s,TICK_PERIOD);
   V_sQ                   = SVM_V_s_ref_Q               (psi_s_ref,psi_s,psi_s_alpha_SVM,psi_rotating_angle_SVM,i_sQ,R_s,TICK_PERIOD);
- 
-gpio_clear(GPIOD, GPIO9);
 
+gpio_clear(GPIOD, GPIO9);
+} 
+
+
+
+
+else
+{
+gpio_set(GPIOD, GPIO9);
   V_s                    = vector_magnitude            (V_sQ,V_sD);
   ////cita_V_s               = vector_angle                (V_sQ,V_sD);
   cita_V_s               = fast_vector_angle                (V_sQ,V_sD);
   V_s_ref_relative_angle = SVM_V_s_relative_angle      (cita_V_s);
 			   SVM_Maximum_allowed_V_s_ref (&V_s,U_d);
 
-gpio_clear(GPIOD, GPIO9);
+
 
   //T1       = SVM_T1       (1.0f,V_s,U_d*2.0f/3.0f, V_s_ref_relative_angle);
   T1       = SVM_T1       (1.0f,V_s,U_d*0.66666666666666666666f, V_s_ref_relative_angle);
@@ -377,6 +390,19 @@ gpio_clear(GPIOD, GPIO9);
   static bool shutdown=true; 
   shutdown_SVM (ref_freq_SVM,w_r,&shutdown);
   SVM_voltage_switch_inverter_VSI ( duty_a,  duty_b,  duty_c,shutdown);
+gpio_clear(GPIOD, GPIO9);
+}
+
+
+if (center_aligned_state==FIRST_HALF)
+{
+  center_aligned_state=SECOND_HALF;
+}
+else 
+{
+  center_aligned_state=FIRST_HALF;
+}
+
 }
 
 
