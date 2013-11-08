@@ -32,9 +32,36 @@ float fast_sine(float angle)
   while (angle>=360.0f) { angle=angle-360.0f; }
   while (angle<   0.0f) { angle=angle+360.0f; }
   
-  rounded_angle=(( int )(angle*SIN_TABLE_SIZE_F/360.0f));
+  if      (angle>=  0.0f && angle< 90.0f) { 
+                                             rounded_angle=(( int )(angle*SIN_TABLE_SIZE_F/90.0f));
+                                             return sine_table[rounded_angle]; 
+                                          }
+
+  else if (angle>= 90.0f && angle<180.0f) { 
+                                              angle=180.0f-angle;
+                                              rounded_angle=(( int )(angle*SIN_TABLE_SIZE_F/90.0f));
+                                              return sine_table[rounded_angle]; 
+                                          }
+
+  else if (angle>=180.0f && angle<270.0f) { 
+                                              angle=angle-180.0f;
+                                              rounded_angle=(( int )(angle*SIN_TABLE_SIZE_F/90.0f));
+                                              return -sine_table[rounded_angle]; 
+                                          }
+
+  else if (angle>=270.0f && angle<360.0f) { 
+                                              angle=360.0f-angle;//angle-270.0f;
+                                              rounded_angle=(( int )(angle*SIN_TABLE_SIZE_F/90.0f));
+                                              return -sine_table[rounded_angle]; 
+                                          }
+  else 
+                                          {
+                                              return 3.0f;
+                                          }
+
+  //rounded_angle=(( int )(angle*SIN_TABLE_SIZE_F/360.0f));
   
-  return sine_table[rounded_angle];
+  //return sine_table[rounded_angle];
 
 }
 

@@ -90,7 +90,10 @@ int main(void)
     printf("freq_ref:%6.2f :freq: %20.10f hall: %6.2f :Ud: %6.2f\n",ref_freq_SVM,w_r,CUR_FREQ,U_d);
     //printf ("pow 5^3: %f\n",powf(5.0f,3.0f));
  
-/*  
+     
+
+
+/*
  printf("original angle: %f y: %f x: %f fast_atanf: %f \n",
 ref_freq_SVM,
 fast_sine         (ref_freq_SVM),
