@@ -323,7 +323,7 @@ void frequency_input(void)
       {
         print_selection=2;
       }	 
-      else if (strcmp(cmd, "t") == 0)
+      else if (strcmp(cmd, "x") == 0)
       {
         print_selection=3;
       }	 
@@ -355,6 +355,20 @@ void frequency_input(void)
         collecting_speed=true;
 
       }	 
+      else if (strcmp(cmd, "t") == 0)
+      {
+        dtc_on=true;
+        t_e_ref=value;
+        motor_off=false;
+
+        if (t_e_ref==0.0f) 
+        { 
+          dtc_on=true;
+        }
+        
+        collecting_speed=true;
+
+      }	 
     }
     if (!close_loop) {
       while (poll(stdin) > 0) {
@@ -365,6 +379,9 @@ void frequency_input(void)
 
       //printf("Close loop\n");
     }
+
+
+      
 }
 
 void gen_pwm(void) {

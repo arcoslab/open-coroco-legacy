@@ -17,7 +17,7 @@
  */
 
 #define SAMPLES 300
-#define FLUX_LINKAGE_TIMER_DELAY 10
+#define FLUX_LINKAGE_TIMER_DELAY 0
 
 //printing buffers
 float hall_angle=0.0f;

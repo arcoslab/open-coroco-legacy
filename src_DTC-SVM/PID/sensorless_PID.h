@@ -18,7 +18,7 @@
  */
 
 
-void sensorless_pi_controller(
+void sensorless_speed_pi_controller(
      float reference_frequency, float frequency,float interrupt_frequency,float* rotating_angle);
  
 void sensorless_open_loop(
@@ -28,4 +28,5 @@ float psi_advance_calculator(float reference_frequency, float interrupt_frequenc
 
 void psi_finitite_state_machine (float reference_frequency, float real_frequency, float* rotating_angle);
 
-
+void sensorless_torque_pi_controller(
+                           float reference_torque, float torque,float switching_frequency, float* rotating_angle);

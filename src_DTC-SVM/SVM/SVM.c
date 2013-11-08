@@ -345,7 +345,8 @@ if (center_aligned_state==FIRST_HALF)
   psi_s_alpha_SVM = fast_vector_angle                               (psi_sQ,psi_sD);
 
   //w_r             = (1.0f/(2.0f*PI))*rotor_speed_w_r                                 (psi_sD,psi_sQ,TICK_PERIOD);
-  w_r             = 0.15915494309189533576f*rotor_speed_w_r                                 (psi_sD,psi_sQ,TICK_PERIOD);
+  //w_r             = 0.15915494309189533576f*rotor_speed_w_r                                 (psi_sD,psi_sQ,TICK_PERIOD);
+  w_r             = 0.15915494309189533576f*rotor_speed_w_r                                 (psi_sD,psi_sQ,TICK_PERIOD*2.0f);  //it has to be multiplied by two in order because the switching frequency is half the pwm frequency due to the two-cycle center-aligned signal
   
   t_e       = electromagnetic_torque_estimation_t_e   (psi_sD,i_sQ,psi_sQ,i_sD,pole_pairs);
   //t_e_ref = DTC_torque_reference_PI                 (CUR_FREQ, ref_freq);
@@ -355,7 +356,8 @@ if (center_aligned_state==FIRST_HALF)
 
   //--------------------------------SVM algorithm--------------------------------------------//
 
-  sensorless_pi_controller(ref_freq_SVM,w_r,PWMFREQ_F,&psi_rotating_angle_SVM);
+  sensorless_speed_pi_controller(ref_freq_SVM,w_r,PWMFREQ_F,&psi_rotating_angle_SVM);
+  //sensorless_torque_pi_controller(t_e_ref,t_e,TICK_PERIOD*2.0f,&psi_rotating_angle_SVM); 
 
   V_sD                   = SVM_V_s_ref_D               (psi_s_ref,psi_s,psi_s_alpha_SVM,psi_rotating_angle_SVM,i_sD,R_s,TICK_PERIOD);
   V_sQ                   = SVM_V_s_ref_Q               (psi_s_ref,psi_s,psi_s_alpha_SVM,psi_rotating_angle_SVM,i_sQ,R_s,TICK_PERIOD);
