@@ -370,10 +370,12 @@ else
 {
 gpio_set(GPIOD, GPIO9);
   V_s                    = vector_magnitude            (V_sQ,V_sD);
+  
   ////cita_V_s               = vector_angle                (V_sQ,V_sD);
   cita_V_s               = fast_vector_angle                (V_sQ,V_sD);
   V_s_ref_relative_angle = SVM_V_s_relative_angle      (cita_V_s);
-			   SVM_Maximum_allowed_V_s_ref (&V_s,U_d);
+                            //SVM_Maximum_allowed_V_s_ref (&V_s,U_d);   //maximum U_d
+			   SVM_Maximum_allowed_V_s_ref (&V_s,U_d*0.7f);
 
 
 

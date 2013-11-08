@@ -23,7 +23,8 @@
 float fast_sine(float angle);
 float fast_cos(float angle); 
 float fast_atan(float tan_value);
-//float fast_vector_angle(float quadrature, float direct);
+
+
 float fast_sine(float angle)
 {
   int rounded_angle; 
@@ -36,6 +37,21 @@ float fast_sine(float angle)
   return sine_table[rounded_angle];
 
 }
+
+/*
+float fast_sine(float angle)
+{
+  int rounded_angle; 
+ 
+  while (angle>=360.0f) { angle=angle-360.0f; }
+  while (angle<   0.0f) { angle=angle+360.0f; }
+  
+  rounded_angle=(( int )(angle*SIN_TABLE_SIZE_F/360.0f));
+  
+  return sine_table[rounded_angle];
+
+}
+*/
 /*
 float fast_cos(float angle)
 {
