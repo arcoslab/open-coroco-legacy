@@ -30,3 +30,5 @@ void psi_finitite_state_machine (float reference_frequency, float real_frequency
 
 void sensorless_torque_pi_controller(
                            float reference_torque, float torque,float switching_frequency, float* rotating_angle);
+
+

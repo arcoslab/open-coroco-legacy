@@ -152,8 +152,8 @@ void psi_finitite_state_machine (float reference_frequency, float actual_frequen
    
 }
 
-#define P_SENSORLESS_TORQUE             0.00001f
-#define P_DOWN_SENSORLESS_TORQUE        0.00001f 
+#define P_SENSORLESS_TORQUE             0.001f
+#define P_DOWN_SENSORLESS_TORQUE        0.001f 
 
 #define I_SENSORLESS_TORQUE             0.0f
 #define I_DOWN_SENSORLESS_TORQUE        0.0f

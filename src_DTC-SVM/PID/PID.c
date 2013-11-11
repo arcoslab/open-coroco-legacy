@@ -35,7 +35,7 @@
 float ref_freq_SVM=0.0f;
 
 float angle_hall1=0.0f;
-float t_e_ref=-0.5f;//-1.5;//-0.9f;//-0.15;//-1.6f;
+float t_e_ref=0.0f;//-1.5;//-0.9f;//-0.15;//-1.6f;
 int  print_selection              = 7;
 bool flux_linkage_capture         = false;
 int  flux_linkage_capture_counter = 0;
@@ -367,6 +367,20 @@ void frequency_input(void)
         }
         
         collecting_speed=true;
+
+      }	 
+      else if (strcmp(cmd, "z") == 0)
+      {
+        dtc_on=true;
+        t_e_ref=value;
+        motor_off=false;
+
+        if (t_e_ref==0.0f) 
+        { 
+          dtc_on=true;
+        }
+        
+        //collecting_speed=true;
 
       }	 
     }

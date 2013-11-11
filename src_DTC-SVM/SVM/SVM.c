@@ -307,7 +307,7 @@ float L_sq       = L_s_q_0;
 float psi_F      = psi_F_0;
 
 #define MINIMUM_SVM_FREQUENCY 0.5f
-void shutdown_SVM (float reference_frequency,float actual_frequency,bool* shutdown)
+void shutdown_SVM_speed (float reference_frequency,float actual_frequency,bool* shutdown)
 {
     if      ( *shutdown           == false && 
               reference_frequency == 0.0f  && 
@@ -317,6 +317,22 @@ void shutdown_SVM (float reference_frequency,float actual_frequency,bool* shutdo
     
     else if ( *shutdown           == true  &&  
               reference_frequency == 0.0f)                                                                                      
+    { *shutdown = true ;}
+ 
+    else                                                                                                                         
+    { *shutdown = false;}
+}
+#define MINIMUM_SVM_TORQUE 0.01f
+void shutdown_SVM_torque (float torque_reference,float actual_torque,bool* shutdown)
+{
+    if      ( *shutdown           == false && 
+              torque_reference == 0.0f  && 
+              actual_torque>-MINIMUM_SVM_TORQUE && 
+              actual_torque<MINIMUM_SVM_TORQUE) 
+    { *shutdown = true ;}
+    
+    else if ( *shutdown           == true  &&  
+              torque_reference == 0.0f)                                                                                      
     { *shutdown = true ;}
  
     else                                                                                                                         
@@ -356,8 +372,8 @@ if (center_aligned_state==FIRST_HALF)
 
   //--------------------------------SVM algorithm--------------------------------------------//
 
-  sensorless_speed_pi_controller(ref_freq_SVM,w_r,PWMFREQ_F,&psi_rotating_angle_SVM);
-  //sensorless_torque_pi_controller(t_e_ref,t_e,TICK_PERIOD*2.0f,&psi_rotating_angle_SVM); 
+  //sensorless_speed_pi_controller(ref_freq_SVM,w_r,PWMFREQ_F,&psi_rotating_angle_SVM);
+  sensorless_torque_pi_controller(t_e_ref,t_e,TICK_PERIOD*2.0f,&psi_rotating_angle_SVM); 
 
   V_sD                   = SVM_V_s_ref_D               (psi_s_ref,psi_s,psi_s_alpha_SVM,psi_rotating_angle_SVM,i_sD,R_s,TICK_PERIOD);
   V_sQ                   = SVM_V_s_ref_Q               (psi_s_ref,psi_s,psi_s_alpha_SVM,psi_rotating_angle_SVM,i_sQ,R_s,TICK_PERIOD);
@@ -392,7 +408,8 @@ gpio_set(GPIOD, GPIO9);
 
   SVM_phase_duty_cycles           (&duty_a, &duty_b, &duty_c, cita_V_s,T_max_on,T_med_on,T_min_on);
   static bool shutdown=true; 
-  shutdown_SVM (ref_freq_SVM,w_r,&shutdown);
+  //shutdown_SVM_speed (ref_freq_SVM,w_r,&shutdown);
+  shutdown_SVM_torque (t_e_ref,t_e,&shutdown);
   SVM_voltage_switch_inverter_VSI ( duty_a,  duty_b,  duty_c,shutdown);
 gpio_clear(GPIOD, GPIO9);
 }
