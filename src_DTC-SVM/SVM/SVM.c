@@ -372,8 +372,8 @@ if (center_aligned_state==FIRST_HALF)
 
   //--------------------------------SVM algorithm--------------------------------------------//
 
-  //sensorless_speed_pi_controller(ref_freq_SVM,w_r,PWMFREQ_F,&psi_rotating_angle_SVM);
-  sensorless_torque_pi_controller(t_e_ref,t_e,TICK_PERIOD*2.0f,&psi_rotating_angle_SVM); 
+  sensorless_speed_pi_controller(ref_freq_SVM,w_r,PWMFREQ_F,&psi_rotating_angle_SVM);
+  //sensorless_torque_pi_controller(t_e_ref,t_e,TICK_PERIOD*2.0f,&psi_rotating_angle_SVM); 
 
   V_sD                   = SVM_V_s_ref_D               (psi_s_ref,psi_s,psi_s_alpha_SVM,psi_rotating_angle_SVM,i_sD,R_s,TICK_PERIOD);
   V_sQ                   = SVM_V_s_ref_Q               (psi_s_ref,psi_s,psi_s_alpha_SVM,psi_rotating_angle_SVM,i_sQ,R_s,TICK_PERIOD);
@@ -408,8 +408,8 @@ gpio_set(GPIOD, GPIO9);
 
   SVM_phase_duty_cycles           (&duty_a, &duty_b, &duty_c, cita_V_s,T_max_on,T_med_on,T_min_on);
   static bool shutdown=true; 
-  //shutdown_SVM_speed (ref_freq_SVM,w_r,&shutdown);
-  shutdown_SVM_torque (t_e_ref,t_e,&shutdown);
+  shutdown_SVM_speed (ref_freq_SVM,w_r,&shutdown);
+  //shutdown_SVM_torque (t_e_ref,t_e,&shutdown);
   SVM_voltage_switch_inverter_VSI ( duty_a,  duty_b,  duty_c,shutdown);
 gpio_clear(GPIOD, GPIO9);
 }

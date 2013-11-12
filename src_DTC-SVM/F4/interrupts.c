@@ -22,11 +22,11 @@
 //printing buffers
 float hall_angle=0.0f;
 float PID_angle[SAMPLES];
-float current_data_i_sA[SAMPLES];
-float current_data_i_sB[SAMPLES];
-float switching_data_SA[SAMPLES];
-float switching_data_SB[SAMPLES];
-float switching_data_SC[SAMPLES];
+//float current_data_i_sA[SAMPLES];
+//float current_data_i_sB[SAMPLES];
+//float switching_data_SA[SAMPLES];
+//float switching_data_SB[SAMPLES];
+//float switching_data_SC[SAMPLES];
 
 bool  inductance_measure=true;
 
@@ -87,9 +87,9 @@ float data_psi_F[SAMPLES];
 
 int data_optimal_voltage_vector[SAMPLES];
 */
-float data_duty_a[SAMPLES];
-float data_duty_b[SAMPLES];
-float data_duty_c[SAMPLES];
+//float data_duty_a[SAMPLES];
+//float data_duty_b[SAMPLES];
+//float data_duty_c[SAMPLES];
 
 float data_phase_advance_SVM[SAMPLES];
 float data_V_s_ref_relative_angle[SAMPLES];
