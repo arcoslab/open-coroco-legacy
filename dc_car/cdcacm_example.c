@@ -70,7 +70,152 @@ void leds_init(void) {
   gpio_mode_setup(GPIOD, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO15);
 }
 
-void tim_init(void)
+
+
+void tim4_init(void) {
+	/* Enable TIM4 clock. and Port D clock */
+	rcc_peripheral_enable_clock(&RCC_APB1ENR, RCC_APB1ENR_TIM4EN);
+	rcc_peripheral_enable_clock(&RCC_AHB1ENR, RCC_AHB1ENR_IOPDEN);
+
+	//Set TIM4 channel (and complementary) output to alternate function push-pull'.
+	//f4 TIM4=> GIO12: CH1, GPIO13: CH2
+	gpio_mode_setup(GPIOD, GPIO_MODE_AF,GPIO_PUPD_NONE,GPIO12 | GPIO13);
+	gpio_set_af(GPIOD, GPIO_AF2, GPIO12 | GPIO13);
+
+
+	/* Reset TIM4 peripheral. */
+	timer_reset(TIM4);
+
+
+	timer_set_mode(TIM4, TIM_CR1_CKD_CK_INT, //For dead time and filter sampling, not important for now.
+		       TIM_CR1_CMS_EDGE,	//TIM_CR1_CMS_EDGE
+						//TIM_CR1_CMS_CENTER_1
+						//TIM_CR1_CMS_CENTER_2
+						//TIM_CR1_CMS_CENTER_3 la frequencia del pwm se divide a la mitad.
+			 TIM_CR1_DIR_UP);
+
+	timer_set_prescaler(TIM4, 1); //1 = disabled (max speed)
+	timer_set_repetition_counter(TIM4, 0); //disabled
+	timer_enable_preload(TIM4);
+	timer_continuous_mode(TIM4);
+	timer_slave_set_mode(TIM4, TIM_SMCR_SMS_EM3);
+	timer_set_oc_polarity_high(TIM4, TIM_OC1);
+	timer_set_oc_polarity_high(TIM4, TIM_OC2);
+	timer_ic_enable(TIM4, TIM_IC1);
+	timer_ic_enable(TIM4, TIM_IC2);
+	timer_ic_set_input(TIM4, TIM_IC1, TIM_IC_IN_TI1);
+	timer_ic_set_input(TIM4, TIM_IC2, TIM_IC_IN_TI1);
+
+	/* Period (32kHz). */
+	timer_set_period(TIM4, 1000); //ARR (value compared against main counter to reload counter aka: period of counter)
+
+	/* Configure break and deadtime. */
+	//timer_set_deadtime(TIM1, deadtime_percentage*pwm_period_ARR);
+	//timer_set_enabled_off_state_in_idle_mode(TIM1);
+	//timer_set_enabled_off_state_in_run_mode(TIM1);
+	//timer_disable_break(TIM1);
+	//timer_set_break_polarity_high(TIM1);
+	//timer_disable_break_automatic_output(TIM1);
+	//timer_set_break_lock(TIM1, TIM_BDTR_LOCK_OFF);
+
+	/* Disable outputs. */
+	timer_disable_oc_output(TIM4, TIM_OC1);
+	//timer_disable_oc_output(TIM1, TIM_OC1N);
+	timer_disable_oc_output(TIM4, TIM_OC2);
+	//timer_disable_oc_output(TIM1, TIM_OC2N);
+	timer_disable_oc_output(TIM4, TIM_OC3);
+	//timer_disable_oc_output(TIM1, TIM_OC3N);
+
+	/* -- OC1 and OC1N configuration -- */
+	/* Configure global mode of line 1. */
+	//timer_enable_oc_preload(TIM1, TIM_OC1);
+	//timer_set_oc_mode(TIM1, TIM_OC1, TIM_OCM_PWM1);
+	/* Configure OC1. */
+	//timer_set_oc_polarity_high(TIM1, TIM_OC1);
+	//timer_set_oc_idle_state_unset(TIM1, TIM_OC1); //When idle (braked) put 0 on output
+	/* Configure OC1N. */
+	//timer_set_oc_polarity_high(TIM1, TIM_OC1N);
+	//timer_set_oc_idle_state_unset(TIM1, TIM_OC1N);
+	/* Set the capture compare value for OC1. */
+	//timer_set_oc_value(TIM1, TIM_OC1, INIT_DUTY*PWM_PERIOD_ARR);//initial_duty_cycle*pwm_period_ARR);
+
+	/* -- OC2 and OC2N configuration -- */
+	/* Configure global mode of line 2. */
+	//timer_enable_oc_preload(TIM1, TIM_OC2);
+	//timer_set_oc_mode(TIM1, TIM_OC2, TIM_OCM_PWM1);
+	/* Configure OC2. */
+	//timer_set_oc_polarity_high(TIM1, TIM_OC2);
+	//timer_set_oc_idle_state_unset(TIM1, TIM_OC2);
+	/* Configure OC2N. */
+	//timer_set_oc_polarity_high(TIM1, TIM_OC2N);
+	//timer_set_oc_idle_state_unset(TIM1, TIM_OC2N);
+	/* Set the capture compare value for OC2. */
+	//timer_set_oc_value(TIM1, TIM_OC2, INIT_DUTY*PWM_PERIOD_ARR);//initial_duty_cycle*pwm_period_ARR);
+
+	/* -- OC3 and OC3N configuration -- */
+	/* Configure global mode of line 3. */
+	//timer_enable_oc_preload(TIM1, TIM_OC3);
+	//timer_set_oc_mode(TIM1, TIM_OC3, TIM_OCM_PWM1);
+	/* Configure OC3. */
+	//timer_set_oc_polarity_high(TIM1, TIM_OC3);
+	//timer_set_oc_idle_state_unset(TIM1, TIM_OC3);
+	/* Configure OC3N. */
+	//timer_set_oc_polarity_high(TIM1, TIM_OC3N);
+	//timer_set_oc_idle_state_unset(TIM1, TIM_OC3N);
+	/* Set the capture compare value for OC3. */
+	//timer_set_oc_value(TIM1, TIM_OC3, INIT_DUTY*PWM_PERIOD_ARR);//initial_duty_cycle*pwm_period_ARR);//100);
+
+	/* Reenable outputs. */
+	/* timer_enable_oc_output(TIM1, TIM_OC1); */
+	/* timer_enable_oc_output(TIM1, TIM_OC1N); */
+	/* timer_enable_oc_output(TIM1, TIM_OC2); */
+	/* timer_enable_oc_output(TIM1, TIM_OC2N); */
+	/* timer_enable_oc_output(TIM1, TIM_OC3); */
+	/* timer_enable_oc_output(TIM1, TIM_OC3N); */
+
+	/* ---- */
+
+	/* ARR reload enable. */
+	//timer_enable_preload(TIM1);
+
+	/*
+	 * Enable preload of complementary channel configurations and
+	 * update on COM event.
+	 */
+	//timer_enable_preload_complementry_enable_bits(TIM1);
+	timer_disable_preload_complementry_enable_bits(TIM4);
+
+	/* Enable outputs in the break subsystem. */
+	//timer_enable_break_main_output(TIM1);
+
+	/* Generate update event to reload all registers before starting*/
+	//timer_generate_event(TIM1, TIM_EGR_UG);
+
+	/* Counter enable. */
+	timer_enable_counter(TIM4);
+
+	/* Enable commutation interrupt. */
+	//timer_enable_irq(TIM1, TIM_DIER_COMIE);
+
+	/*********/
+	/*Capture compare interrupt*/
+
+	//enable capture compare interrupt
+	timer_enable_update_event(TIM4);
+
+	/* Enable commutation interrupt. */
+	//timer_enable_irq(TIM1, TIM_DIER_CC1IE);	//Capture/compare 1 interrupt enable
+	/* Enable commutation interrupt. */
+	//timer_enable_irq(TIM1, TIM_DIER_CC1IE);
+	timer_enable_irq(TIM4, TIM_DIER_UIE);
+	nvic_enable_irq(NVIC_TIM4_IRQ);
+
+
+
+
+}
+
+void tim1_init(void)
 {
 	/* Enable TIM1 clock. and Port E clock (for outputs) */
 	rcc_peripheral_enable_clock(&RCC_APB2ENR, RCC_APB2ENR_TIM1EN);
@@ -217,7 +362,8 @@ void system_init(void) {
   leds_init();
   cdcacm_init();
   printled(4, LRED);
-  tim_init();
+  tim1_init();
+  tim4_init();
 }
 
 /* void calc_freq(void) { */
@@ -366,6 +512,11 @@ void tim1_up_tim10_isr(void) {
   gen_pwm();
 }
 
+void tim4_isr(void) {
+  // Clear the update interrupt flag
+  timer_clear_flag(TIM4,  TIM_SR_UIF);
+}
+
 int main(void)
 {
   system_init();
@@ -373,6 +524,7 @@ int main(void)
   char cmd[10]="";
   int i;
   int c=0;
+  uint32_t encoder;
   setvbuf(stdin,NULL,_IONBF,0); // Sets stdin in unbuffered mode (normal for usart com)
   setvbuf(stdout,NULL,_IONBF,0); // Sets stdin in unbuffered mode (normal for usart com)
   //printled(3, LRED);
@@ -409,6 +561,7 @@ int main(void)
 	//printled(2, LRED);
       }
     }
+    encoder=timer_get_counter(TIM4);
     /* if (!close_loop) { */
     /*   while (poll(stdin) > 0) { */
     /* 	getc(stdin); */
@@ -418,6 +571,7 @@ int main(void)
     /*   //printf("Close loop\n"); */
     /* } */
     //printf(" e: %7.2f, e_p %6.2f, e_i: %6.2f, adv: %6.2f, c_f: %6.2f, r_f: %6.2f, att: %6.2f, counter %d, eof %d, buf: %s, v %f\n", error, p_error, i_error, pi_control*180.0f/PI, 1.0f/(period/TICK_PERIOD), ref_freq, attenuation, counter, eof, cmd, value);
-    printf("ref_freq %6.2f, duty_a: %6.2f\n", ref_freq, duty_a);
+    printf("ref_freq %6.2f, duty_a: %6.2f, encoder: %d\n", ref_freq, duty_a, encoder);
+
   }
 }
