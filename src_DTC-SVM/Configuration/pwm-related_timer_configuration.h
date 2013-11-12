@@ -18,7 +18,7 @@
 
 //pwm-related timer configuration
 #define SYSFREQ                              168000000 //168MHz
-#define PWMFREQ                                  54000//58000 //32000
+#define PWMFREQ                                  58000//58000 //32000
 #define PWMFREQ_F                  ((float )(PWMFREQ)) //32000.0f
 #define PWMFREQ_CENTER_ALIGNED_F   (PWMFREQ_F/2.0f)            
 

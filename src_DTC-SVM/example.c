@@ -87,14 +87,14 @@ int main(void)
 
   while (1)
   {
-    //printf("freq_ref:%6.2f :freq: %20.10f hall: %6.2f :Ud: %6.2f :te_ref: %6.2f :te: %6.2f\n",ref_freq_SVM,w_r,CUR_FREQ,U_d,t_e_ref,t_e);
+    printf("freq_ref:%6.2f :freq: %20.10f hall: %6.2f :Ud: %6.2f :te_ref: %6.2f :te: %6.2f\n",ref_freq_SVM,w_r,CUR_FREQ,U_d,t_e_ref,t_e);
     //printf ("pow 5^3: %f\n",powf(5.0f,3.0f));
  
      
 
 
-/*
- printf("original angle: %f y: %f x: %f fast_atanf: %f \n",
+
+/*printf("original angle: %f y: %20.12f x: %20.12f fast_atanf: %20.12f \n",
 ref_freq_SVM,
 fast_sine         (ref_freq_SVM),
 fast_cos          (ref_freq_SVM),
@@ -178,7 +178,7 @@ printf (":psi_sD:%9.6f:psi_sQ:%9.6f:psi_s:%6.5f:angle:%6.2f:psi_alpha:%2d:timer:
         }
 
 else if (print_selection==6)
-{
+{/*
 printf ("t:%5d:pa:%6.4f:iA:%6.2f:B:%6.2f:C:%6.2f:D:%6.2f:Q:%6.2f:S:%6.2f:c:%6.2f:pD:%7.4f:Q:%7.4f:s:%6.4f:a:%6.2f:r:%6.4f:w:%6.2f:te:%6.2f:VD:%6.2f:Q:%6.2f:s:%6.2f:c:%6.2f:r:%6.2f:T1:%4.2f:2:%4.2f:n:%5.2f:d:%4.2f:x:%4.2f:da:%4.2f:b:%4.2f:c:%4.2f:f:%6.2f:U:%6.2f:at:%10.8f:pi:%10.8f\n",
 timer[current_counter],
 
@@ -221,10 +221,10 @@ data_CUR_FREQ[current_counter],
 data_U_d[current_counter],
 data_attenuation[current_counter],
 data_pi_control_SVM[current_counter]
-);
+);*/
 }
 
-else if (print_selection== 7)// && data_ref_freq_SVM [current_counter] !=0.0f )
+else if (print_selection== 77)// && data_ref_freq_SVM [current_counter] !=0.0f )
 {
 
 
@@ -239,8 +239,8 @@ data_V_s          [current_counter]
 
 
 
-printf (":phase_adv: %12.8f :isA: %6.2f :isB: %6.2f :isC: %6.2f :isD: %6.2f :isQ: %6.2f :is: %6.2f :iscita: %6.2f :psisD: %7.4f :psisQ: %7.4f :psis: %6.4f :psisa: %6.2f :psiref: %6.4f :te: %6.2f :VsD: %8.2f :VsQ: %8.2f :Vs: %6.2f :Vscita: %6.2f :Vscitar: %6.2f :T1: %4.2f :T2: %4.2f :Tmin: %5.2f :Tmed: %4.2f :Tmax: %4.2f :duta: %4.2f :dutb: %4.2f :dutc: %4.2f :Ud: %6.2f :pi: %12.8f :maxpi: %12.8f\n",
-
+//printf (":phase_adv: %12.8f :isA: %6.2f :isB: %6.2f :isC: %6.2f :isD: %6.2f :isQ: %6.2f :is: %6.2f :iscita: %6.2f :psisD: %7.4f :psisQ: %7.4f :psis: %6.4f :psisa: %6.2f :psiref: %6.4f :te: %6.2f :VsD: %8.2f :VsQ: %8.2f :Vs: %6.2f :Vscita: %6.2f :Vscitar: %6.2f :T1: %4.2f :T2: %4.2f :Tmin: %5.2f :Tmed: %4.2f :Tmax: %4.2f :duta: %4.2f :dutb: %4.2f :dutc: %4.2f :Ud: %6.2f :pi: %12.8f :maxpi: %12.8f\n",
+printf (":phase_adv: %12.8f :isA: %6.2f :isB: %6.2f :isC: %6.2f :isD: %6.2f :isQ: %6.2f :is: %6.2f :iscita: %6.2f :psisD: %7.4f :psisQ: %7.4f :psis: %6.4f :psisa: %6.2f :psiref: %6.4f :te: %6.2f :VsD: %8.2f :VsQ: %8.2f :Vs: %6.2f :Vscita: %6.2f :Vscitar: %6.2f :T1: %4.2f :T2: %4.2f :Tmin: %5.2f :Tmed: %4.2f :Tmax: %4.2f :Ud: %6.2f :pi: %12.8f :maxpi: %12.8f\n",
 data_phase_advance_SVM[current_counter],
 
 data_i_sA [current_counter],
@@ -271,9 +271,9 @@ data_T_min_on[current_counter],
 data_T_med_on[current_counter],
 data_T_max_on[current_counter],
 
-data_duty_a[current_counter],
-data_duty_b[current_counter],
-data_duty_c[current_counter],
+//data_duty_a[current_counter],
+//data_duty_b[current_counter],
+//data_duty_c[current_counter],
 
 data_U_d[current_counter],
 data_pi_control_SVM[current_counter],

@@ -110,7 +110,7 @@ void collecting_samples(int sample_counter)
         timer          [sample_counter]=flux_linkage_capture_counter;
         
         //---------------------------------------
-        current_data_i_sB[sample_counter]=i_sB;
+        //current_data_i_sB[sample_counter]=i_sB;
 
 	data_CUR_FREQ[sample_counter]=CUR_FREQ;	
 /*
@@ -162,9 +162,9 @@ void collecting_samples(int sample_counter)
         PID_angle[sample_counter]=cmd_angle;//angle_hall1;
         data_w_r[sample_counter]=w_r;   
 
-        data_duty_a[sample_counter]=duty_a;
-        data_duty_b[sample_counter]=duty_b;
-        data_duty_c[sample_counter]=duty_c;
+        //data_duty_a[sample_counter]=duty_a;
+        //data_duty_b[sample_counter]=duty_b;
+        //data_duty_c[sample_counter]=duty_c;
 
         data_phase_advance_SVM[sample_counter]=phase_advance_SVM;
         data_V_s_ref_relative_angle[sample_counter]=V_s_ref_relative_angle;
@@ -178,7 +178,7 @@ void collecting_samples(int sample_counter)
         data_rotating_angle_SVM[sample_counter] =psi_rotating_angle_SVM;
 }
 
-
+/*
 void collecting_data(void)
 {
 
@@ -319,6 +319,7 @@ void collecting_data(void)
 
 
 //-------------------------------------------------------------------------
+*/
 /*
 void collecting_data_old(void)
 {
