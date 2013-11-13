@@ -54,7 +54,7 @@ float sine_linear_interpolation(float angle, int rounded_angle)
   return fixed_angle;
 }
 
-/*
+
 float fast_sine(float angle)
 {
   int rounded_angle; 
@@ -105,9 +105,9 @@ float fast_sine(float angle)
   //return sine_table[rounded_angle];
 
 }
-*/
 
 
+/*
 float fast_sine(float angle)
 {
   int rounded_angle; 
@@ -147,7 +147,7 @@ float fast_sine(float angle)
   //return sine_table[rounded_angle];
 
 }
-
+*/
 
 
 
@@ -198,7 +198,7 @@ float fast_cos(float angle)
 
 
 
-
+/*
 float fast_atan(float tan_value)
 {
   int rounded_tan;
@@ -208,7 +208,7 @@ float fast_atan(float tan_value)
   if  (rounded_tan<0.0f || rounded_tan>ATAN_TABLE_SIZE) { return 0.0f; }
   else                                                  { return atan_table[rounded_tan]; }
 }
-
+*/
 
 float atan_linear_interpolation(float transformed_tan,int rounded_tan)
 {
@@ -238,7 +238,7 @@ float atan_linear_interpolation(float transformed_tan,int rounded_tan)
   return fixed_atan;
 }
 
-/*
+
 float fast_atan(float tan_value)
 {
   int rounded_tan;
@@ -251,4 +251,4 @@ float fast_atan(float tan_value)
   if  (rounded_tan<0.0f || rounded_tan>ATAN_TABLE_SIZE) { return 0.0f; }
   else                                                  { return atan_linear_interpolation(transformed_tan,rounded_tan);}//atan_table[rounded_tan]; }
 }
-*/
+
