@@ -87,7 +87,7 @@ int main(void)
 
   while (1)
   {
-    printf("freq_ref:%6.2f :freq: %20.10f hall: %6.2f :Ud: %6.2f :te_ref: %6.2f :te: %6.2f\n",ref_freq_SVM,w_r,CUR_FREQ,U_d,t_e_ref,t_e);
+    //printf("freq_ref:%6.2f :freq: %20.10f hall: %6.2f :Ud: %6.2f :te_ref: %6.2f :te: %6.2f\n",ref_freq_SVM,w_r,CUR_FREQ,U_d,t_e_ref,t_e);
     //printf ("pow 5^3: %f\n",powf(5.0f,3.0f));
  
      
@@ -109,7 +109,8 @@ fast_vector_angle  (fast_sine(ref_freq_SVM), fast_cos(ref_freq_SVM))
       current_counter=0;
       printf ("\n\n****************************************************************************************************************\n");
 printf("t:t:freq_ref:freq_ref:freq:freq:hall_freq:hall_freq:Vs:Vs");
-printf (":phase_adv:phase_adv:isA:isA:isB:isB:isC:isC:isD:isD:isQ:isQ:is:is:iscita:iscita:psisD:psisD:psisQ:psisQ:psis:psis:psisa:psisa:psiref: psiref:te:te:VsD:VsD:VsQ:VsQ:Vs:Vs:Vscita:Vscita:Vscitar:Vscitar:T1:T1:T2:T2:Tmin:Tmin:Tmed:Tmed:Tmax:Tmax:duta:duta:dutb:dutb:dutc:dutc:Ud: Ud:pi:pi:maxpi:maxpi\n");
+//printf (":phase_adv:phase_adv:isA:isA:isB:isB:isC:isC:isD:isD:isQ:isQ:is:is:iscita:iscita:psisD:psisD:psisQ:psisQ:psis:psis:psisa:psisa:psiref: psiref:te:te:VsD:VsD:VsQ:VsQ:Vs:Vs:Vscita:Vscita:Vscitar:Vscitar:T1:T1:T2:T2:Tmin:Tmin:Tmed:Tmed:Tmax:Tmax:duta:duta:dutb:dutb:dutc:dutc:Ud: Ud:pi:pi:maxpi:maxpi\n");
+printf (":phase_adv:phase_adv:isA:isA:isB:isB:isC:isC:isD:isD:isQ:isQ:is:is:iscita:iscita:psisD:psisD:psisQ:psisQ:psis:psis:psisa:psisa:psiref: psiref:te:te:VsD:VsD:VsQ:VsQ:Vs:Vs:Vscita:Vscita:Vscitar:Vscitar:T1:T1:T2:T2:Tmin:Tmin:Tmed:Tmed:Tmax:Tmax:Ud:Ud:pi:pi:maxpi:maxpi\n");
 
       while (current_counter<SAMPLES-2)
       {
@@ -224,7 +225,7 @@ data_pi_control_SVM[current_counter]
 );*/
 }
 
-else if (print_selection== 77)// && data_ref_freq_SVM [current_counter] !=0.0f )
+else if (print_selection== 7)// && data_ref_freq_SVM [current_counter] !=0.0f )
 {
 
 

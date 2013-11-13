@@ -20,17 +20,42 @@
 
 
 
-#define P_SENSORLESS             0.00001f
-#define P_DOWN_SENSORLESS        0.00001f 
-
-#define I_SENSORLESS             0.0f
-#define I_DOWN_SENSORLESS        0.0f
+#define P_SENSORLESS             0.00001f//0.00001f
+#define P_DOWN_SENSORLESS        0.00001f//0.00001f 
+                                                   
+#define I_SENSORLESS             0.0f//0.000000000000001f //0.000000000001f
+#define I_DOWN_SENSORLESS        0.0f//0.000000000000001f //0.000000000001f
 
 #define I_MAX_SENSORLESS              (9.0f*400.0f/interrupt_frequency) 
 #define P_MAX_SENSORLESS              (9.0f*400.0f/interrupt_frequency) 
 #define PI_MAX_SENSORLESS             (9.0f*400.0f/interrupt_frequency) 
 #define PI_MIN_SENSORLESS            -(9.0f*400.0f/interrupt_frequency) 
 
+/*
+#define I_MAX_SENSORLESS              (0.05f*frequency/(interrupt_frequency2.0f)) 
+#define P_MAX_SENSORLESS              (0.05f*frequency/(interrupt_frequency*2.0f)) 
+#define PI_MAX_SENSORLESS             (0.05f*frequency/(interrupt_frequency*2.0f)) 
+#define PI_MIN_SENSORLESS            -(0.05f*frequency/(interrupt_frequency*2.0f)) 
+*/
+/*
+#define I_MAX_SENSORLESS              (90.0f*0.005f/(interrupt_frequency*2.0f)) 
+#define P_MAX_SENSORLESS              (90.0f*0.005f/(interrupt_frequency*2.0f)) 
+#define PI_MAX_SENSORLESS             (90.0f*0.005f/(interrupt_frequency*2.0f)) 
+#define PI_MIN_SENSORLESS            -(90.0f*0.005f/(interrupt_frequency*2.0f)) 
+*/
+/*
+#define I_MAX_SENSORLESS              (9.0f*400.0f/interrupt_frequency) 
+#define P_MAX_SENSORLESS              (9.0f*400.0f/interrupt_frequency) 
+#define PI_MAX_SENSORLESS             (9.0f*400.0f/interrupt_frequency) 
+#define PI_MIN_SENSORLESS            -(9.0f*400.0f/interrupt_frequency) 
+*/
+/*
+#define I_MAX_SENSORLESS              (90.0f*frequency/(interrupt_frequency/2.0f)) 
+#define P_MAX_SENSORLESS              (90.0f*frequency/(interrupt_frequency/2.0f)) 
+#define PI_MAX_SENSORLESS             (90.0f*frequency/(interrupt_frequency/2.0f)) 
+#define PI_MIN_SENSORLESS            -(90.0f*frequency/(interrupt_frequency/2.0f)) 
+*/
+//90.0f°frequency|(interrupt_frequency|2.0f)
 
 float SVM_pi_control=0.0f;
 float psi_rotating_angle_SVM=0.0f;
