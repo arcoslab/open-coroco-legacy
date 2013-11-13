@@ -77,6 +77,7 @@ int motor_off=true;//false;
 //colecting current command
 bool collecting_current=false;
 bool collecting_speed  =false;
+bool regular_print=true;
 
 void calc_freq(void) 
 {
@@ -267,94 +268,43 @@ void frequency_input(void)
     }
 
 
-     if (receive_a_string(cmd_s) ){
+     if (receive_a_string(cmd_s) )
+     {
       printf("%s", cmd_s);
       sscanf(cmd_s, "%s %f", cmd, &value);
       
-      if (strcmp(cmd, "f") == 0)
-      { //set ref freq
-	printf("New reference frequency: %f. Confirm? (Press \"y\")\n", value);
-	ref_freq=value;
-        //t_e_ref=value;
-	if (value == 0.0f) {
-	  motor_stop=true;
-	} else {
-	  printf("Motor on\n");
-	  motor_stop=false;
-	  motor_off=false;
-          counter_stop=0;
-
-          //collecting_current=true;
-          
-	}
-      
-      }
-
-      //collecting current command
-      else if (strcmp(cmd, "s") == 0)
-      {
-        //collecting_current=true;
-        
-        //flux_linkage_capture=true;
-        flux_linkage_capture_counter=0;
-        flux_limit_counter_1=0;
-        flux_limit_counter_2=0;
-        flux_limit_counter_3=0;
-        flux_limit_counter_4=0;
-        flux_limit_counter_5=0;
-        flux_limit_counter_6=0;
-        flux_limit_counter_7=0;
-        flux_limit_counter_8=0;
-        flux_limit_counter_9=0;
-        
-      }	 
-      //print current command
-      else if (strcmp(cmd, "i") == 0)
+      if (strcmp(cmd, "d") == 0)
       {
         print_selection=0;
-      }	 
-      //print flux-linkage command
-      else if (strcmp(cmd, "v") == 0)
-      {
-        print_selection=1;
-      }	 
-      //print torque command
-      else if (strcmp(cmd, "m") == 0)
-      {
-        print_selection=2;
-      }	 
-      else if (strcmp(cmd, "x") == 0)
-      {
-        print_selection=3;
-      }	 
-      else if (strcmp(cmd, "n") == 0)
-      {
-        print_selection=4;
-      }	 
-      else if (strcmp(cmd, "a") == 0)
-      {
-        print_selection=5;
-      }	 
-      else if (strcmp(cmd, "d") == 0)
-      {
-       //printf ("\n\n****************************************************************************************************************\n");
-        //printf("t:t:freq_ref:freq_ref :freq:freq:hall_freq:hall_freq:Vs:Vs");
-//printf (":phase_adv:phase_advance:isA:isA:isB:isB:isC:isC:isD:isD:isQ:isQ:is:is:iscita:is_cita:psisD:psisD:psisQ:psisQ:psis:psis:psisa: psisa:psiref:psisref:te:te:VsD:VsD:VsQ:VsQ:Vs:Vs:Vscita:Vscita:Vscitar:Vscitar:T1:T1:T2:T2:Tmin:Tmin:Tmed:Tmed:Tmax:Tmax:duta:dutya:dutb: dutyb:dutc:dutyc:Ud:Ud:pi:pi:pimax:pimax:\n");
-        //print_selection=5;
+        regular_print=true;
         dtc_on=true;
         ref_freq_SVM=value;
         motor_off=false;
 
         if (ref_freq_SVM==0.0f) 
         { 
-          dtc_on=true;//false; 
-          //motor_off=true; 
-          //printf("\nSVM and motor off\n");
+          dtc_on=true;
         }
         
         collecting_speed=true;
-
       }	 
+
+      if (strcmp(cmd, "s") == 0)
+      {
+        print_selection=7;
+        regular_print=false;
+        dtc_on=true;
+        ref_freq_SVM=value;
+        motor_off=false;
+        
+        if (ref_freq_SVM==0.0f) 
+        { 
+          dtc_on=true;
+        }
+        
+        collecting_speed=true;
+      }	
+
       else if (strcmp(cmd, "t") == 0)
       {
         dtc_on=true;
@@ -369,11 +319,12 @@ void frequency_input(void)
         collecting_speed=true;
 
       }	 
+
       else if (strcmp(cmd, "z") == 0)
       {
-        dtc_on=true;
-        t_e_ref=value;
-        motor_off=false;
+        dtc_on    = true;
+        t_e_ref   = value;
+        motor_off = false;
 
         if (t_e_ref==0.0f) 
         { 
