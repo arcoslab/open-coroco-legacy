@@ -1,4 +1,4 @@
-Cmp-Mod V01 Created by CvPcb (2013-jul-07)-stable date = Fri 29 Nov 2013 07:16:37 PM CST
+Cmp-Mod V01 Created by CvPcb (2013-jul-07)-stable date = Fri 29 Nov 2013 08:39:44 PM CST
 
 BeginCmp
 TimeStamp = /528E7FD9;
@@ -509,48 +509,6 @@ TimeStamp = /528E7B9F;
 Reference = STM32_CONN1;
 ValeurCmp = CONN_STM32_25X2;
 IdModule  = PIN_ARRAY_STM32_25X2;
-EndCmp
-
-BeginCmp
-TimeStamp = /528ED996;
-Reference = SW1;
-ValeurCmp = SW_PUSH_SMALL;
-IdModule  = SW_PUSH_SMALL;
-EndCmp
-
-BeginCmp
-TimeStamp = /528EDBBD;
-Reference = SW2;
-ValeurCmp = SW_PUSH_SMALL;
-IdModule  = SW_PUSH_SMALL;
-EndCmp
-
-BeginCmp
-TimeStamp = /528F8A44;
-Reference = SW3;
-ValeurCmp = SW_PUSH_SMALL;
-IdModule  = SW_PUSH_SMALL;
-EndCmp
-
-BeginCmp
-TimeStamp = /528EDBB1;
-Reference = SW4;
-ValeurCmp = SW_PUSH_SMALL;
-IdModule  = SW_PUSH_SMALL;
-EndCmp
-
-BeginCmp
-TimeStamp = /528EDE9E;
-Reference = SW5;
-ValeurCmp = SW_PUSH_SMALL;
-IdModule  = SW_PUSH_SMALL;
-EndCmp
-
-BeginCmp
-TimeStamp = /528EDE92;
-Reference = SW6;
-ValeurCmp = SW_PUSH_SMALL;
-IdModule  = SW_PUSH_SMALL;
 EndCmp
 
 EndListe
