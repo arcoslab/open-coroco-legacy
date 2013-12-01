@@ -1,7 +1,11 @@
-PCBNEW-LibModule-V1  Fri 29 Nov 2013 07:03:10 PM CST
+PCBNEW-LibModule-V1  Sun 01 Dec 2013 12:08:14 AM CST
 # encoding utf-8
 Units mm
 $INDEX
+10mm_C
+4mm_C
+6mm_C
+BIG_C1
 Battery_2x1
 Fuse
 PIN_ARRAY_STM32_25X2
@@ -15,7 +19,156 @@ TO220_Heat_Sink
 TO220_small_Heat_Sink_stand
 TO220_small_Heatsink_NO_copper
 TO220_small_Heatsink_stand_reduced_area
+regular_C
 $EndINDEX
+$MODULE 10mm_C
+Po 0 0 0 15 529AD23E 00000000 ~~
+Li 10mm_C
+Cd Condensateur e = 1 pas
+Kw C
+Sc 0
+AR 
+Op 0 0 0
+T0 0 2.413 1.016 1.016 0 0.2032 N V 21 N "10mm_C"
+T1 0 -2.286 1.016 1.016 0 0.2032 N I 21 N "V***"
+DC 0 0 5.08 0.508 0.15 21
+DS -2.4892 -1.27 2.54 -1.27 0.3048 21
+DS 2.54 -1.27 2.54 1.27 0.3048 21
+DS 2.54 1.27 -2.54 1.27 0.3048 21
+DS -2.54 1.27 -2.54 -1.27 0.3048 21
+DS -2.54 -0.635 -1.905 -1.27 0.3048 21
+$PAD
+Sh "1" C 1.397 1.397 0 0 0
+Dr 0.8128 0 0
+At STD N 00E0FFFF
+Ne 0 ""
+Po -1.27 0
+$EndPAD
+$PAD
+Sh "2" C 1.397 1.397 0 0 0
+Dr 0.8128 0 0
+At STD N 00E0FFFF
+Ne 0 ""
+Po 1.27 0
+$EndPAD
+$SHAPE3D
+Na "discret/capa_1_pas.wrl"
+Sc 1 1 1
+Of 0 0 0
+Ro 0 0 0
+$EndSHAPE3D
+$EndMODULE 10mm_C
+$MODULE 4mm_C
+Po 0 0 0 15 529ACA7D 00000000 ~~
+Li 4mm_C
+Cd Condensateur e = 1 pas
+Kw C
+Sc 0
+AR 
+Op 0 0 0
+T0 0 2.413 1.016 1.016 0 0.2032 N V 21 N "4mm_C"
+T1 0 -2.286 1.016 1.016 0 0.2032 N I 21 N "V***"
+DC 0 0 2.032 0.127 0.15 21
+DS -2.4892 -1.27 2.54 -1.27 0.3048 21
+DS 2.54 -1.27 2.54 1.27 0.3048 21
+DS 2.54 1.27 -2.54 1.27 0.3048 21
+DS -2.54 1.27 -2.54 -1.27 0.3048 21
+DS -2.54 -0.635 -1.905 -1.27 0.3048 21
+$PAD
+Sh "1" C 1.397 1.397 0 0 0
+Dr 0.8128 0 0
+At STD N 00E0FFFF
+Ne 0 ""
+Po -1.27 0
+$EndPAD
+$PAD
+Sh "2" C 1.397 1.397 0 0 0
+Dr 0.8128 0 0
+At STD N 00E0FFFF
+Ne 0 ""
+Po 1.27 0
+$EndPAD
+$SHAPE3D
+Na "discret/capa_1_pas.wrl"
+Sc 1 1 1
+Of 0 0 0
+Ro 0 0 0
+$EndSHAPE3D
+$EndMODULE 4mm_C
+$MODULE 6mm_C
+Po 0 0 0 15 529AD1DE 00000000 ~~
+Li 6mm_C
+Cd Condensateur e = 1 pas
+Kw C
+Sc 0
+AR 
+Op 0 0 0
+T0 0 2.413 1.016 1.016 0 0.2032 N V 21 N "6mm_C"
+T1 0 -2.286 1.016 1.016 0 0.2032 N I 21 N "V***"
+DC 0 0 3.175 0.381 0.15 21
+DS -2.4892 -1.27 2.54 -1.27 0.3048 21
+DS 2.54 -1.27 2.54 1.27 0.3048 21
+DS 2.54 1.27 -2.54 1.27 0.3048 21
+DS -2.54 1.27 -2.54 -1.27 0.3048 21
+DS -2.54 -0.635 -1.905 -1.27 0.3048 21
+$PAD
+Sh "1" C 1.397 1.397 0 0 0
+Dr 0.8128 0 0
+At STD N 00E0FFFF
+Ne 0 ""
+Po -1.27 0
+$EndPAD
+$PAD
+Sh "2" C 1.397 1.397 0 0 0
+Dr 0.8128 0 0
+At STD N 00E0FFFF
+Ne 0 ""
+Po 1.27 0
+$EndPAD
+$SHAPE3D
+Na "discret/capa_1_pas.wrl"
+Sc 1 1 1
+Of 0 0 0
+Ro 0 0 0
+$EndSHAPE3D
+$EndMODULE 6mm_C
+$MODULE BIG_C1
+Po 0 0 0 15 529AC991 00000000 ~~
+Li BIG_C1
+Cd Condensateur e = 1 pas
+Kw C
+Sc 0
+AR 
+Op 0 0 0
+T0 0 2.413 1.016 1.016 0 0.2032 N V 21 N "BIG_C"
+T1 0 -2.286 1.016 1.016 0 0.2032 N I 21 N "V***"
+DC 0 0 5.08 0.508 0.15 21
+DS -2.4892 -1.27 2.54 -1.27 0.3048 21
+DS 2.54 -1.27 2.54 1.27 0.3048 21
+DS 2.54 1.27 -2.54 1.27 0.3048 21
+DS -2.54 1.27 -2.54 -1.27 0.3048 21
+DS -2.54 -0.635 -1.905 -1.27 0.3048 21
+$PAD
+Sh "1" C 1.397 1.397 0 0 0
+Dr 0.8128 0 0
+At STD N 00E0FFFF
+Ne 0 ""
+Po -1.27 0
+$EndPAD
+$PAD
+Sh "2" C 1.397 1.397 0 0 0
+Dr 0.8128 0 0
+At STD N 00E0FFFF
+Ne 0 ""
+Po 1.27 0
+$EndPAD
+$SHAPE3D
+Na "discret/capa_1_pas.wrl"
+Sc 1 1 1
+Of 0 0 0
+Ro 0 0 0
+$EndSHAPE3D
+$EndMODULE BIG_C1
 $MODULE Battery_2x1
 Po 0 0 0 15 52993927 00000000 ~~
 Li Battery_2x1
@@ -1230,4 +1383,41 @@ Of 0 0 0
 Ro 0 0 0
 $EndSHAPE3D
 $EndMODULE TO220_small_Heatsink_stand_reduced_area
+$MODULE regular_C
+Po 0 0 0 15 529ACA13 00000000 ~~
+Li regular_C
+Cd Condensateur e = 1 pas
+Kw C
+Sc 0
+AR 
+Op 0 0 0
+T0 0 2.413 1.016 1.016 0 0.2032 N V 21 N "regular_C"
+T1 0 -2.286 1.016 1.016 0 0.2032 N I 21 N "V***"
+DC 0 0 3.175 0.381 0.15 21
+DS -2.4892 -1.27 2.54 -1.27 0.3048 21
+DS 2.54 -1.27 2.54 1.27 0.3048 21
+DS 2.54 1.27 -2.54 1.27 0.3048 21
+DS -2.54 1.27 -2.54 -1.27 0.3048 21
+DS -2.54 -0.635 -1.905 -1.27 0.3048 21
+$PAD
+Sh "1" C 1.397 1.397 0 0 0
+Dr 0.8128 0 0
+At STD N 00E0FFFF
+Ne 0 ""
+Po -1.27 0
+$EndPAD
+$PAD
+Sh "2" C 1.397 1.397 0 0 0
+Dr 0.8128 0 0
+At STD N 00E0FFFF
+Ne 0 ""
+Po 1.27 0
+$EndPAD
+$SHAPE3D
+Na "discret/capa_1_pas.wrl"
+Sc 1 1 1
+Of 0 0 0
+Ro 0 0 0
+$EndSHAPE3D
+$EndMODULE regular_C
 $EndLIBRARY

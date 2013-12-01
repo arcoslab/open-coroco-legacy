@@ -1,4 +1,4 @@
-Cmp-Mod V01 Created by CvPcb (2013-jul-07)-stable date = Fri 29 Nov 2013 08:39:44 PM CST
+Cmp-Mod V01 Created by CvPcb (2013-jul-07)-stable date = Sun 01 Dec 2013 12:09:25 AM CST
 
 BeginCmp
 TimeStamp = /528E7FD9;
@@ -39,49 +39,105 @@ BeginCmp
 TimeStamp = /528ED398;
 Reference = C1;
 ValeurCmp = 1000uF;
-IdModule  = C1;
+IdModule  = 10mm_C;
 EndCmp
 
 BeginCmp
 TimeStamp = /528ED3A5;
 Reference = C2;
 ValeurCmp = 1000uF;
-IdModule  = C1;
+IdModule  = 10mm_C;
 EndCmp
 
 BeginCmp
 TimeStamp = /528ED3AB;
 Reference = C3;
 ValeurCmp = 100uF;
-IdModule  = C1;
+IdModule  = 6mm_C;
 EndCmp
 
 BeginCmp
 TimeStamp = /528ED3B1;
 Reference = C4;
 ValeurCmp = 100uF;
-IdModule  = C1;
+IdModule  = 6mm_C;
 EndCmp
 
 BeginCmp
 TimeStamp = /528E7FCA;
 Reference = C5;
 ValeurCmp = 100uF;
-IdModule  = C1;
+IdModule  = 6mm_C;
 EndCmp
 
 BeginCmp
 TimeStamp = /528E8AD5;
 Reference = C6;
 ValeurCmp = 100uF;
-IdModule  = C1;
+IdModule  = 6mm_C;
 EndCmp
 
 BeginCmp
 TimeStamp = /528E81F6;
 Reference = C7;
 ValeurCmp = 100u;
-IdModule  = C1;
+IdModule  = 6mm_C;
+EndCmp
+
+BeginCmp
+TimeStamp = /529ACC7C;
+Reference = C8;
+ValeurCmp = 0.1uF;
+IdModule  = 6mm_C;
+EndCmp
+
+BeginCmp
+TimeStamp = /529ACFDF;
+Reference = C9;
+ValeurCmp = 2.2uF;
+IdModule  = 6mm_C;
+EndCmp
+
+BeginCmp
+TimeStamp = /529AD32E;
+Reference = C10;
+ValeurCmp = 0.1uF;
+IdModule  = 6mm_C;
+EndCmp
+
+BeginCmp
+TimeStamp = /529AD130;
+Reference = C11;
+ValeurCmp = 0.33uF;
+IdModule  = 6mm_C;
+EndCmp
+
+BeginCmp
+TimeStamp = /529AD65D;
+Reference = C12;
+ValeurCmp = 1000uF;
+IdModule  = 10mm_C;
+EndCmp
+
+BeginCmp
+TimeStamp = /529AD663;
+Reference = C13;
+ValeurCmp = 1000uF;
+IdModule  = 10mm_C;
+EndCmp
+
+BeginCmp
+TimeStamp = /529AD669;
+Reference = C14;
+ValeurCmp = 100uF;
+IdModule  = 6mm_C;
+EndCmp
+
+BeginCmp
+TimeStamp = /529AD66F;
+Reference = C15;
+ValeurCmp = 100uF;
+IdModule  = 6mm_C;
 EndCmp
 
 BeginCmp
