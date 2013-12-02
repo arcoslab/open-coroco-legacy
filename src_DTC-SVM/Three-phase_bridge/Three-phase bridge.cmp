@@ -1,4 +1,4 @@
-Cmp-Mod V01 Created by CvPcb (2013-jul-07)-stable date = Mon 02 Dec 2013 03:10:02 AM CST
+Cmp-Mod V01 Created by CvPcb (2013-jul-07)-stable date = Mon 02 Dec 2013 04:25:30 AM CST
 
 BeginCmp
 TimeStamp = /528E7FD9;
@@ -141,6 +141,20 @@ IdModule  = 6mm_C;
 EndCmp
 
 BeginCmp
+TimeStamp = /529C5E57;
+Reference = C16;
+ValeurCmp = 10uF;
+IdModule  = 6mm_C;
+EndCmp
+
+BeginCmp
+TimeStamp = /529C5E5D;
+Reference = C17;
+ValeurCmp = 100uF;
+IdModule  = 6mm_C;
+EndCmp
+
+BeginCmp
 TimeStamp = /528EE57D;
 Reference = D1;
 ValeurCmp = LED;
@@ -164,6 +178,13 @@ EndCmp
 BeginCmp
 TimeStamp = /528E9B75;
 Reference = D4;
+ValeurCmp = LED;
+IdModule  = LED-5MM;
+EndCmp
+
+BeginCmp
+TimeStamp = /529C678E;
+Reference = D5;
 ValeurCmp = LED;
 IdModule  = LED-5MM;
 EndCmp
