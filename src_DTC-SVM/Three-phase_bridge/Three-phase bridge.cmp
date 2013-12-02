@@ -1,4 +1,4 @@
-Cmp-Mod V01 Created by CvPcb (2013-jul-07)-stable date = Mon 02 Dec 2013 04:25:30 AM CST
+Cmp-Mod V01 Created by PcbNew date = Mon 02 Dec 2013 04:57:27 AM CST
 
 BeginCmp
 TimeStamp = /528E7FD9;
@@ -214,14 +214,14 @@ BeginCmp
 TimeStamp = /528E8261;
 Reference = INA1;
 ValeurCmp = INA148;
-IdModule  = SO8N;
+IdModule  = INA_148;
 EndCmp
 
 BeginCmp
 TimeStamp = /528E8B20;
 Reference = INA2;
 ValeurCmp = INA148;
-IdModule  = SO8N;
+IdModule  = INA_148;
 EndCmp
 
 BeginCmp
