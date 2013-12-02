@@ -1,4 +1,4 @@
-Cmp-Mod V01 Created by CvPcb (2013-jul-07)-stable date = Mon 02 Dec 2013 06:42:33 AM CST
+Cmp-Mod V01 Created by PcbNew date = Mon 02 Dec 2013 02:38:49 PM CST
 
 BeginCmp
 TimeStamp = /528E7FD9;
@@ -557,42 +557,42 @@ BeginCmp
 TimeStamp = /528E7FAC;
 Reference = S1;
 ValeurCmp = IRF1010N;
-IdModule  = TO220_Big_Heat_Sink;
+IdModule  = TO220_Big_Heat_Sink_Drain_Sink;
 EndCmp
 
 BeginCmp
 TimeStamp = /528E81F0;
 Reference = S2;
 ValeurCmp = IRF1010N;
-IdModule  = TO220_Big_Heat_Sink;
+IdModule  = TO220_Big_Heat_Sink_Drain_Sink;
 EndCmp
 
 BeginCmp
 TimeStamp = /528E8AC9;
 Reference = S3;
 ValeurCmp = IRF1010N;
-IdModule  = TO220_Big_Heat_Sink;
+IdModule  = TO220_Big_Heat_Sink_Drain_Sink;
 EndCmp
 
 BeginCmp
 TimeStamp = /528E7FBB;
 Reference = S4;
 ValeurCmp = IRF1010N;
-IdModule  = TO220_Big_Heat_Sink;
+IdModule  = TO220_Big_Heat_Sink_Drain_Sink;
 EndCmp
 
 BeginCmp
 TimeStamp = /528E81EA;
 Reference = S5;
 ValeurCmp = IRF1010N;
-IdModule  = TO220_Big_Heat_Sink;
+IdModule  = TO220_Big_Heat_Sink_Drain_Sink;
 EndCmp
 
 BeginCmp
 TimeStamp = /528E8ACF;
 Reference = S6;
 ValeurCmp = IRF1010N;
-IdModule  = TO220_Big_Heat_Sink;
+IdModule  = TO220_Big_Heat_Sink_Drain_Sink;
 EndCmp
 
 BeginCmp
