@@ -1,4 +1,4 @@
-Cmp-Mod V01 Created by PcbNew date = Mon 02 Dec 2013 02:38:49 PM CST
+Cmp-Mod V01 Created by CvPcb (2013-jul-07)-stable date = Wed 04 Dec 2013 01:35:54 PM CST
 
 BeginCmp
 TimeStamp = /528E7FD9;
@@ -599,6 +599,13 @@ BeginCmp
 TimeStamp = /528E7B9F;
 Reference = STM32_CONN1;
 ValeurCmp = CONN_STM32_25X2;
+IdModule  = PIN_ARRAY_STM32_25X2;
+EndCmp
+
+BeginCmp
+TimeStamp = /529ED012;
+Reference = STM32_CONN_Passive1;
+ValeurCmp = CONN_STM32_25X2_PASSIVE;
 IdModule  = PIN_ARRAY_STM32_25X2;
 EndCmp
 
