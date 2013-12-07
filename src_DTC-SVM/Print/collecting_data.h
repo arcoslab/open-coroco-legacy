@@ -23,3 +23,4 @@ void collecting_samples(int counter);
 void collecting_data(void);
 void print_regular_data(void);
 void print_captured_data(void);
+void print_float_as_bytes(float value);

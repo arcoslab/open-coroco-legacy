@@ -226,11 +226,17 @@ void print_captured_data(void)
           );
 }
 
+union float_union_t
+{
+    float f;
+    char byte[sizeof(float)];
+};
+
 
 
 void print_regular_data(void)
 {
-   printf("freq_ref:%6.2f :freq: %20.10f hall: %6.2f :Ud: %6.2f :te_ref: %6.2f :te: %6.2f\n",
+   printf("X freq_ref %6.2f freq %20.10f hall %6.2f Ud %6.2f te_ref %6.2f te %6.2f\n",
    ref_freq_SVM,w_r,CUR_FREQ,U_d,t_e_ref,t_e);
 
       /*printf("original angle: %f y: %20.12f x: %20.12f fast_atanf: %20.12f \n",
@@ -240,4 +246,27 @@ void print_regular_data(void)
       fast_vector_angle  (fast_sine(ref_freq_SVM), fast_cos(ref_freq_SVM))
       );       
       */
+
+/*
+    printf ("X freq_ref ");
+    print_float_as_bytes(45.2f);
+    printf (" size ");
+
+    print_float_as_bytes( (float) sizeof(float) );
+    printf("\n");
+*/
+}
+
+void print_float_as_bytes(float floating_value)
+{
+    unsigned int i=0;
+    union float_union_t float_byte;
+
+    float_byte.f=floating_value;
+
+    while (i<sizeof(float))
+    {
+      printf("%c",float_byte.byte[i]);
+      i++;
+    }
 }
