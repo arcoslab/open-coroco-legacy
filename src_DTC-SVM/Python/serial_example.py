@@ -22,14 +22,22 @@
 import serial
 from serial import SerialException
 import struct
+import select
 import sys
 
 
 def bytes_to_float(string_of_bytes):
-    tuplet_float= struct.unpack_from('f',string_of_bytes)
-    return tuplet_float[0]
+    if len(string_of_bytes)<4:  #if there are not 4 bytes then it cannot be translated into a float and therefore an error is obtained
+        return 0.0
+    else:
+        tuplet_float= struct.unpack_from('f',string_of_bytes)
+        return tuplet_float[0]
 
-
+'''
+def bytes_to_float(string_of_bytes):
+        tuplet_float= struct.unpack_from('f',string_of_bytes)
+        return tuplet_float[0]
+'''
 
 class Serial_Stm32f4(object):
 	
@@ -44,8 +52,10 @@ class Serial_Stm32f4(object):
                 self.ser.flushInput()
                 print "Connected to the STM32F4"
             except SerialException:
-                print"exception, cua cua"
+                print"Disconnected from the STM32, cua cua"
                 i=i+1
+                if (i>100):
+                    i=0
                 connecting=True
             
 
@@ -69,34 +79,46 @@ class Serial_Stm32f4(object):
 
             split_info = info.split()
 	  
-            for i in range( len(split_info) ):
-                if   split_info[i] == "freq_ref" : self.freq_ref  = bytes_to_float(split_info[i+1])
-                elif split_info[i] == "freq"     : self.freq      = bytes_to_float(split_info[i+1])
-                elif split_info[i] == "hall"     : self.hall_freq = bytes_to_float(split_info[i+1])
-                elif split_info[i] == "Ud"       : self.Ud        = bytes_to_float(split_info[i+1])
-                elif split_info[i] == "te_ref"   : self.te_ref    = bytes_to_float(split_info[i+1])
-                elif split_info[i] == "te"       : self.te        = bytes_to_float(split_info[i+1])
-                elif split_info[i] == "size"     : self.size      = bytes_to_float(split_info[i+1])
+            for i in range( len(split_info)):
+                if i+1<len(split_info):
+                    if   split_info[i] == "freq_ref" : self.freq_ref  = bytes_to_float(split_info[i+1])
+                    elif split_info[i] == "freq"     : self.freq      = bytes_to_float(split_info[i+1])
+                    elif split_info[i] == "hall"     : self.hall_freq = bytes_to_float(split_info[i+1])
+                    elif split_info[i] == "Ud"       : self.Ud        = bytes_to_float(split_info[i+1])
+                    elif split_info[i] == "te_ref"   : self.te_ref    = bytes_to_float(split_info[i+1])
+                    elif split_info[i] == "te"       : self.te        = bytes_to_float(split_info[i+1])
+                    elif split_info[i] == "size"     : self.size      = bytes_to_float(split_info[i+1])
               
             for data in split_info:    
-                print "reference frequency: "+str(self.freq_ref)+"hall_freq: "+str(self.hall_freq)+" electric_frequency: "+str(self.freq)+"Ud: "+str(self.Ud)+"te_ref: "+str(self.te_ref)+"te: "+str(self.te)
+                print "reference frequency: %6.2f " % self.freq_ref +"hall_freq: %6.2f " % self.hall_freq+" electric_frequency: %6.2f "%self.freq +"Ud: %6.2f " % self.Ud+"te_ref: %6.2f "%self.te_ref+"te: %6.2f "%self.te
+                #print "Ud: %6.2f " % self.Ud
 
             #sys.stdout.write("\n")
 
-#
-    def write(self):		
-		string = raw_input() #esto no estoy segura pero podria funkar jaja
-		self.ser.write(string)
-      
 
+    def write(self):	
+        while sys.stdin in select.select([sys.stdin], [], [], 0)[0]:	#read from standart input if there is something, otherwise not 
+            line = sys.stdin.readline()
+            if line:
+                self.ser.write(line)
+            else: # an empty line means stdin has been closed
+                print "nothing"
 
+        #print string		
+        #self.ser.write(string)
+        '''self.ser.write("d")
+        self.ser.write(" ")
+        self.ser.write("50")
+        self.ser.write("\n")
+        self.ser.write("\r")   
+'''
 
-#main
 def main():
     try:
         stm32f4 = Serial_Stm32f4()
         while True:
             stm32f4.read()
+            stm32f4.write()
     except KeyboardInterrupt:
         print " " 
         print "Sorry, Ctrl-C..."

@@ -236,8 +236,8 @@ union float_union_t
 
 void print_regular_data(void)
 {
-   printf("X freq_ref %6.2f freq %20.10f hall %6.2f Ud %6.2f te_ref %6.2f te %6.2f\n",
-   ref_freq_SVM,w_r,CUR_FREQ,U_d,t_e_ref,t_e);
+//   printf("X freq_ref %6.2f freq %20.10f hall %6.2f Ud %6.2f te_ref %6.2f te %6.2f\n",
+//s   ref_freq_SVM,w_r,CUR_FREQ,U_d,t_e_ref,t_e);
 
       /*printf("original angle: %f y: %20.12f x: %20.12f fast_atanf: %20.12f \n",
       ref_freq_SVM,
@@ -247,15 +247,25 @@ void print_regular_data(void)
       );       
       */
 
-/*
-    printf ("X freq_ref ");
-    print_float_as_bytes(45.2f);
-    printf (" size ");
 
-    print_float_as_bytes( (float) sizeof(float) );
+    printf(" X ");
+    printf (" freq_ref ");
+    print_float_as_bytes(ref_freq_SVM);
+    printf (" fre   q ");
+    print_float_as_bytes(w_r);
+    printf (" hall ");
+    print_float_as_bytes(CUR_FREQ);
+    printf (" Ud ");
+    print_float_as_bytes(U_d);
+    printf (" te_ref ");
+    print_float_as_bytes(t_e_ref);
+    printf (" te ");
+    print_float_as_bytes(t_e);
     printf("\n");
-*/
+
 }
+
+
 
 void print_float_as_bytes(float floating_value)
 {
