@@ -33,11 +33,6 @@ def bytes_to_float(string_of_bytes):
         tuplet_float= struct.unpack_from('f',string_of_bytes)
         return tuplet_float[0]
 
-'''
-def bytes_to_float(string_of_bytes):
-        tuplet_float= struct.unpack_from('f',string_of_bytes)
-        return tuplet_float[0]
-'''
 
 class Serial_Stm32f4(object):
 	
@@ -88,34 +83,38 @@ class Serial_Stm32f4(object):
                     elif split_info[i] == "te_ref"   : self.te_ref    = bytes_to_float(split_info[i+1])
                     elif split_info[i] == "te"       : self.te        = bytes_to_float(split_info[i+1])
                     elif split_info[i] == "size"     : self.size      = bytes_to_float(split_info[i+1])
-              
-            for data in split_info:    
-                print "reference frequency: %6.2f " % self.freq_ref +"hall_freq: %6.2f " % self.hall_freq+" electric_frequency: %6.2f "%self.freq +"Ud: %6.2f " % self.Ud+"te_ref: %6.2f "%self.te_ref+"te: %6.2f "%self.te
-                #print "Ud: %6.2f " % self.Ud
+  
+            if sys.stdin in select.select([sys.stdin], [], [], 0)[0]:
+                print "line"
+            #else:    
+                #for data in split_info:    
+                    #print "reference frequency: %6.2f " % self.freq_ref +"hall_freq: %6.2f " % self.hall_freq+" electric_frequency: %6.2f "%self.freq +"Ud: %6.2f " % self.Ud+"te_ref: %6.2f "%self.te_ref+"te: %6.2f "%self.te
+                #sys.stdout.write("\n")
 
-            #sys.stdout.write("\n")
-
+     
 
     def write(self):	
         while sys.stdin in select.select([sys.stdin], [], [], 0)[0]:	#read from standart input if there is something, otherwise not 
             line = sys.stdin.readline()
+            #print "print"+line
+            sys.stdout.write("out"+line)
             if line:
                 self.ser.write(line)
+                self.ser.write('\n')
+                self.ser.write('\r')
             else: # an empty line means stdin has been closed
                 print "nothing"
 
-        #print string		
-        #self.ser.write(string)
-        '''self.ser.write("d")
-        self.ser.write(" ")
-        self.ser.write("50")
-        self.ser.write("\n")
-        self.ser.write("\r")   
-'''
+
+
 
 def main():
     try:
         stm32f4 = Serial_Stm32f4()
+        #line ="d 200"
+        #stm32f4.ser.write(line)
+        #stm32f4.ser.write('\n')
+        #stm32f4.ser.write('\r')
         while True:
             stm32f4.read()
             stm32f4.write()
