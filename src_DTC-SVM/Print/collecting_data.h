@@ -19,7 +19,8 @@
 
 void collecting_floating_data(void);
 void collecting_speed_data (void);
-void collecting_samples(int counter);
+//void collecting_samples(int counter);
+void collecting_samples(void);
 void collecting_data(void);
 void print_regular_data(void);
 void print_captured_data(void);

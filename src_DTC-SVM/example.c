@@ -81,8 +81,17 @@ int main(void)
 
   while (1)
   {
-    frequency_input();
+    if (transmitting_to_python==true)
+    {
+        print_regular_data();
+        transmitting_to_python=false;
+        collecting_sensorless_data=true; 
+    }
+    //else 
+      //  print_regular_data();
 
+    frequency_input();
+/*
     if (regular_print==true)
     {
       print_regular_data();
@@ -96,6 +105,9 @@ int main(void)
       printf ("\n\n**************************************************************************************************************\n");
       printf("t:t:freq_ref:freq_ref:freq:freq:hall_freq:hall_freq:Vs:Vs");
       printf(":phase_adv:phase_adv:isA:isA:isB:isB:isC:isC:isD:isD:isQ:isQ:is:is:iscita:iscita:psisD:psisD:psisQ:psisQ:psis:psis:psisa:psisa:psiref: psiref:te:te:VsD:VsD:VsQ:VsQ:Vs:Vs:Vscita:Vscita:Vscitar:Vscitar:T1:T1:T2:T2:Tmin:Tmin:Tmed:Tmed:Tmax:Tmax:Ud:Ud:pi:pi:maxpi:maxpi\n");
+
+      if (SAMPLES==1)
+        print_captured_data();
 
 
       while (current_counter<SAMPLES-1)
@@ -112,5 +124,7 @@ int main(void)
       print_current=false;
       current_counter=0;
     }
+*/
+
   }
 }

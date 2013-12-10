@@ -18,15 +18,38 @@
  */
 
 
+bool collecting_sensorless_data = true;
+bool transmitting_to_python = false;
+
+
+
 #define COLLECTING_SPEED_DELAY 0
 
 void collecting_floating_data(void)
 {
 
-  static int countaa=0;
-  static int delay  =0;
-  static int absotule_time=0;
   
+  //static int countaa=0;
+  //static int delay  =0;
+  //static int absotule_time=0;
+  
+  if (collecting_sensorless_data==true)
+  {
+    collecting_sensorless_data=false;
+    collecting_samples();
+    transmitting_to_python=true;
+  }
+    timer++;
+    //if (timer>30000)
+        //timer=0;
+
+  //********************//
+  //collecting_speed=true;  //para hacer que siempre capture dato (comentar si se quiere que solo capture al cambiar la referencia)
+  //current_counter=0;
+  //********************//
+
+
+/*
   if (collecting_speed==true)
   {
 
@@ -35,15 +58,6 @@ void collecting_floating_data(void)
 
       if (delay>COLLECTING_SPEED_DELAY || (absotule_time==0) ) 
       {
-/*
-        data_V_s          [countaa] = V_s;
-        data_w_r          [countaa] = w_r;
-        data_ref_freq_SVM [countaa] = ref_freq_SVM;
-        
-        data_state_SVM    [countaa] = state;
-        data_CUR_FREQ     [countaa] = CUR_FREQ;
-*/
-        
         collecting_samples(countaa);
         timer[countaa] = absotule_time;
         countaa++;
@@ -67,8 +81,11 @@ void collecting_floating_data(void)
     delay=0;    
   }
   
-
+*/
 }
+
+
+
 /*
 void collecting_speed_data(void)
 {
@@ -91,13 +108,13 @@ void collecting_speed_data(void)
 
 }
 */
-void collecting_samples(int sample_counter)
+void collecting_samples(void)
 {
-
+/*
         data_V_s          [sample_counter] = V_s;
         data_w_r          [sample_counter] = w_r;
         data_ref_freq_SVM [sample_counter] = ref_freq_SVM;
-        //timer             [sample_counter] = absotule_time;
+
         data_state_SVM    [sample_counter] = state;
         data_CUR_FREQ     [sample_counter] = CUR_FREQ;
 
@@ -109,27 +126,16 @@ void collecting_samples(int sample_counter)
         data_U_d       [sample_counter]=U_d;
         timer          [sample_counter]=flux_linkage_capture_counter;
         
-        //---------------------------------------
-        //current_data_i_sB[sample_counter]=i_sB;
+	    data_CUR_FREQ[sample_counter]=CUR_FREQ;	
 
-	data_CUR_FREQ[sample_counter]=CUR_FREQ;	
-/*
-        data_S_A[sample_counter]=S_A;
-        data_S_B[sample_counter]=S_B;
-        data_S_C[sample_counter]=S_C;
-
-        data_S_A_f[sample_counter]=S_A_f;
-        data_S_B_f[sample_counter]=S_B_f;
-        data_S_C_f[sample_counter]=S_C_f;
-*/
         data_i_sA [sample_counter]=i_sA;
         data_i_sB [sample_counter]=i_sB;
         data_U_d  [sample_counter]=U_d;
 
         data_i_sD[sample_counter]=i_sD;
         data_i_sQ[sample_counter]=i_sQ;
-        data_i_s[sample_counter]=i_s;
-        data_cita_i_s[sample_counter]=cita_i_s;
+        //data_i_s[sample_counter]=i_s;
+        //data_cita_i_s[sample_counter]=cita_i_s;
 
 
         data_V_sD[sample_counter]=V_sD;
@@ -153,34 +159,82 @@ void collecting_samples(int sample_counter)
         data_d_te[sample_counter]=d_te;
         data_psi_delta_percentage[sample_counter]=psi_delta_percentage;
         data_t_e_delta_percentage[sample_counter]=t_e_delta_percentage;
-/*
-        data_R_s[sample_counter]=R_s;
-        data_pole_pairs[sample_counter]=pole_pairs;
-        data_L_sq[sample_counter]=L_sq;
-        data_psi_F[sample_counter]=psi_F;
-        data_optimal_voltage_vector[sample_counter]=optimal_voltage_vector;
-*/
-        PID_angle[sample_counter]=cmd_angle;//angle_hall1;
-        data_w_r[sample_counter]=w_r;   
 
-        //data_duty_a[sample_counter]=duty_a;
-        //data_duty_b[sample_counter]=duty_b;
-        //data_duty_c[sample_counter]=duty_c;
+        data_w_r[sample_counter]=w_r;   
 
         data_phase_advance_SVM[sample_counter]=phase_advance_SVM;
         data_V_s_ref_relative_angle[sample_counter]=V_s_ref_relative_angle;
-        data_T1[sample_counter]=T1;
-        data_T2[sample_counter]=T2;
-        data_T_min_on[sample_counter]=T_min_on;
-        data_T_med_on[sample_counter]=T_med_on;
-        data_T_max_on[sample_counter]=T_max_on;
-        data_attenuation[sample_counter]=attenuation;
-        data_pi_control_SVM[sample_counter]	=SVM_pi_control;
+        //data_T1[sample_counter]=T1;
+        //data_T2[sample_counter]=T2;
+        //data_T_min_on[sample_counter]=T_min_on;
+        //data_T_med_on[sample_counter]=T_med_on;
+        //data_T_max_on[sample_counter]=T_max_on;
+        //data_attenuation[sample_counter]=attenuation;
+            data_pi_control_SVM[sample_counter]	=SVM_pi_control;
         data_rotating_angle_SVM[sample_counter] =psi_rotating_angle_SVM;
+*/
+        data_V_s           = V_s;
+        data_w_r           = w_r;
+        data_ref_freq_SVM  = ref_freq_SVM;
+
+        data_state_SVM     = state;
+        data_CUR_FREQ      = CUR_FREQ;
+
+        data_psi_sD    =psi_sD;
+        data_psi_sQ    =psi_sQ;
+        data_psi_s     =psi_s;
+        data_psi_alpha =psi_alpha;
+        data_CUR_FREQ  =CUR_FREQ;
+        data_U_d       =U_d;
+        //timer          =flux_linkage_capture_counter;
+        
+	    data_CUR_FREQ=CUR_FREQ;	
+
+        data_i_sA =i_sA;
+        data_i_sB =i_sB;
+        data_U_d  =U_d;
+
+        data_i_sD=i_sD;
+        data_i_sQ=i_sQ;
+
+
+
+        data_V_sD=V_sD;
+        data_V_sQ=V_sQ;
+        data_V_s =V_s;
+        data_cita_V_s=cita_V_s;
+        data_cita_V_s_relative_angle=cita_V_s;
+
+        data_psi_sD=psi_sD;
+        data_psi_sQ=psi_sQ;
+        data_psi_s =psi_s;
+        data_psi_alpha=psi_alpha;
+        data_psi_s_alpha_SVM=psi_s_alpha_SVM;
+
+        data_t_e=t_e;
+
+        data_psi_s_ref=psi_s_ref;
+        data_t_e_ref=t_e_ref;
+
+        data_d_psi=d_psi;
+        data_d_te=d_te;
+        data_psi_delta_percentage=psi_delta_percentage;
+        data_t_e_delta_percentage=t_e_delta_percentage;
+
+        data_w_r=w_r;   
+
+        data_phase_advance_SVM=phase_advance_SVM;
+        data_V_s_ref_relative_angle=V_s_ref_relative_angle;
+
+        data_pi_control_SVM	=SVM_pi_control;
+        data_rotating_angle_SVM =psi_rotating_angle_SVM;
+        data_timer=timer;
+        
 }
 
 void print_captured_data(void)
 {
+/*
   printf("t:%10d :freq_ref:%6.2f :freq: %6.2f :hall_freq:%6.2f :Vs: %6.2f ",
           timer             [current_counter],
           data_ref_freq_SVM [current_counter],
@@ -189,7 +243,7 @@ void print_captured_data(void)
           data_V_s          [current_counter]
           );
           //printf (":phase_adv: %12.8f :isA: %6.2f :isB: %6.2f :isC: %6.2f :isD: %6.2f :isQ: %6.2f :is: %6.2f :iscita: %6.2f :psisD: %7.4f :psisQ: %7.4f :psis: %6.4f :psisa: %6.2f :psiref: %6.4f :te: %6.2f :VsD: %8.2f :VsQ: %8.2f :Vs: %6.2f :Vscita: %6.2f :Vscitar: %6.2f :T1: %4.2f :T2: %4.2f :Tmin: %5.2f :Tmed: %4.2f :Tmax: %4.2f :Ud: %6.2f :pi: %12.8f :maxpi: %12.8f\n",
-          printf (":phase_adv: %12.8f :isA: %6.2f :isB: %6.2f :isC: %6.2f :isD: %6.2f :isQ: %6.2f :psisD: %7.4f :psisQ: %7.4f :psis: %6.4f :psisa: %6.2f :psiref: %6.4f :te: %6.2f :VsD: %8.2f :VsQ: %8.2f :Vs: %6.2f :Vscita: %6.2f :Vscitar: %6.2f :T1: %4.2f :T2: %4.2f :Tmin: %5.2f :Tmed: %4.2f :Tmax: %4.2f :Ud: %6.2f :pi: %12.8f :maxpi: %12.8f\n",
+          printf ("pA %12.8f iA %6.2f iB %6.2f iC %6.2f iD %6.2f iQ %6.2f pD %7.4f pQ %7.4f ps %6.4f pa %6.2f pf %6.4f te %6.2f VD %8.2f VQ %8.2f Vs %6.2f Vc %6.2f Vr %6.2f U %6.2f pi %12.8f mx: %12.8f\n",
 
           data_phase_advance_SVM[current_counter],
           data_i_sA [current_counter],  
@@ -214,17 +268,25 @@ void print_captured_data(void)
           data_cita_V_s                [current_counter],
           data_cita_V_s_relative_angle [current_counter],
 
-          data_T1[current_counter],
-          data_T2[current_counter],
-          data_T_min_on[current_counter],
-          data_T_med_on[current_counter],
-          data_T_max_on[current_counter],
+          //data_T1[current_counter],
+          //data_T2[current_counter],
+          //data_T_min_on[current_counter],
+          //data_T_med_on[current_counter],
+          //data_T_max_on[current_counter],
 
           data_U_d[current_counter],
           data_pi_control_SVM[current_counter],
           pi_max
           );
+
+
+*/
+          
 }
+
+
+
+
 
 union float_union_t
 {
@@ -236,8 +298,8 @@ union float_union_t
 
 void print_regular_data(void)
 {
-//   printf("X freq_ref %6.2f freq %20.10f hall %6.2f Ud %6.2f te_ref %6.2f te %6.2f\n",
-//s   ref_freq_SVM,w_r,CUR_FREQ,U_d,t_e_ref,t_e);
+   //printf("X freq_ref %6.2f freq %20.10f hall %6.2f Ud %6.2f te_ref %6.2f te %6.2f\n",
+  //ref_freq_SVM,w_r,CUR_FREQ,U_d,t_e_ref,t_e);
 
       /*printf("original angle: %f y: %20.12f x: %20.12f fast_atanf: %20.12f \n",
       ref_freq_SVM,
@@ -247,11 +309,11 @@ void print_regular_data(void)
       );       
       */
 
-
+/*
     printf(" X ");
     printf (" freq_ref ");
     print_float_as_bytes(ref_freq_SVM);
-    printf (" fre   q ");
+    printf (" freq ");
     print_float_as_bytes(w_r);
     printf (" hall ");
     print_float_as_bytes(CUR_FREQ);
@@ -261,6 +323,81 @@ void print_regular_data(void)
     print_float_as_bytes(t_e_ref);
     printf (" te ");
     print_float_as_bytes(t_e);
+    printf("\n");
+*/
+
+/*
+    printf (" X ")   ;
+
+    printf (" t ")   ;  print_float_as_bytes(timer                           [current_counter]);
+    printf (" rf ")  ;  print_float_as_bytes(data_ref_freq_SVM               [current_counter]);
+    printf (" freq ")   ;  print_float_as_bytes(data_w_r                        [current_counter]);
+    printf (" h ")   ;  print_float_as_bytes(data_CUR_FREQ                   [current_counter]);
+
+    printf (" iA ")  ;  print_float_as_bytes(data_i_sA                       [current_counter]);
+    printf (" iB ")  ;  print_float_as_bytes(data_i_sB                       [current_counter]);
+    printf (" iC ")  ;  print_float_as_bytes(-data_i_sA                      [current_counter]-data_i_sB[current_counter]);
+    printf (" iD ")  ;  print_float_as_bytes(data_i_sD                       [current_counter]);
+    printf (" iQ ")  ;  print_float_as_bytes(data_i_sQ                       [current_counter]);
+
+    printf (" VD ")  ;  print_float_as_bytes(data_V_sD                       [current_counter]);
+    printf (" VQ ")  ;  print_float_as_bytes(data_V_sQ                       [current_counter]);
+    printf (" Vs ")  ;  print_float_as_bytes(data_V_s                        [current_counter]);
+    printf (" Vc ")  ;  print_float_as_bytes(data_cita_V_s                   [current_counter]);
+    printf (" Vr ")  ;  print_float_as_bytes(data_cita_V_s_relative_angle    [current_counter]);
+
+
+    printf (" pD ")  ;  print_float_as_bytes(data_psi_sD                     [current_counter]);
+    printf (" pQ ")  ;  print_float_as_bytes(data_psi_sQ                     [current_counter]);
+    printf (" ps ")  ;  print_float_as_bytes(data_psi_s                      [current_counter]);
+    printf (" pa ")  ;  print_float_as_bytes(data_psi_s_alpha_SVM            [current_counter]);
+    printf (" pf ")  ;  print_float_as_bytes(data_psi_s_ref                  [current_counter]);
+
+    printf (" te ")  ;  print_float_as_bytes(data_t_e                        [current_counter]);
+    printf (" Ud ")  ;  print_float_as_bytes(data_U_d                        [current_counter]);
+    printf (" pi ")  ;  print_float_as_bytes(data_pi_control_SVM             [current_counter]);
+    printf (" mx ")  ;  print_float_as_bytes(pi_max);
+*/
+
+/*
+    printf(" X ");
+    printf (" rf ");
+    print_float_as_bytes(ref_freq_SVM);
+    printf (" freq ");
+    print_float_as_bytes(w_r);
+    printf (" h ");
+    print_float_as_bytes(CUR_FREQ);
+*/    
+    printf (" X ")   ;
+
+    printf (" t ")   ;  print_float_as_bytes(data_timer                        );
+    printf (" rf ")  ;  print_float_as_bytes(data_ref_freq_SVM            );
+    printf (" freq ")   ;  print_float_as_bytes(data_w_r                  );
+    printf (" h ")   ;  print_float_as_bytes(data_CUR_FREQ                );
+/*
+    printf (" iA ")  ;  print_float_as_bytes(data_i_sA                    );
+    printf (" iB ")  ;  print_float_as_bytes(data_i_sB                    );
+    printf (" iC ")  ;  print_float_as_bytes(-data_i_sA                   );
+    printf (" iD ")  ;  print_float_as_bytes(data_i_sD                    );
+    printf (" iQ ")  ;  print_float_as_bytes(data_i_sQ                    );
+
+    printf (" VD ")  ;  print_float_as_bytes(data_V_sD                    );
+    printf (" VQ ")  ;  print_float_as_bytes(data_V_sQ                    );
+    printf (" Vs ")  ;  print_float_as_bytes(data_V_s                     );
+    printf (" Vc ")  ;  print_float_as_bytes(data_cita_V_s                );
+    printf (" Vr ")  ;  print_float_as_bytes(data_cita_V_s_relative_angle );
+
+    printf (" pD ")  ;  print_float_as_bytes(data_psi_sD                  );
+    printf (" pQ ")  ;  print_float_as_bytes(data_psi_sQ                  );
+    printf (" ps ")  ;  print_float_as_bytes(data_psi_s                   );
+    printf (" pa ")  ;  print_float_as_bytes(data_psi_s_alpha_SVM         );
+    printf (" pf ")  ;  print_float_as_bytes(data_psi_s_ref               );
+
+    printf (" te ")  ;  print_float_as_bytes(data_t_e                     );
+    printf (" Ud ")  ;  print_float_as_bytes(data_U_d                     );
+    printf (" pi ")  ;  print_float_as_bytes(data_pi_control_SVM          );
+    printf (" mx ")  ;  print_float_as_bytes(pi_max                       );
+*/
     printf("\n");
 
 }

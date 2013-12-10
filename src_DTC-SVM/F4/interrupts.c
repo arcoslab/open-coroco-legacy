@@ -16,17 +16,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#define SAMPLES 5
+#define SAMPLES 3
 #define FLUX_LINKAGE_TIMER_DELAY 0
-
+/*
 //printing buffers
 float hall_angle=0.0f;
 float PID_angle[SAMPLES];
-//float current_data_i_sA[SAMPLES];
-//float current_data_i_sB[SAMPLES];
-//float switching_data_SA[SAMPLES];
-//float switching_data_SB[SAMPLES];
-//float switching_data_SC[SAMPLES];
 
 bool  inductance_measure=true;
 
@@ -34,15 +29,7 @@ int current_counter=0;
 bool print_current=false;
 bool first_movement=false;
 float data_CUR_FREQ[SAMPLES];
-/*
-int data_S_A[SAMPLES];
-int data_S_B[SAMPLES];
-int data_S_C[SAMPLES];
 
-float data_S_A_f[SAMPLES];
-float data_S_B_f[SAMPLES];
-float data_S_C_f[SAMPLES];
-*/
 float data_i_sA [SAMPLES];
 float data_i_sB [SAMPLES];
 
@@ -50,8 +37,8 @@ float data_U_d  [SAMPLES];
 
 float data_i_sD[SAMPLES];
 float data_i_sQ[SAMPLES];
-float data_i_s[SAMPLES];
-float data_cita_i_s[SAMPLES];
+//float data_i_s[SAMPLES];
+//float data_cita_i_s[SAMPLES];
 
 float data_V_sD[SAMPLES];
 float data_V_sQ[SAMPLES];
@@ -79,31 +66,93 @@ float data_t_e_delta_percentage[SAMPLES];
 
 
 //motor parameters;
-/*
-float data_R_s[SAMPLES];
-float data_pole_pairs[SAMPLES];
-float data_L_sq[SAMPLES];
-float data_psi_F[SAMPLES];
 
-int data_optimal_voltage_vector[SAMPLES];
-*/
+//float data_R_s[SAMPLES];
+//float data_pole_pairs[SAMPLES];
+//float data_L_sq[SAMPLES];
+//float data_psi_F[SAMPLES];
+
+//int data_optimal_voltage_vector[SAMPLES];
+
 //float data_duty_a[SAMPLES];
 //float data_duty_b[SAMPLES];
 //float data_duty_c[SAMPLES];
 
 float data_phase_advance_SVM[SAMPLES];
 float data_V_s_ref_relative_angle[SAMPLES];
-float data_T1[SAMPLES];
-float data_T2[SAMPLES];
-float data_T_min_on[SAMPLES];
-float data_T_med_on[SAMPLES];
-float data_T_max_on[SAMPLES];
+//float data_T1[SAMPLES];
+//float data_T2[SAMPLES];
+//float data_T_min_on[SAMPLES];
+//float data_T_med_on[SAMPLES];
+//float data_T_max_on[SAMPLES];
 
-float data_attenuation[SAMPLES];
+//float data_attenuation[SAMPLES];
 float data_pi_control_SVM[SAMPLES];
 float data_ref_freq_SVM[SAMPLES];
 int data_state_SVM[SAMPLES];
 float data_rotating_angle_SVM[SAMPLES];
+*/
+
+//--------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------
+
+//printing buffers
+int current_counter=0;  
+bool print_current=false;
+bool first_movement=false;
+
+
+
+float data_CUR_FREQ;
+
+float data_i_sA;
+float data_i_sB;
+float data_i_sD;
+float data_i_sQ;
+
+float data_U_d;
+
+float data_V_sD;
+float data_V_sQ;
+float data_V_s;
+float data_cita_V_s;
+float data_cita_V_s_relative_angle;
+
+float data_psi_sD;
+float data_psi_sQ;
+float data_psi_s;
+int   data_psi_alpha;
+float data_psi_s_alpha_SVM;
+float data_w_r;
+int timer=0;
+float data_timer;
+
+float data_t_e;
+
+float data_psi_s_ref;
+float data_t_e_ref;
+
+int   data_d_psi;
+int   data_d_te;
+float data_psi_delta_percentage;
+float data_t_e_delta_percentage;
+
+
+float data_phase_advance_SVM;
+float data_V_s_ref_relative_angle;
+
+float data_pi_control_SVM;
+float data_ref_freq_SVM;
+int data_state_SVM;
+float data_rotating_angle_SVM;
+
+
+//--------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------
+
+
+
+
 
 
 void tim1_up_tim10_isr(void) 
