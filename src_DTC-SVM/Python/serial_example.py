@@ -28,7 +28,7 @@ import sys
 
 def bytes_to_float(string_of_bytes):
     if len(string_of_bytes)<4:  #if there are not 4 bytes then it cannot be translated into a float and therefore an error is obtained
-        return 0.0
+        return 25.0
     else:
         tuplet_float= struct.unpack_from('f',string_of_bytes)   #uncompress string of 4 bytes into a floting number
         return tuplet_float[0]
@@ -42,7 +42,7 @@ class Serial_Stm32f4(object):
         i=0
 
         self.time                   = 0.0
-        '''
+       
         self.reference_frequency    = 0.0
         self.electric_frequency     = 0.0
         self.hall_frequency         = 0.0
@@ -69,7 +69,7 @@ class Serial_Stm32f4(object):
         self.Ud                     = 0.0
         self.pi_control             = 0.0
         self.pi_max                 = 0.0
-        '''
+        
 
         while connecting==True:
             try:
@@ -99,29 +99,53 @@ class Serial_Stm32f4(object):
 
         if(single_character =="X"):
 
-            while (single_character != "\n"):
+            while (single_character != "m"):#"\n"):
                 single_character = self.ser.read(bytes)
                 info +=single_character
             
-
+            if len(info)>=72:
+                self.time                = bytes_to_float(info[0]+info[1]+info[2]+info[3])
+                        
+            #print len(info)  
             split_info = info.split()
-	  
+            '''
+            self.time                = bytes_to_float(split_info[0])
+            self.reference_frequency = bytes_to_float(split_info[1])
+            self.electric_frequency  = bytes_to_float(split_info[2])
+            self.hall_frequency      = bytes_to_float(split_info[3])
+                              
+            self.isA                = bytes_to_float(split_info[4])
+            self.isB                = bytes_to_float(split_info[5])
+            self.isC                = bytes_to_float(split_info[6])
+            self.isD                = bytes_to_float(split_info[7])
+            self.isQ                = bytes_to_float(split_info[8])
+ 
+            self.VsD                = bytes_to_float(split_info[9])
+            self.VsQ                = bytes_to_float(split_info[10])
+            self.Vs                 = bytes_to_float(split_info[11])
+            self.Vs_cita            = bytes_to_float(split_info[12])
+            self.Vs_relative_cita   = bytes_to_float(split_info[13])
+
+            self.psi_sD             = bytes_to_float(split_info[14])
+            self.psi_sQ             = bytes_to_float(split_info[15])
+            self.psi_s              = bytes_to_float(split_info[16])
+            self.psi_s_alpha        = bytes_to_float(split_info[17])
+            self.psi_s_reference    = bytes_to_float(split_info[18])
+                 
+            self.te                 = bytes_to_float(split_info[19])
+            self.Ud                 = bytes_to_float(split_info[20])
+            self.pi_control         = bytes_to_float(split_info[21])
+            self.pi_max             = bytes_to_float(split_info[22])
+             '''
+            '''
             for i in range( len(split_info)):
                 if i+1<len(split_info):
-                    '''
-                    if   split_info[i] == "freq_ref" : self.freq_ref  = bytes_to_float(split_info[i+1])
-                    elif split_info[i] == "freq"     : self.freq      = bytes_to_float(split_info[i+1])
-                    elif split_info[i] == "hall"     : self.hall_freq = bytes_to_float(split_info[i+1])
-                    elif split_info[i] == "Ud"       : self.Ud        = bytes_to_float(split_info[i+1])
-                    elif split_info[i] == "te_ref"   : self.te_ref    = bytes_to_float(split_info[i+1])
-                    elif split_info[i] == "te"       : self.te        = bytes_to_float(split_info[i+1])
-                    elif split_info[i] == "size"     : self.size      = bytes_to_float(split_info[i+1])
-                    '''  
+
                     if   split_info[i] == "t"   : self.time                = bytes_to_float(split_info[i+1])
                     elif split_info[i] == "rf"  : self.reference_frequency = bytes_to_float(split_info[i+1])
-                    elif split_info[i] == "freq"   : self.electric_frequency  = bytes_to_float(split_info[i+1])
+                    elif split_info[i] == "f"   : self.electric_frequency  = bytes_to_float(split_info[i+1])
                     elif split_info[i] == "h"   : self.hall_frequency      = bytes_to_float(split_info[i+1])
-                    '''
+                    
                     elif split_info[i] == "iA"   : self.isA                = bytes_to_float(split_info[i+1])
                     elif split_info[i] == "iB"   : self.isB                = bytes_to_float(split_info[i+1])
                     elif split_info[i] == "iC"   : self.isC                = bytes_to_float(split_info[i+1])
@@ -144,15 +168,14 @@ class Serial_Stm32f4(object):
                     elif split_info[i] == "Ud"   : self.Ud                 = bytes_to_float(split_info[i+1])
                     elif split_info[i] == "pi"   : self.pi_control         = bytes_to_float(split_info[i+1])
                     elif split_info[i] == "mx"   : self.pi_max             = bytes_to_float(split_info[i+1])
-                    '''
+            '''                             
 
 
-            for data in split_info:    
+            #for data in split_info:    
                 #print "reference frequency: %6.2f " % self.freq
                 #print "reference frequency: %6.2f " % self.freq_ref +"hall_freq: %6.2f " % self.hall_freq+" electric_frequency: %6.2f "%self.freq +"Ud: %6.2f " % self.Ud+"te_ref: %6.2f "%self.te_ref+"te: %6.2f "%self.te
                 #sys.stdout.write("\n")
-                if (self.time>200.0):
-                    print   "t: %6.2f " %self.time+" ref_freq: %6.2f" %self.reference_frequency+" electric_frequency: %6.2f" %self.electric_frequency+" hall_freq: %6.2f" %self.hall_frequency#+"isA: %6.2f" %self.isA+"isB: %6.2f" %self.isB+"isC: %6.2f" %self.isC+"isD: %6.2f" %self.isD+"isQ: %6.2f" %self.isQ+"VsD: %6.2f" %self.VsD+"VsQ: %6.2f" %self.VsQ+"Vs: %6.2f" %self.Vs+"Vs_cita: %6.2f" %self.Vs_cita+"Vs_cita_relative: %6.2f" %self.Vs_relative_cita+"psisD: %6.2f" %self.psi_sD+"psisQ: %6.2f" %self.psi_sQ+"psis: %6.2f" %self.psi_s+"psis_alpha: %6.2f" %self.psi_s_alpha+"psis_ref: %6.5f" %self.psi_s_reference+"te: %6.2f" %self.te+"Ud: %6.2f" %self.Ud+"pi_control: %6.2f" %self.pi_control+"pi_max: %6.2f" %self.pi_max
+            print   "t: %6.2f " %self.time#+" ref_freq: %6.2f" %self.reference_frequency+" electric_frequency: %6.2f" %self.electric_frequency+" hall_freq: %6.2f" %self.hall_frequency  +"isA: %6.2f" %self.isA+"isB: %6.2f" %self.isB+"isC: %6.2f" %self.isC+"isD: %6.2f" %self.isD+"isQ: %6.2f" %self.isQ+"VsD: %6.2f" %self.VsD+"VsQ: %6.2f" %self.VsQ+"Vs: %6.2f" %self.Vs+"Vs_cita: %6.2f" %self.Vs_cita+"Vs_cita_relative: %6.2f" %self.Vs_relative_cita+"psisD: %6.2f" %self.psi_sD+"psisQ: %6.2f" %self.psi_sQ+"psis: %6.2f" %self.psi_s+"psis_alpha: %6.2f" %self.psi_s_alpha+"psis_ref: %6.5f" %self.psi_s_reference+"te: %6.2f" %self.te+"Ud: %6.2f" %self.Ud+"pi_control: %6.2f" %self.pi_control+"pi_max: %6.2f" %self.pi_max
      
 
     def write(self):	

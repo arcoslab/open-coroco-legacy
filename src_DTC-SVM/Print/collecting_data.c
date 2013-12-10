@@ -39,7 +39,9 @@ void collecting_floating_data(void)
     collecting_samples();
     transmitting_to_python=true;
   }
-    timer++;
+    timer=timer+1.0f;
+    if (timer<0.0f)
+        timer=0.0f;
     //if (timer>30000)
         //timer=0;
 
@@ -367,17 +369,18 @@ void print_regular_data(void)
     print_float_as_bytes(w_r);
     printf (" h ");
     print_float_as_bytes(CUR_FREQ);
-*/    
-    printf (" X ")   ;
-
-    printf (" t ")   ;  print_float_as_bytes(data_timer                        );
-    printf (" rf ")  ;  print_float_as_bytes(data_ref_freq_SVM            );
-    printf (" freq ")   ;  print_float_as_bytes(data_w_r                  );
-    printf (" h ")   ;  print_float_as_bytes(data_CUR_FREQ                );
+*/ 
 /*
+    printf ("X")   ;
+
+    printf ("t ")   ;  print_float_as_bytes(data_timer                        );
+    printf (" rf ")  ;  print_float_as_bytes(data_ref_freq_SVM            );
+    printf (" f ")   ;  print_float_as_bytes(data_w_r                  );
+    printf (" h ")   ;  print_float_as_bytes(data_CUR_FREQ                );
+
     printf (" iA ")  ;  print_float_as_bytes(data_i_sA                    );
     printf (" iB ")  ;  print_float_as_bytes(data_i_sB                    );
-    printf (" iC ")  ;  print_float_as_bytes(-data_i_sA                   );
+    printf (" iC ")  ;  print_float_as_bytes(-data_i_sA-data_i_sB         );
     printf (" iD ")  ;  print_float_as_bytes(data_i_sD                    );
     printf (" iQ ")  ;  print_float_as_bytes(data_i_sQ                    );
 
@@ -397,8 +400,112 @@ void print_regular_data(void)
     printf (" Ud ")  ;  print_float_as_bytes(data_U_d                     );
     printf (" pi ")  ;  print_float_as_bytes(data_pi_control_SVM          );
     printf (" mx ")  ;  print_float_as_bytes(pi_max                       );
-*/
+    printf("\n");*/
+
+
+
+    printf ("X")   ;
+    print_float_as_bytes(data_timer                        );
+    print_float_as_bytes(data_ref_freq_SVM            );
+    print_float_as_bytes(data_w_r                  );
+    print_float_as_bytes(data_CUR_FREQ                );
+
+    print_float_as_bytes(data_i_sA                    );
+    print_float_as_bytes(data_i_sB                    );
+    print_float_as_bytes(-data_i_sA-data_i_sB         );
+    print_float_as_bytes(data_i_sD                    );
+    print_float_as_bytes(data_i_sQ                    );
+
+    print_float_as_bytes(data_V_sD                    );
+    print_float_as_bytes(data_V_sQ                    );
+    print_float_as_bytes(data_V_s                     );
+    print_float_as_bytes(data_cita_V_s                );
+    print_float_as_bytes(data_cita_V_s_relative_angle );
+
+    print_float_as_bytes(data_psi_sD                  );
+    print_float_as_bytes(data_psi_sQ                  );
+    print_float_as_bytes(data_psi_s                   );
+    print_float_as_bytes(data_psi_s_alpha_SVM         );
+    print_float_as_bytes(data_psi_s_ref               );
+
+    print_float_as_bytes(data_t_e                     );
+    print_float_as_bytes(data_U_d                     );
+    print_float_as_bytes(data_pi_control_SVM          );
+    print_float_as_bytes(pi_max                       );
+    //printf("\n");
+    printf("m");
+
+/*
+
+    printf ("X")   ;
+
+//    printf (" ")   ;  
+
+                      print_float_as_bytes(data_timer                  );
+    printf (" ")   ;  print_float_as_bytes(data_ref_freq_SVM           );
+    printf (" ")   ;  print_float_as_bytes(data_w_r                    );
+    printf (" ")   ;  print_float_as_bytes(data_CUR_FREQ               );
+
+    printf (" ")  ;  print_float_as_bytes(data_i_sA                    );
+    printf (" ")  ;  print_float_as_bytes(data_i_sB                    );
+    printf (" ")  ;  print_float_as_bytes(-data_i_sA-data_i_sB         );
+    printf (" ")  ;  print_float_as_bytes(data_i_sD                    );
+    printf (" ")  ;  print_float_as_bytes(data_i_sQ                    );
+
+    printf (" ")  ;  print_float_as_bytes(data_V_sD                    );
+    printf (" ")  ;  print_float_as_bytes(data_V_sQ                    );
+    printf (" ")  ;  print_float_as_bytes(data_V_s                     );
+    printf (" ")  ;  print_float_as_bytes(data_cita_V_s                );
+    printf (" ")  ;  print_float_as_bytes(data_cita_V_s_relative_angle );
+
+    printf (" ")  ;  print_float_as_bytes(data_psi_sD                  );
+    printf (" ")  ;  print_float_as_bytes(data_psi_sQ                  );
+    printf (" ")  ;  print_float_as_bytes(data_psi_s                   );
+    printf (" ")  ;  print_float_as_bytes(data_psi_s_alpha_SVM         );
+    printf (" ")  ;  print_float_as_bytes(data_psi_s_ref               );
+
+    printf (" ")  ;  print_float_as_bytes(data_t_e                     );
+    printf (" ")  ;  print_float_as_bytes(data_U_d                     );
+    printf (" ")  ;  print_float_as_bytes(data_pi_control_SVM          );
+    printf (" ")  ;  print_float_as_bytes(pi_max                       );
+
     printf("\n");
+
+*/
+
+
+/*
+          printf ("t: %6.2f pA %12.8f iA %6.2f iB %6.2f iC %6.2f iD %6.2f iQ %6.2f pD %7.4f pQ %7.4f ps %6.4f pa %6.2f pf %6.4f te %6.2f VD %8.2f VQ %8.2f Vs %6.2f Vc %6.2f Vr %6.2f U %6.2f pi %12.8f mx: %12.8f\n",
+
+           data_timer,
+          data_phase_advance_SVM,
+          data_i_sA,  
+          data_i_sB,
+          -data_i_sA-data_i_sB,
+          data_i_sD,
+          data_i_sQ,
+
+
+          data_psi_sD,
+          data_psi_sQ,
+          data_psi_s,
+          data_psi_s_alpha_SVM,
+          data_psi_s_ref,
+
+          data_t_e,
+
+          data_V_sD                    ,
+          data_V_sQ                    ,
+          data_V_s                     ,
+          data_cita_V_s                ,
+          data_cita_V_s_relative_angle ,
+
+          
+          data_U_d,
+          data_pi_control_SVM,
+          pi_max
+          );
+*/
 
 }
 
