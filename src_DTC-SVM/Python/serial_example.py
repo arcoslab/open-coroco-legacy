@@ -102,6 +102,7 @@ class Serial_Stm32f4(object):
             while (single_character != "\n"):
                 single_character = self.ser.read(bytes)
                 info +=single_character
+            
 
             split_info = info.split()
 	  
