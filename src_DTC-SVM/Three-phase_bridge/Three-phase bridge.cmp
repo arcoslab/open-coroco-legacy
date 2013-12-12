@@ -1,4 +1,4 @@
-Cmp-Mod V01 Created by CvPcb (2013-jul-07)-stable date = Wed 04 Dec 2013 01:35:54 PM CST
+Cmp-Mod V01 Created by CvPcb (2013-jul-07)-stable date = Wed 11 Dec 2013 06:13:27 PM CST
 
 BeginCmp
 TimeStamp = /528E7FD9;
@@ -19,6 +19,20 @@ TimeStamp = /528E81FC;
 Reference = 1N3;
 ValeurCmp = 1N4003;
 IdModule  = DO-41;
+EndCmp
+
+BeginCmp
+TimeStamp = /52A8F3FC;
+Reference = ACS1;
+ValeurCmp = ACS712;
+IdModule  = ACS712;
+EndCmp
+
+BeginCmp
+TimeStamp = /52A90854;
+Reference = ACS2;
+ValeurCmp = ACS712;
+IdModule  = ACS712;
 EndCmp
 
 BeginCmp
@@ -151,6 +165,34 @@ BeginCmp
 TimeStamp = /529C5E5D;
 Reference = C17;
 ValeurCmp = 100uF;
+IdModule  = 6mm_C;
+EndCmp
+
+BeginCmp
+TimeStamp = /52A90003;
+Reference = C18;
+ValeurCmp = 0.1uF;
+IdModule  = 6mm_C;
+EndCmp
+
+BeginCmp
+TimeStamp = /52A8FD91;
+Reference = C19;
+ValeurCmp = 1nF;
+IdModule  = 6mm_C;
+EndCmp
+
+BeginCmp
+TimeStamp = /52A9086C;
+Reference = C20;
+ValeurCmp = 0.1uF;
+IdModule  = 6mm_C;
+EndCmp
+
+BeginCmp
+TimeStamp = /52A90866;
+Reference = C21;
+ValeurCmp = 1nF;
 IdModule  = 6mm_C;
 EndCmp
 

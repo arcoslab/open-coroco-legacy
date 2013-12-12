@@ -24,7 +24,8 @@ from serial import SerialException
 import struct
 import select
 import sys
-
+import matplotlib.pyplot as plt
+import datetime
 
 def bytes_to_float(string_of_bytes):
     if len(string_of_bytes)<4:  #if there are not 4 bytes then it cannot be translated into a float and therefore an error is obtained
@@ -41,6 +42,37 @@ class Serial_Stm32f4(object):
         connecting=True;
         i=0
 
+        self.capture_data    = False
+        self.capture_counter = 0
+
+        self.time_vector = []
+        self.reference_frequency_vector = []
+        self.electric_frequency_vector = []
+        self.hall_frequency_vector = []
+  
+        self.isA_vector = []
+        self.isB_vector = []
+        self.isC_vector = []
+        self.isD_vector = []
+        self.isQ_vector = []
+   
+        self.VsD_vector = []
+        self.VsQ_vector = []
+        self.Vs_vector = []
+        self.Vs_cita_vector = []
+        self.Vs_relative_cita_vector = []
+
+        self.psi_sD_vector = []
+        self.psi_sQ_vector = []
+        self.psi_s_vector = []
+        self.psi_s_alpha_vector = []
+        self.psi_s_reference_vector = []
+                 
+        self.te_vector = []
+        self.Ud_vector = []
+        self.pi_control_vector = []
+        self.pi_max_vector = []
+        '''
         self.time                   = 0.0
        
         self.reference_frequency    = 0.0
@@ -69,7 +101,7 @@ class Serial_Stm32f4(object):
         self.Ud                     = 0.0
         self.pi_control             = 0.0
         self.pi_max                 = 0.0
-        
+        '''        
 
         while connecting==True:
             try:
@@ -95,17 +127,25 @@ class Serial_Stm32f4(object):
     def read(self): 
         bytes = 1
         info = ''   #info needs to be set before splitting it, otherwise pythons says it is uninitialized
-        single_character = self.ser.read(bytes)
+        previous_character = self.ser.read(bytes)
+        single_character   = self.ser.read(bytes)
 
-        if(single_character =="X"):
+        if(previous_character+single_character == "XX"):
 
-            while (single_character != "m"):#"\n"):
+            while (previous_character+single_character != "mm"):#"\n"):
+                previous_character = single_character
                 single_character = self.ser.read(bytes)
                 info +=single_character
-            
-            if len(info)>=72:
+                    
+            '''
+            if len(info)>=94:
                 self.time                = bytes_to_float(info[0]+info[1]+info[2]+info[3])
-                        
+                self.reference_frequency = bytes_to_float(info[4]+info[5]+info[6]+info[7])
+                self.electric_frequency  = bytes_to_float(info[8]+info[9]+info[10]+info[11])
+            '''
+    
+                #print   "t: %6.2f " %self.time+" ref_freq: %6.2f" %self.reference_frequency+" electric_frequency: %6.2f" %self.electric_frequency#+" hall_freq: %6.2f" %self.hall_frequency  +"isA: %6.2f" %self.isA+"isB: %6.2f" %self.isB+"isC: %6.2f" %self.isC+"isD: %6.2f" %self.isD+"isQ: %6.2f" %self.isQ+"VsD: %6.2f" %self.VsD+"VsQ: %6.2f" %self.VsQ+"Vs: %6.2f" %self.Vs+"Vs_cita: %6.2f" %self.Vs_cita+"Vs_cita_relative: %6.2f" %self.Vs_relative_cita+"psisD: %6.2f" %self.psi_sD+"psisQ: %6.2f" %self.psi_sQ+"psis: %6.2f" %self.psi_s+"psis_alpha: %6.2f" %self.psi_s_alpha+"psis_ref: %6.5f" %self.psi_s_reference+"te: %6.2f" %self.te+"Ud: %6.2f" %self.Ud+"pi_control: %6.2f" %self.pi_control+"pi_max: %6.2f" %self.pi_max
+             
             #print len(info)  
             split_info = info.split()
             '''
@@ -137,7 +177,7 @@ class Serial_Stm32f4(object):
             self.pi_control         = bytes_to_float(split_info[21])
             self.pi_max             = bytes_to_float(split_info[22])
              '''
-            '''
+                        
             for i in range( len(split_info)):
                 if i+1<len(split_info):
 
@@ -168,14 +208,72 @@ class Serial_Stm32f4(object):
                     elif split_info[i] == "Ud"   : self.Ud                 = bytes_to_float(split_info[i+1])
                     elif split_info[i] == "pi"   : self.pi_control         = bytes_to_float(split_info[i+1])
                     elif split_info[i] == "mx"   : self.pi_max             = bytes_to_float(split_info[i+1])
-            '''                             
+                                        
+            if self.capture_data==True:
+                '''
+                self.time_vector                [self.capture_counter]=self.time
+                self.reference_frequency_vector [self.capture_counter]=self.reference_frequency
+                self.electric_frequency_vector  [self.capture_counter]=self.electric_frequency
+                self.hall_frequency_vector      [self.capture_counter]=self.hall_frequency
+  
+                self.isA_vector                 [self.capture_counter]=self.isA
+                self.isB_vector                 [self.capture_counter]=self.isB
+                self.isC_vector                 [self.capture_counter]=self.isC
+                self.isD_vector                 [self.capture_counter]=self.isD
+                self.isQ_vector                 [self.capture_counter]=self.isQ
+   
+                self.VsD_vector                 [self.capture_counter]=self.VsD
+                self.VsQ_vector                 [self.capture_counter]=self.VsQ
+                self.Vs_vector                  [self.capture_counter]=self.Vs
+                self.Vs_cita_vector             [self.capture_counter]=self.Vs_cita_vector
+                self.Vs_relative_cita_vector    [self.capture_counter]=self.Vs_relative_cita_vector
 
+                self.psi_sD_vector              [self.capture_counter]=self.psi_sD
+                self.psi_sQ_vector              [self.capture_counter]=self.psi_sQ
+                self.psi_s_vector               [self.capture_counter]=self.psi_s_vector
+                self.psi_s_alpha_vector         [self.capture_counter]=self.psi_s_alpha_vector
+                self.psi_s_reference_vector     [self.capture_counter]=self.psi_s_reference_vector
+                         
+                self.te_vector                  [self.capture_counter]=self.te
+                self.Ud_vector                  [self.capture_counter]=self.Ud
+                self.pi_control_vector          [self.capture_counter]=self.pi_control
+                self.pi_max_vector              [self.capture_counter]=self.pi_max
+
+                self.capture_counter=self.capture_counter+1           
+                '''
+                self.time_vector.append(self.time)
+                self.reference_frequency_vector.append(self.reference_frequency)
+                self.electric_frequency_vector.append(self.electric_frequency)
+                self.hall_frequency_vector.append(self.hall_frequency)
+  
+                self.isA_vector.append(self.isA)
+                self.isB_vector.append(self.isB)
+                self.isC_vector.append(self.isC)
+                self.isD_vector.append(self.isD)
+                self.isQ_vector.append(self.isQ)
+   
+                self.VsD_vector.append(self.VsD)
+                self.VsQ_vector.append(self.VsQ)
+                self.Vs_vector.append(self.Vs)
+                self.Vs_cita_vector.append(self.Vs_cita_vector)
+                self.Vs_relative_cita_vector.append(self.Vs_relative_cita_vector)
+
+                self.psi_sD_vector.append(self.psi_sD)
+                self.psi_sQ_vector.append(self.psi_sQ)
+                self.psi_s_vector.append(self.psi_s_vector)
+                self.psi_s_alpha_vector.append(self.psi_s_alpha_vector)
+                self.psi_s_reference_vector.append(self.psi_s_reference_vector)
+                         
+                self.te_vector.append(self.te)
+                self.Ud_vector.append(self.Ud)
+                self.pi_control_vector.append(self.pi_control)
+                self.pi_max_vector.append(self.pi_max)
 
             #for data in split_info:    
                 #print "reference frequency: %6.2f " % self.freq
                 #print "reference frequency: %6.2f " % self.freq_ref +"hall_freq: %6.2f " % self.hall_freq+" electric_frequency: %6.2f "%self.freq +"Ud: %6.2f " % self.Ud+"te_ref: %6.2f "%self.te_ref+"te: %6.2f "%self.te
                 #sys.stdout.write("\n")
-            print   "t: %6.2f " %self.time#+" ref_freq: %6.2f" %self.reference_frequency+" electric_frequency: %6.2f" %self.electric_frequency+" hall_freq: %6.2f" %self.hall_frequency  +"isA: %6.2f" %self.isA+"isB: %6.2f" %self.isB+"isC: %6.2f" %self.isC+"isD: %6.2f" %self.isD+"isQ: %6.2f" %self.isQ+"VsD: %6.2f" %self.VsD+"VsQ: %6.2f" %self.VsQ+"Vs: %6.2f" %self.Vs+"Vs_cita: %6.2f" %self.Vs_cita+"Vs_cita_relative: %6.2f" %self.Vs_relative_cita+"psisD: %6.2f" %self.psi_sD+"psisQ: %6.2f" %self.psi_sQ+"psis: %6.2f" %self.psi_s+"psis_alpha: %6.2f" %self.psi_s_alpha+"psis_ref: %6.5f" %self.psi_s_reference+"te: %6.2f" %self.te+"Ud: %6.2f" %self.Ud+"pi_control: %6.2f" %self.pi_control+"pi_max: %6.2f" %self.pi_max
+            print   "t: %6.2f " %self.time+" ref_freq: %6.2f" %self.reference_frequency+" electric_frequency: %6.2f" %self.electric_frequency+" hall_freq: %6.2f" %self.hall_frequency  +" isA: %6.2f" %self.isA+" isB: %6.2f" %self.isB+" isC: %6.2f" %self.isC+" isD: %6.2f" %self.isD+" isQ: %6.2f" %self.isQ+" VsD: %6.2f" %self.VsD+" VsQ: %6.2f" %self.VsQ+" Vs: %6.2f" %self.Vs+" Vs_cita: %6.2f" %self.Vs_cita+" Vs_cita_relative: %6.2f" %self.Vs_relative_cita+"psisD: %6.2f" %self.psi_sD+" psisQ: %6.2f" %self.psi_sQ+" psis: %6.2f" %self.psi_s+" psis_alpha: %6.2f" %self.psi_s_alpha+" psis_ref: %6.5f" %self.psi_s_reference+"te: %6.2f" %self.te+" Ud: %6.2f" %self.Ud+" pi_control: %6.2f" %self.pi_control+" pi_max: %6.2f" %self.pi_max
      
 
     def write(self):	
@@ -187,6 +285,52 @@ class Serial_Stm32f4(object):
                     self.ser.write(line)
                     self.ser.write('\n')
                     self.ser.write('\r')
+
+                    split_command = line.split()
+                    if split_command[0]=='c':
+                        self.capture_data=True
+                        self.capture_counter=0
+                    elif split_command[0]=='f':
+                        self.capture_data=False
+
+                        plt.subplot(2, 1, 1)
+                        plt.plot(self.time_vector, self.electric_frequency_vector)
+                        plt.title('frequency vs time')
+                        #plt.text(2, 0.65, r'$\cos(2 \pi t) \exp(-t)$', fontdict=font)
+                        plt.xlabel('time (ticks)')
+                        plt.ylabel('frequency (Hz)')
+             
+                        plt.subplot(2, 1, 2)
+                        plt.plot(self.time_vector, self.isA_vector)
+                        plt.title('current vs time')
+                        #plt.text(2, 0.65, r'$\cos(2 \pi t) \exp(-t)$', fontdict=font)
+                        plt.xlabel('time (ticks)')
+                        plt.ylabel('isA (A)')
+
+                        #plt.subplots_adjust(left=0.15)
+                        #plt.tight_layout(pad=1.08, h_pad=None, w_pad=None, rect=None)
+                        
+                        spacing=0.9
+                        '''
+                        left  = 0.125  # the left side of the subplots of the figure
+                        right = 0.9    # the right side of the subplots of the figure
+                        bottom = 0.1   # the bottom of the subplots of the figure
+                        top = 0.9      # the top of the subplots of the figure
+                        wspace = 0.2   # the amount of width reserved for blank space between subplots
+                        hspace = 0.2   # the amount of height reserved for white space between subplots
+                        '''
+                        #plt.subplots_adjust(left=0.1*spacing, bottom=0.1*spacing, right=spacing, top=spacing, wspace=spacing, hspace=spacing)
+                        plt.subplots_adjust(hspace=0.3)
+                        plt.show()
+
+                        '''
+                        plt.plot(self.time_vector,self.electric_frequency_vector)                  
+                        #plt.show()
+                        plt.savefig("/home/tumacher/local/src/repositories/arcoslab/experiment/open-coroco/src_DTC-SVM/Python/measures/"+ "electric_frequency vs time" +"." + datetime.datetime.now().ctime() +".jpg")
+                        plt.plot(self.time_vector,self.isA_vector)    
+                        #plt.show()                        
+                        plt.savefig("/home/tumacher/local/src/repositories/arcoslab/experiment/open-coroco/src_DTC-SVM/Python/measures/"+ "isA vs time" +"." + datetime.datetime.now().ctime() +".jpg")                        
+                        '''
                 else: # an empty line means stdin has been closed
                     print "nothing"
 

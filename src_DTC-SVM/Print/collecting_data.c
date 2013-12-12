@@ -370,8 +370,8 @@ void print_regular_data(void)
     printf (" h ");
     print_float_as_bytes(CUR_FREQ);
 */ 
-/*
-    printf ("X")   ;
+
+    printf ("XX")   ;
 
     printf ("t ")   ;  print_float_as_bytes(data_timer                        );
     printf (" rf ")  ;  print_float_as_bytes(data_ref_freq_SVM            );
@@ -400,11 +400,11 @@ void print_regular_data(void)
     printf (" Ud ")  ;  print_float_as_bytes(data_U_d                     );
     printf (" pi ")  ;  print_float_as_bytes(data_pi_control_SVM          );
     printf (" mx ")  ;  print_float_as_bytes(pi_max                       );
-    printf("\n");*/
+    //printf("\n");
+    printf("mm");
 
-
-
-    printf ("X")   ;
+/*-------------------------------
+    printf ("XX")   ;
     print_float_as_bytes(data_timer                        );
     print_float_as_bytes(data_ref_freq_SVM            );
     print_float_as_bytes(data_w_r                  );
@@ -433,8 +433,8 @@ void print_regular_data(void)
     print_float_as_bytes(data_pi_control_SVM          );
     print_float_as_bytes(pi_max                       );
     //printf("\n");
-    printf("m");
-
+    printf("mm");
+-------------------*/
 /*
 
     printf ("X")   ;
