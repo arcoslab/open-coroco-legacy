@@ -334,7 +334,40 @@ class Serial_Stm32f4(object):
                         plt.ylabel('VsQ (A)')
                         plt.legend() 
 
-    def plot_voltage_magnitude
+    def plot_voltage_magnitude(self,rows,columns,subplot_index):    
+                        plt.subplot(rows,columns,subplot_index)
+                        plt.plot(self.time_vector, self.Vs_vector,label='Vs')
+                        plt.plot(self.time_vector, self.Ud_vector,label='Ud')
+                        plt.title('voltage vs time')
+                        plt.xlabel('t (ticks)')
+                        plt.ylabel('Voltage (V)')
+                        plt.legend()     
+
+    def plot_flux_linkage(self,rows,columns,subplot_index):    
+                        plt.subplot(rows,columns,subplot_index)
+                        plt.plot(self.psi_sD_vector, self.psi_sQ_vector)
+                        plt.title('psi_sQ vs psi_sD')
+                        plt.xlabel('psi_sD (Wb)')
+                        plt.ylabel('psi_sQ (Wb)')
+                        plt.legend() 
+
+    def plot_electromagnetic_torque(self,rows,columns,subplot_index):    
+                        plt.subplot(rows,columns,subplot_index)
+                        plt.plot(self.time_vector, self.te_vector,label='te')
+                        plt.plot(self.time_vector, self.te_ref_vector,label='te_ref')
+                        plt.title('torque vs time')
+                        plt.xlabel('time (ticks)')
+                        plt.ylabel('torque (Nm)')
+                        plt.legend() 
+
+    def plot_phase_advance(self,rows,columns,subplot_index):    
+                        plt.subplot(rows,columns,subplot_index)
+                        plt.plot(self.time_vector, self.pi_control_vector,label='pi_control')
+                        plt.plot(self.time_vector, self.pi_max_vector,label='pi_max')
+                        plt.title('pi increment vs time')
+                        plt.xlabel('time (ticks)')
+                        plt.ylabel('pi (degrees)')
+                        plt.legend()
 
     def plot_all_in_one(self):
                         rows = 4
@@ -355,39 +388,16 @@ class Serial_Stm32f4(object):
                         self.plot_quadrature_vs_direct_voltages (rows,columns,subplot_index)
                         subplot_index=subplot_index+1
 
-                        plt.subplot(rows,columns,subplot_index)
-                        plt.plot(self.time_vector, self.Vs_vector,label='Vs')
-                        plt.plot(self.time_vector, self.Ud_vector,label='Ud')
-                        plt.title('voltage vs time')
-                        plt.xlabel('t (ticks)')
-                        plt.ylabel('Voltage (V)')
-                        plt.legend() 
+                        self.plot_voltage_magnitude             (rows,columns,subplot_index)
                         subplot_index=subplot_index+1
                
-                        plt.subplot(rows,columns,subplot_index)
-                        plt.plot(self.psi_sD_vector, self.psi_sQ_vector)
-                        plt.title('psi_sQ vs psi_sD')
-                        plt.xlabel('psi_sD (Wb)')
-                        plt.ylabel('psi_sQ (Wb)')
-                        plt.legend() 
+                        self.plot_flux_linkage                       (rows,columns,subplot_index)
                         subplot_index=subplot_index+1    
 
-                        plt.subplot(rows,columns,subplot_index)
-                        plt.plot(self.time_vector, self.te_vector,label='te')
-                        plt.plot(self.time_vector, self.te_ref_vector,label='te_ref')
-                        plt.title('torque vs time')
-                        plt.xlabel('time (ticks)')
-                        plt.ylabel('torque (Nm)')
-                        plt.legend()     
+                        self.plot_electromagnetic_torque             (rows,columns,subplot_index)
                         subplot_index=subplot_index+1    
 
-                        plt.subplot(rows,columns,subplot_index)
-                        plt.plot(self.time_vector, self.pi_control_vector,label='pi_control')
-                        plt.plot(self.time_vector, self.pi_max_vector,label='pi_max')
-                        plt.title('pi increment vs time')
-                        plt.xlabel('time (ticks)')
-                        plt.ylabel('pi (degrees)')
-                        plt.legend()
+                        self.plot_phase_advance                      (rows,columns,subplot_index)
                         subplot_index=subplot_index+1  
                         
                         '''
@@ -408,20 +418,38 @@ class Serial_Stm32f4(object):
                         rows = 1
                         columns = 1 
                         subplot_index = 1
-                        
-                        plt.figure(num=2, figsize=(10, 5), dpi=300, facecolor='w', edgecolor='k')  
-                        
-                        plt.subplot(rows,columns,subplot_index)
-                        plt.plot(self.time_vector,self.electric_frequency_vector ,label='electric' )
-                        plt.plot(self.time_vector,self.hall_frequency_vector     ,label='hall'     )
-                        plt.plot(self.time_vector,self.reference_frequency_vector,label='reference')                     
-                        plt.title('frequency vs time')
-                        plt.xlabel('time (ticks)')
-                        plt.ylabel('frequency (Hz)')
-                        plt.legend()
-                        subplot_index=subplot_index+1
-                        
-                        plt.savefig(self.path+ "test" +"." + datetime.datetime.now().ctime() +".jpg")
+                                              
+                        plt.figure(num=2, figsize=(20, 20), dpi=300, facecolor='w', edgecolor='k') 
+                        self.plot_frequencies                   (rows,columns,subplot_index)
+                        plt.savefig(self.path+ "frequencies" +"." + datetime.datetime.now().ctime() +".jpg")
+
+                        plt.figure(num=3, figsize=(20, 20), dpi=300, facecolor='w', edgecolor='k') 
+                        self.plot_three_phase_currents          (rows,columns,subplot_index)
+                        plt.savefig(self.path+ "three-phase_currents" +"." + datetime.datetime.now().ctime() +".jpg")
+
+                        plt.figure(num=4, figsize=(20, 20), dpi=300, facecolor='w', edgecolor='k') 
+                        self.plot_quadrature_vs_direct_currents (rows,columns,subplot_index)
+                        plt.savefig(self.path+ "isQ_vs_isD" +"." + datetime.datetime.now().ctime() +".jpg")
+
+                        plt.figure(num=5, figsize=(20, 20), dpi=300, facecolor='w', edgecolor='k')
+                        self.plot_quadrature_vs_direct_voltages (rows,columns,subplot_index)
+                        plt.savefig(self.path+ "VsQ_vs_VsD" +"." + datetime.datetime.now().ctime() +".jpg")
+
+                        plt.figure(num=6, figsize=(20, 20), dpi=300, facecolor='w', edgecolor='k')
+                        self.plot_voltage_magnitude             (rows,columns,subplot_index)
+                        plt.savefig(self.path+ "voltage_magnitude" +"." + datetime.datetime.now().ctime() +".jpg")
+               
+                        plt.figure(num=7, figsize=(20, 20), dpi=300, facecolor='w', edgecolor='k')
+                        self.plot_flux_linkage                       (rows,columns,subplot_index)
+                        plt.savefig(self.path+ "flux-linkage" +"." + datetime.datetime.now().ctime() +".jpg")
+
+                        plt.figure(num=8, figsize=(20, 20), dpi=300, facecolor='w', edgecolor='k')
+                        self.plot_electromagnetic_torque             (rows,columns,subplot_index)
+                        plt.savefig(self.path+ "electromagnetic_torque" +"." + datetime.datetime.now().ctime() +".jpg")
+
+                        plt.figure(num=9, figsize=(20, 20), dpi=300, facecolor='w', edgecolor='k')
+                        self.plot_phase_advance                      (rows,columns,subplot_index)
+                        plt.savefig(self.path+ "phase_advance_pi" +"." + datetime.datetime.now().ctime() +".jpg")
        
 
 
