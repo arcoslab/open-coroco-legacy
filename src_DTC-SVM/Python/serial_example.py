@@ -19,9 +19,6 @@
 # *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 # */
 
-
-
-
 from  Serial_Stm32f4 import *
     
 
@@ -36,8 +33,7 @@ def main():
         print "Sorry, Ctrl-C..."
     except SerialException:
                 print"STM32F4 disconnected, cua cua"
-   
-
+ 
 
 if __name__ == '__main__':
 	main()

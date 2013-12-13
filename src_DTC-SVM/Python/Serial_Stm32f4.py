@@ -30,7 +30,22 @@ from byte_to_float import *
 
 class Serial_Stm32f4(object):
 
+
     def initializing_values(self):
+
+        #pyserial configuration
+        self.path = "/home/tumacher/local/src/repositories/arcoslab/experiment/open-coroco/src_DTC-SVM/Python/measures/"
+        self.dev_type="/dev/ttyACM"
+        self.serial_speed=115200
+        self.serial_timeout=1
+
+        #control data for pyserial
+        self.connecting      = True;
+        self.counter               = 0
+        self.capture_data    = False
+        self.capture_counter = 0
+
+        #data from stm32F4 (impedance control+DTC-SVM+PID+HALL)
         self.time                   = 0.0
        
         self.reference_frequency    = 0.0
@@ -59,29 +74,10 @@ class Serial_Stm32f4(object):
         self.te_ref                 = 0.0
         self.Ud                     = 0.0
         self.pi_control             = 0.0
-        self.pi_max                 = 0.0    	
-
-    def __init__(self):
-        connecting=True;
-        i=0
-
-        self.capture_data    = False
-        self.capture_counter = 0
+        self.pi_max                 = 0.0   
 
 
-        self.log_file = open("/home/tumacher/local/src/repositories/arcoslab/experiment/open-coroco/src_DTC-SVM/Python/measures/" + \
-                             "data" +"." + datetime.datetime.now().ctime() +".csv", "wb")
-        self.writer   = csv.writer(self.log_file, delimiter=' ',quotechar=' ', quoting=csv.QUOTE_MINIMAL)
-        header_csv    = "t t ref_freq ref_freq electric_frequency electric_frequency hall_freq hall_freq " + \
-                        "isA isA isB isB isC isC isD isD isQ isQ "                                         + \
-                        "VsD VsD VsQ VsQ Vs Vs Vs_cita Vs_cita Vs_cita_relative Vs_cita_relative "         + \
-                        "psisD psisD psisQ psisQ psis psis psis_alpha psis_alpha psis_ref psis_ref "       + \
-                        "te te Ud Ud pi_control pi_control pi_max pi_max"  
-        split_header = header_csv.split()                  
-        self.writer.writerow(split_header)
-
-        self.initializing_values()        
-
+    def creating_data_vectors(self):
         self.time_vector = []
         self.reference_frequency_vector = []
         self.electric_frequency_vector = []
@@ -110,33 +106,36 @@ class Serial_Stm32f4(object):
         self.Ud_vector = []
         self.pi_control_vector = []
         self.pi_max_vector = []
-        
 
-               
 
-        while connecting==True:
+    def connecting_to_stm32F4(self):
+        while self.connecting==True:
             try:
-                self.ser = serial.Serial("/dev/ttyACM"+str(i), 115200, timeout=1)
-                connecting=False
+                self.ser = serial.Serial(self.dev_type+str(self.counter),self.serial_speed , timeout=self.serial_timeout)
+                self.connecting=False
                 self.ser.flushInput()
                 print "Connected to the STM32F4"
             except SerialException:
                 print"Disconnected from the STM32, cua cua"
-                i=i+1
-                if (i>100):
-                    i=0
-                connecting=True
-            
+                self.counter=self.counter+1
+                if (self.counter>100):
+                    self.counter=0
+                self.connecting=True                
 
-    def __del__(self):
-        self.log_file.close()
-        self.ser.close()
-        print "---Serial port closed: disconnected from the STM32F4---"
-	
+  
+    def create_log_file(self):
+        self.log_file = open( self.path +"data" +"." + datetime.datetime.now().ctime() +".csv", "wb")
+        self.writer   = csv.writer(self.log_file, delimiter=' ',quotechar=' ', quoting=csv.QUOTE_MINIMAL)
+        header_csv    = "t t ref_freq ref_freq electric_frequency electric_frequency hall_freq hall_freq " + \
+                        "isA isA isB isB isC isC isD isD isQ isQ "                                         + \
+                        "VsD VsD VsQ VsQ Vs Vs Vs_cita Vs_cita Vs_cita_relative Vs_cita_relative "         + \
+                        "psisD psisD psisQ psisQ psis psis psis_alpha psis_alpha psis_ref psis_ref "       + \
+                        "te te Ud Ud pi_control pi_control pi_max pi_max"  
+        split_header = header_csv.split()                  
+        self.writer.writerow(split_header)        
 
-        	    	    		
-		
-    def read(self): 
+
+    def read_data_from_stm32(self):
         bytes = 1
         info = ''   #info needs to be set before splitting it, otherwise pythons says it is uninitialized
         previous_character = self.ser.read(bytes)
@@ -149,16 +148,6 @@ class Serial_Stm32f4(object):
                 single_character = self.ser.read(bytes)
                 info +=single_character
                     
-            '''
-            if len(info)>=94:
-                self.time                = bytes_to_float(info[0]+info[1]+info[2]+info[3])
-                self.reference_frequency = bytes_to_float(info[4]+info[5]+info[6]+info[7])
-                self.electric_frequency  = bytes_to_float(info[8]+info[9]+info[10]+info[11])
-            '''
-    
-                #print   "t: %6.2f " %self.time+" ref_freq: %6.2f" %self.reference_frequency+" electric_frequency: %6.2f" %self.electric_frequency#+" hall_freq: %6.2f" %self.hall_frequency  +"isA: %6.2f" %self.isA+"isB: %6.2f" %self.isB+"isC: %6.2f" %self.isC+"isD: %6.2f" %self.isD+"isQ: %6.2f" %self.isQ+"VsD: %6.2f" %self.VsD+"VsQ: %6.2f" %self.VsQ+"Vs: %6.2f" %self.Vs+"Vs_cita: %6.2f" %self.Vs_cita+"Vs_cita_relative: %6.2f" %self.Vs_relative_cita+"psisD: %6.2f" %self.psi_sD+"psisQ: %6.2f" %self.psi_sQ+"psis: %6.2f" %self.psi_s+"psis_alpha: %6.2f" %self.psi_s_alpha+"psis_ref: %6.5f" %self.psi_s_reference+"te: %6.2f" %self.te+"Ud: %6.2f" %self.Ud+"pi_control: %6.2f" %self.pi_control+"pi_max: %6.2f" %self.pi_max
-             
-            #print len(info)  
             split_info = info.split()
             '''
             self.time                = bytes_to_float(split_info[0])
@@ -220,40 +209,10 @@ class Serial_Stm32f4(object):
                     elif split_info[i] == "tr"   : self.te_ref             = bytes_to_float(split_info[i+1])
                     elif split_info[i] == "Ud"   : self.Ud                 = bytes_to_float(split_info[i+1])
                     elif split_info[i] == "pi"   : self.pi_control         = bytes_to_float(split_info[i+1])
-                    elif split_info[i] == "mx"   : self.pi_max             = bytes_to_float(split_info[i+1])
-                                        
-            if self.capture_data==True:
-                '''
-                self.time_vector                [self.capture_counter]=self.time
-                self.reference_frequency_vector [self.capture_counter]=self.reference_frequency
-                self.electric_frequency_vector  [self.capture_counter]=self.electric_frequency
-                self.hall_frequency_vector      [self.capture_counter]=self.hall_frequency
-  
-                self.isA_vector                 [self.capture_counter]=self.isA
-                self.isB_vector                 [self.capture_counter]=self.isB
-                self.isC_vector                 [self.capture_counter]=self.isC
-                self.isD_vector                 [self.capture_counter]=self.isD
-                self.isQ_vector                 [self.capture_counter]=self.isQ
-   
-                self.VsD_vector                 [self.capture_counter]=self.VsD
-                self.VsQ_vector                 [self.capture_counter]=self.VsQ
-                self.Vs_vector                  [self.capture_counter]=self.Vs
-                self.Vs_cita_vector             [self.capture_counter]=self.Vs_cita_vector
-                self.Vs_relative_cita_vector    [self.capture_counter]=self.Vs_relative_cita_vector
+                    elif split_info[i] == "mx"   : self.pi_max             = bytes_to_float(split_info[i+1])    
+    
 
-                self.psi_sD_vector              [self.capture_counter]=self.psi_sD
-                self.psi_sQ_vector              [self.capture_counter]=self.psi_sQ
-                self.psi_s_vector               [self.capture_counter]=self.psi_s_vector
-                self.psi_s_alpha_vector         [self.capture_counter]=self.psi_s_alpha_vector
-                self.psi_s_reference_vector     [self.capture_counter]=self.psi_s_reference_vector
-                         
-                self.te_vector                  [self.capture_counter]=self.te
-                self.Ud_vector                  [self.capture_counter]=self.Ud
-                self.pi_control_vector          [self.capture_counter]=self.pi_control
-                self.pi_max_vector              [self.capture_counter]=self.pi_max
-
-                self.capture_counter=self.capture_counter+1           
-                '''
+    def append_new_data_to_vectors(self):
                 self.time_vector.append(self.time)
                 self.reference_frequency_vector.append(self.reference_frequency)
                 self.electric_frequency_vector.append(self.electric_frequency)
@@ -281,8 +240,10 @@ class Serial_Stm32f4(object):
                 self.te_ref_vector.append(self.te_ref)
                 self.Ud_vector.append(self.Ud)
                 self.pi_control_vector.append(self.pi_control)
-                self.pi_max_vector.append(self.pi_max)
+                self.pi_max_vector.append(self.pi_max)        
 
+
+    def save_data_to_csv_file(self):
                 new_data_line_csv=  "t %6.2f "                  %self.time                  + \
                                     " ref_freq %6.2f"           %self.reference_frequency   + \
                                     " electric_frequency %6.2f" %self.electric_frequency    + \
@@ -305,14 +266,12 @@ class Serial_Stm32f4(object):
                                     " te %6.2f"                 %self.te                    + \
                                     " Ud %6.2f"                 %self.Ud                    + \
                                     " pi_control %6.2f"         %self.pi_control            + \
-                                    " pi_max %6.2f"             %self.pi_max
-
+                                    " pi_max %6.2f"             %self.pi_max  
                 split_new_data_line = new_data_line_csv.split()
-                self.writer.writerow(split_new_data_line)
+                self.writer.writerow(split_new_data_line)     
 
-            
-            
-            
+
+    def print_to_console(self):
             new_data_line=  "t: %6.2f "                  %self.time                  + \
                             " ref_freq: %6.2f"           %self.reference_frequency   + \
                             " electric_frequency: %6.2f" %self.electric_frequency    + \
@@ -336,36 +295,11 @@ class Serial_Stm32f4(object):
                             " Ud: %6.2f"                 %self.Ud                    + \
                             " pi_control: %6.2f"         %self.pi_control            + \
                             " pi_max %6.2f:"             %self.pi_max
-            print   new_data_line
+            print   new_data_line        
 
-           
- 
-            
 
-    def write(self):	
-         while sys.stdin in select.select([sys.stdin], [], [], 0)[0]:	#read from standart input if there is something, otherwise not 
-            line = sys.stdin.readline()     #you must press enter before typing the new command
-            if line:
-                line=raw_input("Enter new command: ")   #the printing of the stm32f4 data is stopped until you type a new reference
-                if line:
-                    self.ser.write(line)
-                    self.ser.write('\n')
-                    self.ser.write('\r')
-
-                    split_command = line.split()
-                    if split_command[0]=='c':
-                        self.capture_data=True
-                        self.capture_counter=0
-                    elif split_command[0]=='f':
-                        self.capture_data=False
-
-                        rows = 4
-                        colums = 2 
-                        subplot_index = 1
-                        
-                        plt.figure(num=1, figsize=(20, 20), dpi=300, facecolor='w', edgecolor='k')  
-                        
-                        plt.subplot(rows,colums,subplot_index)
+    def plot_frequencies(self,rows,columns,subplot_index):
+                        plt.subplot(rows,columns,subplot_index)
                         plt.plot(self.time_vector,self.electric_frequency_vector ,label='electric' )
                         plt.plot(self.time_vector,self.hall_frequency_vector     ,label='hall'     )
                         plt.plot(self.time_vector,self.reference_frequency_vector,label='reference')                     
@@ -373,9 +307,9 @@ class Serial_Stm32f4(object):
                         plt.xlabel('time (ticks)')
                         plt.ylabel('frequency (Hz)')
                         plt.legend()
-                        subplot_index=subplot_index+1
 
-                        plt.subplot(rows,colums,subplot_index)
+    def plot_three_phase_currents(self,rows,columns,subplot_index):
+                        plt.subplot(rows,columns,subplot_index)
                         plt.plot(self.time_vector, self.isA_vector,label='isA')
                         plt.plot(self.time_vector, self.isB_vector,label='isB')
                         plt.plot(self.time_vector, self.isC_vector,label='isC')
@@ -383,33 +317,54 @@ class Serial_Stm32f4(object):
                         plt.xlabel('time (ticks)')
                         plt.ylabel('three-phase currents (A)')
                         plt.legend()
-                        subplot_index=subplot_index+1
 
-                        plt.subplot(rows,colums,subplot_index)
+    def plot_quadrature_vs_direct_currents(self,rows,columns,subplot_index):
+                        plt.subplot(rows,columns,subplot_index)
                         plt.plot(self.isD_vector, self.isQ_vector)
                         plt.title('isQ vs isD')
                         plt.xlabel('isD (A)')
                         plt.ylabel('isQ (A)')
-                        plt.legend()  
-                        subplot_index=subplot_index+1    
+                        plt.legend() 
 
-                        plt.subplot(rows,colums,subplot_index)
+    def plot_quadrature_vs_direct_voltages(self,rows,columns,subplot_index):
+                        plt.subplot(rows,columns,subplot_index)
                         plt.plot(self.VsD_vector, self.VsQ_vector)
                         plt.title('VsQ vs VsD')
                         plt.xlabel('VsD (A)')
                         plt.ylabel('VsQ (A)')
                         plt.legend() 
+
+    def plot_voltage_magnitude
+
+    def plot_all_in_one(self):
+                        rows = 4
+                        columns = 2 
+                        subplot_index = 1
+                        
+                        plt.figure(num=1, figsize=(20, 20), dpi=300, facecolor='w', edgecolor='k')  
+                        
+                        self.plot_frequencies                   (rows,columns,subplot_index)
                         subplot_index=subplot_index+1
 
-                        plt.subplot(rows,colums,subplot_index)
-                        plt.plot(self.time_vector, self.Vs_vector)
-                        plt.title('Vs vs time')
+                        self.plot_three_phase_currents          (rows,columns,subplot_index)
+                        subplot_index=subplot_index+1
+
+                        self.plot_quadrature_vs_direct_currents (rows,columns,subplot_index)
+                        subplot_index=subplot_index+1    
+
+                        self.plot_quadrature_vs_direct_voltages (rows,columns,subplot_index)
+                        subplot_index=subplot_index+1
+
+                        plt.subplot(rows,columns,subplot_index)
+                        plt.plot(self.time_vector, self.Vs_vector,label='Vs')
+                        plt.plot(self.time_vector, self.Ud_vector,label='Ud')
+                        plt.title('voltage vs time')
                         plt.xlabel('t (ticks)')
-                        plt.ylabel('Vs (V)')
+                        plt.ylabel('Voltage (V)')
                         plt.legend() 
                         subplot_index=subplot_index+1
                
-                        plt.subplot(rows,colums,subplot_index)
+                        plt.subplot(rows,columns,subplot_index)
                         plt.plot(self.psi_sD_vector, self.psi_sQ_vector)
                         plt.title('psi_sQ vs psi_sD')
                         plt.xlabel('psi_sD (Wb)')
@@ -417,7 +372,7 @@ class Serial_Stm32f4(object):
                         plt.legend() 
                         subplot_index=subplot_index+1    
 
-                        plt.subplot(rows,colums,subplot_index)
+                        plt.subplot(rows,columns,subplot_index)
                         plt.plot(self.time_vector, self.te_vector,label='te')
                         plt.plot(self.time_vector, self.te_ref_vector,label='te_ref')
                         plt.title('torque vs time')
@@ -426,7 +381,7 @@ class Serial_Stm32f4(object):
                         plt.legend()     
                         subplot_index=subplot_index+1    
 
-                        plt.subplot(rows,colums,subplot_index)
+                        plt.subplot(rows,columns,subplot_index)
                         plt.plot(self.time_vector, self.pi_control_vector,label='pi_control')
                         plt.plot(self.time_vector, self.pi_max_vector,label='pi_max')
                         plt.title('pi increment vs time')
@@ -446,17 +401,17 @@ class Serial_Stm32f4(object):
                         plt.subplots_adjust(hspace=0.4)
                         plt.subplots_adjust(wspace=0.2)
                         #plt.show()                        
-                        plt.savefig("/home/tumacher/local/src/repositories/arcoslab/experiment/open-coroco/src_DTC-SVM/Python/measures/"+ "all_graphs" +"." + datetime.datetime.now().ctime() +".jpg")
+                        plt.savefig(self.path+ "all_graphs" +"." + datetime.datetime.now().ctime() +".jpg")
 
 
-
+    def plot_one_by_one(self):
                         rows = 1
-                        colums = 1 
+                        columns = 1 
                         subplot_index = 1
                         
                         plt.figure(num=2, figsize=(10, 5), dpi=300, facecolor='w', edgecolor='k')  
                         
-                        plt.subplot(rows,colums,subplot_index)
+                        plt.subplot(rows,columns,subplot_index)
                         plt.plot(self.time_vector,self.electric_frequency_vector ,label='electric' )
                         plt.plot(self.time_vector,self.hall_frequency_vector     ,label='hall'     )
                         plt.plot(self.time_vector,self.reference_frequency_vector,label='reference')                     
@@ -466,5 +421,57 @@ class Serial_Stm32f4(object):
                         plt.legend()
                         subplot_index=subplot_index+1
                         
-                        plt.savefig("/home/tumacher/local/src/repositories/arcoslab/experiment/open-coroco/src_DTC-SVM/Python/measures/"+ "test" +"." + datetime.datetime.now().ctime() +".jpg")
+                        plt.savefig(self.path+ "test" +"." + datetime.datetime.now().ctime() +".jpg")
+       
+
+
+    def __init__(self):
+        self.initializing_values()        
+        self.creating_data_vectors()
+        self.create_log_file()
+        self.connecting_to_stm32F4()
+               
+
+
+            
+
+    def __del__(self):
+        self.log_file.close()
+        self.ser.close()
+        print "---Serial port closed: disconnected from the STM32F4---"
+	
+
+        	    	    		
+		
+    def read(self): 
+            self.read_data_from_stm32()
+                                        
+            if self.capture_data==True:
+                self.append_new_data_to_vectors()
+                self.save_data_to_csv_file()
+
+            self.print_to_console() 
+
+
+
+    def write(self):	
+         while sys.stdin in select.select([sys.stdin], [], [], 0)[0]:	#read from standart input if there is something, otherwise not 
+            line = sys.stdin.readline()     #you must press enter before typing the new command
+            if line:
+                line=raw_input("Enter new command: ")   #the printing of the stm32f4 data is stopped until you type a new reference
+                if line:
+                    self.ser.write(line)
+                    self.ser.write('\n')
+                    self.ser.write('\r')
+
+                    split_command = line.split()
+                    if split_command[0]=='c':
+                        self.capture_data=True
+                        self.capture_counter=0
+                    elif split_command[0]=='f':
+                        self.capture_data=False
+                        self.plot_all_in_one()
+                        self.plot_one_by_one()
+
+
 
