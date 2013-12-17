@@ -13,6 +13,7 @@
 *.pdf
 *.ods
 *.jpg
+*.csv
 motor.h
 .gdb_history
 .gdb_history

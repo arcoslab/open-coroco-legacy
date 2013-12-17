@@ -12,7 +12,7 @@
 *.log
 *.pdf
 *.ods
-*.jpg
+
 motor.h
 .gdb_history
 .gdb_history

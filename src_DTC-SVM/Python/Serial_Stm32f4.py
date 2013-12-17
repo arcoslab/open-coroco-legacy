@@ -40,10 +40,12 @@ class Serial_Stm32f4(object):
         self.serial_timeout=1
 
         #control data for pyserial
-        self.connecting      = True;
+        self.connecting      = True
+        self.transmition_error =False
         self.counter               = 0
         self.capture_data    = False
         self.capture_counter = 0
+        
 
         #data from stm32F4 (impedance control+DTC-SVM+PID+HALL)
         self.time                   = 0.0
@@ -135,6 +137,16 @@ class Serial_Stm32f4(object):
         self.writer.writerow(split_header)        
 
 
+    def get_value(self,string,output_variable,split_info,i,error):
+        if split_info[i] == string: 
+            convertion = bytes_to_float(split_info[i+1])
+            if (convertion[0]==True):                       
+                output_variable = 27#convertion[1]
+                return True    
+            else:
+                return False 
+
+
     def read_data_from_stm32(self):
         bytes = 1
         info = ''   #info needs to be set before splitting it, otherwise pythons says it is uninitialized
@@ -149,40 +161,23 @@ class Serial_Stm32f4(object):
                 info +=single_character
                     
             split_info = info.split()
-            '''
-            self.time                = bytes_to_float(split_info[0])
-            self.reference_frequency = bytes_to_float(split_info[1])
-            self.electric_frequency  = bytes_to_float(split_info[2])
-            self.hall_frequency      = bytes_to_float(split_info[3])
-                              
-            self.isA                = bytes_to_float(split_info[4])
-            self.isB                = bytes_to_float(split_info[5])
-            self.isC                = bytes_to_float(split_info[6])
-            self.isD                = bytes_to_float(split_info[7])
-            self.isQ                = bytes_to_float(split_info[8])
- 
-            self.VsD                = bytes_to_float(split_info[9])
-            self.VsQ                = bytes_to_float(split_info[10])
-            self.Vs                 = bytes_to_float(split_info[11])
-            self.Vs_cita            = bytes_to_float(split_info[12])
-            self.Vs_relative_cita   = bytes_to_float(split_info[13])
-
-            self.psi_sD             = bytes_to_float(split_info[14])
-            self.psi_sQ             = bytes_to_float(split_info[15])
-            self.psi_s              = bytes_to_float(split_info[16])
-            self.psi_s_alpha        = bytes_to_float(split_info[17])
-            self.psi_s_reference    = bytes_to_float(split_info[18])
-                 
-            self.te                 = bytes_to_float(split_info[19])
-            self.Ud                 = bytes_to_float(split_info[20])
-            self.pi_control         = bytes_to_float(split_info[21])
-            self.pi_max             = bytes_to_float(split_info[22])
-             '''
-                        
+            self.transmition_error=False
+                
             for i in range( len(split_info)):
                 if i+1<len(split_info):
+                    
+                    #if (error==False): error=self.get_value("t",self.time,split_info,i,error)
 
-                    if   split_info[i] == "t"   : self.time                = bytes_to_float(split_info[i+1])
+
+                    
+                    if   (split_info[i] == "t" and self.transmition_error==False)  : 
+                                                                    convertion = bytes_to_float(split_info[i+1])
+                                                                    if (convertion[0]==True):                      
+                                                                        self.time = convertion[1]
+                                                                        self.transmition_error=False
+                                                                    else:   
+                                                                        self.transmition_error=True
+                    '''                         
                     elif split_info[i] == "rf"  : self.reference_frequency = bytes_to_float(split_info[i+1])
                     elif split_info[i] == "f"   : self.electric_frequency  = bytes_to_float(split_info[i+1])
                     elif split_info[i] == "h"   : self.hall_frequency      = bytes_to_float(split_info[i+1])
@@ -209,8 +204,8 @@ class Serial_Stm32f4(object):
                     elif split_info[i] == "tr"   : self.te_ref             = bytes_to_float(split_info[i+1])
                     elif split_info[i] == "Ud"   : self.Ud                 = bytes_to_float(split_info[i+1])
                     elif split_info[i] == "pi"   : self.pi_control         = bytes_to_float(split_info[i+1])
-                    elif split_info[i] == "mx"   : self.pi_max             = bytes_to_float(split_info[i+1])    
-    
+                    elif split_info[i] == "mx"   : self.pi_max             = bytes_to_float(split_info[i+1])     
+                    '''
 
     def append_new_data_to_vectors(self):
                 self.time_vector.append(self.time)
