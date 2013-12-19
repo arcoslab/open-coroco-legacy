@@ -37,7 +37,7 @@ $Descr A4 11693 8268
 encoding utf-8
 Sheet 1 1
 Title ""
-Date "17 dec 2013"
+Date "19 dec 2013"
 Rev ""
 Comp ""
 Comment1 ""
@@ -1428,12 +1428,12 @@ $EndComp
 $Comp
 L GND #PWR058
 U 1 1 528EE59B
-P 3250 -260
-F 0 "#PWR058" H 3250 -260 30  0001 C CNN
-F 1 "GND" H 3250 -330 30  0001 C CNN
-F 2 "" H 3250 -260 60  0000 C CNN
-F 3 "" H 3250 -260 60  0000 C CNN
-	1    3250 -260
+P 3185 265
+F 0 "#PWR058" H 3185 265 30  0001 C CNN
+F 1 "GND" H 3185 195 30  0001 C CNN
+F 2 "" H 3185 265 60  0000 C CNN
+F 3 "" H 3185 265 60  0000 C CNN
+	1    3185 265 
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -1769,13 +1769,13 @@ $EndComp
 $Comp
 L GND #PWR075
 U 1 1 529C679A
-P 2645 -225
-F 0 "#PWR075" H 2645 -225 30  0001 C CNN
-F 1 "GND" H 2645 -295 30  0001 C CNN
-F 2 "" H 2645 -225 60  0000 C CNN
-F 3 "" H 2645 -225 60  0000 C CNN
-	1    2645 -225
-	1    0    0    -1  
+P 2110 -225
+F 0 "#PWR075" H 2110 -225 30  0001 C CNN
+F 1 "GND" H 2110 -295 30  0001 C CNN
+F 2 "" H 2110 -225 60  0000 C CNN
+F 3 "" H 2110 -225 60  0000 C CNN
+	1    2110 -225
+	0    1    1    0   
 $EndComp
 $Comp
 L +48V #PWR076
@@ -2678,4 +2678,36 @@ Wire Wire Line
 	825  4455 3730 4455
 Wire Wire Line
 	3730 4455 3730 4450
+$Comp
+L R R?
+U 1 1 52B244CC
+P 2370 -225
+F 0 "R?" V 2450 -225 40  0000 C CNN
+F 1 "R" V 2377 -224 40  0000 C CNN
+F 2 "~" V 2300 -225 30  0000 C CNN
+F 3 "~" H 2370 -225 30  0000 C CNN
+	1    2370 -225
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	2120 -225 2110 -225
+Wire Wire Line
+	2620 -225 2645 -225
+$Comp
+L R R?
+U 1 1 52B2479C
+P 3185 -5
+F 0 "R?" V 3265 -5  40  0000 C CNN
+F 1 "R" V 3192 -4  40  0000 C CNN
+F 2 "~" V 3115 -5  30  0000 C CNN
+F 3 "~" H 3185 -5  30  0000 C CNN
+	1    3185 -5  
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3250 -260 3185 -260
+Wire Wire Line
+	3185 -260 3185 -255
+Wire Wire Line
+	3185 245  3185 265 
 $EndSCHEMATC
