@@ -1,4 +1,4 @@
-Cmp-Mod V01 Created by CvPcb (2013-jul-07)-stable date = Wed 18 Dec 2013 07:08:34 PM CST
+Cmp-Mod V01 Created by CvPcb (2013-jul-07)-stable date = Thu 19 Dec 2013 04:22:16 PM CST
 
 BeginCmp
 TimeStamp = /528E7FD9;
@@ -39,14 +39,14 @@ BeginCmp
 TimeStamp = /528E79DD;
 Reference = BT1;
 ValeurCmp = BATTERY_12V;
-IdModule  = Battery_2x1;
+IdModule  = PIN_ARRAY_2X1;
 EndCmp
 
 BeginCmp
 TimeStamp = /529393B9;
 Reference = BT2;
 ValeurCmp = BATTERY_48;
-IdModule  = Battery_2x1;
+IdModule  = PIN_ARRAY_2X1;
 EndCmp
 
 BeginCmp
@@ -326,7 +326,7 @@ BeginCmp
 TimeStamp = /529C3E04;
 Reference = P2;
 ValeurCmp = POWER_FUSE;
-IdModule  = Fuse;
+IdModule  = fuse_holder_SMD;
 EndCmp
 
 BeginCmp
@@ -354,7 +354,7 @@ BeginCmp
 TimeStamp = /529C3E13;
 Reference = P6;
 ValeurCmp = POWER_FUSE;
-IdModule  = Fuse;
+IdModule  = fuse_holder_SMD;
 EndCmp
 
 BeginCmp

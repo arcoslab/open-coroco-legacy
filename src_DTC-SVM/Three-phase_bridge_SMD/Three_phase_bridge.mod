@@ -1,4 +1,4 @@
-PCBNEW-LibModule-V1  Wed 18 Dec 2013 06:16:29 PM CST
+PCBNEW-LibModule-V1  Thu 19 Dec 2013 03:44:51 PM CST
 # encoding utf-8
 Units mm
 $INDEX
@@ -24,6 +24,7 @@ TO220_Heat_Sink
 TO220_small_Heat_Sink_stand
 TO220_small_Heatsink_NO_copper
 TO220_small_Heatsink_stand_reduced_area
+fuse_holder_SMD
 regular_C
 $EndINDEX
 $MODULE 10mm_C
@@ -1688,6 +1689,33 @@ Of 0 0 0
 Ro 0 0 0
 $EndSHAPE3D
 $EndMODULE TO220_small_Heatsink_stand_reduced_area
+$MODULE fuse_holder_SMD
+Po 0 0 0 15 52B368C1 00000000 ~~
+Li fuse_holder_SMD
+Sc 0
+AR 
+Op 0 0 0
+T0 0 -4.318 1 1 0 0.15 N V 21 N "fuse_holder_SMD"
+T1 0 4.064 1 1 0 0.15 N V 21 N "VAL**"
+DS -11.43 -5.588 -11.43 5.588 0.15 21
+DS -11.43 5.588 11.43 5.588 0.15 21
+DS 11.43 5.588 11.43 -5.588 0.15 21
+DS 11.43 -5.588 -11.43 -5.588 0.15 21
+$PAD
+Sh "2" R 6.096 6.096 0 0 0
+Dr 0 0 0
+At SMD N 00888000
+Ne 0 ""
+Po 8.636 0
+$EndPAD
+$PAD
+Sh "1" R 6.096 6.096 0 0 0
+Dr 0 0 0
+At SMD N 00888000
+Ne 0 ""
+Po -8.636 0
+$EndPAD
+$EndMODULE fuse_holder_SMD
 $MODULE regular_C
 Po 0 0 0 15 529ACA13 00000000 ~~
 Li regular_C
