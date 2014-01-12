@@ -37,7 +37,7 @@ $Descr A4 11693 8268
 encoding utf-8
 Sheet 1 1
 Title ""
-Date "19 dec 2013"
+Date "12 jan 2014"
 Rev ""
 Comp ""
 Comment1 ""
@@ -2435,13 +2435,11 @@ Wire Wire Line
 Wire Wire Line
 	825  2650 825  2655
 Wire Wire Line
-	825  2755 3730 2755
+	3730 2755 825  2755
 Wire Wire Line
-	3730 2755 3730 2750
+	3730 1985 3730 2755
 Wire Wire Line
-	3730 2850 825  2850
-Wire Wire Line
-	825  2850 825  2855
+	825  2815 825  2855
 Wire Wire Line
 	825  2955 3730 2955
 Wire Wire Line
@@ -2547,16 +2545,6 @@ Wire Wire Line
 Wire Wire Line
 	13600 600  13440 600 
 Wire Wire Line
-	8910 2845 9160 2845
-Wire Wire Line
-	9160 2845 9160 2190
-Wire Wire Line
-	9160 2190 14020 2190
-Wire Wire Line
-	14020 2190 14020 1100
-Wire Wire Line
-	14020 1100 13320 1100
-Wire Wire Line
 	12240 4145 13230 4145
 Wire Wire Line
 	13230 4145 13230 4210
@@ -2591,24 +2579,8 @@ Wire Wire Line
 Wire Wire Line
 	14510 3810 14350 3810
 Wire Wire Line
-	14930 4310 14230 4310
-Wire Wire Line
 	12240 3870 12240 4145
-Wire Wire Line
-	14930 4310 14930 8325
-Wire Wire Line
-	14930 8325 1685 8325
-Wire Wire Line
-	1685 8325 1685 5405
-Wire Wire Line
-	1685 5405 1675 5405
-Wire Wire Line
-	2485 5315 2485 3060
 Connection ~ 2485 3060
-Wire Wire Line
-	1675 5405 1675 5315
-Wire Wire Line
-	1675 5315 2485 5315
 $Comp
 L CONN_STM32_25X2 STM32_CONN1
 U 1 1 528E7B9F
@@ -2696,4 +2668,24 @@ Wire Wire Line
 Wire Wire Line
 	12145 4455 13195 4455
 Connection ~ 13195 4455
+Wire Wire Line
+	3730 1985 13790 1985
+Wire Wire Line
+	13790 1985 13790 1100
+Wire Wire Line
+	13790 1100 13320 1100
+Connection ~ 3730 2750
+Wire Wire Line
+	2630 2035 2630 2850
+Wire Wire Line
+	2630 2035 14610 2035
+Wire Wire Line
+	14610 2035 14610 4310
+Wire Wire Line
+	14610 4310 14230 4310
+Connection ~ 2630 2850
+Wire Wire Line
+	3730 2850 3730 2815
+Wire Wire Line
+	3730 2815 825  2815
 $EndSCHEMATC
