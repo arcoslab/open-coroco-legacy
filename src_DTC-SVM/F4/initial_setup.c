@@ -485,18 +485,25 @@ void adc_init (void)
 {
   rcc_peripheral_enable_clock(&RCC_APB2ENR, RCC_APB2ENR_ADC1EN);
   rcc_peripheral_enable_clock(&RCC_AHB1ENR, RCC_AHB1ENR_IOPAEN);
+  rcc_peripheral_enable_clock(&RCC_AHB1ENR, RCC_AHB1ENR_IOPCEN);
 
-  gpio_mode_setup(GPIOA, GPIO_MODE_ANALOG, GPIO_PUPD_NONE, GPIO1);	//PA1
-  gpio_mode_setup(GPIOA, GPIO_MODE_ANALOG, GPIO_PUPD_NONE, GPIO2);	//PA2
-  gpio_mode_setup(GPIOA, GPIO_MODE_ANALOG, GPIO_PUPD_NONE, GPIO3);	//PA3
+  gpio_mode_setup(GPIOA, GPIO_MODE_ANALOG, GPIO_PUPD_NONE, GPIO1);	//PA1   isA (shunt resistor)
+  gpio_mode_setup(GPIOA, GPIO_MODE_ANALOG, GPIO_PUPD_NONE, GPIO2);	//PA2   isB (shunt resistor)
+  gpio_mode_setup(GPIOA, GPIO_MODE_ANALOG, GPIO_PUPD_NONE, GPIO3);	//PA3   Ud  (voltage divider)
+  gpio_mode_setup(GPIOC, GPIO_MODE_ANALOG, GPIO_PUPD_NONE, GPIO1);	//PC1   isA (hall current sensor)
+  gpio_mode_setup(GPIOC, GPIO_MODE_ANALOG, GPIO_PUPD_NONE, GPIO2);	//PC2   isB (hall current sensor)
+
 
   adc_set_clk_prescale(ADC_CCR_ADCPRE_BY2);
   adc_disable_scan_mode(ADC1);
   adc_set_single_conversion_mode(ADC1);
 
-  adc_set_sample_time(ADC1, ADC_CHANNEL1, ADC_SMPR_SMP_3CYC);
-  adc_set_sample_time(ADC1, ADC_CHANNEL2, ADC_SMPR_SMP_3CYC);
-  adc_set_sample_time(ADC1, ADC_CHANNEL3, ADC_SMPR_SMP_3CYC);
+  adc_set_sample_time(ADC1, ADC_CHANNEL1, ADC_SMPR_SMP_3CYC);   //isA shunt
+  adc_set_sample_time(ADC1, ADC_CHANNEL2, ADC_SMPR_SMP_3CYC);   //isB shunt
+  adc_set_sample_time(ADC1, ADC_CHANNEL3, ADC_SMPR_SMP_3CYC);   //Ud
+  adc_set_sample_time(ADC1, ADC_CHANNEL11, ADC_SMPR_SMP_3CYC);  //isA hall current
+  adc_set_sample_time(ADC1, ADC_CHANNEL12, ADC_SMPR_SMP_3CYC);  //isB hall current
+
 
   adc_set_multi_mode(ADC_CCR_MULTI_INDEPENDENT);
   adc_power_on(ADC1);
@@ -520,7 +527,7 @@ void system_init(void) {
   stdin_init();
   
   //floating point unit
-  pre_main();  
+  //pre_main();  
   
 }
 

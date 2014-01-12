@@ -34,7 +34,7 @@ class Serial_Stm32f4(object):
     def initializing_values(self):
 
         #pyserial configuration
-        self.path = "/home/tumacher/local/src/repositories/arcoslab/experiment/open-coroco/src_DTC-SVM/Python/measures/"
+        self.path = "/home/tumacher/local/src/repositories/arcoslab/open-coroco/src_DTC-SVM/Python/measures/"
         self.dev_type="/dev/ttyACM"
         self.serial_speed=115200
         self.serial_timeout=1
