@@ -1,4 +1,4 @@
-update=Wed 20 Nov 2013 08:59:37 PM CST
+update=Sun 12 Jan 2014 01:26:58 AM CST
 version=1
 last_client=pcbnew
 [cvpcb]
@@ -52,10 +52,10 @@ LibName31=Three-phase_bridge
 version=1
 LastNetListRead=Three-phase bridge.net
 UseCmpFile=1
-PadDrill="    0.600000"
-PadDrillOvalY="    0.600000"
-PadSizeH="    1.500000"
-PadSizeV="    1.500000"
+PadDrill="    0.127000"
+PadDrillOvalY="    0.127000"
+PadSizeH="    1.016000"
+PadSizeV="    1.016000"
 PcbTextSizeV="    1.500000"
 PcbTextSizeH="    1.500000"
 PcbTextThickness="    0.300000"
@@ -68,7 +68,7 @@ DrawSegmentWidth="    0.200000"
 BoardOutlineThickness="    0.100000"
 ModuleOutlineThickness="    0.150000"
 [pcbnew/libraries]
-LibDir=
+LibDir=../../../../../../../../../usr/share/kicad/modules
 LibName1=sockets
 LibName2=connect
 LibName3=discret
