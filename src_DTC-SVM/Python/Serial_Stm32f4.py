@@ -159,7 +159,7 @@ class Serial_Stm32f4(object):
                 self.transmition_error=True
     '''
     def get_value(self,string,split_info,i):
-        output=10.0
+        output=5.0
         if   (split_info[i] == string and self.transmition_error==False)  : 
             convertion = bytes_to_float(split_info[i+1])
             if (convertion[0]==True):
@@ -169,8 +169,8 @@ class Serial_Stm32f4(object):
                 self.transmition_error=False
             else:   
                 self.transmition_error=True
-                output = 5.0
-            return output
+                output = 10.0
+        return output
 
     def read_data_from_stm32(self):
         bytes = 1
@@ -323,12 +323,10 @@ class Serial_Stm32f4(object):
     def print_to_console(self):
             new_data_line=""
             if self.transmition_error==False:
-                new_data_line    =      "t %6.2f "                  %self.time                 
-                ''' + \
+                new_data_line    =      "t %6.2f "                  %self.time                  + \
                                         " ref_freq %6.2f"           %self.reference_frequency   + \
                                         " electric_frequency %6.2f" %self.electric_frequency    + \
-                                        " hall_freq %6.2f"          %self.hall_frequency        
-                 +\
+                                        " hall_freq %6.2f"          %self.hall_frequency        +\
                                         " isA %6.2f"                %self.isA                   + \
                                         " isB %6.2f"                %self.isB                   + \
                                         " isC %6.2f"                %self.isC                   + \
@@ -346,9 +344,10 @@ class Serial_Stm32f4(object):
                                         " psis_ref %6.5f"           %self.psi_s_reference       + \
                                         " te %6.2f"                 %self.te                    + \
                                         " Ud %6.2f"                 %self.Ud                    + \
-                                        " pi_max %6.2f"             %self.pi_max  
                                         " pi_control %6.2f"         %self.pi_control            + \
-                '''
+                                        " pi_max %6.2f"             %self.pi_max  
+
+                
 
             '''
             new_data_line=""
