@@ -1,4 +1,4 @@
-PCBNEW-LibModule-V1  Thu 19 Dec 2013 03:44:51 PM CST
+PCBNEW-LibModule-V1  Sun 12 Jan 2014 01:37:43 AM CST
 # encoding utf-8
 Units mm
 $INDEX
@@ -25,6 +25,7 @@ TO220_small_Heat_Sink_stand
 TO220_small_Heatsink_NO_copper
 TO220_small_Heatsink_stand_reduced_area
 fuse_holder_SMD
+pin_2
 regular_C
 $EndINDEX
 $MODULE 10mm_C
@@ -1716,6 +1717,41 @@ Ne 0 ""
 Po -8.636 0
 $EndPAD
 $EndMODULE fuse_holder_SMD
+$MODULE pin_2
+Po 0 0 0 15 52D24636 00000000 ~~
+Li pin_2
+Cd Connecteurs 2 pins
+Kw CONN DEV
+Sc 0
+AR /529393B9
+Op 0 0 0
+T0 0 2.54 0.762 0.762 0 0.1524 N V 21 N "pin2"
+T1 0 -1.905 0.762 0.762 0 0.1524 N I 21 N "pin_2"
+DS -2.54 1.27 -2.54 -1.27 0.1524 21
+DS -2.54 -1.27 2.54 -1.27 0.1524 21
+DS 2.54 -1.27 2.54 1.27 0.1524 21
+DS 2.54 1.27 -2.54 1.27 0.1524 21
+$PAD
+Sh "1" R 1.524 1.524 0 0 0
+Dr 1.016 0 0
+At STD N 00E0FFFF
+Ne 2 "N-0000010"
+Po -1.27 0
+$EndPAD
+$PAD
+Sh "2" C 1.524 1.524 0 0 0
+Dr 1.016 0 0
+At STD N 00E0FFFF
+Ne 1 "GND"
+Po 1.27 0
+$EndPAD
+$SHAPE3D
+Na "pin_array/pins_array_2x1.wrl"
+Sc 1 1 1
+Of 0 0 0
+Ro 0 0 0
+$EndSHAPE3D
+$EndMODULE pin_2
 $MODULE regular_C
 Po 0 0 0 15 529ACA13 00000000 ~~
 Li regular_C
