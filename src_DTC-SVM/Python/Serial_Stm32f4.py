@@ -136,7 +136,7 @@ class Serial_Stm32f4(object):
         split_header = header_csv.split()                  
         self.writer.writerow(split_header)        
 
-
+    '''
     def get_value(self,string,output_variable,split_info,i,error):
         if split_info[i] == string: 
             convertion = bytes_to_float(split_info[i+1])
@@ -145,6 +145,18 @@ class Serial_Stm32f4(object):
                 return True    
             else:
                 return False 
+    '''
+
+    def get_value(self,string,output_variable,split_info,i):
+        if   (split_info[i] == string and self.transmition_error==False)  : 
+            convertion = bytes_to_float(split_info[i+1])
+            if (convertion[0]==True):
+                output_variable.append(convertion[1])                      
+                #self.time = convertion[1]
+                self.transmition_error=False
+            else:   
+                self.transmition_error=True
+
 
 
     def read_data_from_stm32(self):
@@ -165,11 +177,30 @@ class Serial_Stm32f4(object):
                 
             for i in range( len(split_info)):
                 if i+1<len(split_info):
-                    
-                    #if (error==False): error=self.get_value("t",self.time,split_info,i,error)
 
+                    self.get_value("t" ,self.time_vector                    ,split_info,i)
+                    self.get_value("rf" ,self.reference_frequency_vector    ,split_info,i)
+                    self.get_value("f",self.electric_frequency_vector       ,split_info,i)
+                    self.get_value("h" ,self.hall_frequency_vector          ,split_info,i)
 
-                    
+                    self.get_value("VD",self.VsD_vector                ,split_info,i)
+                    self.get_value("VQ",self.VsQ_vector                ,split_info,i)
+                    self.get_value("Vc",self.Vs_cita_vector            ,split_info,i)
+                    self.get_value("Vr",self.Vs_relative_cita_vector   ,split_info,i)
+
+                    self.get_value("pD",self.psi_sD_vector          ,split_info,i)
+                    self.get_value("pQ",self.psi_sQ_vector          ,split_info,i)
+                    self.get_value("ps",self.psi_s_vector           ,split_info,i)
+                    self.get_value("pa",self.psi_s_alpha_vector     ,split_info,i)
+                    self.get_value("pf",self.psi_s_reference_vector ,split_info,i)
+
+                    self.get_value("te",self.te_vector          ,split_info,i)
+                    self.get_value("tr",self.te_ref_vector      ,split_info,i)
+                    self.get_value("Ud",self.Ud_vector          ,split_info,i)
+                    self.get_value("pi",self.pi_control_vector  ,split_info,i)
+                    self.get_value("mx",self.pi_max_vector      ,split_info,i)
+
+                    '''
                     if   (split_info[i] == "t" and self.transmition_error==False)  : 
                                                                     convertion = bytes_to_float(split_info[i+1])
                                                                     if (convertion[0]==True):                      
@@ -177,7 +208,9 @@ class Serial_Stm32f4(object):
                                                                         self.transmition_error=False
                                                                     else:   
                                                                         self.transmition_error=True
-
+               
+                   
+                    
                     elif   (split_info[i] == "rf" and self.transmition_error==False)  : 
                                                                     convertion = bytes_to_float(split_info[i+1])
                                                                     if (convertion[0]==True):                      
@@ -186,7 +219,7 @@ class Serial_Stm32f4(object):
                                                                     else:   
                                                                         self.transmition_error=True                   
 
-
+                   
                     elif   (split_info[i] == "f" and self.transmition_error==False)  : 
                                                                     convertion = bytes_to_float(split_info[i+1])
                                                                     if (convertion[0]==True):                      
@@ -364,6 +397,7 @@ class Serial_Stm32f4(object):
                                                                         self.transmition_error = False
                                                                     else:   
                                                                         self.transmition_error=True 
+                    '''
                     '''                        
                     elif split_info[i] == "rf"  : self.reference_frequency = bytes_to_float(split_info[i+1])
                     elif split_info[i] == "f"   : self.electric_frequency  = bytes_to_float(split_info[i+1])
@@ -393,7 +427,7 @@ class Serial_Stm32f4(object):
                     elif split_info[i] == "pi"   : self.pi_control         = bytes_to_float(split_info[i+1])
                     elif split_info[i] == "mx"   : self.pi_max             = bytes_to_float(split_info[i+1])     
                     '''
-
+    '''
     def append_new_data_to_vectors(self):
                 self.time_vector.append(self.time)
                 self.reference_frequency_vector.append(self.reference_frequency)
@@ -423,7 +457,7 @@ class Serial_Stm32f4(object):
                 self.Ud_vector.append(self.Ud)
                 self.pi_control_vector.append(self.pi_control)
                 self.pi_max_vector.append(self.pi_max)        
-
+    '''
 
     def save_data_to_csv_file(self):
                 new_data_line_csv=  "t %6.2f "                  %self.time                  + \
@@ -452,33 +486,68 @@ class Serial_Stm32f4(object):
                 split_new_data_line = new_data_line_csv.split()
                 self.writer.writerow(split_new_data_line)     
 
+    def put_together_a_string_and_check_non_empty_vector(self,vector,string,text):
+        if len(vector)>0: string=string + text %vector[-1]
+        return string
 
     def print_to_console(self):
-            new_data_line=  "t: %6.2f "                  %self.time                  + \
-                            " ref_freq: %6.2f"           %self.reference_frequency   + \
-                            " electric_frequency: %6.2f" %self.electric_frequency    + \
-                            " hall_freq: %6.2f"          %self.hall_frequency        + \
-                            " isA: %6.2f"                %self.isA                   + \
-                            " isB: %6.2f"                %self.isB                   + \
-                            " isC: %6.2f"                %self.isC                   + \
-                            " isD: %6.2f"                %self.isD                   + \
-                            " isQ: %6.2f"                %self.isQ                   + \
-                            " VsD: %6.2f"                %self.VsD                   + \
-                            " VsQ: %6.2f"                %self.VsQ                   + \
-                            " Vs: %6.2f"                 %self.Vs                    + \
-                            " Vs_cita: %6.2f"            %self.Vs_cita               + \
-                            " Vs_cita_relative: %6.2f"   %self.Vs_relative_cita      + \
-                            " psisD: %10.6f"             %self.psi_sD               + \
-                            " psisQ: %10.6f"             %self.psi_sQ                + \
-                            " psis: %10.6f"              %self.psi_s                 + \
-                            " psis_alpha: %6.2f"         %self.psi_s_alpha           + \
-                            " psis_ref: %10.8f"          %self.psi_s_reference       + \
-                            " te: %10.6f"                %self.te                    + \
-                            " Ud: %6.2f"                 %self.Ud                    + \
-                            " pi_control: %10.8f"        %self.pi_control            + \
-                            " pi_max %10.8f:"            %self.pi_max
-            print   new_data_line        
+            new_data_line=""
+            new_data_line=self.put_together_a_string_and_check_non_empty_vector(self.time_vector                ,new_data_line,"t: %6.2f "                  )
+            new_data_line=self.put_together_a_string_and_check_non_empty_vector(self.reference_frequency_vector ,new_data_line," ref_freq: %6.2f "          )
+            new_data_line=self.put_together_a_string_and_check_non_empty_vector(self.electric_frequency_vector  ,new_data_line," electric_frequency: %6.2f" )
+            new_data_line=self.put_together_a_string_and_check_non_empty_vector(self.hall_frequency_vector      ,new_data_line," hall_freq: %6.2f"          )
+ 
+            new_data_line=self.put_together_a_string_and_check_non_empty_vector(self.isA_vector ,new_data_line," isA: %6.2f "   )
+            new_data_line=self.put_together_a_string_and_check_non_empty_vector(self.isB_vector ,new_data_line," isB: %6.2f "   )
+            new_data_line=self.put_together_a_string_and_check_non_empty_vector(self.isC_vector ,new_data_line," isC: %6.2f "   )
+            new_data_line=self.put_together_a_string_and_check_non_empty_vector(self.isD_vector ,new_data_line," isD: %6.2f "   )
+            new_data_line=self.put_together_a_string_and_check_non_empty_vector(self.isQ_vector ,new_data_line," isQ: %6.2f "   )
 
+            new_data_line=self.put_together_a_string_and_check_non_empty_vector(self.VsD_vector             ,new_data_line," VsD: %6.2f "               )
+            new_data_line=self.put_together_a_string_and_check_non_empty_vector(self.VsQ_vector             ,new_data_line," VsQ: %6.2f "               )
+            new_data_line=self.put_together_a_string_and_check_non_empty_vector(self.Vs_vector              ,new_data_line," Vs: %6.2f "                )
+            new_data_line=self.put_together_a_string_and_check_non_empty_vector(self.Vs_cita_vector         ,new_data_line," Vs_cita: %6.2f "           )
+            new_data_line=self.put_together_a_string_and_check_non_empty_vector(self.Vs_relative_cita_vector,new_data_line," Vs_cita_relative: %6.2f "  )
+
+            new_data_line=self.put_together_a_string_and_check_non_empty_vector(self.psi_sD_vector          ,new_data_line," psisD: %10.6f "     )
+            new_data_line=self.put_together_a_string_and_check_non_empty_vector(self.psi_sQ_vector          ,new_data_line," psisQ: %10.6f "     )
+            new_data_line=self.put_together_a_string_and_check_non_empty_vector(self.psi_s_vector           ,new_data_line," psis: %10.6f "      )
+            new_data_line=self.put_together_a_string_and_check_non_empty_vector(self.psi_s_alpha_vector     ,new_data_line," psis_alpha: %6.2f " )
+            new_data_line=self.put_together_a_string_and_check_non_empty_vector(self.psi_s_reference_vector ,new_data_line," psis_ref: %10.8f "  )
+
+            new_data_line=self.put_together_a_string_and_check_non_empty_vector(self.te_vector        ,new_data_line," te: %6.2f "          )
+            new_data_line=self.put_together_a_string_and_check_non_empty_vector(self.Ud_vector        ,new_data_line," Ud: %6.2f "          )
+            new_data_line=self.put_together_a_string_and_check_non_empty_vector(self.pi_max_vector    ,new_data_line," pi_max: %6.2f "      )
+            new_data_line=self.put_together_a_string_and_check_non_empty_vector(self.pi_control_vector,new_data_line," pi_control: %6.2f "  )
+            if (new_data_line!=""): print new_data_line  
+                                
+            
+ 
+    '''
+    " ref_freq: %6.2f"           %self.reference_frequency_vector[-1]   + \
+    " electric_frequency: %6.2f" %self.electric_frequency_vector[-1]    + \
+    " hall_freq: %6.2f"          %self.hall_frequency_vector[-1]        + \
+    " isA: %6.2f"                %self.isA_vector[-1]                   + \
+    " isB: %6.2f"                %self.isB_vector[-1]                   + \
+    " isC: %6.2f"                %self.isC_vector[-1]                   + \
+    " isD: %6.2f"                %self.isD_vector[-1]                   + \
+    " isQ: %6.2f"                %self.isQ_vector[-1]                   + \
+    " VsD: %6.2f"                %self.VsD_vector[-1]                   + \
+    " VsQ: %6.2f"                %self.VsQ_vector[-1]                   + \
+    " Vs: %6.2f"                 %self.Vs_vector[-1]                    + \
+    " Vs_cita: %6.2f"            %self.Vs_cita_vector[-1]               + \
+    " Vs_cita_relative: %6.2f"   %self.Vs_relative_cita_vector[-1]      + \
+    " psisD: %10.6f"             %self.psi_sD_vector[-1]                + \
+    " psisQ: %10.6f"             %self.psi_sQ_vector[-1]                + \
+    " psis: %10.6f"              %self.psi_s_vector[-1]                 + \
+    " psis_alpha: %6.2f"         %self.psi_s_alpha_vector[-1]           + \
+    " psis_ref: %10.8f"          %self.psi_s_reference_vector[-1]       + \
+    " te: %10.6f"                %self.te_vector[-1]                    + \
+    " Ud: %6.2f"                 %self.Ud_vector[-1]                    + \                  
+    " pi_max %10.8f:"            %self.pi_max_vector[-1]
+    " pi_control: %10.8f"        %self.pi_control_vector[-1]            + \
+    '''   
+        
 
     def plot_frequencies(self,rows,columns,subplot_index):
                         plt.subplot(rows,columns,subplot_index)
@@ -657,7 +726,7 @@ class Serial_Stm32f4(object):
             self.read_data_from_stm32()
                                         
             if self.capture_data==True:
-                self.append_new_data_to_vectors()
+                #self.append_new_data_to_vectors()
                 self.save_data_to_csv_file()
 
             self.print_to_console() 
