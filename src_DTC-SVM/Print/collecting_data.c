@@ -403,46 +403,41 @@ void print_regular_data(void)
     //printf("\n");
     printf("mm");
 */
-    char checksum;
+    char checksum=0;
     printf ("X")   ;
-    //printf ("tR")    ;  checksum=print_float_as_bytes(data_timer                        );
-    printf ("t")    ;  
-    checksum=print_float_as_bytes(data_timer                        );
-    //printf ("RrfR")  ;  print_float_as_bytes(data_ref_freq_SVM            );
-    //printf ("RfR")   ;  print_float_as_bytes(data_w_r                  );
-    //printf ("RhR")   ;  print_float_as_bytes(data_CUR_FREQ                );
-    //char checksum;
-    //checksum= data_timer+data_ref_freq_SVM+data_w_r+data_CUR_FREQ; 
-    //checksum='h'+'o'+'l'+'a';
-    printf("c");
-    printf ("%c", checksum);
-    //printf ("RchR")  ;  print_float_as_bytes(checksum);
+
+    printf ("t")  ;  checksum=           print_float_as_bytes(data_timer                   );
+    printf ("r")  ;  checksum=checksum  +print_float_as_bytes(data_ref_freq_SVM            );
+    printf ("e")  ;  checksum=checksum  +print_float_as_bytes(data_w_r                     );
+    printf ("h")  ;  checksum=checksum  +print_float_as_bytes(data_CUR_FREQ                );
 /*
-    printf ("RiAR")  ;  print_float_as_bytes(data_i_sA                    );
-    printf ("RiBR")  ;  print_float_as_bytes(data_i_sB                    );
-    printf ("RiCR")  ;  print_float_as_bytes(-data_i_sA-data_i_sB         );
-    printf ("RiDR")  ;  print_float_as_bytes(data_i_sD                    );
-    printf ("RiQR")  ;  print_float_as_bytes(data_i_sQ                    );
+    printf ("A")  ;  checksum=checksum  +print_float_as_bytes(data_i_sA                    );
+    printf ("B")  ;  checksum=checksum  +print_float_as_bytes(data_i_sB                    );
+    printf ("C")  ;  checksum=checksum  +print_float_as_bytes(-data_i_sA-data_i_sB         );
+    printf ("D")  ;  checksum=checksum  +print_float_as_bytes(data_i_sD                    );
+    printf ("Q")  ;  checksum=checksum  +print_float_as_bytes(data_i_sQ                    );
 
-    printf ("RVDR")  ;  print_float_as_bytes(data_V_sD                    );
-    printf ("RVQR")  ;  print_float_as_bytes(data_V_sQ                    );
-    printf ("RVsR")  ;  print_float_as_bytes(data_V_s                     );
-    printf ("RVcR")  ;  print_float_as_bytes(data_cita_V_s                );
-    printf ("RVrR")  ;  print_float_as_bytes(data_cita_V_s_relative_angle );
+    printf ("d")  ;  checksum=checksum  +print_float_as_bytes(data_V_sD                    );
+    printf ("q")  ;  checksum=checksum  +print_float_as_bytes(data_V_sQ                    );
+    printf ("s")  ;  checksum=checksum  +print_float_as_bytes(data_V_s                     );
+    printf ("c")  ;  checksum=checksum  +print_float_as_bytes(data_cita_V_s                );
+    printf ("R")  ;  checksum=checksum  +print_float_as_bytes(data_cita_V_s_relative_angle );
 
-    printf ("RpDR")  ;  print_float_as_bytes(data_psi_sD                  );
-    printf ("RpQR")  ;  print_float_as_bytes(data_psi_sQ                  );
-    printf ("RpsR")  ;  print_float_as_bytes(data_psi_s                   );
-    printf ("RpaR")  ;  print_float_as_bytes(data_psi_s_alpha_SVM         );
-    printf ("RpfR")  ;  print_float_as_bytes(data_psi_s_ref               );
+    printf ("p")  ;  checksum=checksum  +print_float_as_bytes(data_psi_sD                  );
+    printf ("P")  ;  checksum=checksum  +print_float_as_bytes(data_psi_sQ                  );
+    printf ("L")  ;  checksum=checksum  +print_float_as_bytes(data_psi_s                   );
+    printf ("O")  ;  checksum=checksum  +print_float_as_bytes(data_psi_s_alpha_SVM         );
+    printf ("N")  ;  checksum=checksum  +print_float_as_bytes(data_psi_s_ref               );
 
-    printf ("RteR")  ;  print_float_as_bytes(data_t_e                     );
-    printf ("RUdR")  ;  print_float_as_bytes(data_U_d                     );
-    printf ("RpiR")  ;  print_float_as_bytes(data_pi_control_SVM          );
-    printf ("RmxR")  ;  print_float_as_bytes(pi_max                       );
+    printf ("u")  ;  checksum=checksum  +print_float_as_bytes(data_t_e                     );
+    printf ("U")  ;  checksum=checksum  +print_float_as_bytes(data_U_d                     );
+    printf ("l")  ;  checksum=checksum  +print_float_as_bytes(data_pi_control_SVM          );
+    printf ("x")  ;  checksum=checksum  +print_float_as_bytes(pi_max                       );
     //printf("\n");
 */
-    printf("mm");
+    printf("k");
+    printf ("%c", checksum);
+    printf("m");
 
 
 /*-------------------------------

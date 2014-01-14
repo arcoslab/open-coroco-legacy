@@ -150,20 +150,9 @@ class Serial_Stm32f4(object):
                 return False 
 
 
-
-
-    def read_data_from_stm32(self):
-        bytes = 1
-        info = ''   #info needs to be set before splitting it, otherwise pythons says it is uninitialized
-        single_character   = self.ser.read(bytes)
-        self.checksum_python=0
-        self.checksum_stm32=0
-        if(single_character == "X"):
-
-            while (single_character != "m"):#"\n"):
-                single_character = self.ser.read(bytes)
-
-                if (single_character=='t'):
+    def get_data_and_checksum(self):
+                    bytes=1
+                    info=''
                     i=0
                     while i<4:
                         single_character = self.ser.read(bytes)
@@ -171,34 +160,76 @@ class Serial_Stm32f4(object):
                         i=i+1;
                     convertion = bytes_to_float(info)
                     if (convertion[0]==True):                      
-                        self.time = convertion[1]
+                        #self.time = convertion[1]
+                        data = convertion[1]
                         self.transmition_error=False
                     else:   
                         self.transmition_error=True
+                        data=0
                     
-                    self.checksum_python=0
+                    #self.checksum_python=0
                     info_counter=0
                     for ch in info:
-                        #print "checksum_python_sumando: " + str(checksum) 
                         if info_counter<len(info)-1:
                             self.checksum_python=self.checksum_python+ord(ch)
                             if self.checksum_python>256:
                                 self.checksum_python=self.checksum_python-256
-                        #else:
-                        #    checksum_stm32=ord(ch)
-                        #info_counter=info_counter+1
-                        print ord(ch)
-                  
-                    
-                if (single_character=='c'):
-                    self.checksum_stm32 = ord(self.ser.read(bytes))
+                        #print ord(ch)
+                    return data
 
+
+    def read_data_from_stm32(self):
+        bytes = 1
+        #info = ''   #info needs to be set before splitting it, otherwise pythons says it is uninitialized
+        single_character   = self.ser.read(bytes)
+        self.checksum_python=0
+        self.checksum_stm32=0
+        if(single_character == "X"):
+
+            while (single_character != "m"):
+                single_character = self.ser.read(bytes)
+
+                if   (single_character=='t'):   self.time                =self.get_data_and_checksum()
+                elif (single_character=='r'):   self.reference_frequency =self.get_data_and_checksum()
+                elif (single_character=='h'):   self.hall_frequency      =self.get_data_and_checksum()
+                elif (single_character=='e'):   self.electric_frequency  =self.get_data_and_checksum()
+
+ 
+                elif (single_character=='A'):   self.isA =self.get_data_and_checksum()
+                elif (single_character=='B'):   self.isB =self.get_data_and_checksum()
+                elif (single_character=='C'):   self.isC =self.get_data_and_checksum()
+                elif (single_character=='D'):   self.isD =self.get_data_and_checksum()
+                elif (single_character=='Q'):   self.isQ =self.get_data_and_checksum()
+
+                elif (single_character=='d'):   self.VsD                =self.get_data_and_checksum()
+                elif (single_character=='q'):   self.VsQ                =self.get_data_and_checksum()
+                elif (single_character=='s'):   self.Vs                 =self.get_data_and_checksum()
+                elif (single_character=='C'):   self.Vs_cita            =self.get_data_and_checksum()
+                elif (single_character=='R'):   self.Vs_relative_cita   =self.get_data_and_checksum()
+
+                elif (single_character=='p'):   self.psi_sD                =self.get_data_and_checksum()
+                elif (single_character=='P'):   self.psi_sQ                =self.get_data_and_checksum()
+                elif (single_character=='L'):   self.psi_s                 =self.get_data_and_checksum()
+                elif (single_character=='O'):   self.psi_s_alpha           =self.get_data_and_checksum()
+                elif (single_character=='N'):   self.psi_s_reference       =self.get_data_and_checksum()
+
+                elif (single_character=='u'):   self.te                =self.get_data_and_checksum()
+                elif (single_character=='U'):   self.Ud                =self.get_data_and_checksum()
+                elif (single_character=='l'):   self.pi_control        =self.get_data_and_checksum()
+                elif (single_character=='x'):   self.pi_max            =self.get_data_and_checksum()
+                                
+                elif (single_character=='k'):
+                    self.checksum_stm32 = ord(self.ser.read(bytes))
+                #print "single_character: " + single_character
                    
                     
-        print "checksum_python: " + str(self.checksum_python) 
-        print "checksum_stm32: " + str(self.checksum_stm32) 
-        print "info: " + info 
-                    
+        #print "checksum_python: " + str(self.checksum_python) 
+        #print "checksum_stm32: " + str(self.checksum_stm32) 
+      
+        #print "info: " + info 
+        
+        if (self.checksum_python!=self.checksum_stm32):
+            self.transmition_error=True            
         '''
         checksum=0
         info_counter=0
@@ -548,7 +579,7 @@ class Serial_Stm32f4(object):
     def print_to_console(self):
             new_data_line=  "t: %6.2f "                  %self.time                  + \
                             " ref_freq: %6.2f"           %self.reference_frequency   + \
-                            " electric_frequency: %6.2f" %self.electric_frequency    + \
+                            " electric_frequency: %10.2f" %self.electric_frequency    + \
                             " hall_freq: %6.2f"          %self.hall_frequency        + \
                             " isA: %6.2f"                %self.isA                   + \
                             " isB: %6.2f"                %self.isB                   + \
@@ -569,7 +600,10 @@ class Serial_Stm32f4(object):
                             " Ud: %6.2f"                 %self.Ud                    + \
                             " pi_control: %10.8f"        %self.pi_control            + \
                             " pi_max %10.8f:"            %self.pi_max
-            print   new_data_line        
+            
+            if self.transmition_error==False:      
+                print   new_data_line
+                
 
 
     def plot_frequencies(self,rows,columns,subplot_index):
@@ -753,12 +787,12 @@ class Serial_Stm32f4(object):
                 self.save_data_to_csv_file()
 
             self.print_to_console() 
-            
+            '''
             if self.transmition_error==True:
                 print "transmition error"
             else:
                 print "transmition ok"
-            
+            '''
 
     def write(self):	
          while sys.stdin in select.select([sys.stdin], [], [], 0)[0]:	#read from standart input if there is something, otherwise not 
