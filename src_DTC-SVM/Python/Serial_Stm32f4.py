@@ -518,6 +518,9 @@ class Serial_Stm32f4(object):
                     '''
 
     def append_new_data_to_vectors(self):
+
+        if self.transmition_error==False: 
+
                 self.time_vector.append(self.time)
                 self.reference_frequency_vector.append(self.reference_frequency)
                 self.electric_frequency_vector.append(self.electric_frequency)
@@ -572,8 +575,10 @@ class Serial_Stm32f4(object):
                                     " Ud %6.2f"                 %self.Ud                    + \
                                     " pi_control %6.2f"         %self.pi_control            + \
                                     " pi_max %6.2f"             %self.pi_max  
-                split_new_data_line = new_data_line_csv.split()
-                self.writer.writerow(split_new_data_line)     
+
+                if self.transmition_error==False: 
+                    split_new_data_line = new_data_line_csv.split()
+                    self.writer.writerow(split_new_data_line)     
 
 
     def print_to_console(self):
@@ -785,6 +790,7 @@ class Serial_Stm32f4(object):
             if self.capture_data==True:
                 self.append_new_data_to_vectors()
                 self.save_data_to_csv_file()
+                print "apending data to vectors"
 
             self.print_to_console() 
             '''

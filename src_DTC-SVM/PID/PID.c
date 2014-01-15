@@ -289,6 +289,23 @@ void frequency_input(void)
         collecting_speed=true;
       }	 
 
+      if (strcmp(cmd, "p") == 0)
+      {
+        if      (value== 0)   {   print_selection= 0;  }   //print frequencies
+        else if (value== 1)   {   print_selection= 1;  }   //print three-phase_currents
+        else if (value== 2)   {   print_selection= 2;  }   //print quadrature and direct currents 
+        else if (value== 3)   {   print_selection= 3;  }   //print quadrature and direct voltage 
+        else if (value== 4)   {   print_selection= 4;  }   //print voltages and voltage angles
+        else if (value== 5)   {   print_selection= 5;  }   //print quadrature, direct and reference flux-linkage 
+        else if (value== 6)   {   print_selection= 6;  }   //print flux-linkage magnitude and  angle
+        else if (value== 7)   {   print_selection= 7;  }   //print electric torque
+        else if (value== 8)   {   print_selection= 8;  }   //print Ud
+        else if (value== 9)   {   print_selection= 9;  }   //print pi control and pi_max
+        else if (value==10)   {   print_selection=10;  }   //print frequencies
+     }
+
+
+
       if (strcmp(cmd, "s") == 0)
       {
         print_selection=7;
