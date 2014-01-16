@@ -34,17 +34,18 @@ class Serial_Stm32f4(object):
     def initializing_values(self):
 
         #pyserial configuration
-        self.path = "/home/tumacher/local/src/repositories/arcoslab/open-coroco/src_DTC-SVM/Python/measures/"
-        self.dev_type="/dev/ttyACM"
-        self.serial_speed=115200
-        self.serial_timeout=1
+        self.path           = "/home/tumacher/local/src/repositories/arcoslab/open-coroco/src_DTC-SVM/Python/measures/"
+        self.dev_type       ="/dev/ttyACM"
+        self.serial_speed   =115200
+        self.serial_timeout =1
 
         #control data for pyserial
-        self.connecting      = True
-        self.transmition_error =False
-        self.counter               = 0
-        self.capture_data    = False
-        self.capture_counter = 0
+        self.connecting         = True
+        self.transmition_error  = False
+        self.counter            = 0
+        self.capture_data       = False
+        self.capture_counter    = 0
+        self.print_selection    = 6
         
 
         #data from stm32F4 (impedance control+DTC-SVM+PID+HALL)
@@ -78,8 +79,8 @@ class Serial_Stm32f4(object):
         self.pi_control             = 0.0
         self.pi_max                 = 0.0   
 
-        self.checksum_stm32             =0.0
-        self.checksum_python             =0.0
+        self.checksum_stm32         = 0.0
+        self.checksum_python        = 0.0
 
 
     def creating_data_vectors(self):
@@ -94,23 +95,23 @@ class Serial_Stm32f4(object):
         self.isD_vector = []
         self.isQ_vector = []
    
-        self.VsD_vector = []
-        self.VsQ_vector = []
-        self.Vs_vector = []
-        self.Vs_cita_vector = []
+        self.VsD_vector              = []
+        self.VsQ_vector              = []
+        self.Vs_vector               = []
+        self.Vs_cita_vector          = []
         self.Vs_relative_cita_vector = []
 
-        self.psi_sD_vector = []
-        self.psi_sQ_vector = []
-        self.psi_s_vector = []
-        self.psi_s_alpha_vector = []
+        self.psi_sD_vector          = []
+        self.psi_sQ_vector          = []
+        self.psi_s_vector           = []
+        self.psi_s_alpha_vector     = []
         self.psi_s_reference_vector = []
                  
-        self.te_vector = []
-        self.te_ref_vector = []
-        self.Ud_vector = []
-        self.pi_control_vector = []
-        self.pi_max_vector = []
+        self.te_vector          = []
+        self.te_ref_vector      = []
+        self.Ud_vector          = []
+        self.pi_control_vector  = []
+        self.pi_max_vector      = []
 
 
     def connecting_to_stm32F4(self):
@@ -120,6 +121,13 @@ class Serial_Stm32f4(object):
                 self.connecting=False
                 self.ser.flushInput()
                 print "Connected to the STM32F4"
+                
+                self.ser.write('p')
+                self.ser.write(' ')
+                self.ser.write('6')
+                self.ser.write('\n')
+                self.ser.write('\r')
+                
             except SerialException:
                 print"Disconnected from the STM32, cua cua"
                 self.counter=self.counter+1
@@ -163,16 +171,18 @@ class Serial_Stm32f4(object):
                         #self.time = convertion[1]
                         data = convertion[1]
                         self.transmition_error=False
+                        print "found, whaat!"+str(data)
                     else:   
                         self.transmition_error=True
                         data=0
+                        print " four bytes not found" 
                     
                     #self.checksum_python=0
                     info_counter=0
                     for ch in info:
                         if info_counter<len(info)-1:
                             self.checksum_python=self.checksum_python+ord(ch)
-                            if self.checksum_python>256:
+                            if self.checksum_python>=256:
                                 self.checksum_python=self.checksum_python-256
                         #print ord(ch)
                     return data
@@ -204,15 +214,16 @@ class Serial_Stm32f4(object):
                 elif (single_character=='d'):   self.VsD                =self.get_data_and_checksum()
                 elif (single_character=='q'):   self.VsQ                =self.get_data_and_checksum()
                 elif (single_character=='s'):   self.Vs                 =self.get_data_and_checksum()
-                elif (single_character=='C'):   self.Vs_cita            =self.get_data_and_checksum()
+                elif (single_character=='c'):   self.Vs_cita            =self.get_data_and_checksum()
                 elif (single_character=='R'):   self.Vs_relative_cita   =self.get_data_and_checksum()
 
                 elif (single_character=='p'):   self.psi_sD                =self.get_data_and_checksum()
                 elif (single_character=='P'):   self.psi_sQ                =self.get_data_and_checksum()
                 elif (single_character=='L'):   self.psi_s                 =self.get_data_and_checksum()
                 elif (single_character=='O'):   self.psi_s_alpha           =self.get_data_and_checksum()
-                elif (single_character=='N'):   self.psi_s_reference       =self.get_data_and_checksum()
-
+                elif (single_character=='v'):   
+                    self.psi_s_reference       =self.get_data_and_checksum()
+                    print "entering v"
                 elif (single_character=='u'):   self.te                =self.get_data_and_checksum()
                 elif (single_character=='U'):   self.Ud                =self.get_data_and_checksum()
                 elif (single_character=='l'):   self.pi_control        =self.get_data_and_checksum()
@@ -220,303 +231,13 @@ class Serial_Stm32f4(object):
                                 
                 elif (single_character=='k'):
                     self.checksum_stm32 = ord(self.ser.read(bytes))
-                #print "single_character: " + single_character
-                   
-                    
-        #print "checksum_python: " + str(self.checksum_python) 
-        #print "checksum_stm32: " + str(self.checksum_stm32) 
-      
-        #print "info: " + info 
+                print "single_character: " + single_character
         
         if (self.checksum_python!=self.checksum_stm32):
             self.transmition_error=True            
-        '''
-        checksum=0
-        info_counter=0
-        for ch in info:
-            if info_counter<len(info)-1:
-                checksum=checksum+ord(ch)
-                if checksum>256:
-                    checksum=checksum-256
-            else:
-                checksum_stm32=ord(ch)
-            info_counter=info_counter+1
-            print ord(ch)
-
-
-        print "checksum: " + str(checksum)
-        print "checksum_stm32: " + str(checksum_stm32)
-        print info      
-        '''
-
-    def read_data_from_stm32_original(self):
-        bytes = 1
-        info = ''   #info needs to be set before splitting it, otherwise pythons says it is uninitialized
-        previous_character = self.ser.read(bytes)
-        single_character   = self.ser.read(bytes)
-
-        if(previous_character+single_character == "XX"):
-
-            while (previous_character+single_character != "mm"):#"\n"):
-                previous_character = single_character
-                single_character = self.ser.read(bytes)
-                info +=single_character
-                    
-            split_info = info.split('R')
-            self.transmition_error=False
-
-            info=info-'m'-'m'     
-            checksum=0
-            for ch in info:
-                checksum=checksum+ord(ch)
-            print checksum
-            print info
-
-            for i in range( len(split_info)):
-                if i+1<len(split_info):
-                    '''
-                    #if (error==False): error=self.get_value("t",self.time,split_info,i,error)
-
-                    
-                    
-                    if   (split_info[i] == "t" and self.transmition_error==False)  : 
-                                                                    checksum=checksum+split_info[i+1]
-                                                                    convertion = bytes_to_float(split_info[i+1])
-                                                                    if (convertion[0]==True):                      
-                                                                        self.time = convertion[1]
-                                                                        self.transmition_error=False
-                                                                    else:   
-                                                                        self.transmition_error=True
-                    elif   (split_info[i] == "ch" and self.transmition_error==False)  : 
-                                                                    checksum=checksum+split_info[i+1]
-                                                                    convertion = bytes_to_float(split_info[i+1])
-                                                                    if (convertion[0]==True):                      
-                                                                        self.pi_checksum_C = convertion[1]
-                                                                        self.transmition_error = False
-                                                                    else:   
-                                                                        self.transmition_error=True 
-                    
-                    elif   (split_info[i] == "rf" and self.transmition_error==False)  : 
-                                                                    convertion = bytes_to_float(split_info[i+1])
-                                                                    if (convertion[0]==True):                      
-                                                                        self.reference_frequency = convertion[1]
-                                                                        self.transmition_error=False
-                                                                    else:   
-                                                                        self.transmition_error=True                   
-
-
-                    elif   (split_info[i] == "f" and self.transmition_error==False)  : 
-                                                                    convertion = bytes_to_float(split_info[i+1])
-                                                                    if (convertion[0]==True):                      
-                                                                        self.electric_frequency = convertion[1]
-                                                                        self.transmition_error=False
-                                                                    else:   
-                                                                        self.transmition_error=True  
-
-                    elif   (split_info[i] == "h" and self.transmition_error==False)  : 
-                                                                    convertion = bytes_to_float(split_info[i+1])
-                                                                    if (convertion[0]==True):                      
-                                                                        self.hall_frequency = convertion[1]
-                                                                        self.transmition_error=False
-                                                                    else:   
-                                                                        self.transmition_error=True  
-
-
-                    elif   (split_info[i] == "iA" and self.transmition_error==False)  : 
-                                                                    convertion = bytes_to_float(split_info[i+1])
-                                                                    if (convertion[0]==True):                      
-                                                                        self.isA = convertion[1]
-                                                                        self.transmition_error=False
-                                                                    else:   
-                                                                        self.transmition_error=True  
-
-                    elif   (split_info[i] == "iB" and self.transmition_error==False)  : 
-                                                                    convertion = bytes_to_float(split_info[i+1])
-                                                                    if (convertion[0]==True):                      
-                                                                        self.isB = convertion[1]
-                                                                        self.transmition_error=False
-                                                                    else:   
-                                                                        self.transmition_error=True 
-
-                    elif   (split_info[i] == "iC" and self.transmition_error==False)  : 
-                                                                    convertion = bytes_to_float(split_info[i+1])
-                                                                    if (convertion[0]==True):                      
-                                                                        self.isC = convertion[1]
-                                                                        self.transmition_error=False
-                                                                    else:   
-                                                                        self.transmition_error=True 
-
-                    elif   (split_info[i] == "iD" and self.transmition_error==False)  : 
-                                                                    convertion = bytes_to_float(split_info[i+1])
-                                                                    if (convertion[0]==True):                      
-                                                                        self.isD = convertion[1]
-                                                                        self.transmition_error=False
-                                                                    else:   
-                                                                        self.transmition_error=True 
-
-                    elif   (split_info[i] == "iQ" and self.transmition_error==False)  : 
-                                                                    convertion = bytes_to_float(split_info[i+1])
-                                                                    if (convertion[0]==True):                      
-                                                                        self.isQ = convertion[1]
-                                                                        self.transmition_error=False
-                                                                    else:   
-                                                                        self.transmition_error=True 
-
-                    elif   (split_info[i] == "VD" and self.transmition_error==False)  : 
-                                                                    convertion = bytes_to_float(split_info[i+1])
-                                                                    if (convertion[0]==True):                      
-                                                                        self.VsD = convertion[1]
-                                                                        self.transmition_error=False
-                                                                    else:   
-                                                                        self.transmition_error=True 
-
-                    elif   (split_info[i] == "VQ" and self.transmition_error==False)  : 
-                                                                    convertion = bytes_to_float(split_info[i+1])
-                                                                    if (convertion[0]==True):                      
-                                                                        self.VsQ = convertion[1]
-                                                                        self.transmition_error=False
-                                                                    else:   
-                                                                        self.transmition_error=True 
-
-                    elif   (split_info[i] == "Vs" and self.transmition_error==False)  : 
-                                                                    convertion = bytes_to_float(split_info[i+1])
-                                                                    if (convertion[0]==True):                      
-                                                                        self.Vs = convertion[1]
-                                                                        self.transmition_error=False
-                                                                    else:   
-                                                                        self.transmition_error=True 
-
-                    elif   (split_info[i] == "Vc" and self.transmition_error==False)  : 
-                                                                    convertion = bytes_to_float(split_info[i+1])
-                                                                    if (convertion[0]==True):                      
-                                                                        self.Vs_cita = convertion[1]
-                                                                        self.transmition_error=False
-                                                                    else:   
-                                                                        self.transmition_error=True 
-
-                    elif   (split_info[i] == "Vr" and self.transmition_error==False)  : 
-                                                                    convertion = bytes_to_float(split_info[i+1])
-                                                                    if (convertion[0]==True):                      
-                                                                        self.Vs_relative_cita = convertion[1]
-                                                                        self.transmition_error = False
-                                                                    else:   
-                                                                        self.transmition_error=True 
-
-                    elif   (split_info[i] == "pD" and self.transmition_error==False)  : 
-                                                                    convertion = bytes_to_float(split_info[i+1])
-                                                                    if (convertion[0]==True):                      
-                                                                        self.psi_sD = convertion[1]
-                                                                        self.transmition_error = False
-                                                                    else:   
-                                                                        self.transmition_error=True 
-
-
-                    elif   (split_info[i] == "pQ" and self.transmition_error==False)  : 
-                                                                    convertion = bytes_to_float(split_info[i+1])
-                                                                    if (convertion[0]==True):                      
-                                                                        self.psi_sQ = convertion[1]
-                                                                        self.transmition_error = False
-                                                                    else:   
-                                                                        self.transmition_error=True 
-
-                    elif   (split_info[i] == "ps" and self.transmition_error==False)  : 
-                                                                    convertion = bytes_to_float(split_info[i+1])
-                                                                    if (convertion[0]==True):                      
-                                                                        self.psi_s = convertion[1]
-                                                                        self.transmition_error = False
-                                                                    else:   
-                                                                        self.transmition_error=True 
-
-                    elif   (split_info[i] == "pa" and self.transmition_error==False)  : 
-                                                                    convertion = bytes_to_float(split_info[i+1])
-                                                                    if (convertion[0]==True):                      
-                                                                        self.psi_s_alpha = convertion[1]
-                                                                        self.transmition_error = False
-                                                                    else:   
-                                                                        self.transmition_error=True 
-
-                    elif   (split_info[i] == "pf" and self.transmition_error==False)  : 
-                                                                    convertion = bytes_to_float(split_info[i+1])
-                                                                    if (convertion[0]==True):                      
-                                                                        self.psi_s_reference = convertion[1]
-                                                                        self.transmition_error = False
-                                                                    else:   
-                                                                        self.transmition_error=True 
-
-                    elif   (split_info[i] == "te" and self.transmition_error==False)  : 
-                                                                    convertion = bytes_to_float(split_info[i+1])
-                                                                    if (convertion[0]==True):                      
-                                                                        self.te = convertion[1]
-                                                                        self.transmition_error = False
-                                                                    else:   
-                                                                        self.transmition_error=True 
-
-                    elif   (split_info[i] == "tr" and self.transmition_error==False)  : 
-                                                                    convertion = bytes_to_float(split_info[i+1])
-                                                                    if (convertion[0]==True):                      
-                                                                        self.te_ref = convertion[1]
-                                                                        self.transmition_error = False
-                                                                    else:   
-                                                                        self.transmition_error=True 
-
-                    elif   (split_info[i] == "Ud" and self.transmition_error==False)  : 
-                                                                    convertion = bytes_to_float(split_info[i+1])
-                                                                    if (convertion[0]==True):                      
-                                                                        self.Ud = convertion[1]
-                                                                        self.transmition_error = False
-                                                                    else:   
-                                                                        self.transmition_error=True 
-
-                    elif   (split_info[i] == "pi" and self.transmition_error==False)  : 
-                                                                    convertion = bytes_to_float(split_info[i+1])
-                                                                    if (convertion[0]==True):                      
-                                                                        self.pi_control = convertion[1]
-                                                                        self.transmition_error = False
-                                                                    else:   
-                                                                        self.transmition_error=True 
-
-                    elif   (split_info[i] == "mx" and self.transmition_error==False)  : 
-                                                                    convertion = bytes_to_float(split_info[i+1])
-                                                                    if (convertion[0]==True):                      
-                                                                        self.pi_max = convertion[1]
-                                                                        self.transmition_error = False
-                                                                    else:   
-                                                                        self.transmition_error=True 
-
-
-                    '''
-                    
-                    
-                    '''                        
-                    elif split_info[i] == "rf"  : self.reference_frequency = bytes_to_float(split_info[i+1])
-                    elif split_info[i] == "f"   : self.electric_frequency  = bytes_to_float(split_info[i+1])
-                    elif split_info[i] == "h"   : self.hall_frequency      = bytes_to_float(split_info[i+1])
-                    
-                    elif split_info[i] == "iA"   : self.isA                = bytes_to_float(split_info[i+1])
-                    elif split_info[i] == "iB"   : self.isB                = bytes_to_float(split_info[i+1])
-                    elif split_info[i] == "iC"   : self.isC                = bytes_to_float(split_info[i+1])
-                    elif split_info[i] == "iD"   : self.isD                = bytes_to_float(split_info[i+1])
-                    elif split_info[i] == "iQ"   : self.isQ                = bytes_to_float(split_info[i+1])
  
-                    elif split_info[i] == "VD"   : self.VsD                = bytes_to_float(split_info[i+1])
-                    elif split_info[i] == "VQ"   : self.VsQ                = bytes_to_float(split_info[i+1])
-                    elif split_info[i] == "Vs"   : self.Vs                 = bytes_to_float(split_info[i+1])
-                    elif split_info[i] == "Vc"   : self.Vs_cita            = bytes_to_float(split_info[i+1])
-                    elif split_info[i] == "Vr"   : self.Vs_relative_cita   = bytes_to_float(split_info[i+1])
 
-                    elif split_info[i] == "pD"   : self.psi_sD             = bytes_to_float(split_info[i+1])
-                    elif split_info[i] == "pQ"   : self.psi_sQ             = bytes_to_float(split_info[i+1])
-                    elif split_info[i] == "ps"   : self.psi_s              = bytes_to_float(split_info[i+1])
-                    elif split_info[i] == "pa"   : self.psi_s_alpha        = bytes_to_float(split_info[i+1])
-                    elif split_info[i] == "pf"   : self.psi_s_reference    = bytes_to_float(split_info[i+1])
-                 
-                    elif split_info[i] == "te"   : self.te                 = bytes_to_float(split_info[i+1])
-                    elif split_info[i] == "tr"   : self.te_ref             = bytes_to_float(split_info[i+1])
-                    elif split_info[i] == "Ud"   : self.Ud                 = bytes_to_float(split_info[i+1])
-                    elif split_info[i] == "pi"   : self.pi_control         = bytes_to_float(split_info[i+1])
-                    elif split_info[i] == "mx"   : self.pi_max             = bytes_to_float(split_info[i+1])     
-                    '''
-
+ 
     def append_new_data_to_vectors(self):
 
         if self.transmition_error==False: 
@@ -582,33 +303,56 @@ class Serial_Stm32f4(object):
 
 
     def print_to_console(self):
-            new_data_line=  "t: %6.2f "                  %self.time                  + \
-                            " ref_freq: %6.2f"           %self.reference_frequency   + \
-                            " electric_frequency: %10.2f" %self.electric_frequency    + \
-                            " hall_freq: %6.2f"          %self.hall_frequency        + \
+        
+        if   self.print_selection==0:
+            new_data_line=  "t: %6.2f "                   %self.time                + \
+                            " ref_freq: %6.2f"            %self.reference_frequency + \
+                            " electric_frequency: %10.2f" %self.electric_frequency  + \
+                            " hall_freq: %6.2f"           %self.hall_frequency        
+
+        elif self.print_selection==1:
+            new_data_line=  "t: %6.2f "                   %self.time                + \
                             " isA: %6.2f"                %self.isA                   + \
                             " isB: %6.2f"                %self.isB                   + \
                             " isC: %6.2f"                %self.isC                   + \
                             " isD: %6.2f"                %self.isD                   + \
-                            " isQ: %6.2f"                %self.isQ                   + \
-                            " VsD: %6.2f"                %self.VsD                   + \
-                            " VsQ: %6.2f"                %self.VsQ                   + \
-                            " Vs: %6.2f"                 %self.Vs                    + \
-                            " Vs_cita: %6.2f"            %self.Vs_cita               + \
-                            " Vs_cita_relative: %6.2f"   %self.Vs_relative_cita      + \
-                            " psisD: %10.6f"             %self.psi_sD               + \
-                            " psisQ: %10.6f"             %self.psi_sQ                + \
-                            " psis: %10.6f"              %self.psi_s                 + \
-                            " psis_alpha: %6.2f"         %self.psi_s_alpha           + \
-                            " psis_ref: %10.8f"          %self.psi_s_reference       + \
-                            " te: %10.6f"                %self.te                    + \
-                            " Ud: %6.2f"                 %self.Ud                    + \
-                            " pi_control: %10.8f"        %self.pi_control            + \
-                            " pi_max %10.8f:"            %self.pi_max
-            
-            if self.transmition_error==False:      
-                print   new_data_line
-                
+                            " isQ: %6.2f"                %self.isQ                   
+
+        elif self.print_selection==3:
+            new_data_line=  "t: %6.2f "                  %self.time                + \
+                            " VsD: %6.2f"                %self.VsD                 + \
+                            " VsQ: %6.2f"                %self.VsQ                 + \
+                            " Vs: %6.2f"                 %self.Vs                  + \
+                            " Vs_cita: %6.2f"            %self.Vs_cita             + \
+                            " Vs_cita_relative: %6.2f"   %self.Vs_relative_cita      
+
+        elif self.print_selection==5:
+            new_data_line=  "t: %6.2f "                  %self.time                + \
+                            " psisD: %10.6f"             %self.psi_sD              + \
+                            " psisQ: %10.6f"             %self.psi_sQ              
+
+        elif self.print_selection==6:
+            new_data_line=  "t: %6.2f "                  %self.time                + \
+                            " psis: %10.6f"              %self.psi_s               + \
+                            " psis_alpha: %6.2f"         %self.psi_s_alpha         + \
+                            " psis_ref: %10.8f"          %self.psi_s_reference       
+
+        elif self.print_selection==7:
+            new_data_line=  "t: %6.2f "                  %self.time                + \
+                            " te: %10.6f"                %self.te                  + \
+                            " Ud: %6.2f"                 %self.Ud                  + \
+                            " pi_control: %12.8f"        %self.pi_control          + \
+                            " pi_max %12.8f:"            %self.pi_max
+
+        print "check_sum python: "+str(self.checksum_python)+" stm32: "+str(self.checksum_stm32)
+
+        if self.transmition_error==False:      
+            print   new_data_line
+
+        else :
+            print   new_data_line
+            print "warning: transmition_error"
+    
 
 
     def plot_frequencies(self,rows,columns,subplot_index):
@@ -806,18 +550,47 @@ class Serial_Stm32f4(object):
             if line:
                 line=raw_input("Enter new command: ")   #the printing of the stm32f4 data is stopped until you type a new reference
                 if line:
-                    self.ser.write(line)
-                    self.ser.write('\n')
-                    self.ser.write('\r')
+
 
                     split_command = line.split()
-                    if split_command[0]=='c':
+
+                    #updating reference frequency
+                    if     split_command[0]=='d':
+                        self.ser.write(line)
+                        self.ser.write('\n')
+                        self.ser.write('\r')
+                    
+                    #capturing data into csv
+                    elif   split_command[0]=='c':
                         self.capture_data=True
                         self.capture_counter=0
                     elif split_command[0]=='f':
                         self.capture_data=False
                         self.plot_all_in_one()
                         self.plot_one_by_one()
+
+                    #selecting what to print
+                    elif split_command[0]=='p':
+                        self.capture_data=False
+                        self.print_selection=int(split_command[1])
+                        print "line: " + line + " 0: "+split_command[0] +" 1: "+split_command[1]+" int: "+ str(self.print_selection)     
+                        self.ser.write(line)
+                        self.ser.write('\n')
+                        self.ser.write('\r')                       
+                                           
+                        '''
+                        if   split_command[1]=='0':   self.print_selection=0
+                        elif split_command[1]=='0':   self.print_selection=1
+                        elif split_command[1]=='0':   self.print_selection=2
+                        elif split_command[1]=='0':   self.print_selection=3
+                        elif split_command[1]=='0':   self.print_selection=4
+                        elif split_command[1]=='0':   self.print_selection=5
+                        elif split_command[1]=='0':   self.print_selection=6
+                        elif split_command[1]=='0':   self.print_selection=7
+                        elif split_command[1]=='0':   self.print_selection=8
+                        elif split_command[1]=='0':   self.print_selection=9
+                        elif split_command[1]=='0':   self.print_selection=10
+                        '''
 
 
 

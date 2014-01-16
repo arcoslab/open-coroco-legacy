@@ -32,23 +32,23 @@
 */
 
 
-float ref_freq_SVM=0.0f;
+float   ref_freq_SVM=0.0f;
 
-float angle_hall1=0.0f;
-float t_e_ref=0.0f;//-1.5;//-0.9f;//-0.15;//-1.6f;
-int  print_selection              = 7;
-bool flux_linkage_capture         = false;
-int  flux_linkage_capture_counter = 0;
-int  flux_linkage_capture_timer    = 0;
-int        flux_limit_counter_1=0;
-int        flux_limit_counter_2=0;
-int        flux_limit_counter_3=0;
-int        flux_limit_counter_4=0;
-int        flux_limit_counter_5=0;
-int        flux_limit_counter_6=0;
-int        flux_limit_counter_7=0;
-int        flux_limit_counter_8=0;
-int        flux_limit_counter_9=0;
+float   angle_hall1=0.0f;
+float   t_e_ref=0.0f;//-1.5;//-0.9f;//-0.15;//-1.6f;
+int     print_selection              = 0;
+bool    flux_linkage_capture         = false;
+int     flux_linkage_capture_counter = 0;
+int     flux_linkage_capture_timer   = 0;
+int     flux_limit_counter_1=0;
+int     flux_limit_counter_2=0;
+int     flux_limit_counter_3=0;
+int     flux_limit_counter_4=0;
+int     flux_limit_counter_5=0;
+int     flux_limit_counter_6=0;
+int     flux_limit_counter_7=0;
+int     flux_limit_counter_8=0;
+int     flux_limit_counter_9=0;
 
 float attenuation=MIN_ATTENUATION;
 	
@@ -61,8 +61,6 @@ float duty_b=0.0f;
 float duty_c=0.0f;
 float ref_freq=0.0f;//1;
 
-//printf("D1: %6.2f S1: %6.2f D2: %6.2f S2: %6.2f D3: %6.2f S3: %6.2f\n",divisor_voltage,source_voltage,divisor_voltage_2,source_voltage_2,divisor_voltage_3,source_voltage_3);
-
 float cur_angle=0.0f;
 float final_ref_freq=40;
 float error, p_error;
@@ -72,7 +70,6 @@ float pi_control;
 int close_loop=false;
 int first_closed=false;
 int motor_off=true;//false;
-
 
 //colecting current command
 bool collecting_current=false;
@@ -161,10 +158,7 @@ void calc_freq(void)
     }
   }
   hall_a_last=hall_a;
-
-
-   
-      
+     
 }
 
 
@@ -189,7 +183,6 @@ void start_up(void)
     ref_freq=FIRST_CLOSE_LOOP_REF_FREQ;
   }
 }
-
 
 
 void pi_controller(void) {
