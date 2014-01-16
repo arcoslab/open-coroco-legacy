@@ -164,6 +164,7 @@ class Serial_Stm32f4(object):
                     i=0
                     while i<4:
                         single_character = self.ser.read(bytes)
+                        print "single_character_byte_to_float: "+single_character + " ord: " +str(ord(single_character))
                         info +=single_character
                         i=i+1;
                     convertion = bytes_to_float(info)
@@ -223,7 +224,7 @@ class Serial_Stm32f4(object):
                 elif (single_character=='O'):   self.psi_s_alpha           =self.get_data_and_checksum()
                 elif (single_character=='v'):   
                     self.psi_s_reference       =self.get_data_and_checksum()
-                    print "entering v"
+                    print "entering v ord: " + str(ord('v')) 
                 elif (single_character=='u'):   self.te                =self.get_data_and_checksum()
                 elif (single_character=='U'):   self.Ud                =self.get_data_and_checksum()
                 elif (single_character=='l'):   self.pi_control        =self.get_data_and_checksum()

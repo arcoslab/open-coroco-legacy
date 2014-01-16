@@ -308,7 +308,7 @@ void print_regular_data(void)
         printf ("t")  ;  checksum=           print_float_as_bytes(data_timer                   );
         printf ("r")  ;  checksum=checksum  +print_float_as_bytes(data_ref_freq_SVM            );
         printf ("e")  ;  checksum=checksum  +print_float_as_bytes(data_w_r                     );
-        printf ("h")  ;  checksum=checksum  +print_float_as_bytes(0.01f);//data_CUR_FREQ                );
+        printf ("h")  ;  checksum=checksum  +print_float_as_bytes(data_CUR_FREQ                );
     }
     else if (print_selection==1)
     {
@@ -339,7 +339,7 @@ void print_regular_data(void)
         //printf ("t")  ;  checksum=           print_float_as_bytes(data_timer                   );
         //printf ("L")  ;  checksum=checksum  +print_float_as_bytes(data_psi_s                   );
         //printf ("O")  ;  checksum=checksum  +print_float_as_bytes(data_psi_s_alpha_SVM         );
-        printf ("v")  ;  checksum=print_float_as_bytes(0.010f);//data_psi_s_ref               );
+        printf ("v")  ;  checksum=print_float_as_bytes(0.01000000f);//data_psi_s_ref               );
     }
     else if (print_selection==7)
     {
