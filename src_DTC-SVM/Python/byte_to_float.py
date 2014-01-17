@@ -6,6 +6,6 @@ def bytes_to_float(string_of_bytes):
         return (False,25.0)
     else:
         tuplet_float= struct.unpack_from('f',string_of_bytes)   #uncompress string of 4 bytes into a floting number
-        print "byte_to_float: " + str(tuplet_float[0])
+        #print "byte_to_float: " + str(tuplet_float[0])
         return (True,tuplet_float[0])
 

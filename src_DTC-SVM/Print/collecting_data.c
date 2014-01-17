@@ -336,10 +336,10 @@ void print_regular_data(void)
     }
     else if (print_selection==6)
     {
-        //printf ("t")  ;  checksum=           print_float_as_bytes(data_timer                   );
-        //printf ("L")  ;  checksum=checksum  +print_float_as_bytes(data_psi_s                   );
-        //printf ("O")  ;  checksum=checksum  +print_float_as_bytes(data_psi_s_alpha_SVM         );
-        printf ("v")  ;  checksum=print_float_as_bytes(0.01000000f);//data_psi_s_ref               );
+        printf ("t")  ;  checksum=           print_float_as_bytes(data_timer                   );
+        printf ("L")  ;  checksum=checksum  +print_float_as_bytes(data_psi_s                   );
+        printf ("O")  ;  checksum=checksum  +print_float_as_bytes(data_psi_s_alpha_SVM         );
+        printf ("v")  ;  checksum=checksum  +print_float_as_bytes(data_psi_s_ref               );
     }
     else if (print_selection==7)
     {
@@ -378,6 +378,10 @@ char print_float_as_bytes(float floating_value)
     unsigned int i=0;
     char checksum=0;
     union float_union_t float_byte;
+
+    //hack for serial transmition (transmiting 0.01f causes a transmition error)
+    if (floating_value==0.01f)
+        floating_value= 0.010000001f;
 
     float_byte.f=floating_value;
 

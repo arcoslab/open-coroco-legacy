@@ -23,5 +23,5 @@
 #define R_s_0          0.225f   //Ohms
 #define L_s_d_0        0.0001f  //0.000038671875f  //H   0.000089f H
 #define L_s_q_0	       0.0001f  //0.00003515625f  //(54uH)H   0.000089f H
-#define psi_F_0        0.01f//0.08f//0.01f    //Medido: 0.00164f//0.0051f    //Wb-t (weber-turn) (kg m2 s-2 A-1)
+#define psi_F_0         0.010f//0.010000001f//0.08f//0.01f    //Medido: 0.00164f//0.0051f    //Wb-t (weber-turn) (kg m2 s-2 A-1)
 #define pole_pairs_0   7.0f	//seven pole pairs (seven d-axis)

@@ -45,7 +45,7 @@ class Serial_Stm32f4(object):
         self.counter            = 0
         self.capture_data       = False
         self.capture_counter    = 0
-        self.print_selection    = 6
+        self.print_selection    = 0
         
 
         #data from stm32F4 (impedance control+DTC-SVM+PID+HALL)
@@ -124,7 +124,7 @@ class Serial_Stm32f4(object):
                 
                 self.ser.write('p')
                 self.ser.write(' ')
-                self.ser.write('6')
+                self.ser.write('0')
                 self.ser.write('\n')
                 self.ser.write('\r')
                 
@@ -164,21 +164,19 @@ class Serial_Stm32f4(object):
                     i=0
                     while i<4:
                         single_character = self.ser.read(bytes)
-                        print "single_character_byte_to_float: "+single_character + " ord: " +str(ord(single_character))
+                        #print "single_character_byte_to_float: "+single_character + " ord: " +str(ord(single_character))
                         info +=single_character
                         i=i+1;
                     convertion = bytes_to_float(info)
                     if (convertion[0]==True):                      
-                        #self.time = convertion[1]
                         data = convertion[1]
                         self.transmition_error=False
-                        print "found, whaat!"+str(data)
+                        #print "found, whaat!"+str(data)
                     else:   
                         self.transmition_error=True
                         data=0
-                        print " four bytes not found" 
+                        #print " four bytes not found" 
                     
-                    #self.checksum_python=0
                     info_counter=0
                     for ch in info:
                         if info_counter<len(info)-1:
@@ -224,7 +222,7 @@ class Serial_Stm32f4(object):
                 elif (single_character=='O'):   self.psi_s_alpha           =self.get_data_and_checksum()
                 elif (single_character=='v'):   
                     self.psi_s_reference       =self.get_data_and_checksum()
-                    print "entering v ord: " + str(ord('v')) 
+                    #print "entering v ord: " + str(ord('v')) 
                 elif (single_character=='u'):   self.te                =self.get_data_and_checksum()
                 elif (single_character=='U'):   self.Ud                =self.get_data_and_checksum()
                 elif (single_character=='l'):   self.pi_control        =self.get_data_and_checksum()
@@ -232,7 +230,7 @@ class Serial_Stm32f4(object):
                                 
                 elif (single_character=='k'):
                     self.checksum_stm32 = ord(self.ser.read(bytes))
-                print "single_character: " + single_character
+                #print "single_character: " + single_character
         
         if (self.checksum_python!=self.checksum_stm32):
             self.transmition_error=True            
@@ -345,7 +343,7 @@ class Serial_Stm32f4(object):
                             " pi_control: %12.8f"        %self.pi_control          + \
                             " pi_max %12.8f:"            %self.pi_max
 
-        print "check_sum python: "+str(self.checksum_python)+" stm32: "+str(self.checksum_stm32)
+        #print "check_sum python: "+str(self.checksum_python)+" stm32: "+str(self.checksum_stm32)
 
         if self.transmition_error==False:      
             print   new_data_line
