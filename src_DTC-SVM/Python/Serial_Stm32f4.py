@@ -46,6 +46,7 @@ class Serial_Stm32f4(object):
         self.capture_data       = False
         self.capture_counter    = 0
         self.print_selection    = 0
+        self.new_data_line      = ''
         
 
         #data from stm32F4 (impedance control+DTC-SVM+PID+HALL)
@@ -220,10 +221,11 @@ class Serial_Stm32f4(object):
                 elif (single_character=='P'):   self.psi_sQ                =self.get_data_and_checksum()
                 elif (single_character=='L'):   self.psi_s                 =self.get_data_and_checksum()
                 elif (single_character=='O'):   self.psi_s_alpha           =self.get_data_and_checksum()
-                elif (single_character=='v'):   
-                    self.psi_s_reference       =self.get_data_and_checksum()
-                    #print "entering v ord: " + str(ord('v')) 
+                elif (single_character=='v'):   self.psi_s_reference       =self.get_data_and_checksum()  
+                                                #print "entering v ord: " + str(ord('v')) 
                 elif (single_character=='u'):   self.te                =self.get_data_and_checksum()
+                elif (single_character=='y'):   self.te_ref            =self.get_data_and_checksum()
+
                 elif (single_character=='U'):   self.Ud                =self.get_data_and_checksum()
                 elif (single_character=='l'):   self.pi_control        =self.get_data_and_checksum()
                 elif (single_character=='x'):   self.pi_max            =self.get_data_and_checksum()
@@ -271,6 +273,87 @@ class Serial_Stm32f4(object):
                 self.pi_max_vector.append(self.pi_max)        
 
 
+    def full_print_string (self):
+           #print "inside full_print_string"
+           self.new_data_line=  "t %6.2f "                  %self.time                  + \
+                                    " ref_freq %6.2f"           %self.reference_frequency   + \
+                                    " electric_frequency %6.2f" %self.electric_frequency    + \
+                                    " hall_freq %6.2f"          %self.hall_frequency        + \
+                                    " isA %6.2f"                %self.isA                   + \
+                                    " isB %6.2f"                %self.isB                   + \
+                                    " isC %6.2f"                %self.isC                   + \
+                                    " isD %6.2f"                %self.isD                   + \
+                                    " isQ %6.2f"                %self.isQ                   + \
+                                    " VsD %6.2f"                %self.VsD                   + \
+                                    " VsQ %6.2f"                %self.VsQ                   + \
+                                    " Vs %6.2f"                 %self.Vs                    + \
+                                    " Vs_cita %6.2f"            %self.Vs_cita               + \
+                                    " Vs_cita_relative %6.2f"   %self.Vs_relative_cita      + \
+                                    " psisD %10.8f"              %self.psi_sD                + \
+                                    " psisQ %10.8f"              %self.psi_sQ                + \
+                                    " psis %6.2f"               %self.psi_s                 + \
+                                    " psis_alpha %6.2f"         %self.psi_s_alpha           + \
+                                    " psis_ref %10.8f"           %self.psi_s_reference       + \
+                                    " te %6.2f"                 %self.te                    + \
+                                    " Ud %6.2f"                 %self.Ud                    + \
+                                    " pi_control %12.9f"         %self.pi_control            + \
+                                    " pi_max %10.6f"             %self.pi_max  
+
+    def print_selection_print_string(self):
+       
+        if   self.print_selection==0:
+            self.new_data_line= "t: %6.2f "                   %self.time                + \
+                                " ref_freq: %6.2f"            %self.reference_frequency + \
+                                " electric_frequency: %10.2f" %self.electric_frequency  + \
+                                " hall_freq: %6.2f"           %self.hall_frequency        
+
+        elif self.print_selection==1:
+            self.new_data_line= "t: %6.2f "                  %self.time                 + \
+                                " isA: %6.2f"                %self.isA                  + \
+                                " isB: %6.2f"                %self.isB                  + \
+                                " isC: %6.2f"                %self.isC                   
+
+        elif self.print_selection==2:
+            self.new_data_line= "t: %6.2f "                   %self.time                + \
+                                " isD: %6.2f"                %self.isD                  + \
+                                " isQ: %6.2f"                %self.isQ                   
+
+        elif self.print_selection==3:
+            self.new_data_line= "t: %6.2f "                  %self.time                + \
+                                " VsD: %6.2f"                %self.VsD                 + \
+                                " VsQ: %6.2f"                %self.VsQ                 
+
+        elif self.print_selection==4:
+            self.new_data_line= "t: %6.2f "                  %self.time                + \
+                                " Vs: %6.2f"                 %self.Vs                  + \
+                                " Ud: %6.2f"                 %self.Ud                  
+                                #" Vs_cita: %6.2f"            %self.Vs_cita             + \
+                                #" Vs_cita_relative: %6.2f"   %self.Vs_relative_cita      
+
+        elif self.print_selection==5:
+            self.new_data_line= "t: %6.2f "                  %self.time                + \
+                                " psisD: %10.6f"             %self.psi_sD              + \
+                                " psisQ: %10.6f"             %self.psi_sQ              
+
+        elif self.print_selection==6:
+            self.new_data_line= "t: %6.2f "                  %self.time                + \
+                                " te: %10.6f"                %self.te                  + \
+                                " te_ref: %10.6f"            %self.te_ref                  
+
+                                
+        elif self.print_selection==7:
+            self.new_data_line= "t: %6.2f "                  %self.time                + \
+                                " pi_control: %12.8f"        %self.pi_control          + \
+                                " pi_max %12.8f:"            %self.pi_max
+
+        '''
+        elif self.print_selection==6:
+            self.new_data_line= "t: %6.2f "                  %self.time                + \
+                                " psis: %10.6f"              %self.psi_s               + \
+                                " psis_alpha: %6.2f"         %self.psi_s_alpha         + \
+                                " psis_ref: %10.8f"          %self.psi_s_reference       
+        '''
+
     def save_data_to_csv_file(self):
                 new_data_line_csv=  "t %6.2f "                  %self.time                  + \
                                     " ref_freq %6.2f"           %self.reference_frequency   + \
@@ -286,12 +369,12 @@ class Serial_Stm32f4(object):
                                     " Vs %6.2f"                 %self.Vs                    + \
                                     " Vs_cita %6.2f"            %self.Vs_cita               + \
                                     " Vs_cita_relative %6.2f"   %self.Vs_relative_cita      + \
-                                    " psisD %6.2f"              %self.psi_sD                + \
-                                    " psisQ %6.2f"              %self.psi_sQ                + \
+                                    " psisD %10.6f"              %self.psi_sD                + \
+                                    " psisQ %10.6f"              %self.psi_sQ                + \
                                     " psis %6.2f"               %self.psi_s                 + \
                                     " psis_alpha %6.2f"         %self.psi_s_alpha           + \
-                                    " psis_ref %6.5f"           %self.psi_s_reference       + \
-                                    " te %6.2f"                 %self.te                    + \
+                                    " psis_ref %10.6f"           %self.psi_s_reference       + \
+                                    " te %10.6f"                 %self.te                    + \
                                     " Ud %6.2f"                 %self.Ud                    + \
                                     " pi_control %6.2f"         %self.pi_control            + \
                                     " pi_max %6.2f"             %self.pi_max  
@@ -301,57 +384,22 @@ class Serial_Stm32f4(object):
                     self.writer.writerow(split_new_data_line)     
 
 
+    
+
+
     def print_to_console(self):
-        
-        if   self.print_selection==0:
-            new_data_line=  "t: %6.2f "                   %self.time                + \
-                            " ref_freq: %6.2f"            %self.reference_frequency + \
-                            " electric_frequency: %10.2f" %self.electric_frequency  + \
-                            " hall_freq: %6.2f"           %self.hall_frequency        
-
-        elif self.print_selection==1:
-            new_data_line=  "t: %6.2f "                   %self.time                + \
-                            " isA: %6.2f"                %self.isA                   + \
-                            " isB: %6.2f"                %self.isB                   + \
-                            " isC: %6.2f"                %self.isC                   + \
-                            " isD: %6.2f"                %self.isD                   + \
-                            " isQ: %6.2f"                %self.isQ                   
-
-        elif self.print_selection==3:
-            new_data_line=  "t: %6.2f "                  %self.time                + \
-                            " VsD: %6.2f"                %self.VsD                 + \
-                            " VsQ: %6.2f"                %self.VsQ                 + \
-                            " Vs: %6.2f"                 %self.Vs                  + \
-                            " Vs_cita: %6.2f"            %self.Vs_cita             + \
-                            " Vs_cita_relative: %6.2f"   %self.Vs_relative_cita      
-
-        elif self.print_selection==5:
-            new_data_line=  "t: %6.2f "                  %self.time                + \
-                            " psisD: %10.6f"             %self.psi_sD              + \
-                            " psisQ: %10.6f"             %self.psi_sQ              
-
-        elif self.print_selection==6:
-            new_data_line=  "t: %6.2f "                  %self.time                + \
-                            " psis: %10.6f"              %self.psi_s               + \
-                            " psis_alpha: %6.2f"         %self.psi_s_alpha         + \
-                            " psis_ref: %10.8f"          %self.psi_s_reference       
-
-        elif self.print_selection==7:
-            new_data_line=  "t: %6.2f "                  %self.time                + \
-                            " te: %10.6f"                %self.te                  + \
-                            " Ud: %6.2f"                 %self.Ud                  + \
-                            " pi_control: %12.8f"        %self.pi_control          + \
-                            " pi_max %12.8f:"            %self.pi_max
-
+        #print "print_selection: " + str(self.print_selection)
+        if self.print_selection!=9  :  self.print_selection_print_string()
+        else                        :  self.full_print_string ()
         #print "check_sum python: "+str(self.checksum_python)+" stm32: "+str(self.checksum_stm32)
 
         if self.transmition_error==False:      
-            print   new_data_line
-
+            print   self.new_data_line
+        '''
         else :
-            print   new_data_line
+            #print   self.new_data_line
             print "warning: transmition_error"
-    
+        '''
 
 
     def plot_frequencies(self,rows,columns,subplot_index):
@@ -377,7 +425,7 @@ class Serial_Stm32f4(object):
     def plot_quadrature_vs_direct_currents(self,rows,columns,subplot_index):
                         plt.subplot(rows,columns,subplot_index)
                         plt.plot(self.isD_vector, self.isQ_vector)
-                        plt.title('isQ vs isD')
+                        plt.title ('isQ vs isD')
                         plt.xlabel('isD (A)')
                         plt.ylabel('isQ (A)')
                         plt.legend() 
@@ -506,7 +554,52 @@ class Serial_Stm32f4(object):
                         plt.figure(num=9, figsize=(20, 20), dpi=300, facecolor='w', edgecolor='k')
                         self.plot_phase_advance                      (rows,columns,subplot_index)
                         plt.savefig(self.path+ "phase_advance_pi" +"." + datetime.datetime.now().ctime() +".jpg")
-       
+    
+    def plot_selection(self):
+        rows = 1
+        columns = 1 
+        subplot_index = 1
+                        
+        if   self.print_selection==0:
+            plt.figure(num=2, figsize=(20, 20), dpi=300, facecolor='w', edgecolor='k') 
+            self.plot_frequencies                   (rows,columns,subplot_index)
+            plt.savefig(self.path+ "frequencies" +"." + datetime.datetime.now().ctime() +".jpg")
+
+        elif self.print_selection==1:
+            plt.figure(num=3, figsize=(20, 20), dpi=300, facecolor='w', edgecolor='k') 
+            self.plot_three_phase_currents          (rows,columns,subplot_index)
+            plt.savefig(self.path+ "three-phase_currents" +"." + datetime.datetime.now().ctime() +".jpg")
+
+        elif self.print_selection==2:
+            plt.figure(num=4, figsize=(20, 20), dpi=300, facecolor='w', edgecolor='k') 
+            self.plot_quadrature_vs_direct_currents (rows,columns,subplot_index)
+            plt.savefig(self.path+ "isQ_vs_isD" +"." + datetime.datetime.now().ctime() +".jpg")
+
+        elif self.print_selection==3:
+            plt.figure(num=5, figsize=(20, 20), dpi=300, facecolor='w', edgecolor='k')
+            self.plot_quadrature_vs_direct_voltages (rows,columns,subplot_index)
+            plt.savefig(self.path+ "VsQ_vs_VsD" +"." + datetime.datetime.now().ctime() +".jpg")
+
+        elif self.print_selection==4:
+            plt.figure(num=6, figsize=(20, 20), dpi=300, facecolor='w', edgecolor='k')
+            self.plot_voltage_magnitude             (rows,columns,subplot_index)
+            plt.savefig(self.path+ "voltage_magnitude" +"." + datetime.datetime.now().ctime() +".jpg")
+
+        elif self.print_selection==5:
+            plt.figure(num=7, figsize=(20, 20), dpi=300, facecolor='w', edgecolor='k')
+            self.plot_flux_linkage                       (rows,columns,subplot_index)
+            plt.savefig(self.path+ "flux-linkage" +"." + datetime.datetime.now().ctime() +".jpg")
+
+        elif self.print_selection==6:
+            plt.figure(num=8, figsize=(20, 20), dpi=300, facecolor='w', edgecolor='k')
+            self.plot_electromagnetic_torque             (rows,columns,subplot_index)
+            plt.savefig(self.path+ "electromagnetic_torque" +"." + datetime.datetime.now().ctime() +".jpg")
+
+        elif self.print_selection==7:
+            plt.figure(num=9, figsize=(20, 20), dpi=300, facecolor='w', edgecolor='k')
+            self.plot_phase_advance                      (rows,columns,subplot_index)
+            plt.savefig(self.path+ "phase_advance_pi" +"." + datetime.datetime.now().ctime() +".jpg")
+      
 
 
     def __init__(self):
@@ -565,8 +658,11 @@ class Serial_Stm32f4(object):
                         self.capture_counter=0
                     elif split_command[0]=='f':
                         self.capture_data=False
-                        self.plot_all_in_one()
-                        self.plot_one_by_one()
+                        if   self.print_selection==9: 
+                            self.plot_all_in_one()
+                            self.plot_one_by_one()
+                        else                        :
+                            self.plot_selection() 
 
                     #selecting what to print
                     elif split_command[0]=='p':
@@ -577,19 +673,6 @@ class Serial_Stm32f4(object):
                         self.ser.write('\n')
                         self.ser.write('\r')                       
                                            
-                        '''
-                        if   split_command[1]=='0':   self.print_selection=0
-                        elif split_command[1]=='0':   self.print_selection=1
-                        elif split_command[1]=='0':   self.print_selection=2
-                        elif split_command[1]=='0':   self.print_selection=3
-                        elif split_command[1]=='0':   self.print_selection=4
-                        elif split_command[1]=='0':   self.print_selection=5
-                        elif split_command[1]=='0':   self.print_selection=6
-                        elif split_command[1]=='0':   self.print_selection=7
-                        elif split_command[1]=='0':   self.print_selection=8
-                        elif split_command[1]=='0':   self.print_selection=9
-                        elif split_command[1]=='0':   self.print_selection=10
-                        '''
 
 
 

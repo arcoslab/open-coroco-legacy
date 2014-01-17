@@ -316,6 +316,10 @@ void print_regular_data(void)
         printf ("A")  ;  checksum=checksum  +print_float_as_bytes(data_i_sA                    );
         printf ("B")  ;  checksum=checksum  +print_float_as_bytes(data_i_sB                    );
         printf ("C")  ;  checksum=checksum  +print_float_as_bytes(-data_i_sA-data_i_sB         );
+    }
+    else if (print_selection==2)
+    {
+        printf ("t")  ;  checksum=           print_float_as_bytes(data_timer                   );
         printf ("D")  ;  checksum=checksum  +print_float_as_bytes(data_i_sD                    );
         printf ("Q")  ;  checksum=checksum  +print_float_as_bytes(data_i_sQ                    );
     }
@@ -324,16 +328,26 @@ void print_regular_data(void)
         printf ("t")  ;  checksum=           print_float_as_bytes(data_timer                   );
         printf ("d")  ;  checksum=checksum  +print_float_as_bytes(data_V_sD                    );
         printf ("q")  ;  checksum=checksum  +print_float_as_bytes(data_V_sQ                    );
+    }
+    else if (print_selection==4)
+    {
+        printf ("t")  ;  checksum=           print_float_as_bytes(data_timer                   );
         printf ("s")  ;  checksum=checksum  +print_float_as_bytes(data_V_s                     );
+        printf ("U")  ;  checksum=checksum  +print_float_as_bytes(data_U_d                     );
+    }
+    /*
+    else if (print_selection==4)
         printf ("c")  ;  checksum=checksum  +print_float_as_bytes(data_cita_V_s                );
         printf ("R")  ;  checksum=checksum  +print_float_as_bytes(data_cita_V_s_relative_angle );
     }
+    */
     else if (print_selection==5)
     {
         printf ("t")  ;  checksum=           print_float_as_bytes(data_timer                   );
         printf ("p")  ;  checksum=checksum  +print_float_as_bytes(data_psi_sD                  );
         printf ("P")  ;  checksum=checksum  +print_float_as_bytes(data_psi_sQ                  );
     }
+    /*
     else if (print_selection==6)
     {
         printf ("t")  ;  checksum=           print_float_as_bytes(data_timer                   );
@@ -341,11 +355,16 @@ void print_regular_data(void)
         printf ("O")  ;  checksum=checksum  +print_float_as_bytes(data_psi_s_alpha_SVM         );
         printf ("v")  ;  checksum=checksum  +print_float_as_bytes(data_psi_s_ref               );
     }
-    else if (print_selection==7)
+    */
+    else if (print_selection==6)
     {
         printf ("t")  ;  checksum=           print_float_as_bytes(data_timer                   );
         printf ("u")  ;  checksum=checksum  +print_float_as_bytes(data_t_e                     );
-        printf ("U")  ;  checksum=checksum  +print_float_as_bytes(data_U_d                     );
+        printf ("y")  ;  checksum=checksum  +print_float_as_bytes(data_t_e_ref                 );
+    }
+    else if (print_selection==7)
+    {
+        printf ("t")  ;  checksum=           print_float_as_bytes(data_timer                   );
         printf ("l")  ;  checksum=checksum  +print_float_as_bytes(data_pi_control_SVM          );
         printf ("x")  ;  checksum=checksum  +print_float_as_bytes(pi_max                       );
     }
@@ -356,7 +375,50 @@ void print_regular_data(void)
 
 }
 
+void full_print_regular_data(void)
+{
+    char checksum=0;
+    printf ("X")   ;
+        printf ("t")  ;  checksum=           print_float_as_bytes(data_timer                   );
+        printf ("r")  ;  checksum=checksum  +print_float_as_bytes(data_ref_freq_SVM            );
+        printf ("e")  ;  checksum=checksum  +print_float_as_bytes(data_w_r                     );
+        printf ("h")  ;  checksum=checksum  +print_float_as_bytes(data_CUR_FREQ                );
 
+        printf ("A")  ;  checksum=checksum  +print_float_as_bytes(data_i_sA                    );
+        printf ("B")  ;  checksum=checksum  +print_float_as_bytes(data_i_sB                    );
+        printf ("C")  ;  checksum=checksum  +print_float_as_bytes(-data_i_sA-data_i_sB         );
+
+        printf ("D")  ;  checksum=checksum  +print_float_as_bytes(data_i_sD                    );
+        printf ("Q")  ;  checksum=checksum  +print_float_as_bytes(data_i_sQ                    );
+
+        printf ("d")  ;  checksum=checksum  +print_float_as_bytes(data_V_sD                    );
+        printf ("q")  ;  checksum=checksum  +print_float_as_bytes(data_V_sQ                    );
+
+        printf ("s")  ;  checksum=checksum  +print_float_as_bytes(data_V_s                     );
+        printf ("U")  ;  checksum=checksum  +print_float_as_bytes(data_U_d                     );
+
+        printf ("c")  ;  checksum=checksum  +print_float_as_bytes(data_cita_V_s                );
+        printf ("R")  ;  checksum=checksum  +print_float_as_bytes(data_cita_V_s_relative_angle );
+
+        printf ("p")  ;  checksum=checksum  +print_float_as_bytes(data_psi_sD                  );
+        printf ("P")  ;  checksum=checksum  +print_float_as_bytes(data_psi_sQ                  );
+ 
+        printf ("L")  ;  checksum=checksum  +print_float_as_bytes(data_psi_s                   );
+        printf ("O")  ;  checksum=checksum  +print_float_as_bytes(data_psi_s_alpha_SVM         );
+        printf ("v")  ;  checksum=checksum  +print_float_as_bytes(data_psi_s_ref               );
+
+        printf ("u")  ;  checksum=checksum  +print_float_as_bytes(data_t_e                     );
+        printf ("y")  ;  checksum=checksum  +print_float_as_bytes(data_t_e_ref                 );
+
+        printf ("l")  ;  checksum=checksum  +print_float_as_bytes(data_pi_control_SVM          );
+        printf ("x")  ;  checksum=checksum  +print_float_as_bytes(pi_max                       );
+
+
+    printf ("k");
+    printf ("%c", checksum);
+    printf ("m");
+
+}
 /*
 void print_float_as_bytes(float floating_value)
 {

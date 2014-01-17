@@ -23,6 +23,7 @@ void collecting_speed_data (void);
 void collecting_samples(void);
 void collecting_data(void);
 void print_regular_data(void);
+void full_print_regular_data(void);
 void print_captured_data(void);
 //void print_float_as_bytes(float value);
 char print_float_as_bytes(float value);
