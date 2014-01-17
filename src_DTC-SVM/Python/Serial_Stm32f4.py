@@ -129,6 +129,7 @@ class Serial_Stm32f4(object):
                 self.ser.write('\n')
                 self.ser.write('\r')
                 
+                
             except SerialException:
                 print"Disconnected from the STM32, cua cua"
                 self.counter=self.counter+1
