@@ -47,7 +47,8 @@ class Serial_Stm32f4(object):
         self.capture_counter    = 0
         self.print_selection    = 0
         self.new_data_line      = ''
-        
+        self.read_capture_state = 'not_collecting'
+        self.max_time           = 10000
 
         #data from stm32F4 (impedance control+DTC-SVM+PID+HALL)
         self.time                   = 0.0
@@ -141,11 +142,21 @@ class Serial_Stm32f4(object):
     def create_log_file(self):
         self.log_file = open( self.path +"data" +"." + datetime.datetime.now().ctime() +".csv", "wb")
         self.writer   = csv.writer(self.log_file, delimiter=' ',quotechar=' ', quoting=csv.QUOTE_MINIMAL)
-        header_csv    = "t t ref_freq ref_freq electric_frequency electric_frequency hall_freq hall_freq " + \
-                        "isA isA isB isB isC isC isD isD isQ isQ "                                         + \
-                        "VsD VsD VsQ VsQ Vs Vs Vs_cita Vs_cita Vs_cita_relative Vs_cita_relative "         + \
-                        "psisD psisD psisQ psisQ psis psis psis_alpha psis_alpha psis_ref psis_ref "       + \
-                        "te te Ud Ud pi_control pi_control pi_max pi_max"  
+ 
+        if self.print_selection==9:   header_csv = "t t ref_freq ref_freq electric_frequency electric_frequency hall_freq hall_freq "+\
+                                                   "isA isA isB isB isC isC isD isD isQ isQ "                                        +\
+                                                   "VsD VsD VsQ VsQ Vs Vs Vs_cita Vs_cita Vs_cita_relative Vs_cita_relative "        +\
+                                                   "psisD psisD psisQ psisQ psis psis psis_alpha psis_alpha psis_ref psis_ref "      +\
+                                                   "te te Ud Ud pi_control pi_control pi_max pi_max"  
+        elif self.print_selection==0: header_csv = "t t ref_freq ref_freq electric_frequency electric_frequency hall_freq hall_freq " 
+        elif self.print_selection==1: header_csv = "t t isA isA isB isB isC isC " 
+        elif self.print_selection==2: header_csv = "t t isD isD isQ isQ " 
+        elif self.print_selection==3: header_csv = "t t VsD VsD VsQ VsQ "
+        elif self.print_selection==4: header_csv = "t t VsD Vs Vs Ud Ud "
+        elif self.print_selection==5: header_csv = "t t psisD psisD psisQ psisQ "
+        elif self.print_selection==6: header_csv = "t t te te Ud Ud pi_control pi_control pi_max pi_max" 
+        elif self.print_selection==7: header_csv = "t t pi_control pi_control pi_max pi_max" 
+ 
         split_header = header_csv.split()                  
         self.writer.writerow(split_header)        
 
@@ -356,33 +367,46 @@ class Serial_Stm32f4(object):
         '''
 
     def save_data_to_csv_file(self):
-                new_data_line_csv=  "t %6.2f "                  %self.time                  + \
-                                    " ref_freq %6.2f"           %self.reference_frequency   + \
-                                    " electric_frequency %6.2f" %self.electric_frequency    + \
-                                    " hall_freq %6.2f"          %self.hall_frequency        + \
-                                    " isA %6.2f"                %self.isA                   + \
-                                    " isB %6.2f"                %self.isB                   + \
-                                    " isC %6.2f"                %self.isC                   + \
-                                    " isD %6.2f"                %self.isD                   + \
-                                    " isQ %6.2f"                %self.isQ                   + \
-                                    " VsD %6.2f"                %self.VsD                   + \
-                                    " VsQ %6.2f"                %self.VsQ                   + \
-                                    " Vs %6.2f"                 %self.Vs                    + \
-                                    " Vs_cita %6.2f"            %self.Vs_cita               + \
-                                    " Vs_cita_relative %6.2f"   %self.Vs_relative_cita      + \
-                                    " psisD %10.6f"              %self.psi_sD                + \
-                                    " psisQ %10.6f"              %self.psi_sQ                + \
-                                    " psis %6.2f"               %self.psi_s                 + \
-                                    " psis_alpha %6.2f"         %self.psi_s_alpha           + \
-                                    " psis_ref %10.6f"           %self.psi_s_reference       + \
-                                    " te %10.6f"                 %self.te                    + \
-                                    " Ud %6.2f"                 %self.Ud                    + \
-                                    " pi_control %6.2f"         %self.pi_control            + \
-                                    " pi_max %6.2f"             %self.pi_max  
+        '''
+        new_data_line_csv=  "t %6.2f "                  %self.time                  + \
+                            " ref_freq %6.2f"           %self.reference_frequency   + \
+                            " electric_frequency %6.2f" %self.electric_frequency    + \
+                            " hall_freq %6.2f"          %self.hall_frequency        + \
+                            " isA %6.2f"                %self.isA                   + \
+                            " isB %6.2f"                %self.isB                   + \
+                            " isC %6.2f"                %self.isC                   + \
+                            " isD %6.2f"                %self.isD                   + \
+                            " isQ %6.2f"                %self.isQ                   + \
+                            " VsD %6.2f"                %self.VsD                   + \
+                            " VsQ %6.2f"                %self.VsQ                   + \
+                            " Vs %6.2f"                 %self.Vs                    + \
+                            " Vs_cita %6.2f"            %self.Vs_cita               + \
+                            " Vs_cita_relative %6.2f"   %self.Vs_relative_cita      + \
+                            " psisD %10.6f"              %self.psi_sD               + \
+                            " psisQ %10.6f"              %self.psi_sQ               + \
+                            " psis %6.2f"               %self.psi_s                 + \
+                            " psis_alpha %6.2f"         %self.psi_s_alpha           + \
+                            " psis_ref %10.6f"           %self.psi_s_reference      + \
+                            " te %10.6f"                 %self.te                   + \
+                            " Ud %6.2f"                 %self.Ud                    + \
+                            " pi_control %6.2f"         %self.pi_control            + \
+                            " pi_max %6.2f"             %self.pi_max  
+        '''
 
-                if self.transmition_error==False: 
-                    split_new_data_line = new_data_line_csv.split()
-                    self.writer.writerow(split_new_data_line)     
+        if self.print_selection!=9  :  
+            self.print_selection_print_string()
+            #print "just appending some data"
+        elif self.print_selection==9:                       
+            #print "apending everything to a file"
+            self.full_print_string ()
+
+        #if self.transmition_error==False:      
+        #    print   self.new_data_line
+
+
+        if self.transmition_error==False: 
+            split_new_data_line = self.new_data_line.split()
+            self.writer.writerow(split_new_data_line)     
 
 
     
@@ -391,7 +415,7 @@ class Serial_Stm32f4(object):
     def print_to_console(self):
         #print "print_selection: " + str(self.print_selection)
         if self.print_selection!=9  :  self.print_selection_print_string()
-        else                        :  self.full_print_string ()
+        elif self.print_selection==9:  self.full_print_string ()
         #print "check_sum python: "+str(self.checksum_python)+" stm32: "+str(self.checksum_stm32)
 
         if self.transmition_error==False:      
@@ -403,9 +427,12 @@ class Serial_Stm32f4(object):
         '''
 
 
+
+
+    #adding a '*' or 'o'after the two vectors allows to plot points instead of a continuos line 
     def plot_frequencies(self,rows,columns,subplot_index):
                         plt.subplot(rows,columns,subplot_index)
-                        plt.plot(self.time_vector,self.electric_frequency_vector ,label='electric' )
+                        plt.plot(self.time_vector,self.electric_frequency_vector ,label='electric')
                         plt.plot(self.time_vector,self.hall_frequency_vector     ,label='hall'     )
                         plt.plot(self.time_vector,self.reference_frequency_vector,label='reference')                     
                         plt.title('frequency vs time')
@@ -606,7 +633,7 @@ class Serial_Stm32f4(object):
     def __init__(self):
         self.initializing_values()        
         self.creating_data_vectors()
-        self.create_log_file()
+        #self.create_log_file()
         self.connecting_to_stm32F4()
                
 
@@ -624,10 +651,17 @@ class Serial_Stm32f4(object):
     def read(self): 
             self.read_data_from_stm32()
                                         
-            if self.capture_data==True:
-                self.append_new_data_to_vectors()
-                self.save_data_to_csv_file()
-                print "apending data to vectors"
+            if self.capture_data==True and self.transmition_error==False:
+                
+                if   self.read_capture_state == 'not_collecting' and self.time <= 500:#  30 cycles for the regularbyte sending
+                                                                                      # and 300 for the whole data 
+                    self.read_capture_state = 'collecting'
+                    #print "not appending, timer: " + str(self.time)
+
+                elif self.read_capture_state == 'collecting':
+                    self.append_new_data_to_vectors()
+                    self.save_data_to_csv_file()
+                    #print "apending data to vectors"
 
             self.print_to_console() 
             '''
@@ -636,6 +670,22 @@ class Serial_Stm32f4(object):
             else:
                 print "transmition ok"
             '''
+
+    def break_the_motor(self):
+        line = 'd 0' 
+        self.ser.write(line)
+        self.ser.write('\n')
+        self.ser.write('\r')
+
+    def change_frequency (self):
+
+    def testing_routine(self)
+        self.break_the_motor();
+        self.change_frequency(self.new_frequency);
+        self.capture_data();
+        self.end_capturing_data();
+        
+
 
     def write(self):	
          while sys.stdin in select.select([sys.stdin], [], [], 0)[0]:	#read from standart input if there is something, otherwise not 
@@ -655,21 +705,30 @@ class Serial_Stm32f4(object):
                     
                     #capturing data into csv
                     elif   split_command[0]=='c':
+                        self.ser.write(line)
+                        self.ser.write('\n')
+                        self.ser.write('\r')
                         self.capture_data=True
                         self.capture_counter=0
+                        self.create_log_file()
+                        self.read_capture_state = 'not_collecting'
+
                     elif split_command[0]=='f':
                         self.capture_data=False
                         if   self.print_selection==9: 
                             self.plot_all_in_one()
-                            self.plot_one_by_one()
+                            #self.plot_one_by_one()
                         else                        :
                             self.plot_selection() 
+                        self.log_file.close()
+                        self.read_capture_state == 'not_collecting'
+                        self.creating_data_vectors() #it empties the vectors
 
                     #selecting what to print
                     elif split_command[0]=='p':
                         self.capture_data=False
                         self.print_selection=int(split_command[1])
-                        print "line: " + line + " 0: "+split_command[0] +" 1: "+split_command[1]+" int: "+ str(self.print_selection)     
+                        print "line: "+line+" 0: "+split_command[0]+" 1: "+split_command[1]+" int: "+ str(self.print_selection)     
                         self.ser.write(line)
                         self.ser.write('\n')
                         self.ser.write('\r')                       

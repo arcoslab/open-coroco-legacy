@@ -30,7 +30,7 @@
   }
 }
 */
-
+float timer=0.0f;
 
 float   ref_freq_SVM=0.0f;
 
@@ -268,7 +268,7 @@ void frequency_input(void)
       
       if (strcmp(cmd, "d") == 0)
       {
-        print_selection=0;
+        //print_selection=0;
         regular_print=true;
         dtc_on=true;
         ref_freq_SVM=value;
@@ -281,6 +281,12 @@ void frequency_input(void)
         
         collecting_speed=true;
       }	 
+
+      if (strcmp(cmd, "c") == 0)
+      {
+        timer=0;
+      }	 
+
 
       if (strcmp(cmd, "p") == 0)
       {

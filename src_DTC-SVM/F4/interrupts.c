@@ -124,7 +124,7 @@ float data_psi_s;
 int   data_psi_alpha;
 float data_psi_s_alpha_SVM;
 float data_w_r;
-float timer=0.0f;
+
 float data_timer;
 
 float data_t_e;
