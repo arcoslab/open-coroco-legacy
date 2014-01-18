@@ -287,6 +287,11 @@ void frequency_input(void)
         timer=0;
       }	 
 
+      if (strcmp(cmd, "t") == 0)
+      {
+        timer=0;
+      }	 
+
 
       if (strcmp(cmd, "p") == 0)
       {

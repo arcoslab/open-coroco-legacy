@@ -48,7 +48,12 @@ class Serial_Stm32f4(object):
         self.print_selection    = 0
         self.new_data_line      = ''
         self.read_capture_state = 'not_collecting'
-        self.max_time           = 10000
+
+        #test routine
+        self.max_test_time      = 10000
+        self.test_routine_state = 'initial'
+        self.start_test         = False
+        self.test_frequency     = 0
 
         #data from stm32F4 (impedance control+DTC-SVM+PID+HALL)
         self.time                   = 0.0
@@ -671,23 +676,100 @@ class Serial_Stm32f4(object):
                 print "transmition ok"
             '''
 
-    def break_the_motor(self):
-        line = 'd 0' 
+    def write_a_line(self,line):
         self.ser.write(line)
         self.ser.write('\n')
-        self.ser.write('\r')
+        self.ser.write('\r')      
 
-    def change_frequency (self):
+    def break_the_motor(self):
+        line = 'd 0' 
+        self.write_a_line(line)
 
-    def testing_routine(self)
-        self.break_the_motor();
-        self.change_frequency(self.new_frequency);
-        self.capture_data();
-        self.end_capturing_data();
+    def change_frequency (self, frequency):
+        line='d '+ frequency
+        self.write_a_line(line)
+
+    
+
+    def testing_routine(self):
+        #test_frequency='200'
+        frequency_tolenrance=0.05
+        print self.test_routine_state
+
+        if   (self.test_routine_state=='initial' and 
+              self.start_test==True                      ): 
+ 
+            self.break_the_motor()
+            self.test_routine_state='breaking'
+
+
+        elif (  self.test_routine_state=='breaking' and 
+                self.transmition_error ==False      and 
+                self.electric_frequency<0.01            ):
+
+
+           self.change_frequency(self.test_frequency)
+           self.capturing_data()
+           self.test_routine_state='changing_frequency'
+       
+ 
+        elif (  self.test_routine_state=='changing_frequency'                   and 
+                self.transmition_error ==              False                    and 
+                self.time>=self.max_test_time                                       ):
+            #    self.electric_frequency<(1+frequency_tolerance)*test_frequency  and
+            #    self.electric_frequency>(1-frequency_tolerance)*test_frequency      ):
+
+            self.break_the_motor();
+            self.end_capturing_data()
+            self.test_routine_state='stopping_the_motor'
+ 
+
+        elif (  self.test_routine_state=='stopping_the_motor'                   and
+                self.transmition_error==False                                   and
+                self.electric_frequency<0.01                                        ):
+
+            self.test_routine_state='motor_stopped'
+            self.start_test=False
+
+
+        elif (  self.test_routine_state=='motor_stopped' and
+                self.start_test==True                            ):
+
+            #self.break_the_motor()
+            self.test_routine_state='breaking'
+            
+
         
+            
+            
+        
+    def capturing_data(self):
+        self.capture_data       = True
+        self.capture_counter    = 0
+        self.create_log_file()
+        self.read_capture_state = 'not_collecting'       
+
+    def end_capturing_data(self):
+        self.capture_data=False
+        if   self.print_selection==9: 
+            self.plot_all_in_one()
+            #self.plot_one_by_one()
+        else                        :
+            self.plot_selection() 
+        self.log_file.close()
+        self.read_capture_state == 'not_collecting'
+        self.creating_data_vectors() #it empties the vectors        
+ 
+    def print_selection_setup(self,selection):
+        self.capture_data=False
+        self.print_selection=selection#int(split_command[1])     
+        self.write_a_line( 'p '+str(selection) )              
 
 
     def write(self):	
+
+         self.testing_routine()
+
          while sys.stdin in select.select([sys.stdin], [], [], 0)[0]:	#read from standart input if there is something, otherwise not 
             line = sys.stdin.readline()     #you must press enter before typing the new command
             if line:
@@ -699,39 +781,31 @@ class Serial_Stm32f4(object):
 
                     #updating reference frequency
                     if     split_command[0]=='d':
-                        self.ser.write(line)
-                        self.ser.write('\n')
-                        self.ser.write('\r')
+                        self.write_a_line(line)
                     
                     #capturing data into csv
                     elif   split_command[0]=='c':
-                        self.ser.write(line)
-                        self.ser.write('\n')
-                        self.ser.write('\r')
-                        self.capture_data=True
-                        self.capture_counter=0
-                        self.create_log_file()
-                        self.read_capture_state = 'not_collecting'
+                        self.write_a_line(line)
+                        self.capturing_data()
 
                     elif split_command[0]=='f':
-                        self.capture_data=False
-                        if   self.print_selection==9: 
-                            self.plot_all_in_one()
-                            #self.plot_one_by_one()
-                        else                        :
-                            self.plot_selection() 
-                        self.log_file.close()
-                        self.read_capture_state == 'not_collecting'
-                        self.creating_data_vectors() #it empties the vectors
+                        self.end_capturing_data()
 
                     #selecting what to print
                     elif split_command[0]=='p':
-                        self.capture_data=False
-                        self.print_selection=int(split_command[1])
-                        print "line: "+line+" 0: "+split_command[0]+" 1: "+split_command[1]+" int: "+ str(self.print_selection)     
-                        self.ser.write(line)
-                        self.ser.write('\n')
-                        self.ser.write('\r')                       
+                        #self.capture_data=False
+                        #self.print_selection=int(split_command[1])     
+                        #self.write_a_line(line)
+                        self.print_selection_setup(int(split_command[1]))
+
+                    elif split_command[0]=='t':
+                        self.start_test=True    
+                        self.test_frequency=split_command[1]
+    
+                    
+
+
+                      
                                            
 
 
