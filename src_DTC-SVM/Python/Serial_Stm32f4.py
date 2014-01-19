@@ -52,6 +52,7 @@ class Serial_Stm32f4(object):
         #test routine
         self.max_test_time      = 10000
         self.test_routine_state = 'initial'
+        self.driving_test_state = 'initial'
         self.start_test         = False
         self.test_frequency     = 0
 
@@ -687,6 +688,7 @@ class Serial_Stm32f4(object):
 
     def change_frequency (self, frequency):
         line='d '+ frequency
+        print "new frequency to test: " + frequency
         self.write_a_line(line)
 
     
@@ -701,6 +703,7 @@ class Serial_Stm32f4(object):
  
             self.break_the_motor()
             self.test_routine_state='breaking'
+            #line=raw_input("Enter to continue: ") 
 
 
         elif (  self.test_routine_state=='breaking' and 
@@ -711,6 +714,7 @@ class Serial_Stm32f4(object):
            self.change_frequency(self.test_frequency)
            self.capturing_data()
            self.test_routine_state='changing_frequency'
+           #line=raw_input("Enter to continue: ") 
        
  
         elif (  self.test_routine_state=='changing_frequency'                   and 
@@ -722,6 +726,7 @@ class Serial_Stm32f4(object):
             self.break_the_motor();
             self.end_capturing_data()
             self.test_routine_state='stopping_the_motor'
+            #line=raw_input("Enter to continue: ") 
  
 
         elif (  self.test_routine_state=='stopping_the_motor'                   and
@@ -730,6 +735,7 @@ class Serial_Stm32f4(object):
 
             self.test_routine_state='motor_stopped'
             self.start_test=False
+            #line=raw_input("Enter to continue: ") 
 
 
         elif (  self.test_routine_state=='motor_stopped' and
@@ -737,10 +743,25 @@ class Serial_Stm32f4(object):
 
             #self.break_the_motor()
             self.test_routine_state='breaking'
+            #line=raw_input("Enter to continue: ") 
             
 
-        
-            
+    def driving_tests_for_every_set_of_data(self,frequency):
+    
+        if   (self.start_driving_test==True and 
+            self.driving_test_state=='initial'):
+            print_selection_setup(self,0)
+            self.start_test=True 
+            self.driving_test_state='printing_0'
+
+        elif (self.start_driving_test==False and 
+            self.driving_test_state=='printing_0'):
+            print_selection_setup(self,1)
+            self.start_test=True 
+            self.driving_test_state='printing_1'
+            self.driving_test=False
+                           
+                  
             
         
     def capturing_data(self):
