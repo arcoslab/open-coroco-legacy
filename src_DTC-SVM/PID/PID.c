@@ -280,6 +280,7 @@ void frequency_input(void)
         }
         
         collecting_speed=true;
+        timer=0;
       }	 
 
       if (strcmp(cmd, "c") == 0)
@@ -325,7 +326,7 @@ void frequency_input(void)
         
         collecting_speed=true;
       }	
-
+      /*
       else if (strcmp(cmd, "t") == 0)
       {
         dtc_on=true;
@@ -339,7 +340,8 @@ void frequency_input(void)
         
         collecting_speed=true;
 
-      }	 
+      }	
+       */ 
 
       else if (strcmp(cmd, "z") == 0)
       {

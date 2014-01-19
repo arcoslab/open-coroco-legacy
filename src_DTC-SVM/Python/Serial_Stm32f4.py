@@ -54,7 +54,8 @@ class Serial_Stm32f4(object):
         self.test_routine_state = 'initial'
         self.driving_test_state = 'initial'
         self.start_test         = False
-        self.test_frequency     = 0
+        self.start_driving_test = False
+        self.test_frequency     = '0'
 
         #data from stm32F4 (impedance control+DTC-SVM+PID+HALL)
         self.time                   = 0.0
@@ -323,13 +324,15 @@ class Serial_Stm32f4(object):
             self.new_data_line= "t: %6.2f "                   %self.time                + \
                                 " ref_freq: %6.2f"            %self.reference_frequency + \
                                 " electric_frequency: %10.2f" %self.electric_frequency  + \
-                                " hall_freq: %6.2f"           %self.hall_frequency        
+                                " hall_freq: %6.2f"           %self.hall_frequency      + " "+self.test_routine_state + " "+self.driving_test_state
 
         elif self.print_selection==1:
             self.new_data_line= "t: %6.2f "                  %self.time                 + \
+                                " ref_freq: %6.2f"            %self.reference_frequency + \
+                                " electric_frequency: %10.2f" %self.electric_frequency  + \
                                 " isA: %6.2f"                %self.isA                  + \
                                 " isB: %6.2f"                %self.isB                  + \
-                                " isC: %6.2f"                %self.isC                   
+                                " isC: %6.2f"                %self.isC                  + " "+self.test_routine_state + " "+self.driving_test_state
 
         elif self.print_selection==2:
             self.new_data_line= "t: %6.2f "                   %self.time                + \
@@ -678,6 +681,8 @@ class Serial_Stm32f4(object):
             '''
 
     def write_a_line(self,line):
+        #self.ser.write('\n')
+        #self.ser.write('\r') 
         self.ser.write(line)
         self.ser.write('\n')
         self.ser.write('\r')      
@@ -688,15 +693,16 @@ class Serial_Stm32f4(object):
 
     def change_frequency (self, frequency):
         line='d '+ frequency
-        print "new frequency to test: " + frequency
+        #print "change_frequency :::: new frequency to test: " + frequency
+        #print line
         self.write_a_line(line)
 
     
 
     def testing_routine(self):
         #test_frequency='200'
-        frequency_tolenrance=0.05
-        print self.test_routine_state
+        frequency_tolerance=0.05
+        #print self.test_routine_state
 
         if   (self.test_routine_state=='initial' and 
               self.start_test==True                      ): 
@@ -705,23 +711,48 @@ class Serial_Stm32f4(object):
             self.test_routine_state='breaking'
             #line=raw_input("Enter to continue: ") 
 
+        #in case there was a transmition error and the referente did not change to 0Hz
+        elif   (self.test_routine_state=='breaking' and 
+               self.electric_frequency>2.0               ): 
+            self.break_the_motor()
+            self.test_routine_state='breaking'
+            #line=raw_input("breaking again, Enter to continue: ")        
+        
+
 
         elif (  self.test_routine_state=='breaking' and 
                 self.transmition_error ==False      and 
-                self.electric_frequency<0.01            ):
+                self.electric_frequency<4.0            ):
 
 
            self.change_frequency(self.test_frequency)
+           #self.change_frequency('777')
            self.capturing_data()
            self.test_routine_state='changing_frequency'
-           #line=raw_input("Enter to continue: ") 
+           #print "self.test_frequency" + self.test_frequency
+           #line=raw_input("Enter to continue aaaaahhhhhhhh!!!: ") 
+
+        #in case there was a transmition error and the reference frequency did no change in to the test_frequency
+        elif (  self.test_routine_state=='changing_frequency' and 
+                self.transmition_error ==False                and 
+                self.reference_frequency!=float(self.test_frequency) ):
+
+
+           self.change_frequency(self.test_frequency)
+           #self.change_frequency('777')
+           self.capturing_data()
+           self.test_routine_state='changing_frequency'
+           #print "self.test_frequency" + self.test_frequency
+           #line=raw_input("Enter to continue changing_frequencies aaaaahhhhhhhh!!!: ") 
+
+        
        
  
         elif (  self.test_routine_state=='changing_frequency'                   and 
                 self.transmition_error ==              False                    and 
-                self.time>=self.max_test_time                                       ):
-            #    self.electric_frequency<(1+frequency_tolerance)*test_frequency  and
-            #    self.electric_frequency>(1-frequency_tolerance)*test_frequency      ):
+                #self.time>=self.max_test_time                                       ):
+                self.electric_frequency<(1.0+frequency_tolerance)*float(self.test_frequency)  and
+                self.electric_frequency>(1.0-frequency_tolerance)*float(self.test_frequency)      ):
 
             self.break_the_motor();
             self.end_capturing_data()
@@ -746,22 +777,27 @@ class Serial_Stm32f4(object):
             #line=raw_input("Enter to continue: ") 
             
 
-    def driving_tests_for_every_set_of_data(self,frequency):
+    def driving_tests_for_every_set_of_data(self):
     
         if   (self.start_driving_test==True and 
             self.driving_test_state=='initial'):
-            print_selection_setup(self,0)
+            self.print_selection_setup(0)
             self.start_test=True 
             self.driving_test_state='printing_0'
 
-        elif (self.start_driving_test==False and 
+        elif (self.start_test==False and 
             self.driving_test_state=='printing_0'):
-            print_selection_setup(self,1)
+            self.print_selection_setup(1)
             self.start_test=True 
             self.driving_test_state='printing_1'
-            self.driving_test=False
+
                            
-                  
+        elif (self.start_test==False and 
+            self.driving_test_state=='printing_1'):
+            self.print_selection_setup(0)
+            self.start_test=False 
+            self.driving_test_state='initial'
+            self.start_driving_test=False
             
         
     def capturing_data(self):
@@ -789,15 +825,16 @@ class Serial_Stm32f4(object):
 
     def write(self):	
 
+         self.driving_tests_for_every_set_of_data()
          self.testing_routine()
-
+         
          while sys.stdin in select.select([sys.stdin], [], [], 0)[0]:	#read from standart input if there is something, otherwise not 
             line = sys.stdin.readline()     #you must press enter before typing the new command
             if line:
                 line=raw_input("Enter new command: ")   #the printing of the stm32f4 data is stopped until you type a new reference
                 if line:
-
-
+                    #print "line captured in the first while: " + line
+                    #raw_input("Enter enter if you want to live: ")
                     split_command = line.split()
 
                     #updating reference frequency
@@ -820,7 +857,13 @@ class Serial_Stm32f4(object):
                         self.print_selection_setup(int(split_command[1]))
 
                     elif split_command[0]=='t':
-                        self.start_test=True    
+
+                        self.start_driving_test=True;
+                        #self.start_test=True
+
+
+                        #print "test_frequency: " + split_command[1]
+                        #raw_input("Enter enter to continue: ")
                         self.test_frequency=split_command[1]
     
                     

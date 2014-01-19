@@ -316,6 +316,10 @@ void print_regular_data(void)
         printf ("A")  ;  checksum=checksum  +print_float_as_bytes(data_i_sA                    );
         printf ("B")  ;  checksum=checksum  +print_float_as_bytes(data_i_sB                    );
         printf ("C")  ;  checksum=checksum  +print_float_as_bytes(-data_i_sA-data_i_sB         );
+
+        //////////////
+        printf ("r")  ;  checksum=checksum  +print_float_as_bytes(data_ref_freq_SVM            );
+        printf ("e")  ;  checksum=checksum  +print_float_as_bytes(data_w_r                     );
     }
     else if (print_selection==2)
     {
