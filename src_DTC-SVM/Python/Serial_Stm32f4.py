@@ -27,6 +27,7 @@ import select
 import matplotlib.pyplot as plt
 
 from byte_to_float import *
+import os
 
 class Serial_Stm32f4(object):
 
@@ -34,7 +35,7 @@ class Serial_Stm32f4(object):
     def initializing_values(self):
 
         #pyserial configuration
-        self.path           = "/home/tumacher/local/src/repositories/arcoslab/open-coroco/src_DTC-SVM/Python/measures/"
+        self.root_path           = "/home/tumacher/local/src/repositories/arcoslab/open-coroco/src_DTC-SVM/Python/measures/"
         self.dev_type       ="/dev/ttyACM"
         self.serial_speed   =115200
         self.serial_timeout =1
@@ -48,6 +49,12 @@ class Serial_Stm32f4(object):
         self.print_selection    = 0
         self.new_data_line      = ''
         self.read_capture_state = 'not_collecting'
+        self.tag_comment        = ''
+        self.driving_counter    = 0
+
+        #plotting
+        self.plotting_character=''
+        self.plotting_character_0='o'
 
         #test routine
         self.max_test_time      = 10000
@@ -147,7 +154,26 @@ class Serial_Stm32f4(object):
 
   
     def create_log_file(self):
-        self.log_file = open( self.path +"data" +"." + datetime.datetime.now().ctime() +".csv", "wb")
+
+        #self.path=self.root_path+self.tag_comment+'_'+"data" +"." + datetime.datetime.now().ctime() +"."+self.tag_comment+'/'
+
+        if not os.path.exists(self.path):
+            os.makedirs(self.path)#+"data" +"." + datetime.datetime.now().ctime() +"."+self.tag_comment)
+
+        if   self.print_selection==0: tag='frequencies'
+        elif self.print_selection==1: tag='three-phase_currents'
+        elif self.print_selection==2: tag='isQ_vs_isD'
+        elif self.print_selection==3: tag='VsQ_vs_VsD'
+        elif self.print_selection==4: tag='voltage_magnitude'
+        elif self.print_selection==5: tag='flux-linkage'
+        elif self.print_selection==6: tag='electromagnetic_torque'
+        elif self.print_selection==7: tag='phase_advance_pi'
+        elif self.print_selection==8: tag=''
+        elif self.print_selection==9: tag=''
+        else                        : tag=''
+
+
+        self.log_file = open( self.path+"["+datetime.datetime.now().ctime() +"] ["+self.tag_comment+"] data " + tag +".csv", "wb")
         self.writer   = csv.writer(self.log_file, delimiter=' ',quotechar=' ', quoting=csv.QUOTE_MINIMAL)
  
         if self.print_selection==9:   header_csv = "t t ref_freq ref_freq electric_frequency electric_frequency hall_freq hall_freq "+\
@@ -319,12 +345,14 @@ class Serial_Stm32f4(object):
                                     " pi_max %10.6f"             %self.pi_max  
 
     def print_selection_print_string(self):
+
+        extra_information= " "+self.test_routine_state + " "+self.driving_test_state+" "+str(self.driving_counter)
        
         if   self.print_selection==0:
             self.new_data_line= "t: %6.2f "                   %self.time                + \
                                 " ref_freq: %6.2f"            %self.reference_frequency + \
                                 " electric_frequency: %10.2f" %self.electric_frequency  + \
-                                " hall_freq: %6.2f"           %self.hall_frequency      + " "+self.test_routine_state + " "+self.driving_test_state
+                                " hall_freq: %6.2f"           %self.hall_frequency      + extra_information
 
         elif self.print_selection==1:
             self.new_data_line= "t: %6.2f "                  %self.time                 + \
@@ -332,40 +360,40 @@ class Serial_Stm32f4(object):
                                 " electric_frequency: %10.2f" %self.electric_frequency  + \
                                 " isA: %6.2f"                %self.isA                  + \
                                 " isB: %6.2f"                %self.isB                  + \
-                                " isC: %6.2f"                %self.isC                  + " "+self.test_routine_state + " "+self.driving_test_state
+                                " isC: %6.2f"                %self.isC                  + extra_information
 
         elif self.print_selection==2:
             self.new_data_line= "t: %6.2f "                   %self.time                + \
                                 " isD: %6.2f"                %self.isD                  + \
-                                " isQ: %6.2f"                %self.isQ                   
+                                " isQ: %6.2f"                %self.isQ                  + extra_information
 
         elif self.print_selection==3:
             self.new_data_line= "t: %6.2f "                  %self.time                + \
                                 " VsD: %6.2f"                %self.VsD                 + \
-                                " VsQ: %6.2f"                %self.VsQ                 
+                                " VsQ: %6.2f"                %self.VsQ                 + extra_information
 
         elif self.print_selection==4:
             self.new_data_line= "t: %6.2f "                  %self.time                + \
                                 " Vs: %6.2f"                 %self.Vs                  + \
-                                " Ud: %6.2f"                 %self.Ud                  
+                                " Ud: %6.2f"                 %self.Ud                  + extra_information
                                 #" Vs_cita: %6.2f"            %self.Vs_cita             + \
                                 #" Vs_cita_relative: %6.2f"   %self.Vs_relative_cita      
 
         elif self.print_selection==5:
             self.new_data_line= "t: %6.2f "                  %self.time                + \
                                 " psisD: %10.6f"             %self.psi_sD              + \
-                                " psisQ: %10.6f"             %self.psi_sQ              
+                                " psisQ: %10.6f"             %self.psi_sQ              + extra_information
 
         elif self.print_selection==6:
             self.new_data_line= "t: %6.2f "                  %self.time                + \
                                 " te: %10.6f"                %self.te                  + \
-                                " te_ref: %10.6f"            %self.te_ref                  
+                                " te_ref: %10.6f"            %self.te_ref              + extra_information  
 
                                 
         elif self.print_selection==7:
             self.new_data_line= "t: %6.2f "                  %self.time                + \
                                 " pi_control: %12.8f"        %self.pi_control          + \
-                                " pi_max %12.8f:"            %self.pi_max
+                                " pi_max %12.8f:"            %self.pi_max              + extra_information
 
         '''
         elif self.print_selection==6:
@@ -441,9 +469,9 @@ class Serial_Stm32f4(object):
     #adding a '*' or 'o'after the two vectors allows to plot points instead of a continuos line 
     def plot_frequencies(self,rows,columns,subplot_index):
                         plt.subplot(rows,columns,subplot_index)
-                        plt.plot(self.time_vector,self.electric_frequency_vector ,label='electric')
-                        plt.plot(self.time_vector,self.hall_frequency_vector     ,label='hall'     )
-                        plt.plot(self.time_vector,self.reference_frequency_vector,label='reference')                     
+                        plt.plot(self.time_vector,self.electric_frequency_vector ,self.plotting_character,label='electric')
+                        plt.plot(self.time_vector,self.hall_frequency_vector     ,self.plotting_character,label='hall'     )
+                        plt.plot(self.time_vector,self.reference_frequency_vector,self.plotting_character,label='reference')                     
                         plt.title('frequency vs time')
                         plt.xlabel('time (ticks)')
                         plt.ylabel('frequency (Hz)')
@@ -451,9 +479,9 @@ class Serial_Stm32f4(object):
 
     def plot_three_phase_currents(self,rows,columns,subplot_index):
                         plt.subplot(rows,columns,subplot_index)
-                        plt.plot(self.time_vector, self.isA_vector,label='isA')
-                        plt.plot(self.time_vector, self.isB_vector,label='isB')
-                        plt.plot(self.time_vector, self.isC_vector,label='isC')
+                        plt.plot(self.time_vector, self.isA_vector,self.plotting_character,label='isA')
+                        plt.plot(self.time_vector, self.isB_vector,self.plotting_character,label='isB')
+                        plt.plot(self.time_vector, self.isC_vector,self.plotting_character,label='isC')
                         plt.title('current vs time')
                         plt.xlabel('time (ticks)')
                         plt.ylabel('three-phase currents (A)')
@@ -461,7 +489,7 @@ class Serial_Stm32f4(object):
 
     def plot_quadrature_vs_direct_currents(self,rows,columns,subplot_index):
                         plt.subplot(rows,columns,subplot_index)
-                        plt.plot(self.isD_vector, self.isQ_vector)
+                        plt.plot(self.isD_vector, self.isQ_vector,self.plotting_character)
                         plt.title ('isQ vs isD')
                         plt.xlabel('isD (A)')
                         plt.ylabel('isQ (A)')
@@ -469,7 +497,7 @@ class Serial_Stm32f4(object):
 
     def plot_quadrature_vs_direct_voltages(self,rows,columns,subplot_index):
                         plt.subplot(rows,columns,subplot_index)
-                        plt.plot(self.VsD_vector, self.VsQ_vector)
+                        plt.plot(self.VsD_vector, self.VsQ_vector,self.plotting_character)
                         plt.title('VsQ vs VsD')
                         plt.xlabel('VsD (A)')
                         plt.ylabel('VsQ (A)')
@@ -477,8 +505,8 @@ class Serial_Stm32f4(object):
 
     def plot_voltage_magnitude(self,rows,columns,subplot_index):    
                         plt.subplot(rows,columns,subplot_index)
-                        plt.plot(self.time_vector, self.Vs_vector,label='Vs')
-                        plt.plot(self.time_vector, self.Ud_vector,label='Ud')
+                        plt.plot(self.time_vector, self.Vs_vector,self.plotting_character,label='Vs')
+                        plt.plot(self.time_vector, self.Ud_vector,self.plotting_character,label='Ud')
                         plt.title('voltage vs time')
                         plt.xlabel('t (ticks)')
                         plt.ylabel('Voltage (V)')
@@ -486,7 +514,7 @@ class Serial_Stm32f4(object):
 
     def plot_flux_linkage(self,rows,columns,subplot_index):    
                         plt.subplot(rows,columns,subplot_index)
-                        plt.plot(self.psi_sD_vector, self.psi_sQ_vector)
+                        plt.plot(self.psi_sD_vector, self.psi_sQ_vector,self.plotting_character_0)
                         plt.title('psi_sQ vs psi_sD')
                         plt.xlabel('psi_sD (Wb)')
                         plt.ylabel('psi_sQ (Wb)')
@@ -494,8 +522,8 @@ class Serial_Stm32f4(object):
 
     def plot_electromagnetic_torque(self,rows,columns,subplot_index):    
                         plt.subplot(rows,columns,subplot_index)
-                        plt.plot(self.time_vector, self.te_vector,label='te')
-                        plt.plot(self.time_vector, self.te_ref_vector,label='te_ref')
+                        plt.plot(self.time_vector, self.te_vector,self.plotting_character,label='te')
+                        plt.plot(self.time_vector, self.te_ref_vector,self.plotting_character,label='te_ref')
                         plt.title('torque vs time')
                         plt.xlabel('time (ticks)')
                         plt.ylabel('torque (Nm)')
@@ -503,8 +531,8 @@ class Serial_Stm32f4(object):
 
     def plot_phase_advance(self,rows,columns,subplot_index):    
                         plt.subplot(rows,columns,subplot_index)
-                        plt.plot(self.time_vector, self.pi_control_vector,label='pi_control')
-                        plt.plot(self.time_vector, self.pi_max_vector,label='pi_max')
+                        plt.plot(self.time_vector, self.pi_control_vector,self.plotting_character,label='pi_control')
+                        plt.plot(self.time_vector, self.pi_max_vector,self.plotting_character,label='pi_max')
                         plt.title('pi increment vs time')
                         plt.xlabel('time (ticks)')
                         plt.ylabel('pi (degrees)')
@@ -552,7 +580,7 @@ class Serial_Stm32f4(object):
                         plt.subplots_adjust(hspace=0.4)
                         plt.subplots_adjust(wspace=0.2)
                         #plt.show()                        
-                        plt.savefig(self.path+ "all_graphs" +"." + datetime.datetime.now().ctime() +".jpg")
+                        plt.savefig(self.path+"[" +datetime.datetime.now().ctime() +"] ""all_graphs"+".jpg")
 
 
     def plot_one_by_one(self):
@@ -562,80 +590,86 @@ class Serial_Stm32f4(object):
                                               
                         plt.figure(num=2, figsize=(20, 20), dpi=300, facecolor='w', edgecolor='k') 
                         self.plot_frequencies                   (rows,columns,subplot_index)
-                        plt.savefig(self.path+ "frequencies" +"." + datetime.datetime.now().ctime() +".jpg")
+                        plt.savefig(self.path+datetime.datetime.now().ctime()+"."+self.tag_comment+"._frequencies" +".jpg")
 
                         plt.figure(num=3, figsize=(20, 20), dpi=300, facecolor='w', edgecolor='k') 
                         self.plot_three_phase_currents          (rows,columns,subplot_index)
-                        plt.savefig(self.path+ "three-phase_currents" +"." + datetime.datetime.now().ctime() +".jpg")
+                        plt.savefig(self.path+ "three-phase_currents" +"." + datetime.datetime.now().ctime() +self.tag_comment+".jpg")
 
                         plt.figure(num=4, figsize=(20, 20), dpi=300, facecolor='w', edgecolor='k') 
                         self.plot_quadrature_vs_direct_currents (rows,columns,subplot_index)
-                        plt.savefig(self.path+ "isQ_vs_isD" +"." + datetime.datetime.now().ctime() +".jpg")
+                        plt.savefig(self.path+ "isQ_vs_isD" +"." + datetime.datetime.now().ctime() +self.tag_comment+".jpg")
 
                         plt.figure(num=5, figsize=(20, 20), dpi=300, facecolor='w', edgecolor='k')
                         self.plot_quadrature_vs_direct_voltages (rows,columns,subplot_index)
-                        plt.savefig(self.path+ "VsQ_vs_VsD" +"." + datetime.datetime.now().ctime() +".jpg")
+                        plt.savefig(self.path+ "VsQ_vs_VsD" +"." + datetime.datetime.now().ctime() +self.tag_comment+".jpg")
 
                         plt.figure(num=6, figsize=(20, 20), dpi=300, facecolor='w', edgecolor='k')
                         self.plot_voltage_magnitude             (rows,columns,subplot_index)
-                        plt.savefig(self.path+ "voltage_magnitude" +"." + datetime.datetime.now().ctime() +".jpg")
+                        plt.savefig(self.path+ "voltage_magnitude" +"." + datetime.datetime.now().ctime() +self.tag_comment+".jpg")
                
                         plt.figure(num=7, figsize=(20, 20), dpi=300, facecolor='w', edgecolor='k')
                         self.plot_flux_linkage                       (rows,columns,subplot_index)
-                        plt.savefig(self.path+ "flux-linkage" +"." + datetime.datetime.now().ctime() +".jpg")
+                        plt.savefig(self.path+ "flux-linkage" +"." + datetime.datetime.now().ctime() +self.tag_comment+".jpg")
 
                         plt.figure(num=8, figsize=(20, 20), dpi=300, facecolor='w', edgecolor='k')
                         self.plot_electromagnetic_torque             (rows,columns,subplot_index)
-                        plt.savefig(self.path+ "electromagnetic_torque" +"." + datetime.datetime.now().ctime() +".jpg")
+                        plt.savefig(self.path+ "electromagnetic_torque" +"." + datetime.datetime.now().ctime() +self.tag_comment+".jpg")
 
                         plt.figure(num=9, figsize=(20, 20), dpi=300, facecolor='w', edgecolor='k')
                         self.plot_phase_advance                      (rows,columns,subplot_index)
-                        plt.savefig(self.path+ "phase_advance_pi" +"." + datetime.datetime.now().ctime() +".jpg")
+                        plt.savefig(self.path+ "phase_advance_pi" +"." + datetime.datetime.now().ctime() +self.tag_comment+".jpg")
     
     def plot_selection(self):
         rows = 1
         columns = 1 
         subplot_index = 1
-                        
+                     
+        plot_name = self.path+ "[" +datetime.datetime.now().ctime() +"] ["+self.tag_comment+"] "
+        plot_figsize=(10,10)
+        plot_dpi=300
+        plot_face_color='w'
+        plot_edge_color='k'  
+
         if   self.print_selection==0:
-            plt.figure(num=2, figsize=(20, 20), dpi=300, facecolor='w', edgecolor='k') 
+            plt.figure(num=2, figsize=plot_figsize, dpi=plot_dpi, facecolor=plot_face_color, edgecolor=plot_edge_color) 
             self.plot_frequencies                   (rows,columns,subplot_index)
-            plt.savefig(self.path+ "frequencies" +"." + datetime.datetime.now().ctime() +".jpg")
+            plt.savefig( plot_name+"frequencies" +".jpg")
 
         elif self.print_selection==1:
-            plt.figure(num=3, figsize=(20, 20), dpi=300, facecolor='w', edgecolor='k') 
+            plt.figure(num=3, figsize=plot_figsize, dpi=plot_dpi, facecolor=plot_face_color, edgecolor=plot_edge_color) 
             self.plot_three_phase_currents          (rows,columns,subplot_index)
-            plt.savefig(self.path+ "three-phase_currents" +"." + datetime.datetime.now().ctime() +".jpg")
+            plt.savefig(plot_name+"three-phase_currents"+".jpg")
 
         elif self.print_selection==2:
-            plt.figure(num=4, figsize=(20, 20), dpi=300, facecolor='w', edgecolor='k') 
+            plt.figure(num=4, figsize=plot_figsize, dpi=plot_dpi, facecolor=plot_face_color, edgecolor=plot_edge_color) 
             self.plot_quadrature_vs_direct_currents (rows,columns,subplot_index)
-            plt.savefig(self.path+ "isQ_vs_isD" +"." + datetime.datetime.now().ctime() +".jpg")
+            plt.savefig(plot_name+"isQ_vs_isD"+".jpg")
 
         elif self.print_selection==3:
-            plt.figure(num=5, figsize=(20, 20), dpi=300, facecolor='w', edgecolor='k')
+            plt.figure(num=5, figsize=plot_figsize, dpi=plot_dpi, facecolor=plot_face_color, edgecolor=plot_edge_color)
             self.plot_quadrature_vs_direct_voltages (rows,columns,subplot_index)
-            plt.savefig(self.path+ "VsQ_vs_VsD" +"." + datetime.datetime.now().ctime() +".jpg")
+            plt.savefig(plot_name+"VsQ_vs_VsD"+".jpg")
 
         elif self.print_selection==4:
-            plt.figure(num=6, figsize=(20, 20), dpi=300, facecolor='w', edgecolor='k')
+            plt.figure(num=6, figsize=plot_figsize, dpi=plot_dpi, facecolor=plot_face_color, edgecolor=plot_edge_color)
             self.plot_voltage_magnitude             (rows,columns,subplot_index)
-            plt.savefig(self.path+ "voltage_magnitude" +"." + datetime.datetime.now().ctime() +".jpg")
+            plt.savefig(plot_name+"voltage_magnitude"+".jpg")
 
         elif self.print_selection==5:
-            plt.figure(num=7, figsize=(20, 20), dpi=300, facecolor='w', edgecolor='k')
+            plt.figure(num=7, figsize=plot_figsize, dpi=plot_dpi, facecolor=plot_face_color, edgecolor=plot_edge_color)
             self.plot_flux_linkage                       (rows,columns,subplot_index)
-            plt.savefig(self.path+ "flux-linkage" +"." + datetime.datetime.now().ctime() +".jpg")
+            plt.savefig(plot_name+"flux-linkage"+".jpg")
 
         elif self.print_selection==6:
-            plt.figure(num=8, figsize=(20, 20), dpi=300, facecolor='w', edgecolor='k')
+            plt.figure(num=8, figsize=plot_figsize, dpi=plot_dpi, facecolor=plot_face_color, edgecolor=plot_edge_color)
             self.plot_electromagnetic_torque             (rows,columns,subplot_index)
-            plt.savefig(self.path+ "electromagnetic_torque" +"." + datetime.datetime.now().ctime() +".jpg")
+            plt.savefig(plot_name+"electromagnetic_torque" +".jpg")
 
         elif self.print_selection==7:
-            plt.figure(num=9, figsize=(20, 20), dpi=300, facecolor='w', edgecolor='k')
+            plt.figure(num=9, figsize=plot_figsize, dpi=plot_dpi, facecolor=plot_face_color, edgecolor=plot_edge_color)
             self.plot_phase_advance                      (rows,columns,subplot_index)
-            plt.savefig(self.path+ "phase_advance_pi" +"." + datetime.datetime.now().ctime() +".jpg")
+            plt.savefig(plot_name+"phase_advance_pi"+".jpg")
       
 
 
@@ -784,7 +818,25 @@ class Serial_Stm32f4(object):
             self.print_selection_setup(0)
             self.start_test=True 
             self.driving_test_state='printing_0'
+            self.driving_counter=0
 
+        
+        elif (self.start_test==False and 
+            self.driving_test_state=='printing_'+str(self.driving_counter) and 
+            self.driving_counter<7):
+            self.print_selection_setup(self.driving_counter+1)
+            self.start_test         =True 
+            self.driving_test_state ='printing_'+str(self.driving_counter+1)
+            self.driving_counter    =self.driving_counter+1
+
+        elif (self.start_test==False and 
+            self.driving_test_state=='printing_7'):
+            self.print_selection_setup(7)
+            self.start_test=False 
+            self.driving_test_state='initial'
+            self.start_driving_test=False
+
+        '''
         elif (self.start_test==False and 
             self.driving_test_state=='printing_0'):
             self.print_selection_setup(1)
@@ -798,7 +850,7 @@ class Serial_Stm32f4(object):
             self.start_test=False 
             self.driving_test_state='initial'
             self.start_driving_test=False
-            
+        '''            
         
     def capturing_data(self):
         self.capture_data       = True
@@ -857,18 +909,28 @@ class Serial_Stm32f4(object):
                         self.print_selection_setup(int(split_command[1]))
 
                     elif split_command[0]=='t':
-
+                        
                         self.start_driving_test=True;
-                        #self.start_test=True
+                        self.test_frequency    =split_command[1]
+                        self.tag_comment       =raw_input("Enter comment: ") 
+                        self.path              =self.root_path + "["+datetime.datetime.now().ctime() +"] ["+self.tag_comment+"]"+'/'  
+
+                    elif split_command[0]=='all':
+                        
+                        self.start_test=True;
+                        self.print_selection_setup(9)
+                        self.test_frequency    =split_command[1]
+                        self.tag_comment       =raw_input("Enter comment: ") 
+                        self.path              =self.root_path + "["+datetime.datetime.now().ctime() +"] ["+self.tag_comment+"]"+'/'  
 
 
-                        #print "test_frequency: " + split_command[1]
-                        #raw_input("Enter enter to continue: ")
-                        self.test_frequency=split_command[1]
-    
-                    
-
-
+                    elif split_command[0]=='one':
+                        
+                        self.start_test=True;
+                        self.print_selection_setup(int(split_command[2]))
+                        self.test_frequency    =split_command[1]
+                        self.tag_comment       =raw_input("Enter comment: ") 
+                        self.path              =self.root_path + "["+datetime.datetime.now().ctime() +"] ["+self.tag_comment+"]"+'/'  
                       
                                            
 
