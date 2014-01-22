@@ -22,6 +22,9 @@ float SVM_V_s_ref_D(float psi_s_ref, float psi_s, float psi_s_angle, float phase
   //return ( psi_s_ref*cosf((psi_s_angle+phase_advance)*PI/180.0f) - psi_s*cosf(psi_s_angle*PI/180.0f) )/T_s  +  i_sD*R_s;
   //return ( psi_s_ref*cosf((psi_s_angle+phase_advance)*0.01745329251994329576f) - psi_s*cosf(psi_s_angle*0.01745329251994329576f) )/T_s  +  i_sD*R_s;
   ////return ( psi_s_ref*fast_cos((psi_s_angle+phase_advance)*0.01745329251994329576f) - psi_s*fast_cos(psi_s_angle*0.01745329251994329576f) )/T_s  +  i_sD*R_s;
+
+  //catching_NaNs();
+  catching_NaNs_data (psi_s_angle+phase_advance, fast_cos((psi_s_angle+phase_advance)), fast_cos(psi_s_angle));
   return ( psi_s_ref*fast_cos((psi_s_angle+phase_advance)) - psi_s*fast_cos(psi_s_angle) )/T_s  +  i_sD*R_s;
 }
 
@@ -30,6 +33,10 @@ float SVM_V_s_ref_Q(float psi_s_ref, float psi_s, float psi_s_angle, float phase
   //return ( psi_s_ref*sinf((psi_s_angle+phase_advance)*PI/180.0f) - psi_s*sinf(psi_s_angle*PI/180.0f) )/T_s  +  i_sQ*R_s; 
   //return ( psi_s_ref*sinf((psi_s_angle+phase_advance)*0.01745329251994329576f) - psi_s*sinf(psi_s_angle*0.01745329251994329576f) )/T_s  +  i_sQ*R_s; 
   //return ( psi_s_ref*fast_sine((psi_s_angle+phase_advance)*0.01745329251994329576f) - psi_s*fast_sine(psi_s_angle*0.01745329251994329576f) )/T_s  +  i_sQ*R_s;
+
+  //catching_NaNs();
+  catching_NaNs_data (psi_s_angle+phase_advance, fast_sine((psi_s_angle+phase_advance)), fast_sine(psi_s_angle));
+
   return ( psi_s_ref*fast_sine((psi_s_angle+phase_advance)) - psi_s*fast_sine(psi_s_angle) )/T_s  +  i_sQ*R_s;
 }
 
@@ -344,9 +351,169 @@ void shutdown_SVM_torque (float torque_reference,float actual_torque,bool* shutd
 #define SECOND_HALF 1
 float center_aligned_state=FIRST_HALF;
 
+
+char catched_wr         = '0';
+char catched_VsD        = '0';
+char catched_VsQ        = '0';
+char catched_psisD      = '0';
+char catched_psisQ      = '0';
+char catched_te         = '0';
+char catched_pi_control = '0';
+bool first_catch        = true;
+bool something_catched  = false;
+
+char catched_psi_s_ref              ='o';
+char catched_psi_s                  ='o';
+char catched_psi_s_alpha_SVM        ='o';
+char catched_psi_rotating_angle_SVM ='o';
+char catched_i_sD                   ='o';
+char catched_i_sQ                   ='o';
+char catched_R_s                    ='o';
+char catched_tick_period            ='o';
+
+float catched_value_wr         = 0.0f;
+float catched_value_VsD        = 0.0f;
+float catched_value_VsQ        = 0.0f;
+float catched_value_psisD      = 0.0f;
+float catched_value_psisQ      = 0.0f;
+float catched_value_te         = 0.0f;
+float catched_value_pi_control = 0.0f;
+
+
+float catched_value_psi_s_ref              =0.0f;
+float catched_value_psi_s                  =0.0f;
+float catched_value_psi_s_alpha_SVM        =0.0f;
+float catched_value_psi_rotating_angle_SVM =0.0f;
+float catched_value_i_sD                   =0.0f;
+float catched_value_i_sQ                   =0.0f;
+float catched_value_R_s                    =0.0f;
+float catched_value_tick_period            =0.0f;
+
+float catched_data_4                       =0.0f;
+float catched_data_5                       =0.0f;
+float catched_data_6                       =0.0f;
+
+//
+
+void catched_values (void)
+{
+    catched_value_wr         = w_r;
+    catched_value_VsD        = V_sD;
+    catched_value_VsQ        = V_sQ;
+    catched_value_psisD      = psi_sD;
+    catched_value_psisQ      = psi_sQ;
+    catched_value_te         = t_e;
+    catched_value_pi_control = pi_control;
+
+
+    catched_value_psi_s_ref              =psi_s_ref;
+    catched_value_psi_s                  =psi_s;
+    catched_value_psi_s_alpha_SVM        =psi_s_alpha_SVM;
+    catched_value_psi_rotating_angle_SVM =psi_rotating_angle_SVM;
+    catched_value_i_sD                   =i_sD;
+    catched_value_i_sQ                   =i_sQ;
+    catched_value_R_s                    =R_s;
+    catched_value_tick_period            =TICK_PERIOD*2.0f;
+}
+
+void catched_values_data (float data_4, float data_5, float data_6)
+{
+    catched_value_wr         = w_r;
+    catched_value_VsD        = V_sD;
+    catched_value_VsQ        = V_sQ;
+    catched_value_psisD      = psi_sD;
+    catched_value_psisQ      = psi_sQ;
+    catched_value_te         = t_e;
+    catched_value_pi_control = pi_control;
+
+
+    catched_value_psi_s_ref              =psi_s_ref;
+    catched_value_psi_s                  =psi_s;
+    catched_value_psi_s_alpha_SVM        =psi_s_alpha_SVM;
+    catched_value_psi_rotating_angle_SVM =psi_rotating_angle_SVM;
+    catched_value_i_sD                   =i_sD;
+    catched_value_i_sQ                   =i_sQ;
+    catched_value_R_s                    =R_s;
+    catched_value_tick_period            =TICK_PERIOD*2.0f;
+    
+    catched_data_4  = data_4;
+    catched_data_5  = data_5;
+    catched_data_6  = data_6;
+    
+}
+
+void catching_NaNs (void)
+{
+
+    if (w_r            !=w_r           && first_catch==true)  { catched_wr         ='f'; something_catched=true;}
+    if (V_sD           !=V_sD          && first_catch==true)  { catched_VsD        ='D'; something_catched=true;}
+    if (V_sQ           !=V_sQ          && first_catch==true)  { catched_VsQ        ='Q'; something_catched=true;}
+    if (psi_sD         !=psi_sD        && first_catch==true)  { catched_psisD      ='d'; something_catched=true;}
+    if (psi_sQ         !=psi_sQ        && first_catch==true)  { catched_psisQ      ='q'; something_catched=true;}
+    if (t_e            !=t_e           && first_catch==true)  { catched_te         ='t'; something_catched=true;}
+    if (SVM_pi_control !=SVM_pi_control&& first_catch==true)  { catched_pi_control ='i'; something_catched=true;}
+
+    if(psi_s_ref             !=psi_s_ref             &&first_catch==true){catched_psi_s_ref              ='r'; something_catched=true;}
+    if(psi_s                 !=psi_s                 &&first_catch==true){catched_psi_s                  ='s'; something_catched=true;}
+    if(psi_s_alpha_SVM       !=psi_s_alpha_SVM       &&first_catch==true){catched_psi_s_alpha_SVM        ='a'; something_catched=true;}
+    if(psi_rotating_angle_SVM!=psi_rotating_angle_SVM&&first_catch==true){catched_psi_rotating_angle_SVM ='R'; something_catched=true;}
+    if (i_sD                 !=i_sD                  &&first_catch==true){catched_i_sD                   ='D'; something_catched=true;}
+    if (i_sQ                 !=i_sQ                  &&first_catch==true){catched_i_sQ                   ='Q'; something_catched=true;}
+    if (R_s                  !=R_s                   &&first_catch==true){catched_R_s                    ='r'; something_catched=true;}
+    if (TICK_PERIOD          !=TICK_PERIOD           &&first_catch==true){catched_tick_period            ='T'; something_catched=true;}
+ 
+    if (something_catched==true && first_catch==true)    { catched_values ();}
+   
+    if (something_catched==true)    {first_catch=false; }
+
+}
+
+void catching_NaNs_data (float data_4, float data_5, float data_6)
+{
+
+    if (w_r            !=w_r           && first_catch==true)  { catched_wr         ='f'; something_catched=true;}
+    if (V_sD           !=V_sD          && first_catch==true)  { catched_VsD        ='D'; something_catched=true;}
+    if (V_sQ           !=V_sQ          && first_catch==true)  { catched_VsQ        ='Q'; something_catched=true;}
+    if (psi_sD         !=psi_sD        && first_catch==true)  { catched_psisD      ='d'; something_catched=true;}
+    if (psi_sQ         !=psi_sQ        && first_catch==true)  { catched_psisQ      ='q'; something_catched=true;}
+    if (t_e            !=t_e           && first_catch==true)  { catched_te         ='t'; something_catched=true;}
+    if (SVM_pi_control !=SVM_pi_control&& first_catch==true)  { catched_pi_control ='i'; something_catched=true;}
+
+    if(psi_s_ref             !=psi_s_ref             &&first_catch==true){catched_psi_s_ref              ='r'; something_catched=true;}
+    if(psi_s                 !=psi_s                 &&first_catch==true){catched_psi_s                  ='s'; something_catched=true;}
+    if(psi_s_alpha_SVM       !=psi_s_alpha_SVM       &&first_catch==true){catched_psi_s_alpha_SVM        ='a'; something_catched=true;}
+    if(psi_rotating_angle_SVM!=psi_rotating_angle_SVM&&first_catch==true){catched_psi_rotating_angle_SVM ='R'; something_catched=true;}
+    if (i_sD                 !=i_sD                  &&first_catch==true){catched_i_sD                   ='D'; something_catched=true;}
+    if (i_sQ                 !=i_sQ                  &&first_catch==true){catched_i_sQ                   ='Q'; something_catched=true;}
+    if (R_s                  !=R_s                   &&first_catch==true){catched_R_s                    ='r'; something_catched=true;}
+    if (TICK_PERIOD          !=TICK_PERIOD           &&first_catch==true){catched_tick_period            ='T'; something_catched=true;}
+ 
+    if (data_4  !=data_4    &&first_catch==true){catched_data_4 ='1'; something_catched=true;}
+    if (data_5  !=data_5    &&first_catch==true){catched_data_5 ='2'; something_catched=true;}
+    if (data_6  !=data_6    &&first_catch==true){catched_data_6 ='3'; something_catched=true;}
+ 
+
+    if (something_catched==true && first_catch==true)    { catched_values_data (data_4,data_5,data_6);}
+   
+    if (something_catched==true)    {first_catch=false; }
+
+}
+
 void  DTC_SVM(void)
 {
   //---------------------------------DTC algorithm--------------------------------------------//
+/*
+    if      (w_r            !=w_r      )  { catched_wr         ='f'; }
+    else if (V_sD           !=V_sD          )  { catched_VsD        ='D'; }
+    else if (V_sQ           !=V_sQ          )  { catched_VsQ        ='Q'; }
+    else if (psi_sD         !=psi_sD        )  { catched_psisD      ='d'; }
+    else if (psi_sQ         !=psi_sQ        )  { catched_psisQ      ='q'; }
+    else if (t_e            !=t_e           )  { catched_te         ='t'; }
+    else if (SVM_pi_control !=SVM_pi_control)  { catched_pi_control ='i'; }
+*/
+
+//catching_NaNs();
+
 if (center_aligned_state==FIRST_HALF)
 {
   i_sD     = direct_stator_current_i_sD     (i_sA);
@@ -356,6 +523,8 @@ if (center_aligned_state==FIRST_HALF)
 
   psi_sD          = direct_stator_flux_linkage_estimator_psi_sD     (TICK_PERIOD,V_sD,i_sD,R_s);
   psi_sQ          = quadrature_stator_flux_linkage_estimator_psi_sQ (TICK_PERIOD,V_sQ,i_sQ,R_s);
+
+
   psi_s           = stator_flux_linkage_magnite_psi_s               (psi_sD,psi_sQ);
   ////psi_s_alpha_SVM = vector_angle                                    (psi_sQ,psi_sD);
   psi_s_alpha_SVM = fast_vector_angle                               (psi_sQ,psi_sD);

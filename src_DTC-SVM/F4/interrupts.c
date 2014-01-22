@@ -147,6 +147,12 @@ int data_state_SVM;
 float data_rotating_angle_SVM;
 
 
+
+
+
+
+
+
 //--------------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------------------
 
@@ -157,6 +163,9 @@ float data_rotating_angle_SVM;
 
 void tim1_up_tim10_isr(void) 
 {
+
+
+
 
   //oscilloscope flag: start of calculations
   gpio_set(GPIOD, GPIO9);

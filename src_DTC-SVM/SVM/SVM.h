@@ -41,4 +41,7 @@ void  DTC_SVM                         (void);
 
 void speed_PID_no_SVM(void);
 
-
+void catching_NaNs (void);
+void catching_NaNs_data (float data_4, float data_5, float data_6);
+void catched_values (void);
+void catched_values_data (float data_4, float data_5, float data_6);

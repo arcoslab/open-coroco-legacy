@@ -30,7 +30,7 @@ float sine_linear_interpolation(float angle, int rounded_angle)
 {
   float fixed_angle;
   
-  if (angle>rounded_angle) 
+  if (angle>=rounded_angle) 
   {
 /*    fixed_angle =  sine_table[rounded_angle]+
                   (sine_table[rounded_angle+1]-sine_table[rounded_angle])*

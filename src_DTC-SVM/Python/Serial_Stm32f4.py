@@ -51,6 +51,7 @@ class Serial_Stm32f4(object):
         self.read_capture_state = 'not_collecting'
         self.tag_comment        = ''
         self.driving_counter    = 0
+        self.exception          = 'N'
 
         #plotting
         self.plotting_character=''
@@ -98,6 +99,12 @@ class Serial_Stm32f4(object):
         self.checksum_stm32         = 0.0
         self.checksum_python        = 0.0
 
+        self.data_1                 = 0.0
+        self.data_2                 = 0.0
+        self.data_3                 = 0.0
+        self.data_4                 = 0.0
+        self.data_5                 = 0.0
+        self.data_6                 = 0.0
 
     def creating_data_vectors(self):
         self.time_vector = []
@@ -129,6 +136,12 @@ class Serial_Stm32f4(object):
         self.pi_control_vector  = []
         self.pi_max_vector      = []
 
+        self.data_1_vector          = []
+        self.data_2_vector          = []
+        self.data_3_vector          = []
+        self.data_4_vector          = []
+        self.data_5_vector          = []
+
 
     def connecting_to_stm32F4(self):
         while self.connecting==True:
@@ -156,7 +169,7 @@ class Serial_Stm32f4(object):
     def create_log_file(self):
 
         #self.path=self.root_path+self.tag_comment+'_'+"data" +"." + datetime.datetime.now().ctime() +"."+self.tag_comment+'/'
-
+        self.path              =self.root_path + "["+datetime.datetime.now().ctime() +"] ["+self.tag_comment+"]"+'/'
         if not os.path.exists(self.path):
             os.makedirs(self.path)#+"data" +"." + datetime.datetime.now().ctime() +"."+self.tag_comment)
 
@@ -274,7 +287,33 @@ class Serial_Stm32f4(object):
                 elif (single_character=='U'):   self.Ud                =self.get_data_and_checksum()
                 elif (single_character=='l'):   self.pi_control        =self.get_data_and_checksum()
                 elif (single_character=='x'):   self.pi_max            =self.get_data_and_checksum()
-                                
+
+                elif (single_character=='1'):   self.data_1            =self.get_data_and_checksum()
+                elif (single_character=='2'):   self.data_2            =self.get_data_and_checksum()
+                elif (single_character=='3'):   self.data_3            =self.get_data_and_checksum()
+                elif (single_character=='4'):   self.data_4            =self.get_data_and_checksum()
+                elif (single_character=='5'):   self.data_5            =self.get_data_and_checksum()
+                elif (single_character=='6'):   self.data_6            =self.get_data_and_checksum()
+
+
+                elif (single_character=='N'):   
+                    self.exception  = self.ser.read(bytes)
+                    self.exception += self.ser.read(bytes)
+                    self.exception += self.ser.read(bytes)
+                    self.exception += self.ser.read(bytes)
+                    self.exception += self.ser.read(bytes)
+                    self.exception += self.ser.read(bytes)
+                    self.exception += self.ser.read(bytes)
+
+                    self.exception += self.ser.read(bytes)
+                    self.exception += self.ser.read(bytes)
+                    self.exception += self.ser.read(bytes)
+                    self.exception += self.ser.read(bytes)
+                    self.exception += self.ser.read(bytes)
+                    self.exception += self.ser.read(bytes)
+                    self.exception += self.ser.read(bytes)
+                    self.exception += self.ser.read(bytes)
+
                 elif (single_character=='k'):
                     self.checksum_stm32 = ord(self.ser.read(bytes))
                 #print "single_character: " + single_character
@@ -320,7 +359,9 @@ class Serial_Stm32f4(object):
 
     def full_print_string (self):
            #print "inside full_print_string"
-           self.new_data_line=  "t %6.2f "                  %self.time                  + \
+           extra_information=  " "+self.test_routine_state + " "+self.driving_test_state+" "+str(self.driving_counter) + \
+                            " N: "+self.exception
+           self.new_data_line=  "t %6.2f "                  %self.time                      + \
                                     " ref_freq %6.2f"           %self.reference_frequency   + \
                                     " electric_frequency %6.2f" %self.electric_frequency    + \
                                     " hall_freq %6.2f"          %self.hall_frequency        + \
@@ -334,19 +375,26 @@ class Serial_Stm32f4(object):
                                     " Vs %6.2f"                 %self.Vs                    + \
                                     " Vs_cita %6.2f"            %self.Vs_cita               + \
                                     " Vs_cita_relative %6.2f"   %self.Vs_relative_cita      + \
-                                    " psisD %10.8f"              %self.psi_sD                + \
-                                    " psisQ %10.8f"              %self.psi_sQ                + \
+                                    " psisD %10.8f"              %self.psi_sD               + \
+                                    " psisQ %10.8f"              %self.psi_sQ               + \
                                     " psis %6.2f"               %self.psi_s                 + \
                                     " psis_alpha %6.2f"         %self.psi_s_alpha           + \
-                                    " psis_ref %10.8f"           %self.psi_s_reference       + \
+                                    " psis_ref %10.8f"           %self.psi_s_reference      + \
                                     " te %6.2f"                 %self.te                    + \
                                     " Ud %6.2f"                 %self.Ud                    + \
-                                    " pi_control %12.9f"         %self.pi_control            + \
-                                    " pi_max %10.6f"             %self.pi_max  
+                                    " pi_control %12.9f"         %self.pi_control           + \
+                                    " pi_max %10.6f"             %self.pi_max               + \
+                                    " psi_rotating_angle %12.9f"         %self.data_1            + \
+                                    " R_s %12.9f"         %self.data_2            + \
+                                    " tick_period %12.9f"         %self.data_3            + \
+                                    " data4 %12.9f"         %self.data_4            + \
+                                    " data5 %12.9f"         %self.data_5            + \
+                                    " data6 %12.9f"         %self.data_6            + extra_information
 
     def print_selection_print_string(self):
 
-        extra_information= " "+self.test_routine_state + " "+self.driving_test_state+" "+str(self.driving_counter)
+        extra_information=  " "+self.test_routine_state + " "+self.driving_test_state+" "+str(self.driving_counter) + \
+                            " N: "+self.exception
        
         if   self.print_selection==0:
             self.new_data_line= "t: %6.2f "                   %self.time                + \
@@ -897,6 +945,7 @@ class Serial_Stm32f4(object):
                     elif   split_command[0]=='c':
                         self.write_a_line(line)
                         self.capturing_data()
+                        self.tag_comment       =raw_input("Enter comment: ") 
 
                     elif split_command[0]=='f':
                         self.end_capturing_data()

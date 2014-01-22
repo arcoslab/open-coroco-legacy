@@ -296,15 +296,86 @@ union float_union_t
     char byte[sizeof(float)];
 };
 
+//looking for exceptions
+
 
 
 void print_regular_data(void)
 {
     char checksum=0;
     printf ("X")   ;
+    /*
+    if      (data_w_r!=data_w_r)                        { printf ("N"); printf ("f"); }
+    else if (data_V_sD!=data_V_sD)                      { printf ("N"); printf ("D"); }
+    else if (data_V_sQ!=data_V_sQ)                      { printf ("N"); printf ("Q"); }
+    else if (data_psi_sD!=data_psi_sD)                  { printf ("N"); printf ("d"); }
+    else if (data_psi_sQ!=data_psi_sQ)                  { printf ("N"); printf ("q"); }
+    else if (data_t_e!=data_t_e)                        { printf ("N"); printf ("t"); }
+    else if (data_pi_control_SVM!=data_pi_control_SVM)  { printf ("N"); printf ("i"); }
+    */  
+    if (catched_wr         != '0' ||
+        catched_VsD        != '0' ||
+        catched_VsQ        != '0' ||
+        catched_psisD      != '0' ||
+        catched_psisQ      != '0' ||
+        catched_te         != '0' ||
+        catched_pi_control != '0' ||
 
-    if      (print_selection==0)
+        catched_psi_s_ref          !='o' ||
+        catched_psi_s              !='o' ||
+        catched_psi_s_alpha_SVM    !='o' ||
+        catched_psi_rotating_angle_SVM !='o' ||
+        catched_i_sD               !='o' ||
+        catched_i_sQ               !='o' ||
+        catched_R_s                !='o' ||
+        catched_tick_period        !='o')
     {
+        printf  ("N"                     );
+        printf  ("%c",catched_wr         );
+        printf  ("%c",catched_VsD        );
+        printf  ("%c",catched_VsQ        );
+        printf  ("%c",catched_psisD      );
+        printf  ("%c",catched_psisQ      );
+        printf  ("%c",catched_te         );
+        printf  ("%c",catched_pi_control );
+
+        printf  ("%c",catched_psi_s_ref          );
+        printf  ("%c",catched_psi_s              );
+        printf  ("%c",catched_psi_s_alpha_SVM    );
+        printf  ("%c",catched_psi_rotating_angle_SVM );
+        printf  ("%c",catched_i_sD               );
+        printf  ("%c",catched_i_sQ               );
+        printf  ("%c",catched_R_s                );
+        printf  ("%c",catched_tick_period        );
+
+    }
+
+
+
+/*
+    catched_value_wr         
+    catched_value_VsD        
+    catched_value_VsQ        
+    catched_value_psisD      
+    catched_value_psisQ      
+    catched_value_te         
+    catched_value_pi_control 
+
+
+    catched_value_psi_s_ref              
+    catched_value_psi_s                  
+    catched_value_psi_s_alpha_SVM        
+    catched_value_psi_rotating_angle_SVM 
+    catched_value_i_sD                   
+    catched_value_i_sQ                   
+    catched_value_R_s                    
+    catched_value_tick_period            
+ */   
+
+    else if      (print_selection==0)
+    {
+        //printf ("t")  ;  checksum=           print_float_as_bytes(fast_sine(1080.0f));//data_timer                   );
+        //printf ("r")  ;  checksum=checksum  +print_float_as_bytes(fast_sine(1080.0f));//data_ref_freq_SVM            );
         printf ("t")  ;  checksum=           print_float_as_bytes(data_timer                   );
         printf ("r")  ;  checksum=checksum  +print_float_as_bytes(data_ref_freq_SVM            );
         printf ("e")  ;  checksum=checksum  +print_float_as_bytes(data_w_r                     );
@@ -407,6 +478,111 @@ void full_print_regular_data(void)
 {
     char checksum=0;
     printf ("X")   ;
+
+    if (catched_wr         != '0' ||
+        catched_VsD        != '0' ||
+        catched_VsQ        != '0' ||
+        catched_psisD      != '0' ||
+        catched_psisQ      != '0' ||
+        catched_te         != '0' ||
+        catched_pi_control != '0' ||
+
+        catched_psi_s_ref               !='o' ||
+        catched_psi_s                   !='o' ||
+        catched_psi_s_alpha_SVM         !='o' ||
+        catched_psi_rotating_angle_SVM  !='o' ||
+        catched_i_sD                    !='o' ||
+        catched_i_sQ                    !='o' ||
+        catched_R_s                     !='o' ||
+        catched_tick_period             !='o' ||
+        catched_data_4                  !='o' ||
+        catched_data_5                  !='o' ||
+        catched_data_6                  !='o'     )
+    {
+        printf  ("N"                     );
+        printf  ("%c",catched_wr         );
+        printf  ("%c",catched_VsD        );
+        printf  ("%c",catched_VsQ        );
+        printf  ("%c",catched_psisD      );
+        printf  ("%c",catched_psisQ      );
+        printf  ("%c",catched_te         );
+        printf  ("%c",catched_pi_control );
+
+        printf  ("%c",catched_psi_s_ref          );
+        printf  ("%c",catched_psi_s              );
+        printf  ("%c",catched_psi_s_alpha_SVM    );
+        printf  ("%c",catched_psi_rotating_angle_SVM );
+        printf  ("%c",catched_i_sD               );
+        printf  ("%c",catched_i_sQ               );
+        printf  ("%c",catched_R_s                );
+        printf  ("%c",catched_tick_period        );
+
+        //--------------------------------------------
+/*
+    catched_value_wr         
+    catched_value_VsD        
+    catched_value_VsQ        
+    catched_value_psisD      
+    catched_value_psisQ      
+    catched_value_te         
+    catched_value_pi_control 
+
+
+    catched_value_psi_s_ref              
+    catched_value_psi_s                  
+    catched_value_psi_s_alpha_SVM        
+    catched_value_psi_rotating_angle_SVM //
+    catched_value_i_sD                   
+    catched_value_i_sQ                   
+    catched_value_R_s                    
+    catched_value_tick_period  
+*/
+
+        printf ("t")  ;  checksum=           print_float_as_bytes(data_timer                   );
+        printf ("r")  ;  checksum=checksum  +print_float_as_bytes(data_ref_freq_SVM            );
+        printf ("e")  ;  checksum=checksum  +print_float_as_bytes(catched_value_wr                     );
+        printf ("h")  ;  checksum=checksum  +print_float_as_bytes(data_CUR_FREQ                );
+
+        printf ("A")  ;  checksum=checksum  +print_float_as_bytes(data_i_sA                    );
+        printf ("B")  ;  checksum=checksum  +print_float_as_bytes(data_i_sB                    );
+        printf ("C")  ;  checksum=checksum  +print_float_as_bytes(-data_i_sA-data_i_sB         );
+
+        printf ("D")  ;  checksum=checksum  +print_float_as_bytes(catched_value_i_sD                    );
+        printf ("Q")  ;  checksum=checksum  +print_float_as_bytes(catched_value_i_sQ                    );
+
+        printf ("d")  ;  checksum=checksum  +print_float_as_bytes(catched_value_VsD                    );
+        printf ("q")  ;  checksum=checksum  +print_float_as_bytes(catched_value_VsQ                    );
+
+        printf ("s")  ;  checksum=checksum  +print_float_as_bytes(data_V_s                     );
+        printf ("U")  ;  checksum=checksum  +print_float_as_bytes(data_U_d                     );
+
+        printf ("c")  ;  checksum=checksum  +print_float_as_bytes(data_cita_V_s                );
+        printf ("R")  ;  checksum=checksum  +print_float_as_bytes(data_cita_V_s_relative_angle );
+
+        printf ("p")  ;  checksum=checksum  +print_float_as_bytes(catched_value_psisD                  );
+        printf ("P")  ;  checksum=checksum  +print_float_as_bytes(catched_value_psisQ                  );
+ 
+        printf ("L")  ;  checksum=checksum  +print_float_as_bytes(catched_value_psi_s                   );
+        printf ("O")  ;  checksum=checksum  +print_float_as_bytes(catched_value_psi_s_alpha_SVM         );
+        printf ("v")  ;  checksum=checksum  +print_float_as_bytes(catched_value_psi_s_ref               );
+
+        printf ("u")  ;  checksum=checksum  +print_float_as_bytes(catched_value_te                     );
+        printf ("y")  ;  checksum=checksum  +print_float_as_bytes(data_t_e_ref                 );
+
+        printf ("l")  ;  checksum=checksum  +print_float_as_bytes(catched_value_pi_control          );
+        printf ("x")  ;  checksum=checksum  +print_float_as_bytes(pi_max                       );
+
+        printf ("1")  ;  checksum=checksum  +print_float_as_bytes(catched_value_psi_rotating_angle_SVM    );
+        printf ("2")  ;  checksum=checksum  +print_float_as_bytes(catched_value_R_s                       );
+        printf ("3")  ;  checksum=checksum  +print_float_as_bytes(catched_value_tick_period               );
+        printf ("4")  ;  checksum=checksum  +print_float_as_bytes(catched_data_4                          );
+        printf ("5")  ;  checksum=checksum  +print_float_as_bytes(catched_data_5                          );
+        printf ("6")  ;  checksum=checksum  +print_float_as_bytes(catched_data_6               );
+
+    }
+
+    else 
+    {
         printf ("t")  ;  checksum=           print_float_as_bytes(data_timer                   );
         printf ("r")  ;  checksum=checksum  +print_float_as_bytes(data_ref_freq_SVM            );
         printf ("e")  ;  checksum=checksum  +print_float_as_bytes(data_w_r                     );
@@ -440,7 +616,7 @@ void full_print_regular_data(void)
 
         printf ("l")  ;  checksum=checksum  +print_float_as_bytes(data_pi_control_SVM          );
         printf ("x")  ;  checksum=checksum  +print_float_as_bytes(pi_max                       );
-
+    }
 
     printf ("k");
     printf ("%c", checksum);

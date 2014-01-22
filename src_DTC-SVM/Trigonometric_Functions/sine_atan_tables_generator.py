@@ -51,9 +51,6 @@ table_file.write(" *  along with this program.  If not, see <http://www.gnu.org/
 table_file.write(" */\n")
 
 
-
-
-
 table_file.write ("#define SIN_TABLE_SIZE   ")
 table_file.write (repr(table_size))
 table_file.write ("\n#define SIN_TABLE_SIZE_F ")
