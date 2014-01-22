@@ -214,7 +214,7 @@ float atan_linear_interpolation(float transformed_tan,int rounded_tan)
 {
   float fixed_atan;
   
-  if (transformed_tan>rounded_tan) 
+  if (transformed_tan>=rounded_tan) 
   {
 /*    fixed_angle =  sine_table[rounded_angle]+
                   (sine_table[rounded_angle+1]-sine_table[rounded_angle])*
