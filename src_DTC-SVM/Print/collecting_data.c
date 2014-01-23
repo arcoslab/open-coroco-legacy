@@ -42,6 +42,8 @@ void collecting_floating_data(void)
     timer=timer+1.0f;
     if (timer<0.0f)
         timer=0.0f;
+    if (timer >=16777210.0f)
+        timer =0.0f;
     //if (timer>30000)
         //timer=0;
 
@@ -313,6 +315,10 @@ void print_regular_data(void)
     else if (data_t_e!=data_t_e)                        { printf ("N"); printf ("t"); }
     else if (data_pi_control_SVM!=data_pi_control_SVM)  { printf ("N"); printf ("i"); }
     */  
+
+
+
+/*######################################
     if (catched_wr         != '0' ||
         catched_VsD        != '0' ||
         catched_VsQ        != '0' ||
@@ -349,7 +355,7 @@ void print_regular_data(void)
         printf  ("%c",catched_tick_period        );
 
     }
-
+###################################*/
 
 
 /*
@@ -372,7 +378,7 @@ void print_regular_data(void)
     catched_value_tick_period            
  */   
 
-    else if      (print_selection==0)
+    if      (print_selection==0)
     {
         //printf ("t")  ;  checksum=           print_float_as_bytes(fast_sine(1080.0f));//data_timer                   );
         //printf ("r")  ;  checksum=checksum  +print_float_as_bytes(fast_sine(1080.0f));//data_ref_freq_SVM            );

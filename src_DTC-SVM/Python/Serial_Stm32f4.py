@@ -58,7 +58,7 @@ class Serial_Stm32f4(object):
         self.plotting_character_0='o'
 
         #test routine
-        self.max_test_time      = 10000
+        self.max_test_time      = 100000
         self.test_routine_state = 'initial'
         self.driving_test_state = 'initial'
         self.start_test         = False
@@ -169,7 +169,7 @@ class Serial_Stm32f4(object):
     def create_log_file(self):
 
         #self.path=self.root_path+self.tag_comment+'_'+"data" +"." + datetime.datetime.now().ctime() +"."+self.tag_comment+'/'
-        self.path              =self.root_path + "["+datetime.datetime.now().ctime() +"] ["+self.tag_comment+"]"+'/'
+        #self.path              =self.root_path + "["+datetime.datetime.now().ctime() +"] ["+self.tag_comment+"]"+'/'
         if not os.path.exists(self.path):
             os.makedirs(self.path)#+"data" +"." + datetime.datetime.now().ctime() +"."+self.tag_comment)
 
@@ -629,7 +629,7 @@ class Serial_Stm32f4(object):
                         plt.subplots_adjust(wspace=0.2)
                         #plt.show()                        
                         plt.savefig(self.path+"[" +datetime.datetime.now().ctime() +"] ""all_graphs"+".jpg")
-
+                        plt.close()
 
     def plot_one_by_one(self):
                         rows = 1
@@ -639,34 +639,43 @@ class Serial_Stm32f4(object):
                         plt.figure(num=2, figsize=(20, 20), dpi=300, facecolor='w', edgecolor='k') 
                         self.plot_frequencies                   (rows,columns,subplot_index)
                         plt.savefig(self.path+datetime.datetime.now().ctime()+"."+self.tag_comment+"._frequencies" +".jpg")
+                        plt.close()
 
                         plt.figure(num=3, figsize=(20, 20), dpi=300, facecolor='w', edgecolor='k') 
                         self.plot_three_phase_currents          (rows,columns,subplot_index)
                         plt.savefig(self.path+ "three-phase_currents" +"." + datetime.datetime.now().ctime() +self.tag_comment+".jpg")
+                        plt.close()
 
                         plt.figure(num=4, figsize=(20, 20), dpi=300, facecolor='w', edgecolor='k') 
                         self.plot_quadrature_vs_direct_currents (rows,columns,subplot_index)
                         plt.savefig(self.path+ "isQ_vs_isD" +"." + datetime.datetime.now().ctime() +self.tag_comment+".jpg")
+                        plt.close()
 
                         plt.figure(num=5, figsize=(20, 20), dpi=300, facecolor='w', edgecolor='k')
                         self.plot_quadrature_vs_direct_voltages (rows,columns,subplot_index)
                         plt.savefig(self.path+ "VsQ_vs_VsD" +"." + datetime.datetime.now().ctime() +self.tag_comment+".jpg")
+                        plt.close()
 
                         plt.figure(num=6, figsize=(20, 20), dpi=300, facecolor='w', edgecolor='k')
                         self.plot_voltage_magnitude             (rows,columns,subplot_index)
                         plt.savefig(self.path+ "voltage_magnitude" +"." + datetime.datetime.now().ctime() +self.tag_comment+".jpg")
+                        plt.close()
                
                         plt.figure(num=7, figsize=(20, 20), dpi=300, facecolor='w', edgecolor='k')
                         self.plot_flux_linkage                       (rows,columns,subplot_index)
                         plt.savefig(self.path+ "flux-linkage" +"." + datetime.datetime.now().ctime() +self.tag_comment+".jpg")
+                        plt.close()
 
                         plt.figure(num=8, figsize=(20, 20), dpi=300, facecolor='w', edgecolor='k')
                         self.plot_electromagnetic_torque             (rows,columns,subplot_index)
                         plt.savefig(self.path+ "electromagnetic_torque" +"." + datetime.datetime.now().ctime() +self.tag_comment+".jpg")
+                        plt.close()
 
                         plt.figure(num=9, figsize=(20, 20), dpi=300, facecolor='w', edgecolor='k')
                         self.plot_phase_advance                      (rows,columns,subplot_index)
                         plt.savefig(self.path+ "phase_advance_pi" +"." + datetime.datetime.now().ctime() +self.tag_comment+".jpg")
+                        plt.close()
+
     
     def plot_selection(self):
         rows = 1
@@ -683,42 +692,49 @@ class Serial_Stm32f4(object):
             plt.figure(num=2, figsize=plot_figsize, dpi=plot_dpi, facecolor=plot_face_color, edgecolor=plot_edge_color) 
             self.plot_frequencies                   (rows,columns,subplot_index)
             plt.savefig( plot_name+"frequencies" +".jpg")
+            plt.close()
 
         elif self.print_selection==1:
             plt.figure(num=3, figsize=plot_figsize, dpi=plot_dpi, facecolor=plot_face_color, edgecolor=plot_edge_color) 
             self.plot_three_phase_currents          (rows,columns,subplot_index)
             plt.savefig(plot_name+"three-phase_currents"+".jpg")
+            plt.close()
 
         elif self.print_selection==2:
             plt.figure(num=4, figsize=plot_figsize, dpi=plot_dpi, facecolor=plot_face_color, edgecolor=plot_edge_color) 
             self.plot_quadrature_vs_direct_currents (rows,columns,subplot_index)
             plt.savefig(plot_name+"isQ_vs_isD"+".jpg")
+            plt.close()
 
         elif self.print_selection==3:
             plt.figure(num=5, figsize=plot_figsize, dpi=plot_dpi, facecolor=plot_face_color, edgecolor=plot_edge_color)
             self.plot_quadrature_vs_direct_voltages (rows,columns,subplot_index)
             plt.savefig(plot_name+"VsQ_vs_VsD"+".jpg")
+            plt.close()
 
         elif self.print_selection==4:
             plt.figure(num=6, figsize=plot_figsize, dpi=plot_dpi, facecolor=plot_face_color, edgecolor=plot_edge_color)
             self.plot_voltage_magnitude             (rows,columns,subplot_index)
             plt.savefig(plot_name+"voltage_magnitude"+".jpg")
+            plt.close()
 
         elif self.print_selection==5:
             plt.figure(num=7, figsize=plot_figsize, dpi=plot_dpi, facecolor=plot_face_color, edgecolor=plot_edge_color)
             self.plot_flux_linkage                       (rows,columns,subplot_index)
             plt.savefig(plot_name+"flux-linkage"+".jpg")
+            plt.close()
 
         elif self.print_selection==6:
             plt.figure(num=8, figsize=plot_figsize, dpi=plot_dpi, facecolor=plot_face_color, edgecolor=plot_edge_color)
             self.plot_electromagnetic_torque             (rows,columns,subplot_index)
             plt.savefig(plot_name+"electromagnetic_torque" +".jpg")
+            plt.close()
 
         elif self.print_selection==7:
             plt.figure(num=9, figsize=plot_figsize, dpi=plot_dpi, facecolor=plot_face_color, edgecolor=plot_edge_color)
             self.plot_phase_advance                      (rows,columns,subplot_index)
             plt.savefig(plot_name+"phase_advance_pi"+".jpg")
-      
+            plt.close()    
 
 
     def __init__(self):
@@ -744,7 +760,7 @@ class Serial_Stm32f4(object):
                                         
             if self.capture_data==True and self.transmition_error==False:
                 
-                if   self.read_capture_state == 'not_collecting' and self.time <= 500:#  30 cycles for the regularbyte sending
+                if   self.read_capture_state == 'not_collecting' and self.time <= 300:#  30 cycles for the regularbyte sending
                                                                                       # and 300 for the whole data 
                     self.read_capture_state = 'collecting'
                     #print "not appending, timer: " + str(self.time)
@@ -813,8 +829,9 @@ class Serial_Stm32f4(object):
            self.test_routine_state='changing_frequency'
            #print "self.test_frequency" + self.test_frequency
            #line=raw_input("Enter to continue aaaaahhhhhhhh!!!: ") 
-
-        #in case there was a transmition error and the reference frequency did no change in to the test_frequency
+        
+           #in case there was a transmition error and the reference frequency did no change in to the test_frequency
+           
         elif (  self.test_routine_state=='changing_frequency' and 
                 self.transmition_error ==False                and 
                 self.reference_frequency!=float(self.test_frequency) ):
@@ -826,16 +843,15 @@ class Serial_Stm32f4(object):
            self.test_routine_state='changing_frequency'
            #print "self.test_frequency" + self.test_frequency
            #line=raw_input("Enter to continue changing_frequencies aaaaahhhhhhhh!!!: ") 
-
+        
         
        
  
         elif (  self.test_routine_state=='changing_frequency'                   and 
                 self.transmition_error ==              False                    and 
-                #self.time>=self.max_test_time                                       ):
-                self.electric_frequency<(1.0+frequency_tolerance)*float(self.test_frequency)  and
-                self.electric_frequency>(1.0-frequency_tolerance)*float(self.test_frequency)      ):
-
+                self.time>=self.max_test_time                                       ):
+            #self.electric_frequency<(1.0+frequency_tolerance)*float(self.test_frequency)  and
+            #self.electric_frequency>(1.0-frequency_tolerance)*float(self.test_frequency)      
             self.break_the_motor();
             self.end_capturing_data()
             self.test_routine_state='stopping_the_motor'
