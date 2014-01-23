@@ -59,11 +59,19 @@ class Serial_Stm32f4(object):
 
         #test routine
         self.max_test_time      = 100000
+        self.min_test_time      =    300
         self.test_routine_state = 'initial'
         self.driving_test_state = 'initial'
         self.start_test         = False
         self.start_driving_test = False
+        self.start_P_test       = False
         self.test_frequency     = '0'
+
+        #PI controller finite state machine(stm32)
+        self.P_speed=0.0
+        self.I_speed=0.0
+        self.P_speed_state='initial'
+        self.I_speed_state='initial'
 
         #data from stm32F4 (impedance control+DTC-SVM+PID+HALL)
         self.time                   = 0.0
@@ -295,6 +303,10 @@ class Serial_Stm32f4(object):
                 elif (single_character=='5'):   self.data_5            =self.get_data_and_checksum()
                 elif (single_character=='6'):   self.data_6            =self.get_data_and_checksum()
 
+                elif (single_character=='K'):   self.P_speed            =self.get_data_and_checksum()
+                elif (single_character=='I'):   self.I_speed            =self.get_data_and_checksum()
+                
+
 
                 elif (single_character=='N'):   
                     self.exception  = self.ser.read(bytes)
@@ -394,7 +406,7 @@ class Serial_Stm32f4(object):
     def print_selection_print_string(self):
 
         extra_information=  " "+self.test_routine_state + " "+self.driving_test_state+" "+str(self.driving_counter) + \
-                            " N: "+self.exception
+                            " "+self.P_speed_state+" N: "+self.exception
        
         if   self.print_selection==0:
             self.new_data_line= "t: %6.2f "                   %self.time                + \
@@ -404,8 +416,6 @@ class Serial_Stm32f4(object):
 
         elif self.print_selection==1:
             self.new_data_line= "t: %6.2f "                  %self.time                 + \
-                                " ref_freq: %6.2f"            %self.reference_frequency + \
-                                " electric_frequency: %10.2f" %self.electric_frequency  + \
                                 " isA: %6.2f"                %self.isA                  + \
                                 " isB: %6.2f"                %self.isB                  + \
                                 " isC: %6.2f"                %self.isC                  + extra_information
@@ -441,7 +451,12 @@ class Serial_Stm32f4(object):
         elif self.print_selection==7:
             self.new_data_line= "t: %6.2f "                  %self.time                + \
                                 " pi_control: %12.8f"        %self.pi_control          + \
-                                " pi_max %12.8f:"            %self.pi_max              + extra_information
+                                " pi_max: %12.8f"            %self.pi_max              + extra_information
+
+        elif self.print_selection==8:
+            self.new_data_line= " P: %12.8f:"               %self.P_speed              + \
+                                " I: %12.8f:"               %self.I_speed              + extra_information
+
 
         '''
         elif self.print_selection==6:
@@ -760,7 +775,7 @@ class Serial_Stm32f4(object):
                                         
             if self.capture_data==True and self.transmition_error==False:
                 
-                if   self.read_capture_state == 'not_collecting' and self.time <= 300:#  30 cycles for the regularbyte sending
+                if   self.read_capture_state == 'not_collecting' and self.time <= self.min_test_time:#  30 cycles for the regularbyte sending
                                                                                       # and 300 for the whole data 
                     self.read_capture_state = 'collecting'
                     #print "not appending, timer: " + str(self.time)
@@ -826,15 +841,27 @@ class Serial_Stm32f4(object):
            self.change_frequency(self.test_frequency)
            #self.change_frequency('777')
            self.capturing_data()
-           self.test_routine_state='changing_frequency'
+           self.test_routine_state='changing_frequency_reference'
            #print "self.test_frequency" + self.test_frequency
            #line=raw_input("Enter to continue aaaaahhhhhhhh!!!: ") 
         
            #in case there was a transmition error and the reference frequency did no change in to the test_frequency
            
-        elif (  self.test_routine_state=='changing_frequency' and 
+        elif (  self.test_routine_state=='changing_frequency_reference' and 
                 self.transmition_error ==False                and 
-                self.reference_frequency!=float(self.test_frequency) ):
+                self.time>self.min_test_time):#self.reference_frequency!=float(self.test_frequency) ):
+
+
+           self.change_frequency(self.test_frequency)
+           #self.change_frequency('777')
+           self.capturing_data()
+           self.test_routine_state='changing_frequency_reference'
+           #print "self.test_frequency" + self.test_frequency
+           #line=raw_input("Enter to continue changing_frequencies aaaaahhhhhhhh!!!: ") 
+        
+        elif (  self.test_routine_state=='changing_frequency_reference' and 
+                self.transmition_error ==False                and 
+                self.time<self.min_test_time):#self.reference_frequency!=float(self.test_frequency) ):
 
 
            self.change_frequency(self.test_frequency)
@@ -844,8 +871,11 @@ class Serial_Stm32f4(object):
            #print "self.test_frequency" + self.test_frequency
            #line=raw_input("Enter to continue changing_frequencies aaaaahhhhhhhh!!!: ") 
         
-        
+                
        
+
+
+
  
         elif (  self.test_routine_state=='changing_frequency'                   and 
                 self.transmition_error ==              False                    and 
@@ -941,6 +971,8 @@ class Serial_Stm32f4(object):
 
     def write(self):	
 
+         #finite state machines
+         self.P_test()
          self.driving_tests_for_every_set_of_data()
          self.testing_routine()
          
@@ -996,8 +1028,46 @@ class Serial_Stm32f4(object):
                         self.test_frequency    =split_command[1]
                         self.tag_comment       =raw_input("Enter comment: ") 
                         self.path              =self.root_path + "["+datetime.datetime.now().ctime() +"] ["+self.tag_comment+"]"+'/'  
-                      
-                                           
 
+                    
+                    elif split_command[0]=='pi':
+                        
+                        #self.start_test=True;
+                        self.start_P_test=True
+                        self.print_selection_setup(8)
+                        self.test_frequency    =split_command[1]
+                        self.tag_comment       =raw_input("Enter comment: ") 
+                        self.path              =self.root_path + "["+datetime.datetime.now().ctime() +"] ["+self.tag_comment+"]"+'/'  
+
+                      
+    def P_test(self):                                          
+        self.initial_P=0.000000999999997475#0.000001
+        self.final_P=0.000001
+        self.P_increment=0.0    
+    
+        if self.P_speed_state=='initial' and self.start_P_test==True:
+            line='P '+str(self.initial_P)
+            print line
+            self.write_a_line(line)
+            self.P_speed_state='waiting for P update'
+            #self.print_selection_setup(8)
+
+        elif self.P_speed_state=='waiting for P update' and self.P_speed==self.initial_P :
+            self.start_test=True;
+            self.print_selection_setup(0)
+            self.path              =self.root_path + "["+datetime.datetime.now().ctime() +"] ["+self.tag_comment+"]"+'/'   
+            self.P_state='testing'
+
+        elif self.P_speed_state=='waiting for P update' and self.P_speed!=self.initial_P :
+            linex='P python: '+str(self.initial_P)+'P stm32: '+str(self.P_speed)
+            print linex
+            line='P '+str(self.initial_P)
+            self.write_a_line(line)
+            self.P_speed_state='waiting for P update'
+
+
+        elif self.P_speed_state=='testing' and self.start_test==False:
+            self.start_P_test=False
+            self.P_speed_state='initial'        
 
 

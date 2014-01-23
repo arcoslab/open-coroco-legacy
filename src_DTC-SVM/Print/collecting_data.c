@@ -395,8 +395,8 @@ void print_regular_data(void)
         printf ("C")  ;  checksum=checksum  +print_float_as_bytes(-data_i_sA-data_i_sB         );
 
         //////////////
-        printf ("r")  ;  checksum=checksum  +print_float_as_bytes(data_ref_freq_SVM            );
-        printf ("e")  ;  checksum=checksum  +print_float_as_bytes(data_w_r                     );
+        //printf ("r")  ;  checksum=checksum  +print_float_as_bytes(data_ref_freq_SVM            );
+        //printf ("e")  ;  checksum=checksum  +print_float_as_bytes(data_w_r                     );
     }
     else if (print_selection==2)
     {
@@ -405,8 +405,8 @@ void print_regular_data(void)
         printf ("Q")  ;  checksum=checksum  +print_float_as_bytes(data_i_sQ                    );
 
         //////////////
-        printf ("r")  ;  checksum=checksum  +print_float_as_bytes(data_ref_freq_SVM            );
-        printf ("e")  ;  checksum=checksum  +print_float_as_bytes(data_w_r                     );
+        //printf ("r")  ;  checksum=checksum  +print_float_as_bytes(data_ref_freq_SVM            );
+        //printf ("e")  ;  checksum=checksum  +print_float_as_bytes(data_w_r                     );
     }
     else if (print_selection==3)
     {
@@ -415,8 +415,8 @@ void print_regular_data(void)
         printf ("q")  ;  checksum=checksum  +print_float_as_bytes(data_V_sQ                    );
 
         //////////////
-        printf ("r")  ;  checksum=checksum  +print_float_as_bytes(data_ref_freq_SVM            );
-        printf ("e")  ;  checksum=checksum  +print_float_as_bytes(data_w_r                     );
+        //printf ("r")  ;  checksum=checksum  +print_float_as_bytes(data_ref_freq_SVM            );
+        //printf ("e")  ;  checksum=checksum  +print_float_as_bytes(data_w_r                     );
     }
     else if (print_selection==4)
     {
@@ -425,8 +425,8 @@ void print_regular_data(void)
         printf ("U")  ;  checksum=checksum  +print_float_as_bytes(data_U_d                     );
 
         //////////////
-        printf ("r")  ;  checksum=checksum  +print_float_as_bytes(data_ref_freq_SVM            );
-        printf ("e")  ;  checksum=checksum  +print_float_as_bytes(data_w_r                     );
+        //printf ("r")  ;  checksum=checksum  +print_float_as_bytes(data_ref_freq_SVM            );
+        //printf ("e")  ;  checksum=checksum  +print_float_as_bytes(data_w_r                     );
     }
     /*
     else if (print_selection==4)
@@ -441,8 +441,8 @@ void print_regular_data(void)
         printf ("P")  ;  checksum=checksum  +print_float_as_bytes(data_psi_sQ                  );
 
         //////////////
-        printf ("r")  ;  checksum=checksum  +print_float_as_bytes(data_ref_freq_SVM            );
-        printf ("e")  ;  checksum=checksum  +print_float_as_bytes(data_w_r                     );
+        //printf ("r")  ;  checksum=checksum  +print_float_as_bytes(data_ref_freq_SVM            );
+        //printf ("e")  ;  checksum=checksum  +print_float_as_bytes(data_w_r                     );
     }
     /*
     else if (print_selection==6)
@@ -472,6 +472,12 @@ void print_regular_data(void)
         //////////////
         printf ("r")  ;  checksum=checksum  +print_float_as_bytes(data_ref_freq_SVM            );
         printf ("e")  ;  checksum=checksum  +print_float_as_bytes(data_w_r                     );
+    }
+
+    else if (print_selection==8)
+    {
+        printf ("K")  ;  checksum=           print_float_as_bytes(P_SENSORLESS                  );
+        printf ("I")  ;  checksum=checksum  +print_float_as_bytes(I_SENSORLESS                  );
     }
 
     printf ("k");

@@ -20,8 +20,8 @@
 
 
 
-#define P_SENSORLESS             0.000001f//0.00001f
-#define P_DOWN_SENSORLESS        0.000001f//0.00001f 
+//#define P_SENSORLESS             0.000001f//0.00001f
+//#define P_DOWN_SENSORLESS        0.000001f//0.00001f 
                                                    
 #define I_SENSORLESS             0.0000000000001f//0.000000000000001f //0.000000000001f
 #define I_DOWN_SENSORLESS        0.0000000000001f//0.000000000000001f //0.000000000001f

@@ -30,6 +30,12 @@
   }
 }
 */
+
+
+float P_SENSORLESS      = 0.0f; //0.000001f
+float P_DOWN_SENSORLESS = 0.0f; //0.000001f
+
+
 float timer=0.0f;
 
 float   ref_freq_SVM=0.0f;
@@ -291,6 +297,12 @@ void frequency_input(void)
       if (strcmp(cmd, "t") == 0)
       {
         timer=0;
+      }	 
+      if (strcmp(cmd, "P") == 0)
+      {
+        P_SENSORLESS      = value;
+        P_DOWN_SENSORLESS = value;
+        print_selection   = 8;
       }	 
 
 
