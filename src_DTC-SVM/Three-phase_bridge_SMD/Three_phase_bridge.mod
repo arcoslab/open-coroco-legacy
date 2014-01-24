@@ -1,4 +1,4 @@
-PCBNEW-LibModule-V1  Sun 12 Jan 2014 01:37:43 AM CST
+PCBNEW-LibModule-V1  Thu 23 Jan 2014 06:02:06 PM CST
 # encoding utf-8
 Units mm
 $INDEX
@@ -24,6 +24,8 @@ TO220_Heat_Sink
 TO220_small_Heat_Sink_stand
 TO220_small_Heatsink_NO_copper
 TO220_small_Heatsink_stand_reduced_area
+Trimmer_100K_5.21mmW_6.71mmL
+Trimmer_20K_1.5mmW_4.5mmL_3.8mmH
 fuse_holder_SMD
 pin_2
 regular_C
@@ -1690,6 +1692,77 @@ Of 0 0 0
 Ro 0 0 0
 $EndSHAPE3D
 $EndMODULE TO220_small_Heatsink_stand_reduced_area
+$MODULE Trimmer_100K_5.21mmW_6.71mmL
+Po 0 0 0 15 52E1AD2F 00000000 ~~
+Li Trimmer_100K_5.21mmW_6.71mmL
+Sc 0
+AR 
+Op 0 0 0
+T0 0.762 -6.6802 1 1 0 0.15 N V 21 N "Trimmer_100K_5.21mmW_6.71mmL"
+T1 0.2286 6.477 1 1 0 0.15 N V 21 N "VAL**"
+DC 0 0 0.8255 1.397 0.15 21
+DS -3.3528 -4.2672 3.3528 -4.2672 0.15 21
+DS 3.3528 -4.2672 3.3528 4.2672 0.15 21
+DS 3.3528 4.2672 -3.3528 4.2672 0.15 21
+DS -3.3528 4.2672 -3.3528 -4.2672 0.15 21
+$PAD
+Sh "1" R 1.2192 3.3274 0 0 0
+Dr 0 0 0
+At SMD N 00888000
+Ne 0 ""
+Po 0 -3.1877
+$EndPAD
+$PAD
+Sh "2" R 1.2192 3.3274 0 0 0
+Dr 0 0 0
+At SMD N 00888000
+Ne 0 ""
+Po 2.54 3.1877
+$EndPAD
+$PAD
+Sh "3" R 1.2192 3.3274 0 0 0
+Dr 0 0 0
+At SMD N 00888000
+Ne 0 ""
+Po -2.54 3.1877
+$EndPAD
+$EndMODULE Trimmer_100K_5.21mmW_6.71mmL
+$MODULE Trimmer_20K_1.5mmW_4.5mmL_3.8mmH
+Po 0 0 0 15 52E1A421 00000000 ~~
+Li Trimmer_20K_1.5mmW_4.5mmL_3.8mmH
+Sc 0
+AR 
+Op 0 0 0
+T0 1.5875 -6.9342 1 1 0 0.15 N V 21 N "Trimmer_20K_1.5mmW_4.5mmL_3.8mmH"
+T1 -0.254 -9.9568 1 1 0 0.15 N V 21 N "VAL**"
+DC 0 0 0.2794 0.381 0.15 21
+DC 0 0 -0.0508 1.8923 0.15 21
+DS -1.905 2.2606 1.905 2.2606 0.15 21
+DS 1.905 2.2606 1.905 -2.2606 0.15 21
+DS 1.905 -2.2606 -1.905 -2.2606 0.15 21
+DS -1.905 -2.2606 -1.905 2.2606 0.15 21
+$PAD
+Sh "1" R 2.3876 1.0922 0 0 0
+Dr 0 0 0
+At SMD N 00888000
+Ne 0 ""
+Po 0 -2.0066
+$EndPAD
+$PAD
+Sh "2" R 1.2954 1.4986 0 0 0
+Dr 0 0 0
+At SMD N 00888000
+Ne 0 ""
+Po -1.4478 1.8034
+$EndPAD
+$PAD
+Sh "3" R 1.2954 1.4986 0 0 0
+Dr 0 0 0
+At SMD N 00888000
+Ne 0 ""
+Po 1.4478 1.8034
+$EndPAD
+$EndMODULE Trimmer_20K_1.5mmW_4.5mmL_3.8mmH
 $MODULE fuse_holder_SMD
 Po 0 0 0 15 52B368C1 00000000 ~~
 Li fuse_holder_SMD

@@ -1,24 +1,24 @@
-Cmp-Mod V01 Created by PcbNew date = Sun 12 Jan 2014 01:38:27 AM CST
+Cmp-Mod V01 Created by CvPcb (2013-jul-07)-stable date = Thu 23 Jan 2014 07:56:31 PM CST
 
 BeginCmp
 TimeStamp = /528E7FD9;
 Reference = 1N1;
 ValeurCmp = 1N4003;
-IdModule  = DO-41;
+IdModule  = SOD-123;
 EndCmp
 
 BeginCmp
 TimeStamp = /528E8ADB;
 Reference = 1N2;
 ValeurCmp = 1N4003;
-IdModule  = DO-41;
+IdModule  = SOD-123;
 EndCmp
 
 BeginCmp
 TimeStamp = /528E81FC;
 Reference = 1N3;
 ValeurCmp = 1N4003;
-IdModule  = DO-41;
+IdModule  = SOD-123;
 EndCmp
 
 BeginCmp
@@ -158,7 +158,7 @@ BeginCmp
 TimeStamp = /529C5E57;
 Reference = C16;
 ValeurCmp = 10uF;
-IdModule  = 6mm_C;
+IdModule  = c_1206;
 EndCmp
 
 BeginCmp
@@ -227,6 +227,48 @@ EndCmp
 BeginCmp
 TimeStamp = /529C678E;
 Reference = D5;
+ValeurCmp = LED;
+IdModule  = LED-1206;
+EndCmp
+
+BeginCmp
+TimeStamp = /52E1A2B3;
+Reference = D6;
+ValeurCmp = LED;
+IdModule  = LED-1206;
+EndCmp
+
+BeginCmp
+TimeStamp = /52E1A2C2;
+Reference = D7;
+ValeurCmp = LED;
+IdModule  = LED-1206;
+EndCmp
+
+BeginCmp
+TimeStamp = /52E19BB9;
+Reference = D8;
+ValeurCmp = LED;
+IdModule  = LED-1206;
+EndCmp
+
+BeginCmp
+TimeStamp = /52E19BC8;
+Reference = D9;
+ValeurCmp = LED;
+IdModule  = LED-1206;
+EndCmp
+
+BeginCmp
+TimeStamp = /52E19382;
+Reference = D10;
+ValeurCmp = LED;
+IdModule  = LED-1206;
+EndCmp
+
+BeginCmp
+TimeStamp = /52E19397;
+Reference = D11;
 ValeurCmp = LED;
 IdModule  = LED-1206;
 EndCmp
@@ -554,24 +596,31 @@ IdModule  = R_1206;
 EndCmp
 
 BeginCmp
-TimeStamp = /528E9BC0;
-Reference = RGL1;
-ValeurCmp = RG_LED;
-IdModule  = LED_RG_1206;
+TimeStamp = /52E1D0FF;
+Reference = RV1;
+ValeurCmp = POT;
+IdModule  = Trimmer_20K_1.5mmW_4.5mmL_3.8mmH;
 EndCmp
 
 BeginCmp
-TimeStamp = /528E9E84;
-Reference = RGL2;
-ValeurCmp = RG_LED;
-IdModule  = LED_RG_1206;
+TimeStamp = /52E1CAE3;
+Reference = RV2;
+ValeurCmp = POT;
+IdModule  = Trimmer_100K_5.21mmW_6.71mmL;
 EndCmp
 
 BeginCmp
-TimeStamp = /528E9EA5;
-Reference = RGL3;
-ValeurCmp = RG_LED;
-IdModule  = LED_RG_1206;
+TimeStamp = /52E1C636;
+Reference = RV3;
+ValeurCmp = POT;
+IdModule  = Trimmer_20K_1.5mmW_4.5mmL_3.8mmH;
+EndCmp
+
+BeginCmp
+TimeStamp = /52E1C64D;
+Reference = RV4;
+ValeurCmp = POT;
+IdModule  = Trimmer_100K_5.21mmW_6.71mmL;
 EndCmp
 
 BeginCmp
