@@ -18,3 +18,13 @@
 
 void system_init(void);
 void leds_init(void);
+void tim4_init(void);
+void tim3_init(void);
+void tim1_init(void);
+void gen_pwm(void);
+void clean_stdin(void);
+void stdin_init(void);
+bool receive_a_string(char* cmd_s);
+void pi_controller(void);
+
+
