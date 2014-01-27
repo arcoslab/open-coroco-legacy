@@ -396,7 +396,7 @@ void print_regular_data(void)
 
         //////////////
         //printf ("r")  ;  checksum=checksum  +print_float_as_bytes(data_ref_freq_SVM            );
-        //printf ("e")  ;  checksum=checksum  +print_float_as_bytes(data_w_r                     );
+        printf ("e")  ;  checksum=checksum  +print_float_as_bytes(data_w_r                     );
     }
     else if (print_selection==2)
     {
@@ -406,7 +406,7 @@ void print_regular_data(void)
 
         //////////////
         //printf ("r")  ;  checksum=checksum  +print_float_as_bytes(data_ref_freq_SVM            );
-        //printf ("e")  ;  checksum=checksum  +print_float_as_bytes(data_w_r                     );
+        printf ("e")  ;  checksum=checksum  +print_float_as_bytes(data_w_r                     );
     }
     else if (print_selection==3)
     {
@@ -416,7 +416,7 @@ void print_regular_data(void)
 
         //////////////
         //printf ("r")  ;  checksum=checksum  +print_float_as_bytes(data_ref_freq_SVM            );
-        //printf ("e")  ;  checksum=checksum  +print_float_as_bytes(data_w_r                     );
+        printf ("e")  ;  checksum=checksum  +print_float_as_bytes(data_w_r                     );
     }
     else if (print_selection==4)
     {
@@ -426,7 +426,7 @@ void print_regular_data(void)
 
         //////////////
         //printf ("r")  ;  checksum=checksum  +print_float_as_bytes(data_ref_freq_SVM            );
-        //printf ("e")  ;  checksum=checksum  +print_float_as_bytes(data_w_r                     );
+        printf ("e")  ;  checksum=checksum  +print_float_as_bytes(data_w_r                     );
     }
     /*
     else if (print_selection==4)
@@ -442,7 +442,7 @@ void print_regular_data(void)
 
         //////////////
         //printf ("r")  ;  checksum=checksum  +print_float_as_bytes(data_ref_freq_SVM            );
-        //printf ("e")  ;  checksum=checksum  +print_float_as_bytes(data_w_r                     );
+        printf ("e")  ;  checksum=checksum  +print_float_as_bytes(data_w_r                     );
     }
     /*
     else if (print_selection==6)
@@ -460,7 +460,7 @@ void print_regular_data(void)
         printf ("y")  ;  checksum=checksum  +print_float_as_bytes(data_t_e_ref                 );
 
         //////////////
-        printf ("r")  ;  checksum=checksum  +print_float_as_bytes(data_ref_freq_SVM            );
+        //printf ("r")  ;  checksum=checksum  +print_float_as_bytes(data_ref_freq_SVM            );
         printf ("e")  ;  checksum=checksum  +print_float_as_bytes(data_w_r                     );
     }
     else if (print_selection==7)
@@ -470,13 +470,13 @@ void print_regular_data(void)
         printf ("x")  ;  checksum=checksum  +print_float_as_bytes(pi_max                       );
 
         //////////////
-        printf ("r")  ;  checksum=checksum  +print_float_as_bytes(data_ref_freq_SVM            );
+        //printf ("r")  ;  checksum=checksum  +print_float_as_bytes(data_ref_freq_SVM            );
         printf ("e")  ;  checksum=checksum  +print_float_as_bytes(data_w_r                     );
     }
 
     else if (print_selection==8)
     {
-        printf ("K")  ;  checksum=           print_float_as_bytes(P_SENSORLESS                  );
+        printf ("K")  ;  checksum=           print_float_as_bytes(fake_P_SENSORLESS                  );
         printf ("I")  ;  checksum=checksum  +print_float_as_bytes(I_SENSORLESS                  );
     }
 

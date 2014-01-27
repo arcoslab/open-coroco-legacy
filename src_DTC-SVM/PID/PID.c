@@ -32,9 +32,9 @@
 */
 
 
-float P_SENSORLESS      = 0.0f; //0.000001f
-float P_DOWN_SENSORLESS = 0.0f; //0.000001f
-
+float P_SENSORLESS      = 0.000001f;//0.0f; //0.000001f
+float P_DOWN_SENSORLESS = 0.000001f;//0.0f; //0.000001f
+float fake_P_SENSORLESS =0.0f;
 
 float timer=0.0f;
 
@@ -300,8 +300,9 @@ void frequency_input(void)
       }	 
       if (strcmp(cmd, "P") == 0)
       {
-        P_SENSORLESS      = value;
-        P_DOWN_SENSORLESS = value;
+        fake_P_SENSORLESS =value;
+        P_SENSORLESS      = value/1000000000.0f;
+        P_DOWN_SENSORLESS = value/1000000000.0f;
         print_selection   = 8;
       }	 
 

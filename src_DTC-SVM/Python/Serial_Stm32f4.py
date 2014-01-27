@@ -54,8 +54,9 @@ class Serial_Stm32f4(object):
         self.exception          = 'N'
 
         #plotting
-        self.plotting_character=''
-        self.plotting_character_0='o'
+        self.plotting_character     = ''
+        self.plotting_character_0   = 'o'
+        self.title_extra            = ''
 
         #test routine
         self.max_test_time      = 100000
@@ -66,6 +67,14 @@ class Serial_Stm32f4(object):
         self.start_driving_test = False
         self.start_P_test       = False
         self.test_frequency     = '0'
+
+        #P_test
+        self.P              =1.0#0.000000999999997475#0.000001
+        self.final_P        =0.000001
+        self.P_increment    =10    
+        self.P_test_counter =0
+        self.max_P_tests    =9
+        self.P_divisor      =1000000000
 
         #PI controller finite state machine(stm32)
         self.P_speed=0.0
@@ -535,7 +544,7 @@ class Serial_Stm32f4(object):
                         plt.plot(self.time_vector,self.electric_frequency_vector ,self.plotting_character,label='electric')
                         plt.plot(self.time_vector,self.hall_frequency_vector     ,self.plotting_character,label='hall'     )
                         plt.plot(self.time_vector,self.reference_frequency_vector,self.plotting_character,label='reference')                     
-                        plt.title('frequency vs time')
+                        plt.title('frequency vs time'+self.title_extra)
                         plt.xlabel('time (ticks)')
                         plt.ylabel('frequency (Hz)')
                         plt.legend()
@@ -706,7 +715,7 @@ class Serial_Stm32f4(object):
         if   self.print_selection==0:
             plt.figure(num=2, figsize=plot_figsize, dpi=plot_dpi, facecolor=plot_face_color, edgecolor=plot_edge_color) 
             self.plot_frequencies                   (rows,columns,subplot_index)
-            plt.savefig( plot_name+"frequencies" +".jpg")
+            plt.savefig( plot_name+"frequencies" +self.title_extra+".jpg")
             plt.close()
 
         elif self.print_selection==1:
@@ -993,7 +1002,7 @@ class Serial_Stm32f4(object):
                     elif   split_command[0]=='c':
                         self.write_a_line(line)
                         self.capturing_data()
-                        self.tag_comment       =raw_input("Enter comment: ") 
+                        self.tag_comment       =line#raw_input("Enter comment: ") 
 
                     elif split_command[0]=='f':
                         self.end_capturing_data()
@@ -1009,7 +1018,7 @@ class Serial_Stm32f4(object):
                         
                         self.start_driving_test=True;
                         self.test_frequency    =split_command[1]
-                        self.tag_comment       =raw_input("Enter comment: ") 
+                        self.tag_comment       =line#raw_input("Enter comment: ") 
                         self.path              =self.root_path + "["+datetime.datetime.now().ctime() +"] ["+self.tag_comment+"]"+'/'  
 
                     elif split_command[0]=='all':
@@ -1017,7 +1026,7 @@ class Serial_Stm32f4(object):
                         self.start_test=True;
                         self.print_selection_setup(9)
                         self.test_frequency    =split_command[1]
-                        self.tag_comment       =raw_input("Enter comment: ") 
+                        self.tag_comment       =line#raw_input("Enter comment: ") 
                         self.path              =self.root_path + "["+datetime.datetime.now().ctime() +"] ["+self.tag_comment+"]"+'/'  
 
 
@@ -1026,7 +1035,7 @@ class Serial_Stm32f4(object):
                         self.start_test=True;
                         self.print_selection_setup(int(split_command[2]))
                         self.test_frequency    =split_command[1]
-                        self.tag_comment       =raw_input("Enter comment: ") 
+                        self.tag_comment       =line#raw_input("Enter comment: ") 
                         self.path              =self.root_path + "["+datetime.datetime.now().ctime() +"] ["+self.tag_comment+"]"+'/'  
 
                     
@@ -1036,38 +1045,79 @@ class Serial_Stm32f4(object):
                         self.start_P_test=True
                         self.print_selection_setup(8)
                         self.test_frequency    =split_command[1]
-                        self.tag_comment       =raw_input("Enter comment: ") 
+                        self.tag_comment       =line
+                        #if (len(split_command)>=3): 
+                        #    self.tag_comment       =line#raw_input("Enter comment: ") 
                         self.path              =self.root_path + "["+datetime.datetime.now().ctime() +"] ["+self.tag_comment+"]"+'/'  
 
                       
     def P_test(self):                                          
-        self.initial_P=0.000000999999997475#0.000001
-        self.final_P=0.000001
-        self.P_increment=0.0    
-    
+
+
         if self.P_speed_state=='initial' and self.start_P_test==True:
-            line='P '+str(self.initial_P)
+            line='P '+str(self.P)
             print line
             self.write_a_line(line)
-            self.P_speed_state='waiting for P update'
+            self.P_speed_state='waiting for P update_0'
             #self.print_selection_setup(8)
 
-        elif self.P_speed_state=='waiting for P update' and self.P_speed==self.initial_P :
+        elif self.P_speed_state=='waiting for P update_'+str(self.P_test_counter) and self.P_speed==self.P and self.P_test_counter<self.max_P_tests:
             self.start_test=True;
-            self.print_selection_setup(0)
-            self.path              =self.root_path + "["+datetime.datetime.now().ctime() +"] ["+self.tag_comment+"]"+'/'   
-            self.P_state='testing'
+            self.title_extra=' (P='+str(self.P/self.P_divisor)+')'
+            self.print_selection_setup(0)#self.P_test_counter)
+            #self.path              =self.root_path + "["+datetime.datetime.now().ctime() +"] ["+self.tag_comment+"]"+'/'   
+            self.P_speed_state='testing_'+str(self.P_test_counter)
 
-        elif self.P_speed_state=='waiting for P update' and self.P_speed!=self.initial_P :
-            linex='P python: '+str(self.initial_P)+'P stm32: '+str(self.P_speed)
+        elif self.P_speed_state=='waiting for P update_'+str(self.P_test_counter) and self.P_speed!=self.P  and self.P_test_counter<self.max_P_tests:
+            linex='P python: '+str(self.P)+' P stm32: '+str(self.P_speed)
             print linex
-            line='P '+str(self.initial_P)
+            line='P '+str(self.P)
             self.write_a_line(line)
-            self.P_speed_state='waiting for P update'
+            self.P_speed_state='waiting for P update_'+str(self.P_test_counter)
 
 
-        elif self.P_speed_state=='testing' and self.start_test==False:
+            '''
+            elif self.P_speed_state=='waiting for P update' and self.P_speed==self.P :
+                self.start_test=True;
+                self.print_selection_setup(0)
+                #self.path              =self.root_path + "["+datetime.datetime.now().ctime() +"] ["+self.tag_comment+"]"+'/'   
+                self.P_speed_state='testing'
+
+            elif self.P_speed_state=='waiting for P update' and self.P_speed!=self.P :
+                linex='P python: '+str(self.P)+' P stm32: '+str(self.P_speed)
+                print linex
+                line='P '+str(self.P)
+                self.write_a_line(line)
+                self.P_speed_state='waiting for P update'
+            '''
+
+
+        elif self.P_speed_state=='testing_'+str(self.P_test_counter) and self.start_test==False and self.P_test_counter<self.max_P_tests:
+
+            self.P_test_counter=self.P_test_counter+1
+
+            if self.P_test_counter<self.max_P_tests:    
+                            self.P_speed_state='waiting for P update_'+str(self.P_test_counter)
+                            self.P=self.P*self.P_increment
+                            line='P '+str(self.P)
+                            print line
+                            self.write_a_line(line)
+          
+            else                                   :    
+                            self.start_P_test=False
+                            self.P_speed_state='initial'        
+                            self.P=0
+                            self.P_test_counter=0
+ 
+            #self.print_selection_setup(8)
+
+
+
+        
+        elif self.P_speed_state=='testing_'+str(self.max_P_tests) and self.start_test==False:
             self.start_P_test=False
             self.P_speed_state='initial'        
+            self.P=0
+            self.P_test_counter=0
 
 
