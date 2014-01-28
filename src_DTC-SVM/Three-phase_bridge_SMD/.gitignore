@@ -12,7 +12,10 @@
 *.log
 *.pdf
 *.ods
+*.svg
 modules/
+Refill/
+No_refill/
 motor.h
 .gdb_history
 .gdb_history
