@@ -32,7 +32,7 @@
   )
 
   (setup
-    (last_trace_width 1.016)
+    (last_trace_width 1.905)
     (user_trace_width 0.381)
     (user_trace_width 0.508)
     (user_trace_width 0.762)
@@ -70,7 +70,7 @@
     (visible_elements FFFFFFBF)
     (pcbplotparams
       (layerselection 3178497)
-      (usegerberextensions true)
+      (usegerberextensions false)
       (excludeedgelayer true)
       (linewidth 0.150000)
       (plotframeref false)
@@ -81,7 +81,7 @@
       (hpglpenspeed 20)
       (hpglpendiameter 15)
       (hpglpenoverlay 2)
-      (psnegative false)
+      (psnegative true)
       (psa4output false)
       (plotreference true)
       (plotvalue true)
@@ -89,7 +89,7 @@
       (plotinvisibletext false)
       (padsonsilk false)
       (subtractmaskfromsilk false)
-      (outputformat 1)
+      (outputformat 5)
       (mirror false)
       (drillshape 0)
       (scaleselection 1)

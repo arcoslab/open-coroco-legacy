@@ -59,7 +59,7 @@ class Serial_Stm32f4(object):
         self.title_extra            = ''
 
         #test routine
-        self.max_test_time      = 100000
+        self.max_test_time      = 50000#100000
         self.min_test_time      =    300
         self.test_routine_state = 'initial'
         self.driving_test_state = 'initial'
@@ -69,11 +69,20 @@ class Serial_Stm32f4(object):
         self.test_frequency     = '0'
 
         #P_test
-        self.P              =1.0#0.000000999999997475#0.000001
+        '''
+        #sacred parameters
+        self.P              =100.0#0.000000999999997475#0.000001
         self.final_P        =0.000001
-        self.P_increment    =10    
+        self.P_increment    =2000 
         self.P_test_counter =0
-        self.max_P_tests    =9
+        self.max_P_tests    =20
+        self.P_divisor      =1000000000
+        '''
+        self.P              =100.0#0.000000999999997475#0.000001
+        self.final_P        =0.000001
+        self.P_increment    =10000 
+        self.P_test_counter =0
+        self.max_P_tests    =20
         self.P_divisor      =1000000000
 
         #PI controller finite state machine(stm32)
@@ -542,7 +551,7 @@ class Serial_Stm32f4(object):
     def plot_frequencies(self,rows,columns,subplot_index):
                         plt.subplot(rows,columns,subplot_index)
                         plt.plot(self.time_vector,self.electric_frequency_vector ,self.plotting_character,label='electric')
-                        plt.plot(self.time_vector,self.hall_frequency_vector     ,self.plotting_character,label='hall'     )
+                        #plt.plot(self.time_vector,self.hall_frequency_vector     ,self.plotting_character,label='hall'     )
                         plt.plot(self.time_vector,self.reference_frequency_vector,self.plotting_character,label='reference')                     
                         plt.title('frequency vs time'+self.title_extra)
                         plt.xlabel('time (ticks)')
@@ -605,7 +614,7 @@ class Serial_Stm32f4(object):
                         plt.subplot(rows,columns,subplot_index)
                         plt.plot(self.time_vector, self.pi_control_vector,self.plotting_character,label='pi_control')
                         plt.plot(self.time_vector, self.pi_max_vector,self.plotting_character,label='pi_max')
-                        plt.title('pi increment vs time')
+                        plt.title('pi increment vs time'+self.title_extra)
                         plt.xlabel('time (ticks)')
                         plt.ylabel('pi (degrees)')
                         plt.legend()
@@ -1064,7 +1073,7 @@ class Serial_Stm32f4(object):
         elif self.P_speed_state=='waiting for P update_'+str(self.P_test_counter) and self.P_speed==self.P and self.P_test_counter<self.max_P_tests:
             self.start_test=True;
             self.title_extra=' (P='+str(self.P/self.P_divisor)+')'
-            self.print_selection_setup(0)#self.P_test_counter)
+            self.print_selection_setup(0)#********************************0)#self.P_test_counter)
             #self.path              =self.root_path + "["+datetime.datetime.now().ctime() +"] ["+self.tag_comment+"]"+'/'   
             self.P_speed_state='testing_'+str(self.P_test_counter)
 
@@ -1098,7 +1107,7 @@ class Serial_Stm32f4(object):
 
             if self.P_test_counter<self.max_P_tests:    
                             self.P_speed_state='waiting for P update_'+str(self.P_test_counter)
-                            self.P=self.P*self.P_increment
+                            self.P=self.P+self.P_increment
                             line='P '+str(self.P)
                             print line
                             self.write_a_line(line)
