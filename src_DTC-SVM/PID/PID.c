@@ -32,13 +32,13 @@
 */
 
 
-float P_SENSORLESS      = 0.00001f; //0.000001f
-float P_DOWN_SENSORLESS = 0.00001f; //0.000001f
+float P_SENSORLESS      = 0.000001f; //0.000001f
+float P_DOWN_SENSORLESS = 0.000001f; //0.000001f
 float fake_P_SENSORLESS = 0.0f;
 
 float I_SENSORLESS      = 0.0f;//0.0000000000001f//0.000000000000001f //0.000000000001f
 float I_DOWN_SENSORLESS = 0.0f;//0.0000000000001f//0.000000000000001f //0.000000000001f
-
+float fake_I_SENSORLESS = 12.0f;
 
 float timer=0.0f;
 
@@ -313,8 +313,8 @@ void frequency_input(void)
       if (strcmp(cmd, "I") == 0)
       {
         fake_I_SENSORLESS =value;
-        I_SENSORLESS      = value/10000000.0f;
-        I_DOWN_SENSORLESS = value/10000000.0f;
+        I_SENSORLESS      = value/10000000000000000000.0f;
+        I_DOWN_SENSORLESS = value/10000000000000000000.0f;
         print_selection   = 10;
       }
 
