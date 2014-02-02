@@ -51,6 +51,8 @@ class Serial_Stm32f4(object):
         self.read_capture_state = 'not_collecting'
         self.tag_comment        = ''
         self.driving_counter    = 0
+        self.various_counter     = 0
+        self.type_of_test       = 0        
         self.exception          = 'N'
 
         #plotting
@@ -63,9 +65,16 @@ class Serial_Stm32f4(object):
         self.min_test_time      =    300
         self.test_routine_state = 'initial'
         self.driving_test_state = 'initial'
+        self.various_test_state = 'initial'
         self.start_test         = False
         self.start_driving_test = False
+        self.start_various_test = False
         self.test_frequency     = '0'
+
+        #torque test
+        self.torque_start_test          =   False
+        self.torque_test_routine_state  ='initial'
+        
 
         #P_test
         '''
@@ -237,7 +246,8 @@ class Serial_Stm32f4(object):
         elif self.print_selection==5: header_csv = "t t psisD psisD psisQ psisQ "
         elif self.print_selection==6: header_csv = "t t te te Ud Ud pi_control pi_control pi_max pi_max" 
         elif self.print_selection==7: header_csv = "t t pi_control pi_control pi_max pi_max" 
- 
+
+
         split_header = header_csv.split()                  
         self.writer.writerow(split_header)        
 
@@ -433,7 +443,7 @@ class Serial_Stm32f4(object):
     def print_selection_print_string(self):
 
         extra_information=  " "+self.test_routine_state + " "+self.driving_test_state+" "+str(self.driving_counter) + \
-                            " "+self.P_speed_state+" "+self.I_speed_state+" N: "+self.exception
+                            " "+self.P_speed_state+" "+self.I_speed_state+" "+self.various_test_state+" "+self.torque_test_routine_state+" N: "+self.exception
        
         if   self.print_selection==0:
             self.new_data_line= "t: %6.2f "                   %self.time                + \
@@ -574,7 +584,7 @@ class Serial_Stm32f4(object):
                         plt.plot(self.time_vector, self.isA_vector,self.plotting_character,label='isA')
                         plt.plot(self.time_vector, self.isB_vector,self.plotting_character,label='isB')
                         plt.plot(self.time_vector, self.isC_vector,self.plotting_character,label='isC')
-                        plt.title('current vs time')
+                        plt.title('current vs time'+self.title_extra)
                         plt.xlabel('time (ticks)')
                         plt.ylabel('three-phase currents (A)')
                         plt.legend()
@@ -582,7 +592,7 @@ class Serial_Stm32f4(object):
     def plot_quadrature_vs_direct_currents(self,rows,columns,subplot_index):
                         plt.subplot(rows,columns,subplot_index)
                         plt.plot(self.isD_vector, self.isQ_vector,self.plotting_character)
-                        plt.title ('isQ vs isD')
+                        plt.title ('isQ vs isD'+self.title_extra)
                         plt.xlabel('isD (A)')
                         plt.ylabel('isQ (A)')
                         plt.legend() 
@@ -590,7 +600,7 @@ class Serial_Stm32f4(object):
     def plot_quadrature_vs_direct_voltages(self,rows,columns,subplot_index):
                         plt.subplot(rows,columns,subplot_index)
                         plt.plot(self.VsD_vector, self.VsQ_vector,self.plotting_character)
-                        plt.title('VsQ vs VsD')
+                        plt.title('VsQ vs VsD'+self.title_extra)
                         plt.xlabel('VsD (A)')
                         plt.ylabel('VsQ (A)')
                         plt.legend() 
@@ -599,7 +609,7 @@ class Serial_Stm32f4(object):
                         plt.subplot(rows,columns,subplot_index)
                         plt.plot(self.time_vector, self.Vs_vector,self.plotting_character,label='Vs')
                         plt.plot(self.time_vector, self.Ud_vector,self.plotting_character,label='Ud')
-                        plt.title('voltage vs time')
+                        plt.title('voltage vs time'+self.title_extra)
                         plt.xlabel('t (ticks)')
                         plt.ylabel('Voltage (V)')
                         plt.legend()     
@@ -607,7 +617,7 @@ class Serial_Stm32f4(object):
     def plot_flux_linkage(self,rows,columns,subplot_index):    
                         plt.subplot(rows,columns,subplot_index)
                         plt.plot(self.psi_sD_vector, self.psi_sQ_vector,self.plotting_character_0)
-                        plt.title('psi_sQ vs psi_sD')
+                        plt.title('psi_sQ vs psi_sD'+self.title_extra)
                         plt.xlabel('psi_sD (Wb)')
                         plt.ylabel('psi_sQ (Wb)')
                         plt.legend() 
@@ -616,7 +626,7 @@ class Serial_Stm32f4(object):
                         plt.subplot(rows,columns,subplot_index)
                         plt.plot(self.time_vector, self.te_vector,self.plotting_character,label='te')
                         plt.plot(self.time_vector, self.te_ref_vector,self.plotting_character,label='te_ref')
-                        plt.title('torque vs time')
+                        plt.title('torque vs time'+self.title_extra)
                         plt.xlabel('time (ticks)')
                         plt.ylabel('torque (Nm)')
                         plt.legend() 
@@ -839,7 +849,9 @@ class Serial_Stm32f4(object):
         #print line
         self.write_a_line(line)
 
-    
+    def change_torque (self, torque):
+        line='Q '+ torque
+        self.write_a_line(line)
 
     def testing_routine(self):
         #test_frequency='200'
@@ -934,6 +946,68 @@ class Serial_Stm32f4(object):
             #line=raw_input("Enter to continue: ") 
             
 
+
+    def torque_testing_routine(self):
+
+        frequency_tolerance=0.05
+
+        if   (self.torque_test_routine_state=='initial' and 
+              self.torque_start_test==True                      ): 
+ 
+            self.break_the_motor()
+            self.torque_test_routine_state='breaking'
+
+
+        elif   (self.torque_test_routine_state=='breaking' and 
+               self.electric_frequency>2.0               ): 
+            self.break_the_motor()
+            self.torque_test_routine_state='breaking'
+
+ 
+        elif (  self.torque_test_routine_state=='breaking' and 
+                self.transmition_error ==False      and 
+                self.electric_frequency<4.0            ):
+
+           self.change_torque(self.test_torque)    #######################################**********************
+           self.capturing_data()
+           self.torque_test_routine_state='changing_frequency_reference'
+           
+        elif (  self.torque_test_routine_state=='changing_frequency_reference' and 
+                self.transmition_error ==False                and 
+                self.time>self.min_test_time):#self.reference_frequency!=float(self.test_frequency) ):
+           self.change_torque(self.test_torque)   #######################################********************
+           self.capturing_data()
+           self.torque_test_routine_state='changing_frequency_reference'
+        
+        elif (  self.torque_test_routine_state=='changing_frequency_reference' and 
+                self.transmition_error ==False                and 
+                self.time<self.min_test_time):#self.reference_frequency!=float(self.test_frequency) ):
+
+           self.change_torque(self.test_torque) #################################********************
+           self.capturing_data()
+           self.torque_test_routine_state='changing_frequency'
+ 
+        elif (  self.torque_test_routine_state=='changing_frequency'                   and 
+                self.transmition_error ==              False                    and 
+                self.time>=self.max_test_time                                       ):
+            self.break_the_motor();
+            self.end_capturing_data()
+            self.torque_test_routine_state='stopping_the_motor'
+
+        elif (  self.torque_test_routine_state=='stopping_the_motor'                   and
+                self.transmition_error==False                                   and
+                self.electric_frequency<0.01                                        ):
+            self.torque_test_routine_state='motor_stopped'
+            self.torque_start_test=False
+
+        elif (  self.torque_test_routine_state=='motor_stopped' and
+                self.torque_start_test==True                            ):
+            self.torque_test_routine_state='breaking'
+
+
+
+
+
     def driving_tests_for_every_set_of_data(self):
     
         if   (self.start_driving_test==True and 
@@ -1003,8 +1077,10 @@ class Serial_Stm32f4(object):
          #finite state machines
          self.P_test()
          self.I_test()
+         self.testing_for_various_frequencies()
          self.driving_tests_for_every_set_of_data()
          self.testing_routine()
+         self.torque_testing_routine()
          
          while sys.stdin in select.select([sys.stdin], [], [], 0)[0]:	#read from standart input if there is something, otherwise not 
             line = sys.stdin.readline()     #you must press enter before typing the new command
@@ -1017,6 +1093,10 @@ class Serial_Stm32f4(object):
 
                     #updating reference frequency
                     if     split_command[0]=='d':
+                        self.write_a_line(line)
+
+                    #updating reference torque
+                    elif     split_command[0]=='Q':
                         self.write_a_line(line)
                     
                     #capturing data into csv
@@ -1041,6 +1121,15 @@ class Serial_Stm32f4(object):
                         self.test_frequency    =split_command[1]
                         self.tag_comment       =line#raw_input("Enter comment: ") 
                         self.path              =self.root_path + "["+datetime.datetime.now().ctime() +"] ["+self.tag_comment+"]"+'/'  
+                        self.title_extra=''
+
+                    elif split_command[0]=='va':
+                        
+                        self.start_various_test=True;
+                        #self.test_frequency    =split_command[1]
+                        self.type_of_test      =int(split_command[1])
+                        self.tag_comment       =line#raw_input("Enter comment: ") 
+                        self.path              =self.root_path + "["+datetime.datetime.now().ctime() +"] ["+self.tag_comment+"]"+'/'  
 
                     elif split_command[0]=='all':
                         
@@ -1058,6 +1147,15 @@ class Serial_Stm32f4(object):
                         self.test_frequency    =split_command[1]
                         self.tag_comment       =line#raw_input("Enter comment: ") 
                         self.path              =self.root_path + "["+datetime.datetime.now().ctime() +"] ["+self.tag_comment+"]"+'/'  
+
+                    elif split_command[0]=='onetorque':
+                        
+                        self.torque_start_test  =True;
+                        self.print_selection_setup(int(split_command[2]))
+                        self.test_torque        =split_command[1]
+                        self.tag_comment        =line 
+                        self.path                =self.root_path + "["+datetime.datetime.now().ctime() +"] ["+self.tag_comment+"]"+'/'  
+
 
                     
                     elif split_command[0]=='pp':
@@ -1228,4 +1326,38 @@ class Serial_Stm32f4(object):
             self.I_test_counter=0
 
 
+
+    def testing_for_various_frequencies(self):
+        self.test_frequency_array =('10','50','100','200','300','400','500','600','640')
+    
+        if   (self.start_various_test==True and 
+            self.various_test_state=='initial'):
+            self.print_selection_setup(self.type_of_test)
+            self.start_test= True 
+            self.various_test_state='various_0'
+            self.various_counter=0
+            self.test_frequency= self.test_frequency_array [0]
+            self.title_extra=' (f='+self.test_frequency_array [0]+'Hz)'
+
+        
+        elif (self.start_test==False and 
+            self.various_test_state=='various_'+str(self.various_counter) and 
+            self.various_counter<len(self.test_frequency_array)-1):
+            self.print_selection_setup(self.type_of_test)
+            self.start_test         =True 
+            self.various_test_state ='various_'+str(self.various_counter+1)
+            self.various_counter    =self.various_counter+1
+            self.test_frequency= self.test_frequency_array [self.various_counter]
+            self.title_extra=' (f='+self.test_frequency_array [self.various_counter]+'Hz)'
+               
+
+        elif (self.start_test==False and 
+            self.various_test_state=='various_'+str(len(self.test_frequency_array)-1)):
+            self.print_selection_setup(self.type_of_test)
+            self.start_various_test=False 
+            self.various_test_state='initial'
+            self.start_various_test=False
+
+       
+        
 

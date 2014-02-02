@@ -32,13 +32,34 @@
 */
 
 
-float P_SENSORLESS      = 0.000001f; //0.000001f
-float P_DOWN_SENSORLESS = 0.000001f; //0.000001f
+float P_SENSORLESS      = 0.00001f; //0.000001f
+float P_DOWN_SENSORLESS = 0.00001f; //0.000001f
+float fake_P_SENSORLESS = 0.0f;
+
+float I_SENSORLESS      = 0.0000000000000001f;//0.0000000000001f//0.000000000000001f //0.000000000001f
+float I_DOWN_SENSORLESS = 0.0000000000000001f;//0.0000000000001f//0.000000000000001f //0.000000000001f
+float fake_I_SENSORLESS = 0.0f;
+
+
+
+float P_SENSORLESS_TORQUE      = 0.00001f; //0.000001f
+float P_DOWN_SENSORLESS_TORQUE = 0.00001f; //0.000001f
+float fake_P_SENSORLESS_TORQUE = 0.0f;
+
+float I_SENSORLESS_TORQUE      = 0.0000000000000001f;//0.0000000000001f//0.000000000000001f //0.000000000001f
+float I_DOWN_SENSORLESS_TORQUE = 0.0000000000000001f;//0.0000000000001f//0.000000000000001f //0.000000000001f
+float fake_I_SENSORLESS_TORQUE = 0.0f;
+
+/*
+float P_SENSORLESS      = 0.01f;//0.000001f; //0.000001f
+float P_DOWN_SENSORLESS = 0.01f;//0.000001f; //0.000001f
 float fake_P_SENSORLESS = 0.0f;
 
 float I_SENSORLESS      = 0.0f;//0.0000000000001f//0.000000000000001f //0.000000000001f
 float I_DOWN_SENSORLESS = 0.0f;//0.0000000000001f//0.000000000000001f //0.000000000001f
 float fake_I_SENSORLESS = 12.0f;
+*/
+
 
 float timer=0.0f;
 
@@ -293,6 +314,22 @@ void frequency_input(void)
         timer=0;
       }	 
 
+      if (strcmp(cmd, "Q") == 0)
+      {
+        //print_selection=0;
+        regular_print=true;
+        dtc_on=true;
+        t_e_ref=value;
+        motor_off=false;
+
+        
+        collecting_speed=true;
+        timer=0;
+      }	 
+
+
+
+
       if (strcmp(cmd, "c") == 0)
       {
         timer=0;
@@ -316,6 +353,14 @@ void frequency_input(void)
         I_SENSORLESS      = value/10000000000000000000.0f;
         I_DOWN_SENSORLESS = value/10000000000000000000.0f;
         print_selection   = 10;
+      }
+
+      if (strcmp(cmd, "T") == 0)
+      {
+        fake_I_SENSORLESS_TORQUE =value;
+        I_SENSORLESS_TORQUE      = value/10000000000000000000.0f;
+        I_DOWN_SENSORLESS_TORQUE = value/10000000000000000000.0f;
+        print_selection   = 6;
       }
 
 

@@ -46,6 +46,14 @@
 #define PI_MAX_SENSORLESS             0.0005f//(90.0f*frequency/interrupt_frequency) 
 #define PI_MIN_SENSORLESS            -0.0005f//-(90.0f*frequency/interrupt_frequency) 
 
+/*
+#define I_MAX_SENSORLESS              700.0f//0.0005f//(90.0f*frequency/interrupt_frequency) 
+#define P_MAX_SENSORLESS              700.0f//0.0005f//(90.0f*frequency/interrupt_frequency) 
+#define PI_MAX_SENSORLESS             700.0f//0.0005f//(90.0f*frequency/interrupt_frequency) 
+#define PI_MIN_SENSORLESS             -700.0f//-0.0005f//-(90.0f*frequency/interrupt_frequency) 
+*/
+
+
 
 /*
 #define I_MAX_SENSORLESS              0.05f//(90.0f*frequency/interrupt_frequency) 
@@ -92,8 +100,10 @@ void sensorless_speed_pi_controller(
     //pi control: 
     else {pi_control_sensorless =0.0f;}
     */
-    *rotating_angle=*rotating_angle+pi_control_sensorless;
 
+
+    *rotating_angle=*rotating_angle+pi_control_sensorless;
+    
 
   SVM_pi_control=pi_control_sensorless;
 
@@ -180,18 +190,23 @@ void psi_finitite_state_machine (float reference_frequency, float actual_frequen
      attenuation=1.0f; 
    
 }
-
+/*
 #define P_SENSORLESS_TORQUE             0.001f
 #define P_DOWN_SENSORLESS_TORQUE        0.001f 
 
 #define I_SENSORLESS_TORQUE             0.0f
 #define I_DOWN_SENSORLESS_TORQUE        0.0f
-
+*/
+/*
 #define I_MAX_SENSORLESS_TORQUE              (9.0f*400.0f/switching_frequency) 
 #define P_MAX_SENSORLESS_TORQUE              (9.0f*400.0f/switching_frequency) 
 #define PI_MAX_SENSORLESS_TORQUE             (9.0f*400.0f/switching_frequency) 
 #define PI_MIN_SENSORLESS_TORQUE            -(9.0f*400.0f/switching_frequency) 
-
+*/
+#define I_MAX_SENSORLESS_TORQUE              0.0005f//(90.0f*frequency/interrupt_frequency) 
+#define P_MAX_SENSORLESS_TORQUE              0.0005f//(90.0f*frequency/interrupt_frequency) 
+#define PI_MAX_SENSORLESS_TORQUE             0.0005f//(90.0f*frequency/interrupt_frequency) 
+#define PI_MIN_SENSORLESS_TORQUE            -0.0005f//-(90.0f*frequency/interrupt_frequency) 
 
 void sensorless_torque_pi_controller(
                            float reference_torque, float torque,float switching_frequency, float* rotating_angle) 
