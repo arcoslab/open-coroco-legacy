@@ -305,10 +305,18 @@ void frequency_input(void)
       if (strcmp(cmd, "P") == 0)
       {
         fake_P_SENSORLESS =value;
-        P_SENSORLESS      = value/1000000000.0f;
-        P_DOWN_SENSORLESS = value/1000000000.0f;
+        P_SENSORLESS      = value/10000000.0f;
+        P_DOWN_SENSORLESS = value/10000000.0f;
         print_selection   = 8;
       }	 
+
+      if (strcmp(cmd, "I") == 0)
+      {
+        fake_I_SENSORLESS =value;
+        I_SENSORLESS      = value/10000000.0f;
+        I_DOWN_SENSORLESS = value/10000000.0f;
+        print_selection   = 10;
+      }
 
 
       if (strcmp(cmd, "p") == 0)

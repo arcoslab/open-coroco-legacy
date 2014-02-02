@@ -75,15 +75,23 @@ class Serial_Stm32f4(object):
         self.final_P        =0.000001
         self.P_increment    =2000 
         self.P_test_counter =0
-        self.max_P_tests    =20
+        self.max_P_tests    =10
         self.P_divisor      =1000000000
         '''
         self.P              =100.0#0.000000999999997475#0.000001
         self.final_P        =0.000001
-        self.P_increment    =10000 
+        self.P_increment    =10 
         self.P_test_counter =0
-        self.max_P_tests    =20
-        self.P_divisor      =1000000000
+        self.max_P_tests    =5
+        self.P_divisor      =10000000
+
+        #I tests
+        self.I              =100.0#0.000000999999997475#0.000001
+        self.final_I        =0.000001
+        self.I_increment    =10 
+        self.I_test_counter =0
+        self.max_I_tests    =5
+        self.I_divisor      =10000000
 
         #PI controller finite state machine(stm32)
         self.P_speed=0.0
@@ -475,7 +483,9 @@ class Serial_Stm32f4(object):
             self.new_data_line= " P: %12.8f:"               %self.P_speed              + \
                                 " I: %12.8f:"               %self.I_speed              + extra_information
 
-
+        elif self.print_selection==10:
+            self.new_data_line= " P: %12.8f:"               %self.P_speed              + \
+                                " I: %12.8f:"               %self.I_speed              + extra_information
         '''
         elif self.print_selection==6:
             self.new_data_line= "t: %6.2f "                  %self.time                + \
@@ -1062,6 +1072,13 @@ class Serial_Stm32f4(object):
                       
     def P_test(self):                                          
 
+        '''
+        if self.P!=100:
+            self.max_test_time=50000
+        else :
+            self.max_test_time=1500000
+        '''                 
+        
 
         if self.P_speed_state=='initial' and self.start_P_test==True:
             line='P '+str(self.P)
@@ -1073,7 +1090,7 @@ class Serial_Stm32f4(object):
         elif self.P_speed_state=='waiting for P update_'+str(self.P_test_counter) and self.P_speed==self.P and self.P_test_counter<self.max_P_tests:
             self.start_test=True;
             self.title_extra=' (P='+str(self.P/self.P_divisor)+')'
-            self.print_selection_setup(0)#********************************0)#self.P_test_counter)
+            self.print_selection_setup(7)#********************************0)#self.P_test_counter)
             #self.path              =self.root_path + "["+datetime.datetime.now().ctime() +"] ["+self.tag_comment+"]"+'/'   
             self.P_speed_state='testing_'+str(self.P_test_counter)
 
@@ -1107,7 +1124,93 @@ class Serial_Stm32f4(object):
 
             if self.P_test_counter<self.max_P_tests:    
                             self.P_speed_state='waiting for P update_'+str(self.P_test_counter)
-                            self.P=self.P+self.P_increment
+
+                            #Pincrement                            
+                            self.P=self.P*self.P_increment
+
+                            
+                            line='P '+str(self.P)
+                            print line
+                            self.write_a_line(line)
+          
+            else                                   :    
+                            self.start_P_test=False
+                            self.P_speed_state='initial'        
+                            self.P=0
+                            self.P_test_counter=0
+ 
+            #self.print_selection_setup(8)
+
+
+
+        
+        elif self.P_speed_state=='testing_'+str(self.max_P_tests) and self.start_test==False:
+            self.start_P_test=False
+            self.P_speed_state='initial'        
+            self.P=0
+            self.P_test_counter=0
+
+
+
+    def I_test(self):                                          
+
+        '''
+        if self.P!=100:
+            self.max_test_time=50000
+        else :
+            self.max_test_time=1500000
+        '''                 
+        
+
+        if self.P_speed_state=='initial' and self.start_P_test==True:
+            line='P '+str(self.P)
+            print line
+            self.write_a_line(line)
+            self.P_speed_state='waiting for P update_0'
+            #self.print_selection_setup(8)
+
+        elif self.P_speed_state=='waiting for P update_'+str(self.P_test_counter) and self.P_speed==self.P and self.P_test_counter<self.max_P_tests:
+            self.start_test=True;
+            self.title_extra=' (P='+str(self.P/self.P_divisor)+')'
+            self.print_selection_setup(7)#********************************0)#self.P_test_counter)
+            #self.path              =self.root_path + "["+datetime.datetime.now().ctime() +"] ["+self.tag_comment+"]"+'/'   
+            self.P_speed_state='testing_'+str(self.P_test_counter)
+
+        elif self.P_speed_state=='waiting for P update_'+str(self.P_test_counter) and self.P_speed!=self.P  and self.P_test_counter<self.max_P_tests:
+            linex='P python: '+str(self.P)+' P stm32: '+str(self.P_speed)
+            print linex
+            line='P '+str(self.P)
+            self.write_a_line(line)
+            self.P_speed_state='waiting for P update_'+str(self.P_test_counter)
+
+
+            '''
+            elif self.P_speed_state=='waiting for P update' and self.P_speed==self.P :
+                self.start_test=True;
+                self.print_selection_setup(0)
+                #self.path              =self.root_path + "["+datetime.datetime.now().ctime() +"] ["+self.tag_comment+"]"+'/'   
+                self.P_speed_state='testing'
+
+            elif self.P_speed_state=='waiting for P update' and self.P_speed!=self.P :
+                linex='P python: '+str(self.P)+' P stm32: '+str(self.P_speed)
+                print linex
+                line='P '+str(self.P)
+                self.write_a_line(line)
+                self.P_speed_state='waiting for P update'
+            '''
+
+
+        elif self.P_speed_state=='testing_'+str(self.P_test_counter) and self.start_test==False and self.P_test_counter<self.max_P_tests:
+
+            self.P_test_counter=self.P_test_counter+1
+
+            if self.P_test_counter<self.max_P_tests:    
+                            self.P_speed_state='waiting for P update_'+str(self.P_test_counter)
+
+                            #Pincrement                            
+                            self.P=self.P*self.P_increment
+
+                            
                             line='P '+str(self.P)
                             print line
                             self.write_a_line(line)

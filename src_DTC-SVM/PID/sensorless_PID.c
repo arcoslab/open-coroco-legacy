@@ -47,6 +47,15 @@
 #define PI_MIN_SENSORLESS            -0.0005f//-(90.0f*frequency/interrupt_frequency) 
 
 
+/*
+#define I_MAX_SENSORLESS              0.05f//(90.0f*frequency/interrupt_frequency) 
+#define P_MAX_SENSORLESS              0.05f//(90.0f*frequency/interrupt_frequency) 
+#define PI_MAX_SENSORLESS             0.05f//(90.0f*frequency/interrupt_frequency) 
+#define PI_MIN_SENSORLESS            -0.05f//-(90.0f*frequency/interrupt_frequency) 
+*/
+
+
+
 float SVM_pi_control=0.0f;
 float psi_rotating_angle_SVM=0.0f;
 float phase_advance_SVM=0.0f;
@@ -88,8 +97,8 @@ void sensorless_speed_pi_controller(
 
   SVM_pi_control=pi_control_sensorless;
 
-  phase_advance_SVM=*rotating_angle;//pi_control_sensorless;
-  pi_max=P_MAX_SENSORLESS*interrupt_frequency;
+  phase_advance_SVM=pi_control_sensorless;//*rotating_angle;//pi_control_sensorless;
+  pi_max=P_MAX_SENSORLESS;//*interrupt_frequency;
 }
 
 

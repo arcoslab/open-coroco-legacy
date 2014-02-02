@@ -480,6 +480,12 @@ void print_regular_data(void)
         printf ("I")  ;  checksum=checksum  +print_float_as_bytes(I_SENSORLESS                  );
     }
 
+    else if (print_selection==10)
+    {
+        printf ("K")  ;  checksum=           print_float_as_bytes(fake_P_SENSORLESS                  );
+        printf ("I")  ;  checksum=checksum  +print_float_as_bytes(fake_I_SENSORLESS                  );
+    }
+
     printf ("k");
     printf ("%c", checksum);
     printf ("m");
