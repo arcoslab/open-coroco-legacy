@@ -541,8 +541,8 @@ if (center_aligned_state==FIRST_HALF)
 
   //--------------------------------SVM algorithm--------------------------------------------//
 
-  //    sensorless_speed_pi_controller(ref_freq_SVM,w_r,PWMFREQ_F,&psi_rotating_angle_SVM);
-  sensorless_torque_pi_controller(t_e_ref,t_e,TICK_PERIOD*2.0f,&psi_rotating_angle_SVM); 
+  if (pi_mode==0)   {   sensorless_speed_pi_controller  (ref_freq_SVM   ,w_r, PWMFREQ_F         ,&psi_rotating_angle_SVM    );     }
+  else              {   sensorless_torque_pi_controller (t_e_ref        ,t_e, TICK_PERIOD*2.0f  ,&psi_rotating_angle_SVM    );  } 
 
   V_sD                   = SVM_V_s_ref_D               (psi_s_ref,psi_s,psi_s_alpha_SVM,psi_rotating_angle_SVM,i_sD,R_s,TICK_PERIOD);
   V_sQ                   = SVM_V_s_ref_Q               (psi_s_ref,psi_s,psi_s_alpha_SVM,psi_rotating_angle_SVM,i_sQ,R_s,TICK_PERIOD);

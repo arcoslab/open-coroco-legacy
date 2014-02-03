@@ -74,7 +74,10 @@ class Serial_Stm32f4(object):
         #torque test
         self.torque_start_test          =   False
         self.torque_test_routine_state  ='initial'
-        
+
+        self.torque_start_driving_test = False
+        self.torque_driving_test_state = 'initial'
+        self.torque_driving_counter    = 0
 
         #P_test
         '''
@@ -853,6 +856,8 @@ class Serial_Stm32f4(object):
         line='Q '+ torque
         self.write_a_line(line)
 
+
+
     def testing_routine(self):
         #test_frequency='200'
         frequency_tolerance=0.05
@@ -1049,6 +1054,34 @@ class Serial_Stm32f4(object):
             self.start_driving_test=False
         '''            
         
+
+    def torque_driving_tests_for_every_set_of_data(self):
+    
+        if   (self.torque_start_driving_test==True and 
+              self.torque_driving_test_state=='initial'):
+            self.print_selection_setup(0)
+            self.torque_start_test=True 
+            self.torque_driving_test_state='printing_0'
+            self.torque_driving_counter=0
+        
+        elif (self.torque_start_test==False and 
+            self.torque_driving_test_state=='printing_'+str(self.torque_driving_counter) and 
+            self.torque_driving_counter<7):
+            self.print_selection_setup(self.torque_driving_counter+1)
+            self.torque_start_test         =True 
+            self.torque_driving_test_state ='printing_'+str(self.torque_driving_counter+1)
+            self.torque_driving_counter    =self.torque_driving_counter+1
+
+        elif (self.torque_start_test==False and 
+            self.torque_driving_test_state=='printing_7'):
+            self.print_selection_setup(7)
+            self.torque_start_test          =False 
+            self.torque_driving_test_state  ='initial'
+            self.torque_start_driving_test  =False
+
+
+
+
     def capturing_data(self):
         self.capture_data       = True
         self.capture_counter    = 0
@@ -1080,6 +1113,8 @@ class Serial_Stm32f4(object):
          self.testing_for_various_frequencies()
          self.driving_tests_for_every_set_of_data()
          self.testing_routine()
+
+         self.torque_driving_tests_for_every_set_of_data()
          self.torque_testing_routine()
          
          while sys.stdin in select.select([sys.stdin], [], [], 0)[0]:	#read from standart input if there is something, otherwise not 
@@ -1123,6 +1158,14 @@ class Serial_Stm32f4(object):
                         self.path              =self.root_path + "["+datetime.datetime.now().ctime() +"] ["+self.tag_comment+"]"+'/'  
                         self.title_extra=''
 
+                    elif split_command[0]=='ttorque':
+                        
+                        self.torque_start_driving_test=True;
+                        self.test_torque              =split_command[1]
+                        self.tag_comment              =line 
+                        self.path                     =self.root_path + "["+datetime.datetime.now().ctime() +"] ["+self.tag_comment+"]"+'/'  
+                        self.title_extra=''
+
                     elif split_command[0]=='va':
                         
                         self.start_various_test=True;
@@ -1151,11 +1194,12 @@ class Serial_Stm32f4(object):
                     elif split_command[0]=='onetorque':
                         
                         self.torque_start_test  =True;
-                        self.print_selection_setup(int(split_command[2]))
                         self.test_torque        =split_command[1]
+                        self.print_selection_setup(int(split_command[2]))
                         self.tag_comment        =line 
                         self.path                =self.root_path + "["+datetime.datetime.now().ctime() +"] ["+self.tag_comment+"]"+'/'  
-
+                        print "test_torque: " + self.test_torque + " print selection: "+split_command[2]
+                        raw_input("Enter comment: ") 
 
                     
                     elif split_command[0]=='pp':

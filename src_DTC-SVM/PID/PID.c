@@ -1,7 +1,8 @@
 /*
  * Copyright (C) 2013 ARCOS-Lab Universidad de Costa Rica
- * Author: Federico Ruiz Ugalde <memeruiz@gmail.com>
- *
+ * Author:      Federico Ruiz Ugalde            <memeruiz@gmail.com>
+ * Modified by: Sebastian Chinchilla Gutierrez  <tumacher@gmail.com>
+
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -31,6 +32,8 @@
 }
 */
 
+int pi_mode=0;
+
 
 float P_SENSORLESS      = 0.00001f; //0.000001f
 float P_DOWN_SENSORLESS = 0.00001f; //0.000001f
@@ -41,7 +44,7 @@ float I_DOWN_SENSORLESS = 0.0000000000000001f;//0.0000000000001f//0.000000000000
 float fake_I_SENSORLESS = 0.0f;
 
 
-
+/*
 float P_SENSORLESS_TORQUE      = 0.00001f; //0.000001f
 float P_DOWN_SENSORLESS_TORQUE = 0.00001f; //0.000001f
 float fake_P_SENSORLESS_TORQUE = 0.0f;
@@ -49,16 +52,14 @@ float fake_P_SENSORLESS_TORQUE = 0.0f;
 float I_SENSORLESS_TORQUE      = 0.0000000000000001f;//0.0000000000001f//0.000000000000001f //0.000000000001f
 float I_DOWN_SENSORLESS_TORQUE = 0.0000000000000001f;//0.0000000000001f//0.000000000000001f //0.000000000001f
 float fake_I_SENSORLESS_TORQUE = 0.0f;
-
-/*
-float P_SENSORLESS      = 0.01f;//0.000001f; //0.000001f
-float P_DOWN_SENSORLESS = 0.01f;//0.000001f; //0.000001f
-float fake_P_SENSORLESS = 0.0f;
-
-float I_SENSORLESS      = 0.0f;//0.0000000000001f//0.000000000000001f //0.000000000001f
-float I_DOWN_SENSORLESS = 0.0f;//0.0000000000001f//0.000000000000001f //0.000000000001f
-float fake_I_SENSORLESS = 12.0f;
 */
+float P_SENSORLESS_TORQUE      = 0.00000001f;//0.00001f; //0.000001f
+float P_DOWN_SENSORLESS_TORQUE = 0.00000001f;//0.00001f; //0.000001f
+float fake_P_SENSORLESS_TORQUE = 0.0f;
+
+float I_SENSORLESS_TORQUE      = 0.0f;//0.0000000000000001f;//0.0000000000001f//0.000000000000001f //0.000000000001f
+float I_DOWN_SENSORLESS_TORQUE = 0.0f;//0.0000000000000001f;//0.0000000000001f//0.000000000000001f //0.000000000001f
+float fake_I_SENSORLESS_TORQUE = 0.0f;
 
 
 float timer=0.0f;
@@ -312,6 +313,9 @@ void frequency_input(void)
         
         collecting_speed=true;
         timer=0;
+
+        pi_mode=0;  //speed pi controller
+
       }	 
 
       if (strcmp(cmd, "Q") == 0)
@@ -325,6 +329,8 @@ void frequency_input(void)
         
         collecting_speed=true;
         timer=0;
+
+        pi_mode=1;   //torque pi controller
       }	 
 
 
