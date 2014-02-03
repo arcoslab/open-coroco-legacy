@@ -109,12 +109,12 @@ class Serial_Stm32f4(object):
 
          #torque P_test
         self.torque_start_P_test   = False
-        self.torque_P              =100.0#0.000000999999997475#0.000001
+        self.torque_P              =1.0#0.000000999999997475#0.000001
         self.torque_final_P        =0.000001
         self.torque_P_increment    =10 
         self.torque_P_test_counter =0
         self.torque_max_P_tests    =5
-        self.torque_P_divisor      =10000000
+        self.torque_P_divisor      =1000000000
 
         self.torque_P_speed = 0.0
         self.torque_I_speed = 0.0
@@ -353,7 +353,7 @@ class Serial_Stm32f4(object):
                 elif (single_character=='O'):   self.psi_s_alpha           =self.get_data_and_checksum()
                 elif (single_character=='v'):   self.psi_s_reference       =self.get_data_and_checksum()  
                                                 #print "entering v ord: " + str(ord('v')) 
-                elif (single_character=='u'):   self.te                =self.get_data_and_checksum()
+                elif (single_character=='W'):   self.te                =self.get_data_and_checksum()
                 elif (single_character=='y'):   self.te_ref            =self.get_data_and_checksum()
 
                 elif (single_character=='U'):   self.Ud                =self.get_data_and_checksum()
@@ -587,11 +587,11 @@ class Serial_Stm32f4(object):
 
         if self.transmition_error==False:      
             print   self.new_data_line
-        '''
+        
         else :
-            #print   self.new_data_line
-            print "warning: transmition_error"
-        '''
+            print   self.new_data_line + " transmition_error"
+            #print "warning: transmition_error"
+        
 
 
 
@@ -1144,7 +1144,9 @@ class Serial_Stm32f4(object):
          self.torque_driving_tests_for_every_set_of_data()
          self.torque_testing_routine()
          self.torque_P_test()
-         
+         #if self.transmition_error: print "transmition_error"         
+
+
          while sys.stdin in select.select([sys.stdin], [], [], 0)[0]:	#read from standart input if there is something, otherwise not 
             line = sys.stdin.readline()     #you must press enter before typing the new command
             if line:

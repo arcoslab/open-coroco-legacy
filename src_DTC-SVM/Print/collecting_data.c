@@ -456,7 +456,7 @@ void print_regular_data(void)
     else if (print_selection==6)
     {
         printf ("t")  ;  checksum=           print_float_as_bytes(data_timer                   );
-        printf ("u")  ;  checksum=checksum  +print_float_as_bytes(data_t_e                     );
+        printf ("W")  ;  checksum=checksum  +print_float_as_bytes(data_t_e                     );
         printf ("y")  ;  checksum=checksum  +print_float_as_bytes(data_t_e_ref                 );
 
         //////////////
@@ -485,7 +485,7 @@ void print_regular_data(void)
     {
         printf ("t")  ;  checksum=           print_float_as_bytes(data_timer                   );
         printf ("j")  ;  checksum=          +print_float_as_bytes(fake_P_SENSORLESS_TORQUE                  );
-        printf ("i")  ;  checksum=checksum  +print_float_as_bytes(fake_I_SENSORLESS_TORQUE                  );
+        //printf ("i")  ;  checksum=checksum  +print_float_as_bytes(fake_I_SENSORLESS_TORQUE                  );
     }
 
     printf ("k");

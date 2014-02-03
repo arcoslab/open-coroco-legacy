@@ -356,8 +356,8 @@ void frequency_input(void)
       if (strcmp(cmd, "#") == 0)
       {
         fake_P_SENSORLESS_TORQUE =value;
-        P_SENSORLESS_TORQUE      = value/10000000.0f;
-        P_DOWN_SENSORLESS_TORQUE = value/10000000.0f;
+        P_SENSORLESS_TORQUE      = value/1000000000.0f;
+        P_DOWN_SENSORLESS_TORQUE = value/1000000000.0f;
         print_selection   = 10;
       }	       
 
