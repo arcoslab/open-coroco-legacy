@@ -96,6 +96,7 @@ class Serial_Stm32f4(object):
         self.P_test_counter =0
         self.max_P_tests    =5
         self.P_divisor      =10000000
+        self.torque_P_speed_state='initial'
 
         #I tests
         self.start_I_test       = False
@@ -105,6 +106,29 @@ class Serial_Stm32f4(object):
         self.I_test_counter =0
         self.max_I_tests    =11
         self.I_divisor      =10000000000000000000
+
+         #torque P_test
+        self.torque_start_P_test   = False
+        self.torque_P              =100.0#0.000000999999997475#0.000001
+        self.torque_final_P        =0.000001
+        self.torque_P_increment    =10 
+        self.torque_P_test_counter =0
+        self.torque_max_P_tests    =5
+        self.torque_P_divisor      =10000000
+
+        self.torque_P_speed = 0.0
+        self.torque_I_speed = 0.0
+                
+
+        #I tests
+        self.start_I_test   = False
+        self.I              =1.0#0.000000999999997475#0.000001
+        self.final_I        =0.000001
+        self.I_increment    =10 
+        self.I_test_counter =0
+        self.max_I_tests    =11
+        self.I_divisor      =10000000000000000000
+
 
         #PI controller finite state machine(stm32)
         self.P_speed=0.0
@@ -345,7 +369,8 @@ class Serial_Stm32f4(object):
 
                 elif (single_character=='K'):   self.P_speed            =self.get_data_and_checksum()
                 elif (single_character=='I'):   self.I_speed            =self.get_data_and_checksum()
-                
+                elif (single_character=='j'):   self.torque_P_speed     =self.get_data_and_checksum()
+                elif (single_character=='i'):   self.torque_I_speed     =self.get_data_and_checksum()               
 
 
                 elif (single_character=='N'):   
@@ -446,7 +471,7 @@ class Serial_Stm32f4(object):
     def print_selection_print_string(self):
 
         extra_information=  " "+self.test_routine_state + " "+self.driving_test_state+" "+str(self.driving_counter) + \
-                            " "+self.P_speed_state+" "+self.I_speed_state+" "+self.various_test_state+" "+self.torque_test_routine_state+" N: "+self.exception
+                            " "+self.P_speed_state+" "+self.I_speed_state+" "+self.various_test_state+" "+self.torque_test_routine_state+" "+self.torque_P_speed_state#+" N: "+self.exception
        
         if   self.print_selection==0:
             self.new_data_line= "t: %6.2f "                   %self.time                + \
@@ -498,8 +523,8 @@ class Serial_Stm32f4(object):
                                 " I: %12.8f:"               %self.I_speed              + extra_information
 
         elif self.print_selection==10:
-            self.new_data_line= " P: %12.8f:"               %self.P_speed              + \
-                                " I: %12.8f:"               %self.I_speed              + extra_information
+            self.new_data_line= " P: %12.8f:"               %self.torque_P_speed              + \
+                                " I: %12.8f:"               %self.torque_I_speed              + extra_information
         '''
         elif self.print_selection==6:
             self.new_data_line= "t: %6.2f "                  %self.time                + \
@@ -983,6 +1008,7 @@ class Serial_Stm32f4(object):
            self.change_torque(self.test_torque)   #######################################********************
            self.capturing_data()
            self.torque_test_routine_state='changing_frequency_reference'
+           
         
         elif (  self.torque_test_routine_state=='changing_frequency_reference' and 
                 self.transmition_error ==False                and 
@@ -1001,7 +1027,7 @@ class Serial_Stm32f4(object):
 
         elif (  self.torque_test_routine_state=='stopping_the_motor'                   and
                 self.transmition_error==False                                   and
-                self.electric_frequency<0.01                                        ):
+                self.electric_frequency<0.1                                        ):
             self.torque_test_routine_state='motor_stopped'
             self.torque_start_test=False
 
@@ -1010,7 +1036,8 @@ class Serial_Stm32f4(object):
             self.torque_test_routine_state='breaking'
 
 
-
+        if (  self.torque_test_routine_state=='changing_frequency_reference'):
+            print "time: "+str(self.time)+" min: "+str(self.min_test_time)+" transmition_error: " +str(self.transmition_error)
 
 
     def driving_tests_for_every_set_of_data(self):
@@ -1116,6 +1143,7 @@ class Serial_Stm32f4(object):
 
          self.torque_driving_tests_for_every_set_of_data()
          self.torque_testing_routine()
+         self.torque_P_test()
          
          while sys.stdin in select.select([sys.stdin], [], [], 0)[0]:	#read from standart input if there is something, otherwise not 
             line = sys.stdin.readline()     #you must press enter before typing the new command
@@ -1223,6 +1251,18 @@ class Serial_Stm32f4(object):
                         self.path              =self.root_path + "["+datetime.datetime.now().ctime() +"] ["+self.tag_comment+"]"+'/'  
 
 
+                    elif split_command[0]=='ptorque':
+                        
+                        #self.start_test=True;
+                        self.torque_start_P_test=True
+                        self.print_selection_setup(10)
+                        self.test_torque    =split_command[1]
+                        self.tag_comment       =line
+                        #if (len(split_command)>=3): 
+                        #    self.tag_comment       =line#raw_input("Enter comment: ") 
+                        self.path              =self.root_path + "["+datetime.datetime.now().ctime() +"] ["+self.tag_comment+"]"+'/'  
+
+
                       
     def P_test(self):                                          
 
@@ -1304,7 +1344,62 @@ class Serial_Stm32f4(object):
             self.P=0
             self.P_test_counter=0
 
+    def torque_P_test(self):                                          
 
+        '''
+        if self.P!=100:
+            self.max_test_time=50000
+        else :
+            self.max_test_time=1500000
+        '''                 
+        
+        if self.torque_P_speed_state=='initial' and self.torque_start_P_test==True:
+            line='# '+str(self.torque_P)
+            print line
+            self.write_a_line(line)
+            self.torque_P_speed_state='waiting for P update_0'
+        
+        elif self.torque_P_speed_state=='waiting for P update_'+str(self.torque_P_test_counter) and self.torque_P_speed==self.torque_P and self.torque_P_test_counter<self.torque_max_P_tests:
+            self.torque_start_test=True;
+            self.title_extra=' (P='+str(self.torque_P/self.torque_P_divisor)+')'
+            self.print_selection_setup(6)#********************************0)#self.P_test_counter)
+            self.torque_P_speed_state='testing_'+str(self.torque_P_test_counter)
+
+        elif self.torque_P_speed_state=='waiting for P update_'+str(self.torque_P_test_counter) and self.torque_P_speed!=self.torque_P  and self.torque_P_test_counter<self.torque_max_P_tests:
+            linex='P python: '+str(self.torque_P)+' P stm32: '+str(self.torque_P_speed)
+            print linex
+            line='# '+str(self.torque_P)
+            self.write_a_line(line)
+            self.torque_P_speed_state='waiting for P update_'+str(self.torque_P_test_counter)
+
+
+        elif self.torque_P_speed_state=='testing_'+str(self.torque_P_test_counter) and self.torque_start_test==False and self.torque_P_test_counter<self.torque_max_P_tests:
+
+            self.torque_P_test_counter=self.torque_P_test_counter+1
+
+            if self.torque_P_test_counter<self.torque_max_P_tests:    
+                            self.torque_P_speed_state='waiting for P update_'+str(self.torque_P_test_counter)
+
+                            #Pincrement                            
+                            self.torque_P=self.P*self.torque_P_increment
+
+                            
+                            line='# '+str(self.torque_P)
+                            print line
+                            self.write_a_line(line)
+          
+            else                                   :    
+                            self.torque_start_P_test=False
+                            self.torque_P_speed_state='initial'        
+                            self.torque_P=0
+                            self.torque_P_test_counter=0
+
+     
+        elif self.torque_P_speed_state=='testing_'+str(self.torque_max_P_tests) and self.torque_start_test==False:
+            self.torque_start_P_test=False
+            self.torque_P_speed_state='initial'        
+            self.torque_P=0
+            self.torque_P_test_counter=0
 
 
     def I_test(self):                                          

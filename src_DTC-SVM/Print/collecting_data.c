@@ -476,14 +476,16 @@ void print_regular_data(void)
 
     else if (print_selection==8)
     {
-        printf ("K")  ;  checksum=           print_float_as_bytes(fake_P_SENSORLESS                  );
+        printf ("t")  ;  checksum=           print_float_as_bytes(data_timer                   );
+        printf ("K")  ;  checksum=          +print_float_as_bytes(fake_P_SENSORLESS                  );
         printf ("I")  ;  checksum=checksum  +print_float_as_bytes(I_SENSORLESS                  );
     }
 
     else if (print_selection==10)
     {
-        printf ("K")  ;  checksum=           print_float_as_bytes(fake_P_SENSORLESS                  );
-        printf ("I")  ;  checksum=checksum  +print_float_as_bytes(fake_I_SENSORLESS                  );
+        printf ("t")  ;  checksum=           print_float_as_bytes(data_timer                   );
+        printf ("j")  ;  checksum=          +print_float_as_bytes(fake_P_SENSORLESS_TORQUE                  );
+        printf ("i")  ;  checksum=checksum  +print_float_as_bytes(fake_I_SENSORLESS_TORQUE                  );
     }
 
     printf ("k");

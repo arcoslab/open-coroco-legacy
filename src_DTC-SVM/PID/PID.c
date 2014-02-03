@@ -353,12 +353,22 @@ void frequency_input(void)
         print_selection   = 8;
       }	 
 
+      if (strcmp(cmd, "#") == 0)
+      {
+        fake_P_SENSORLESS_TORQUE =value;
+        P_SENSORLESS_TORQUE      = value/10000000.0f;
+        P_DOWN_SENSORLESS_TORQUE = value/10000000.0f;
+        print_selection   = 10;
+      }	       
+
+
+
       if (strcmp(cmd, "I") == 0)
       {
         fake_I_SENSORLESS =value;
         I_SENSORLESS      = value/10000000000000000000.0f;
         I_DOWN_SENSORLESS = value/10000000000000000000.0f;
-        print_selection   = 10;
+        print_selection   = 8;
       }
 
       if (strcmp(cmd, "T") == 0)
@@ -366,7 +376,7 @@ void frequency_input(void)
         fake_I_SENSORLESS_TORQUE =value;
         I_SENSORLESS_TORQUE      = value/10000000000000000000.0f;
         I_DOWN_SENSORLESS_TORQUE = value/10000000000000000000.0f;
-        print_selection   = 6;
+        print_selection   = 10;
       }
 
 
