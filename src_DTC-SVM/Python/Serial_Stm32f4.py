@@ -61,7 +61,7 @@ class Serial_Stm32f4(object):
         self.title_extra            = ''
 
         #test routine
-        self.max_test_time      = 50000#100000
+        self.max_test_time      = 100000#50000#100000
         self.min_test_time      =    300
         self.test_routine_state = 'initial'
         self.driving_test_state = 'initial'
@@ -587,11 +587,11 @@ class Serial_Stm32f4(object):
 
         if self.transmition_error==False:      
             print   self.new_data_line
-        
+        '''
         else :
             print   self.new_data_line + " transmition_error"
             #print "warning: transmition_error"
-        
+        '''
 
 
 
@@ -1228,8 +1228,8 @@ class Serial_Stm32f4(object):
                         self.print_selection_setup(int(split_command[2]))
                         self.tag_comment        =line 
                         self.path                =self.root_path + "["+datetime.datetime.now().ctime() +"] ["+self.tag_comment+"]"+'/'  
-                        print "test_torque: " + self.test_torque + " print selection: "+split_command[2]
-                        raw_input("Enter comment: ") 
+                        #print "test_torque: " + self.test_torque + " print selection: "+split_command[2]
+                        #raw_input("Enter comment: ") 
 
                     
                     elif split_command[0]=='pp':

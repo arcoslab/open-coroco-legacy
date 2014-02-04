@@ -220,11 +220,11 @@ float rotor_speed_w_r(float psi_sD, float psi_sQ, float T)
 {
   static float previous_psi_sD=0.0f;
   static float previous_psi_sQ=0.0f;
-  float w_r=0.0f;
-  w_r=(previous_psi_sD*psi_sQ-previous_psi_sQ*psi_sD)/(T*(psi_sD*psi_sD+psi_sQ*psi_sQ));
+  float w_=0.0f;
+  w_=(previous_psi_sD*psi_sQ-previous_psi_sQ*psi_sD)/(T*(psi_sD*psi_sD+psi_sQ*psi_sQ));
   previous_psi_sD=psi_sD;
   previous_psi_sQ=psi_sQ;
-  return w_r;
+  return w_;
 }
 
 
@@ -762,12 +762,12 @@ float stator_angle_to_phase_A(float stator_angle)
 
 #define P_DTC 0.01f//0.000028f
 #define I_DTC 1.0f
-float DTC_torque_reference_PI(float w_r, float w_r_ref)
+float DTC_torque_reference_PI(float w, float w_ref)
 {
   float te_error=0.0f;
   float te_ref  =0.0f;
 
-  te_error=w_r_ref-w_r;
+  te_error=w_ref-w;
 
   te_ref=-P_DTC*te_error;
   
