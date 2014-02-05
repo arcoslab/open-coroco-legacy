@@ -61,7 +61,7 @@ class Serial_Stm32f4(object):
         self.title_extra            = ''
 
         #test routine
-        self.max_test_time      = 100000#50000#100000
+        self.max_test_time      = 50000#100000#50000#100000
         self.min_test_time      =    300
         self.test_routine_state = 'initial'
         self.driving_test_state = 'initial'
@@ -653,6 +653,7 @@ class Serial_Stm32f4(object):
     def plot_electromagnetic_torque(self,rows,columns,subplot_index):    
                         plt.subplot(rows,columns,subplot_index)
                         plt.plot(self.time_vector, self.te_vector,self.plotting_character,label='te')
+                        #plt.plot(self.time_vector, self.te_vector,'o',label='te')
                         plt.plot(self.time_vector, self.te_ref_vector,self.plotting_character,label='te_ref')
                         plt.title('torque vs time'+self.title_extra)
                         plt.xlabel('time (ticks)')

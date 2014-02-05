@@ -94,21 +94,26 @@ void sensorless_speed_pi_controller(
   if      (pi_control_sensorless > PI_MAX_SENSORLESS) { pi_control_sensorless = PI_MAX_SENSORLESS; }
   else if (pi_control_sensorless < PI_MIN_SENSORLESS) { pi_control_sensorless = PI_MIN_SENSORLESS; }
 
-    /*
-    if (reference_frequency!=0.0f){pi_control_sensorless=0.001f;}
+/*   
+    if (reference_frequency!=0.0f){pi_control_sensorless=PI_MAX_SENSORLESS;}
     //pi control: 0.0005f arranca
     //pi control: 
-    else {pi_control_sensorless =0.0f;}
-    */
+    else {pi_control_sensorless =   PI_MAX_SENSORLESS;}//0.0f;}
+  
+
+    if      (reference_frequency>0.0f && frequency <=400.0f)    {*rotating_angle=*rotating_angle+pi_control_sensorless;}
+    else if (reference_frequency==0.0 && frequency>0.0f)        {*rotating_angle=*rotating_angle-pi_control_sensorless/3.0;}
+    else if (reference_frequency==0.0f)                         {*rotating_angle=0.0f;}
+*/
 
 
     *rotating_angle=*rotating_angle+pi_control_sensorless;
     
 
   SVM_pi_control=pi_control_sensorless;
-
   phase_advance_SVM=pi_control_sensorless;//*rotating_angle;//pi_control_sensorless;
-  pi_max=*rotating_angle;//P_MAX_SENSORLESS;//*interrupt_frequency;
+  //pi_max=*rotating_angle;//P_MAX_SENSORLESS;//*interrupt_frequency;
+  pi_max=P_MAX_SENSORLESS;//*interrupt_frequency;
 }
 
 
@@ -209,10 +214,10 @@ void psi_finitite_state_machine (float reference_frequency, float actual_frequen
 #define PI_MAX_SENSORLESS_TORQUE             0.0005f//(90.0f*frequency/interrupt_frequency) 
 #define PI_MIN_SENSORLESS_TORQUE            -0.0005f//-(90.0f*frequency/interrupt_frequency) 
 */
-#define I_MAX_SENSORLESS_TORQUE              1.5f//(90.0f*frequency/interrupt_frequency) 
-#define P_MAX_SENSORLESS_TORQUE              1.5f//(90.0f*frequency/interrupt_frequency) 
-#define PI_MAX_SENSORLESS_TORQUE             1.5f//(90.0f*frequency/interrupt_frequency) 
-#define PI_MIN_SENSORLESS_TORQUE            -1.5f//-(90.0f*frequency/interrupt_frequency) 
+#define I_MAX_SENSORLESS_TORQUE              1.0f//(90.0f*frequency/interrupt_frequency) 
+#define P_MAX_SENSORLESS_TORQUE              1.0f//(90.0f*frequency/interrupt_frequency) 
+#define PI_MAX_SENSORLESS_TORQUE             1.0f//(90.0f*frequency/interrupt_frequency) 
+#define PI_MIN_SENSORLESS_TORQUE            -1.0f//-(90.0f*frequency/interrupt_frequency) 
 
 
 void sensorless_torque_pi_controller(
@@ -242,8 +247,8 @@ void sensorless_torque_pi_controller(
   else if (pi_control_sensorless < PI_MIN_SENSORLESS_TORQUE) { pi_control_sensorless = PI_MIN_SENSORLESS_TORQUE; }
 
 
-  //if (w_r<300.0f && w_r>-300.0f)  {*rotating_angle=*rotating_angle+pi_control_sensorless;}
-  if (w_r<300.0f && w_r>-300.0f)  {*rotating_angle=pi_control_sensorless;}
+  if (w_r<300.0f && w_r>-300.0f)  {*rotating_angle=*rotating_angle+pi_control_sensorless;}
+  //if (w_r<300.0f && w_r>-300.0f)  {*rotating_angle=pi_control_sensorless;}
 
   SVM_pi_control=pi_control_sensorless;
   phase_advance_SVM=pi_control_sensorless;
