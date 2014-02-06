@@ -41,11 +41,21 @@ float w_r=0;
 #define PI_MIN_SENSORLESS            -(90.0f*frequency/interrupt_frequency) 
 */
 
+
+
 #define I_MAX_SENSORLESS              0.0005f//(90.0f*frequency/interrupt_frequency) 
 #define P_MAX_SENSORLESS              0.0005f//(90.0f*frequency/interrupt_frequency) 
 #define PI_MAX_SENSORLESS             0.0005f//(90.0f*frequency/interrupt_frequency) 
 #define PI_MIN_SENSORLESS            -0.0005f//-(90.0f*frequency/interrupt_frequency) 
 
+
+
+/*
+#define I_MAX_SENSORLESS              0.0005f//(90.0f*frequency/interrupt_frequency) 
+#define P_MAX_SENSORLESS              0.0005f//(90.0f*frequency/interrupt_frequency) 
+#define PI_MAX_SENSORLESS             0.0005f//(90.0f*frequency/interrupt_frequency) 
+#define PI_MIN_SENSORLESS            -0.0005f//-(90.0f*frequency/interrupt_frequency) 
+*/
 /*
 #define I_MAX_SENSORLESS              700.0f//0.0005f//(90.0f*frequency/interrupt_frequency) 
 #define P_MAX_SENSORLESS              700.0f//0.0005f//(90.0f*frequency/interrupt_frequency) 
@@ -106,9 +116,10 @@ void sensorless_speed_pi_controller(
     else if (reference_frequency==0.0f)                         {*rotating_angle=0.0f;}
 */
 
-
-    *rotating_angle=*rotating_angle+pi_control_sensorless;
+    if (reference_frequency > 0.0f && frequency > -200.0f && frequency < 200.0f)
+        {   *rotating_angle=*rotating_angle+0.0005f;    }
     
+    //*rotating_angle=*rotating_angle+pi_control_sensorless;
 
   SVM_pi_control=pi_control_sensorless;
   phase_advance_SVM=pi_control_sensorless;//*rotating_angle;//pi_control_sensorless;
@@ -208,17 +219,18 @@ void psi_finitite_state_machine (float reference_frequency, float actual_frequen
 #define PI_MAX_SENSORLESS_TORQUE             (9.0f*400.0f/switching_frequency) 
 #define PI_MIN_SENSORLESS_TORQUE            -(9.0f*400.0f/switching_frequency) 
 */
-/*
+
 #define I_MAX_SENSORLESS_TORQUE              0.0005f//(90.0f*frequency/interrupt_frequency) 
 #define P_MAX_SENSORLESS_TORQUE              0.0005f//(90.0f*frequency/interrupt_frequency) 
 #define PI_MAX_SENSORLESS_TORQUE             0.0005f//(90.0f*frequency/interrupt_frequency) 
 #define PI_MIN_SENSORLESS_TORQUE            -0.0005f//-(90.0f*frequency/interrupt_frequency) 
-*/
+
+/*
 #define I_MAX_SENSORLESS_TORQUE              1.0f//(90.0f*frequency/interrupt_frequency) 
 #define P_MAX_SENSORLESS_TORQUE              1.0f//(90.0f*frequency/interrupt_frequency) 
 #define PI_MAX_SENSORLESS_TORQUE             1.0f//(90.0f*frequency/interrupt_frequency) 
 #define PI_MIN_SENSORLESS_TORQUE            -1.0f//-(90.0f*frequency/interrupt_frequency) 
-
+*/
 
 void sensorless_torque_pi_controller(
                            float reference_torque, float torque,float switching_frequency, float* rotating_angle) 
@@ -247,11 +259,38 @@ void sensorless_torque_pi_controller(
   else if (pi_control_sensorless < PI_MIN_SENSORLESS_TORQUE) { pi_control_sensorless = PI_MIN_SENSORLESS_TORQUE; }
 
 
-  if (w_r<300.0f && w_r>-300.0f)  {*rotating_angle=*rotating_angle+pi_control_sensorless;}
+
+if (w_r<20.0f)
+{ 
+/*
+    if (reference_torque!=0.0f){pi_control_sensorless=PI_MAX_SENSORLESS;}
+    //pi control: 0.0005f arranca
+    //pi control: 
+    else {pi_control_sensorless =   PI_MAX_SENSORLESS;}//0.0f;}
+  
+
+    if      (reference_torque>0.0f && frequency <=400.0f)    {*rotating_angle=*rotating_angle+pi_control_sensorless/3.0f;}
+    else if (reference_frequency==0.0 && frequency>0.0f)        {*rotating_angle=*rotating_angle-pi_control_sensorless/3.0f;}
+    else if (reference_frequency==0.0f)                         {*rotating_angle=0.0f;}
+*/
+    if      (reference_torque>0.0f)    
+    {
+        pi_control_sensorless=PI_MAX_SENSORLESS;
+        *rotating_angle=*rotating_angle+pi_control_sensorless/3.0f;
+    }
+
+}
+
+else
+{
+  if (w_r<400.0f && w_r>-400.0f)  {*rotating_angle=*rotating_angle+pi_control_sensorless;}
   //if (w_r<300.0f && w_r>-300.0f)  {*rotating_angle=pi_control_sensorless;}
 
   SVM_pi_control=pi_control_sensorless;
   phase_advance_SVM=pi_control_sensorless;
   pi_max=P_MAX_SENSORLESS_TORQUE;
+}
+
+
 }
 
