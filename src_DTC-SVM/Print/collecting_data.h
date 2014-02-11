@@ -30,3 +30,5 @@ char print_float_as_bytes(float value);
 
 
 void colllecting_flux_linkage(void);
+void print_collected_data_buffer(char* checksum);
+void collecting_collected_in_buffer (void);

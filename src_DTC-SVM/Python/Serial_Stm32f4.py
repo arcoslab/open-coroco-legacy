@@ -61,8 +61,8 @@ class Serial_Stm32f4(object):
         self.title_extra            = ''
 
         #test routine
-        self.max_test_time      = 100000#100000#50000#100000
-        self.min_test_time      =    300
+        self.max_test_time      = 298#100000#100000#50000#100000
+        self.min_test_time      = 300
         self.test_routine_state = 'initial'
         self.driving_test_state = 'initial'
         self.various_test_state = 'initial'
@@ -265,15 +265,15 @@ class Serial_Stm32f4(object):
                                                    "VsD VsD VsQ VsQ Vs Vs Vs_cita Vs_cita Vs_cita_relative Vs_cita_relative "        +\
                                                    "psisD psisD psisQ psisQ psis psis psis_alpha psis_alpha psis_ref psis_ref "      +\
                                                    "te te Ud Ud pi_control pi_control pi_max pi_max"  
-        elif self.print_selection==0: header_csv = "t t ref_freq ref_freq electric_frequency electric_frequency hall_freq hall_freq " 
-        elif self.print_selection==1: header_csv = "t t isA isA isB isB isC isC " 
-        elif self.print_selection==2: header_csv = "t t isD isD isQ isQ " 
-        elif self.print_selection==3: header_csv = "t t VsD VsD VsQ VsQ "
-        elif self.print_selection==4: header_csv = "t t VsD Vs Vs Ud Ud "
-        elif self.print_selection==5: header_csv = "t t psisD psisD psisQ psisQ "
-        elif self.print_selection==6: header_csv = "t t te te Ud Ud pi_control pi_control pi_max pi_max" 
-        elif self.print_selection==7: header_csv = "t t pi_control pi_control pi_max pi_max" 
-
+        elif self.print_selection== 0: header_csv ="t t ref_freq ref_freq electric_frequency electric_frequency hall_freq hall_freq " 
+        elif self.print_selection== 1: header_csv ="t t isA isA isB isB isC isC " 
+        elif self.print_selection== 2: header_csv ="t t isD isD isQ isQ " 
+        elif self.print_selection== 3: header_csv ="t t VsD VsD VsQ VsQ "
+        elif self.print_selection== 4: header_csv ="t t VsD Vs Vs Ud Ud "
+        elif self.print_selection== 5: header_csv ="t t psisD psisD psisQ psisQ "
+        elif self.print_selection== 6: header_csv ="t t te te Ud Ud pi_control pi_control pi_max pi_max" 
+        elif self.print_selection== 7: header_csv ="t t pi_control pi_control pi_max pi_max" 
+        elif self.print_selection==11: header_csv ="t t psis psis alpha alpha ref ref"
 
         split_header = header_csv.split()                  
         self.writer.writerow(split_header)        

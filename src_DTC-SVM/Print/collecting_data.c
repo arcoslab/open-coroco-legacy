@@ -21,22 +21,100 @@
 bool collecting_sensorless_data = true;
 bool transmitting_to_python = false;
 
-
+#define SAMPLES 300
 
 #define COLLECTING_SPEED_DELAY 0
 
-float collected_psi_s_alpha_SVM[1000];
+float collected_psi_s_alpha_SVM[SAMPLES];
+
+
+//printing buffers
+float hall_angle=0.0f;
+float PID_angle[SAMPLES];
+
+bool  inductance_measure=true;
+
+//int current_counter=0;  
+//bool print_current=false;
+//bool first_movement=false;
+float collected_CUR_FREQ[SAMPLES];
+
+float collected_i_sA [SAMPLES];
+float collected_i_sB [SAMPLES];
+
+float collected_U_d  [SAMPLES];
+
+float collected_i_sD[SAMPLES];
+float collected_i_sQ[SAMPLES];
+//float collected_i_s[SAMPLES];
+//float collected_cita_i_s[SAMPLES];
+
+float collected_V_sD[SAMPLES];
+float collected_V_sQ[SAMPLES];
+float collected_V_s [SAMPLES];
+float collected_cita_V_s[SAMPLES];
+float collected_cita_V_s_relative_angle[SAMPLES];
+
+float collected_psi_sD[SAMPLES];
+float collected_psi_sQ[SAMPLES];
+float collected_psi_s [SAMPLES];
+int   collected_psi_alpha[SAMPLES];
+//float collected_psi_s_alpha_SVM[SAMPLES];
+float collected_w_r[SAMPLES];
+//int timer[SAMPLES];
+
+float collected_t_e[SAMPLES];
+
+float collected_psi_s_ref[SAMPLES];
+float collected_t_e_ref[SAMPLES];
+
+int   collected_d_psi[SAMPLES];
+int   collected_d_te[SAMPLES];
+float collected_psi_delta_percentage[SAMPLES];
+float collected_t_e_delta_percentage[SAMPLES];
+
+
+//motor parameters;
+
+//float collected_R_s[SAMPLES];
+//float collected_pole_pairs[SAMPLES];
+//float collected_L_sq[SAMPLES];
+//float collected_psi_F[SAMPLES];
+
+//int collected_optimal_voltage_vector[SAMPLES];
+
+//float collected_duty_a[SAMPLES];
+//float collected_duty_b[SAMPLES];
+//float collected_duty_c[SAMPLES];
+
+float collected_phase_advance_SVM[SAMPLES];
+float collected_V_s_ref_relative_angle[SAMPLES];
+//float collected_T1[SAMPLES];
+//float collected_T2[SAMPLES];
+//float collected_T_min_on[SAMPLES];
+//float collected_T_med_on[SAMPLES];
+//float collected_T_max_on[SAMPLES];
+
+//float collected_attenuation[SAMPLES];
+float collected_pi_control_SVM[SAMPLES];
+float collected_ref_freq_SVM[SAMPLES];
+int collected_state_SVM[SAMPLES];
+float collected_rotating_angle_SVM[SAMPLES];
+
+
+
 int collected_pointer=0;
 
 bool serial_print_collected_data=false; 
 void colllecting_flux_linkage(void)
 {
-    if(collected_permission==true && collected_pointer<998)
+    if(collected_permission==true && collected_pointer<SAMPLES-2)
     { 
-        collected_psi_s_alpha_SVM[collected_pointer]=psi_s_alpha_SVM;
+        //collected_psi_s_alpha_SVM[collected_pointer]=psi_s_alpha_SVM;
+        collecting_collected_in_buffer ();
         collected_pointer+=1;
     }
-    else if (collected_permission==true && collected_pointer>=998)
+    else if (collected_permission==true && collected_pointer>=SAMPLES-2)
     {
         collected_permission=false;
         collected_pointer=0;
@@ -45,6 +123,71 @@ void colllecting_flux_linkage(void)
 }
 
 
+void collecting_collected_in_buffer (void)
+{
+        collected_V_s          [collected_pointer] = V_s;
+        collected_w_r          [collected_pointer] = w_r;
+        collected_ref_freq_SVM [collected_pointer] = ref_freq_SVM;
+
+        collected_state_SVM    [collected_pointer] = state;
+        collected_CUR_FREQ     [collected_pointer] = CUR_FREQ;
+
+        collected_psi_sD    [collected_pointer]=psi_sD;
+        collected_psi_sQ    [collected_pointer]=psi_sQ;
+        collected_psi_s     [collected_pointer]=psi_s;
+        collected_psi_alpha [collected_pointer]=psi_alpha;
+        collected_CUR_FREQ  [collected_pointer]=CUR_FREQ;
+        collected_U_d       [collected_pointer]=U_d;
+        //timer          [collected_pointer]=flux_linkage_capture_counter;
+        
+	    collected_CUR_FREQ[collected_pointer]=CUR_FREQ;	
+
+        collected_i_sA [collected_pointer]=i_sA;
+        collected_i_sB [collected_pointer]=i_sB;
+        collected_U_d  [collected_pointer]=U_d;
+
+        collected_i_sD[collected_pointer]=i_sD;
+        collected_i_sQ[collected_pointer]=i_sQ;
+        //collected_i_s[collected_pointer]=i_s;
+        //collected_cita_i_s[collected_pointer]=cita_i_s;
+
+
+        collected_V_sD[collected_pointer]=V_sD;
+        collected_V_sQ[collected_pointer]=V_sQ;
+        collected_V_s [collected_pointer]=V_s;
+        collected_cita_V_s[collected_pointer]=cita_V_s;
+        collected_cita_V_s_relative_angle[collected_pointer]=cita_V_s;
+
+        collected_psi_sD[collected_pointer]=psi_sD;
+        collected_psi_sQ[collected_pointer]=psi_sQ;
+        collected_psi_s [collected_pointer]=psi_s;
+        collected_psi_alpha[collected_pointer]=psi_alpha;
+        collected_psi_s_alpha_SVM[collected_pointer]=psi_s_alpha_SVM;
+
+        collected_t_e[collected_pointer]=t_e;
+
+        collected_psi_s_ref[collected_pointer]=psi_s_ref;
+        collected_t_e_ref[collected_pointer]=t_e_ref;
+
+        collected_d_psi[collected_pointer]=d_psi;
+        collected_d_te[collected_pointer]=d_te;
+        collected_psi_delta_percentage[collected_pointer]=psi_delta_percentage;
+        collected_t_e_delta_percentage[collected_pointer]=t_e_delta_percentage;
+
+        collected_w_r[collected_pointer]=w_r;   
+
+        collected_phase_advance_SVM[collected_pointer]=phase_advance_SVM;
+        collected_V_s_ref_relative_angle[collected_pointer]=V_s_ref_relative_angle;
+        //collected_T1[collected_pointer]=T1;
+        //collected_T2[collected_pointer]=T2;
+        //collected_T_min_on[collected_pointer]=T_min_on;
+        //collected_T_med_on[collected_pointer]=T_med_on;
+        //collected_T_max_on[collected_pointer]=T_max_on;
+        //collected_attenuation[collected_pointer]=attenuation;
+            collected_pi_control_SVM[collected_pointer]	=SVM_pi_control;
+        collected_rotating_angle_SVM[collected_pointer] =psi_rotating_angle_SVM;
+
+}
 
 void collecting_floating_data(void)
 {
@@ -481,10 +624,35 @@ void print_regular_data(void)
     
     else if (print_selection==11)
     {
+/*
         printf ("t")  ;  checksum=           print_float_as_bytes(data_timer                   );
         printf ("L")  ;  checksum=checksum  +print_float_as_bytes(data_psi_s                   );
         printf ("O")  ;  checksum=checksum  +print_float_as_bytes(data_psi_s_alpha_SVM         );
         printf ("v")  ;  checksum=checksum  +print_float_as_bytes(data_psi_s_ref               );
+*/
+/*
+        printf ("t");  checksum=         print_float_as_bytes(collected_pointer                   );
+        printf ("O");  checksum=checksum+print_float_as_bytes(collected_psi_s_alpha_SVM[collected_pointer]);
+        collected_pointer+=1;
+*/
+        
+        if (serial_print_collected_data==true)
+        {  
+            collected_pointer+=1;
+            printf ("t")  ;  checksum=           print_float_as_bytes(collected_pointer                   );
+            print_collected_data_buffer(&checksum);
+        }
+        else 
+        {
+            printf ("t")  ;  checksum=           print_float_as_bytes(data_timer             );
+        }
+
+        if (collected_pointer>=SAMPLES-2)
+        {    
+            serial_print_collected_data=false;
+            collected_pointer=0;
+        }
+
     }
     
     else if (print_selection==6)
@@ -679,6 +847,53 @@ void full_print_regular_data(void)
     printf ("m");
 
 }
+
+
+
+void print_collected_data_buffer(char* checksum)
+{
+        //printf ("t")  ;  *checksum=           print_float_as_bytes(collected_pointer                   );
+        printf ("r")  ;  *checksum=*checksum  +print_float_as_bytes(collected_ref_freq_SVM[collected_pointer]            );
+        printf ("e")  ;  *checksum=*checksum  +print_float_as_bytes(collected_w_r[collected_pointer]                     );
+        printf ("h")  ;  *checksum=*checksum  +print_float_as_bytes(collected_CUR_FREQ[collected_pointer]                );
+
+        printf ("A")  ;  *checksum=*checksum  +print_float_as_bytes(collected_i_sA[collected_pointer]                    );
+        printf ("B")  ;  *checksum=*checksum  +print_float_as_bytes(collected_i_sB[collected_pointer]                   );
+        printf ("C")  ;  *checksum=*checksum  +print_float_as_bytes(-collected_i_sA[collected_pointer]-collected_i_sB[collected_pointer]         );
+
+        printf ("D")  ;  *checksum=*checksum  +print_float_as_bytes(collected_i_sD[collected_pointer]                    );
+        printf ("Q")  ;  *checksum=*checksum  +print_float_as_bytes(collected_i_sQ[collected_pointer]                    );
+
+        printf ("d")  ;  *checksum=*checksum  +print_float_as_bytes(collected_V_sD[collected_pointer]                    );
+        printf ("q")  ;  *checksum=*checksum  +print_float_as_bytes(collected_V_sQ[collected_pointer]                    );
+
+        printf ("s")  ;  *checksum=*checksum  +print_float_as_bytes(collected_V_s[collected_pointer]                     );
+        printf ("U")  ;  *checksum=*checksum  +print_float_as_bytes(collected_U_d[collected_pointer]                     );
+
+        printf ("c")  ;  *checksum=*checksum  +print_float_as_bytes(collected_cita_V_s[collected_pointer]                );
+        printf ("R")  ;  *checksum=*checksum  +print_float_as_bytes(collected_cita_V_s_relative_angle[collected_pointer] );
+
+        printf ("p")  ;  *checksum=*checksum  +print_float_as_bytes(collected_psi_sD[collected_pointer]                  );
+        printf ("P")  ;  *checksum=*checksum  +print_float_as_bytes(collected_psi_sQ[collected_pointer]                  );
+ 
+        printf ("L")  ;  *checksum=*checksum  +print_float_as_bytes(collected_psi_s[collected_pointer]                   );
+        printf ("O")  ;  *checksum=*checksum  +print_float_as_bytes(collected_psi_s_alpha_SVM[collected_pointer]         );
+        printf ("v")  ;  *checksum=*checksum  +print_float_as_bytes(collected_psi_s_ref[collected_pointer]               );
+
+        printf ("u")  ;  *checksum=*checksum  +print_float_as_bytes(collected_t_e[collected_pointer]                     );
+        printf ("y")  ;  *checksum=*checksum  +print_float_as_bytes(collected_t_e_ref[collected_pointer]                 );
+
+        printf ("l")  ;  *checksum=*checksum  +print_float_as_bytes(collected_pi_control_SVM[collected_pointer]          );
+        printf ("x")  ;  *checksum=*checksum  +print_float_as_bytes(pi_max                       );
+}
+
+
+
+
+
+
+
+
 /*
 void print_float_as_bytes(float floating_value)
 {
