@@ -236,6 +236,8 @@ float electromagnetic_torque_estimation_t_e(float psi_sD,float i_sQ, float psi_s
 {
   //float t_e=0.0f;
   //t_e=(3.0f/2.0f)*pole_pairs* (psi_sD*i_sQ-psi_sQ*i_sD);
+
+
   return ( 1.5f*pole_pairs* (psi_sD*i_sQ-psi_sQ*i_sD) );//t_e;
 }
 

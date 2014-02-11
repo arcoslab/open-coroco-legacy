@@ -61,7 +61,7 @@ class Serial_Stm32f4(object):
         self.title_extra            = ''
 
         #test routine
-        self.max_test_time      = 50000#100000#50000#100000
+        self.max_test_time      = 100000#100000#50000#100000
         self.min_test_time      =    300
         self.test_routine_state = 'initial'
         self.driving_test_state = 'initial'
@@ -986,7 +986,7 @@ class Serial_Stm32f4(object):
               self.torque_start_test==True                      ): 
  
             self.break_the_motor()
-            self.torque_test_routine_state='breaking'
+            self.torque_test_routine_state='changing_frequency_reference'#'breaking'
 
 
         elif   (self.torque_test_routine_state=='breaking' and 
@@ -1219,7 +1219,7 @@ class Serial_Stm32f4(object):
                         self.start_test=True;
                         self.print_selection_setup(int(split_command[2]))
                         self.test_frequency    =split_command[1]
-                        self.tag_comment       =line#raw_input("Enter comment: ") 
+                        self.tag_comment       =line+'  0.0005 rotating angle increment'#raw_input("Enter comment: ") 
                         self.path              =self.root_path + "["+datetime.datetime.now().ctime() +"] ["+self.tag_comment+"]"+'/'  
 
                     elif split_command[0]=='onetorque':
@@ -1228,6 +1228,7 @@ class Serial_Stm32f4(object):
                         self.test_torque        =split_command[1]
                         self.print_selection_setup(int(split_command[2]))
                         self.tag_comment        =line 
+                        self.tag_comment=self.tag_comment+' torque controller P=0.00001 I=0 PIMax=0.0005 Helix off, propdrive, Psi_ref=Psi_F' 
                         self.path                =self.root_path + "["+datetime.datetime.now().ctime() +"] ["+self.tag_comment+"]"+'/'  
                         #print "test_torque: " + self.test_torque + " print selection: "+split_command[2]
                         #raw_input("Enter comment: ") 
@@ -1265,6 +1266,7 @@ class Serial_Stm32f4(object):
                         #    self.tag_comment       =line#raw_input("Enter comment: ") 
                         self.path              =self.root_path + "["+datetime.datetime.now().ctime() +"] ["+self.tag_comment+"]"+'/'  
 
+                    self.tag_comment=self.tag_comment+' torque controller P=0.00001 I=0 PIMax=0.0005 Helix on'
 
                       
     def P_test(self):                                          

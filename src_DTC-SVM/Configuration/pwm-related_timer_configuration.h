@@ -27,7 +27,7 @@
 #define PWM_PERIOD_ARR              SYSFREQ/( PWMFREQ*(PRESCALE+1) )
 #define INIT_DUTY                                               0.5f
 #define PI                                                   3.1416f
-#define TICK_PERIOD                                   1.0f/PWMFREQ_F
+#define TICK_PERIOD                                   (1.0f/PWMFREQ_F)
 #define MYUINT_MAX                                         536870912
 #define t ticks/TICK_PERIOD
 
