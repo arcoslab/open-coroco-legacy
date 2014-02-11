@@ -525,13 +525,13 @@ class Serial_Stm32f4(object):
         elif self.print_selection==10:
             self.new_data_line= " P: %12.8f:"               %self.torque_P_speed              + \
                                 " I: %12.8f:"               %self.torque_I_speed              + extra_information
-        '''
-        elif self.print_selection==6:
-            self.new_data_line= "t: %6.2f "                  %self.time                + \
-                                " psis: %10.6f"              %self.psi_s               + \
-                                " psis_alpha: %6.2f"         %self.psi_s_alpha         + \
-                                " psis_ref: %10.8f"          %self.psi_s_reference       
-        '''
+        
+        elif self.print_selection==11:
+                self.new_data_line= "t: %6.2f "                  %self.time                + \
+                                    " psis: %10.6f"              %self.psi_s               + \
+                                    " psis_alpha: %6.2f"         %self.psi_s_alpha         + \
+                                    " psis_ref: %10.8f"          %self.psi_s_reference       
+        
 
     def save_data_to_csv_file(self):
         '''
@@ -586,7 +586,7 @@ class Serial_Stm32f4(object):
         #print "check_sum python: "+str(self.checksum_python)+" stm32: "+str(self.checksum_stm32)
 
         if self.transmition_error==False:      
-            print   self.new_data_line
+          print   self.new_data_line
         '''
         else :
             print   self.new_data_line + " transmition_error"

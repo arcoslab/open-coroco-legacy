@@ -250,7 +250,7 @@ void adc_isr(void)
     //collecting_data();
 
     collecting_floating_data();
-
+    colllecting_flux_linkage();
     //oscilloscope flag: end of DTC
     //gpio_clear(GPIOD, GPIO9);
 

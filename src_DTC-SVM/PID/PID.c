@@ -33,7 +33,7 @@
 */
 
 int pi_mode=0;
-
+bool collected_permission=false;
 /*
 float P_SENSORLESS      = 0.00001f; 
 float P_DOWN_SENSORLESS = 0.00001f; 
@@ -321,6 +321,9 @@ void frequency_input(void)
       
       if (strcmp(cmd, "d") == 0)
       {
+
+        collected_permission=true;
+
         //print_selection=0;
         regular_print=true;
         dtc_on=true;
@@ -403,6 +406,7 @@ void frequency_input(void)
 
       if (strcmp(cmd, "p") == 0)
       {
+        /*
         if      (value== 0)   {   print_selection= 0;  }   //print frequencies
         else if (value== 1)   {   print_selection= 1;  }   //print three-phase_currents
         else if (value== 2)   {   print_selection= 2;  }   //print quadrature and direct currents 
@@ -414,6 +418,8 @@ void frequency_input(void)
         else if (value== 8)   {   print_selection= 8;  }   //print Ud
         else if (value== 9)   {   print_selection= 9;  }   //print pi control and pi_max
         else if (value==10)   {   print_selection=10;  }   //print frequencies
+        */
+        print_selection=value;
      }
 
 

@@ -123,13 +123,17 @@ void sensorless_speed_pi_controller(
     if (frequency >-300.0f && frequency < 300.0f)  
       {*rotating_angle=*rotating_angle+pi_control_sensorless;}
 */
-
+/*
 if (w_r<100.0f&& reference_frequency!=0.0f) 
       *rotating_angle=*rotating_angle+0.0005f;
 
 
 else if (reference_frequency!=0.0f && w_r<200.0f)
       *rotating_angle=5.0f;//0.00000005;
+*/
+
+    if (reference_frequency>0.0f)
+        *rotating_angle=30.0f;//0.00000005;
 
 /*
   else if (reference_frequency==0.0f)

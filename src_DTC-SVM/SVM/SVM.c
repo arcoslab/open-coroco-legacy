@@ -27,7 +27,7 @@ float SVM_V_s_ref_D(float psi_s_ref, float psi_s, float psi_s_angle, float phase
 
   //catching_NaNs();
   //####catching_NaNs_data (psi_s_angle+phase_advance, fast_cos((psi_s_angle+phase_advance)), fast_cos(psi_s_angle));
-  return ( psi_s_ref*fast_cos((psi_s_angle+phase_advance)) - psi_s*fast_cos(psi_s_angle) )/T_s  +  i_sD*R_s;
+  return ( psi_s_ref*fast_cos((psi_s_angle+phase_advance)) - psi_s*fast_cos(psi_s_angle) )/T_s;//  +  i_sD*R_s;
 }
 
 float SVM_V_s_ref_Q(float psi_s_ref, float psi_s, float psi_s_angle, float phase_advance,float i_sQ, float R_s,float T_s)
@@ -39,7 +39,7 @@ float SVM_V_s_ref_Q(float psi_s_ref, float psi_s, float psi_s_angle, float phase
   //catching_NaNs();
   //##catching_NaNs_data (psi_s_angle+phase_advance, fast_sine((psi_s_angle+phase_advance)), fast_sine(psi_s_angle));
 
-  return ( psi_s_ref*fast_sine((psi_s_angle+phase_advance)) - psi_s*fast_sine(psi_s_angle) )/T_s  +  i_sQ*R_s;
+  return ( psi_s_ref*fast_sine((psi_s_angle+phase_advance)) - psi_s*fast_sine(psi_s_angle) )/T_s;//  +  i_sQ*R_s;
 }
 
 void SVM_Maximum_allowed_V_s_ref(float* V_s_ref,float U_d)

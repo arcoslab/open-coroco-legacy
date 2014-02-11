@@ -25,6 +25,27 @@ bool transmitting_to_python = false;
 
 #define COLLECTING_SPEED_DELAY 0
 
+float collected_psi_s_alpha_SVM[1000];
+int collected_pointer=0;
+
+bool serial_print_collected_data=false; 
+void colllecting_flux_linkage(void)
+{
+    if(collected_permission==true && collected_pointer<998)
+    { 
+        collected_psi_s_alpha_SVM[collected_pointer]=psi_s_alpha_SVM;
+        collected_pointer+=1;
+    }
+    else if (collected_permission==true && collected_pointer>=998)
+    {
+        collected_permission=false;
+        collected_pointer=0;
+        serial_print_collected_data=true;
+    }
+}
+
+
+
 void collecting_floating_data(void)
 {
 
@@ -376,8 +397,21 @@ void print_regular_data(void)
     catched_value_i_sQ                   
     catched_value_R_s                    
     catched_value_tick_period            
- */   
+ */
+/*   
+    if (serial_print_collected_data==true)
+    {
+        printf ("t");  checksum=         print_float_as_bytes(collected_pointer                   );
+        printf  ("O");  checksum=checksum+print_float_as_bytes(collected_psi_s_alpha_SVM[collected_pointer]);
+        collected_pointer+=1;
 
+        if (collected_permission==true && collected_pointer>=998)
+        {    
+            serial_print_collected_data=false;
+            collected_pointer=0;
+        }
+    }
+*/
     if      (print_selection==0)
     {
         //printf ("t")  ;  checksum=           print_float_as_bytes(fast_sine(1080.0f));//data_timer                   );
@@ -429,7 +463,7 @@ void print_regular_data(void)
         printf ("e")  ;  checksum=checksum  +print_float_as_bytes(data_w_r                     );
     }
     /*
-    else if (print_selection==4)
+    else if (print_selection==12)
         printf ("c")  ;  checksum=checksum  +print_float_as_bytes(data_cita_V_s                );
         printf ("R")  ;  checksum=checksum  +print_float_as_bytes(data_cita_V_s_relative_angle );
     }
@@ -444,15 +478,15 @@ void print_regular_data(void)
         //printf ("r")  ;  checksum=checksum  +print_float_as_bytes(data_ref_freq_SVM            );
         printf ("e")  ;  checksum=checksum  +print_float_as_bytes(data_w_r                     );
     }
-    /*
-    else if (print_selection==6)
+    
+    else if (print_selection==11)
     {
         printf ("t")  ;  checksum=           print_float_as_bytes(data_timer                   );
         printf ("L")  ;  checksum=checksum  +print_float_as_bytes(data_psi_s                   );
         printf ("O")  ;  checksum=checksum  +print_float_as_bytes(data_psi_s_alpha_SVM         );
         printf ("v")  ;  checksum=checksum  +print_float_as_bytes(data_psi_s_ref               );
     }
-    */
+    
     else if (print_selection==6)
     {
         printf ("t")  ;  checksum=           print_float_as_bytes(data_timer                   );
@@ -487,6 +521,8 @@ void print_regular_data(void)
         printf ("j")  ;  checksum=          +print_float_as_bytes(fake_P_SENSORLESS_TORQUE                  );
         //printf ("i")  ;  checksum=checksum  +print_float_as_bytes(fake_I_SENSORLESS_TORQUE                  );
     }
+
+
 
     printf ("k");
     printf ("%c", checksum);
