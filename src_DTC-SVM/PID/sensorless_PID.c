@@ -133,8 +133,9 @@ else if (reference_frequency!=0.0f && w_r<200.0f)
 */
 
     if (reference_frequency>0.0f)
-        *rotating_angle=30.0f;//0.00000005;
-
+        *rotating_angle=15.0f;//0.00000005;
+    else 
+        *rotating_angle=0.0f;
 /*
   else if (reference_frequency==0.0f)
     *rotating_angle=0.0005f;    

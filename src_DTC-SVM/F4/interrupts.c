@@ -119,6 +119,9 @@ if (center_aligned_state==FIRST_HALF)
 else 
 {
   DTC_SVM();
+
+  collecting_floating_data();
+  colllecting_flux_linkage();
 }
 
 }
@@ -176,8 +179,7 @@ void adc_isr(void)
 
     //collecting_data();
 
-    collecting_floating_data();
-    colllecting_flux_linkage();
+    
     //oscilloscope flag: end of DTC
     //gpio_clear(GPIOD, GPIO9);
 

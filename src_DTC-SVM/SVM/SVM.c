@@ -27,7 +27,7 @@ float SVM_V_s_ref_D(float psi_s_ref, float psi_s, float psi_s_angle, float phase
 
   //catching_NaNs();
   //####catching_NaNs_data (psi_s_angle+phase_advance, fast_cos((psi_s_angle+phase_advance)), fast_cos(psi_s_angle));
-  return ( psi_s_ref*fast_cos((psi_s_angle+phase_advance)) - psi_s*fast_cos(psi_s_angle) )/T_s;//  +  i_sD*R_s;
+  return ( psi_s_ref*fast_cos((psi_s_angle+phase_advance)) - psi_s*fast_cos(psi_s_angle) )/T_s  +  i_sD*R_s;
 }
 
 float SVM_V_s_ref_Q(float psi_s_ref, float psi_s, float psi_s_angle, float phase_advance,float i_sQ, float R_s,float T_s)
@@ -39,15 +39,29 @@ float SVM_V_s_ref_Q(float psi_s_ref, float psi_s, float psi_s_angle, float phase
   //catching_NaNs();
   //##catching_NaNs_data (psi_s_angle+phase_advance, fast_sine((psi_s_angle+phase_advance)), fast_sine(psi_s_angle));
 
-  return ( psi_s_ref*fast_sine((psi_s_angle+phase_advance)) - psi_s*fast_sine(psi_s_angle) )/T_s;//  +  i_sQ*R_s;
+  return ( psi_s_ref*fast_sine((psi_s_angle+phase_advance)) - psi_s*fast_sine(psi_s_angle) )/T_s  +  i_sQ*R_s;
 }
 
-void SVM_Maximum_allowed_V_s_ref(float* V_s_ref,float U_d)
+void SVM_Maximum_allowed_V_s_ref(float* VsD, float* VsQ,float* V_s_ref,float U_d)
 {
   //if   (*V_s_ref<=U_d/sqrtf(3.0f)) { *V_s_ref = *V_s_ref;       }
   //else                            { *V_s_ref = U_d/sqrtf(3.0f); }
-  if   (*V_s_ref<=U_d/1.73205080756887729352f) { *V_s_ref = *V_s_ref;       }
-  else                                         { *V_s_ref = U_d/1.73205080756887729352f; }
+
+  float voltage_magnitude = *V_s_ref; 
+
+  if   (*V_s_ref<=U_d/1.73205080756887729352f) { 
+                                                    *V_s_ref = *V_s_ref;
+                                                    *VsD     = *VsD;
+                                                    *VsQ     = *VsQ;
+                                               }
+
+  else                                         { 
+                                                  //shrinking quadrature and direct components in order to fit under the maximum circle
+                                                    *VsD     = *VsD * (U_d/1.73205080756887729352f) / voltage_magnitude;//(*V_s_ref); 
+                                                    *VsQ     = *VsQ * (U_d/1.73205080756887729352f) / voltage_magnitude;//(*V_s_ref);
+                                                  //adjusting the voltage magnitude to the value of the radious of the circule
+                                                     *V_s_ref = U_d/1.73205080756887729352f;  
+                                               }
 
 
 }
@@ -523,8 +537,8 @@ if (center_aligned_state==FIRST_HALF)
   //i_s      = vector_magnitude               (i_sQ,i_sD);
   //cita_i_s = vector_angle                   (i_sQ,i_sD);
 
-  psi_sD          = direct_stator_flux_linkage_estimator_psi_sD     (TICK_PERIOD,V_sD,i_sD,R_s);
-  psi_sQ          = quadrature_stator_flux_linkage_estimator_psi_sQ (TICK_PERIOD,V_sQ,i_sQ,R_s);
+  psi_sD          = direct_stator_flux_linkage_estimator_psi_sD     (2.0f*TICK_PERIOD,V_sD,i_sD,R_s);
+  psi_sQ          = quadrature_stator_flux_linkage_estimator_psi_sQ (2.0f*TICK_PERIOD,V_sQ,i_sQ,R_s);
 
 
   psi_s           = stator_flux_linkage_magnite_psi_s               (psi_sD,psi_sQ);
@@ -572,7 +586,7 @@ gpio_set(GPIOD, GPIO9);
   cita_V_s               = fast_vector_angle                (V_sQ,V_sD);
   V_s_ref_relative_angle = SVM_V_s_relative_angle      (cita_V_s);
                             //SVM_Maximum_allowed_V_s_ref (&V_s,U_d);   //maximum U_d
-			   SVM_Maximum_allowed_V_s_ref (&V_s,U_d*0.7f);
+			   SVM_Maximum_allowed_V_s_ref (&V_sD,&V_sQ,&V_s,U_d*0.7f);
 
 
 
@@ -593,6 +607,9 @@ gpio_set(GPIOD, GPIO9);
   //shutdown_SVM_torque (t_e_ref,t_e,&shutdown);
   SVM_voltage_switch_inverter_VSI ( duty_a,  duty_b,  duty_c,shutdown);
 gpio_clear(GPIOD, GPIO9);
+
+
+
 }
 
 

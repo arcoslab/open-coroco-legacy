@@ -21,7 +21,7 @@
 bool collecting_sensorless_data = true;
 bool transmitting_to_python = false;
 
-#define SAMPLES 300
+#define SAMPLES 3
 
 #define COLLECTING_SPEED_DELAY 0
 
@@ -853,9 +853,9 @@ void full_print_regular_data(void)
 void print_collected_data_buffer(char* checksum)
 {
         //printf ("t")  ;  *checksum=           print_float_as_bytes(collected_pointer                   );
-        printf ("r")  ;  *checksum=*checksum  +print_float_as_bytes(collected_ref_freq_SVM[collected_pointer]            );
-        printf ("e")  ;  *checksum=*checksum  +print_float_as_bytes(collected_w_r[collected_pointer]                     );
-        printf ("h")  ;  *checksum=*checksum  +print_float_as_bytes(collected_CUR_FREQ[collected_pointer]                );
+/*        printf ("r")  ;  *checksum=*checksum  +print_float_as_bytes(collected_ref_freq_SVM[collected_pointer]            );
+*/        printf ("e")  ;  *checksum=*checksum  +print_float_as_bytes(collected_w_r[collected_pointer]                     );
+/*        printf ("h")  ;  *checksum=*checksum  +print_float_as_bytes(collected_CUR_FREQ[collected_pointer]                );
 
         printf ("A")  ;  *checksum=*checksum  +print_float_as_bytes(collected_i_sA[collected_pointer]                    );
         printf ("B")  ;  *checksum=*checksum  +print_float_as_bytes(collected_i_sB[collected_pointer]                   );
@@ -879,12 +879,13 @@ void print_collected_data_buffer(char* checksum)
         printf ("L")  ;  *checksum=*checksum  +print_float_as_bytes(collected_psi_s[collected_pointer]                   );
         printf ("O")  ;  *checksum=*checksum  +print_float_as_bytes(collected_psi_s_alpha_SVM[collected_pointer]         );
         printf ("v")  ;  *checksum=*checksum  +print_float_as_bytes(collected_psi_s_ref[collected_pointer]               );
-
+/*
         printf ("u")  ;  *checksum=*checksum  +print_float_as_bytes(collected_t_e[collected_pointer]                     );
         printf ("y")  ;  *checksum=*checksum  +print_float_as_bytes(collected_t_e_ref[collected_pointer]                 );
 
         printf ("l")  ;  *checksum=*checksum  +print_float_as_bytes(collected_pi_control_SVM[collected_pointer]          );
         printf ("x")  ;  *checksum=*checksum  +print_float_as_bytes(pi_max                       );
+*/
 }
 
 

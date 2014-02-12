@@ -61,7 +61,7 @@ class Serial_Stm32f4(object):
         self.title_extra            = ''
 
         #test routine
-        self.max_test_time      = 298#100000#100000#50000#100000
+        self.max_test_time      = 10000#298#100000#100000#50000#100000
         self.min_test_time      = 300
         self.test_routine_state = 'initial'
         self.driving_test_state = 'initial'
@@ -528,9 +528,10 @@ class Serial_Stm32f4(object):
         
         elif self.print_selection==11:
                 self.new_data_line= "t: %6.2f "                  %self.time                + \
-                                    " psis: %10.6f"              %self.psi_s               + \
-                                    " psis_alpha: %6.2f"         %self.psi_s_alpha         + \
-                                    " psis_ref: %10.8f"          %self.psi_s_reference       
+                                    "frequency %6.2f"                 %self.electric_frequency
+                                    #" psis: %10.6f"              %self.psi_s               + \
+                                    #" psis_alpha: %6.2f"         %self.psi_s_alpha         + \
+                                    #" psis_ref: %10.8f"          %self.psi_s_reference       
         
 
     def save_data_to_csv_file(self):
