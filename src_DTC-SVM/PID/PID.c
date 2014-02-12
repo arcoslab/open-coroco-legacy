@@ -336,7 +336,7 @@ void frequency_input(void)
         }
         
         collecting_speed=true;
-        timer=0;
+        timer=1;
 
         pi_mode=0;  //speed pi controller
 

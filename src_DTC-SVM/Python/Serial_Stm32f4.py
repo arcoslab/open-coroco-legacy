@@ -54,6 +54,11 @@ class Serial_Stm32f4(object):
         self.various_counter     = 0
         self.type_of_test       = 0        
         self.exception          = 'N'
+        self.read_strings       =False
+
+        #debugging finite statemachine
+        self.start_debugging=False
+        self.debugging_state='initial'
 
         #plotting
         self.plotting_character     = ''
@@ -61,7 +66,7 @@ class Serial_Stm32f4(object):
         self.title_extra            = ''
 
         #test routine
-        self.max_test_time      = 10000#298#100000#100000#50000#100000
+        self.max_test_time      = 50000#298#100000#100000#50000#100000
         self.min_test_time      = 300
         self.test_routine_state = 'initial'
         self.driving_test_state = 'initial'
@@ -318,6 +323,76 @@ class Serial_Stm32f4(object):
                     return data
 
 
+
+    def read_data_from_stm32_strings(self):
+        bytes = 1
+        string=''
+        #info = ''   #info needs to be set before splitting it, otherwise pythons says it is uninitialized
+        single_character   = self.ser.read(bytes)
+        self.checksum_python=0
+        self.checksum_stm32=0
+        if(single_character == "X"):
+
+            while (single_character != "m"):
+                single_character = self.ser.read(bytes)
+                string+=single_character
+
+
+            split_string = string.split()
+            split_counter=0
+            
+
+
+            while split_counter<len(split_string) and len(split_string)>1: 
+                #print "split_string[split_counter]: " + split_string[split_counter] + " split_string[split_counter+1 ]: "+split_string[split_counter+1]
+                print split_counter
+                print split_counter+1
+                if   (split_string[split_counter]=='t'):   self.time                =float(split_string[split_counter+1])
+                elif (split_string[split_counter]=='r'):   self.reference_frequency =float(split_string[split_counter+1])
+                elif (split_string[split_counter]=='h'):   self.hall_frequency      =float(split_string[split_counter+1])
+                elif (split_string[split_counter]=='e'):   self.electric_frequency  =float(split_string[split_counter+1])
+
+ 
+                elif (split_string[split_counter]=='A'):   self.isA =float(split_string[split_counter+1])
+                elif (split_string[split_counter]=='B'):   self.isB =float(split_string[split_counter+1])
+                elif (split_string[split_counter]=='C'):   self.isC =float(split_string[split_counter+1])
+                elif (split_string[split_counter]=='D'):   self.isD =float(split_string[split_counter+1])
+                elif (split_string[split_counter]=='Q'):   self.isQ =float(split_string[split_counter+1])
+
+                elif (split_string[split_counter]=='d'):   self.VsD                =float(split_string[split_counter+1])
+                elif (split_string[split_counter]=='q'):   self.VsQ                =float(split_string[split_counter+1])
+                elif (split_string[split_counter]=='s'):   self.Vs                 =float(split_string[split_counter+1])
+                elif (split_string[split_counter]=='c'):   self.Vs_cita            =float(split_string[split_counter+1])
+                elif (split_string[split_counter]=='R'):   self.Vs_relative_cita   =float(split_string[split_counter+1])
+
+                elif (split_string[split_counter]=='p'):   self.psi_sD                =float(split_string[split_counter+1])
+                elif (split_string[split_counter]=='P'):   self.psi_sQ                =float(split_string[split_counter+1])
+                elif (split_string[split_counter]=='L'):   self.psi_s                 =float(split_string[split_counter+1])
+                elif (split_string[split_counter]=='O'):   self.psi_s_alpha           =float(split_string[split_counter+1])
+                elif (split_string[split_counter]=='v'):   self.psi_s_reference       =float(split_string[split_counter+1])  
+                                          
+                elif (split_string[split_counter]=='W'):   self.te                =float(split_string[split_counter+1])
+                elif (split_string[split_counter]=='y'):   self.te_ref            =float(split_string[split_counter+1])
+
+                elif (split_string[split_counter]=='U'):   self.Ud                =float(split_string[split_counter+1])
+                elif (split_string[split_counter]=='l'):   self.pi_control        =float(split_string[split_counter+1])
+                elif (split_string[split_counter]=='x'):   self.pi_max            =float(split_string[split_counter+1])
+                '''
+                elif (split_string[split_counter]=='1'):   self.data_1            =float(split_string[split_counter+1])
+                elif (split_string[split_counter]=='2'):   self.data_2            =float(split_string[split_counter+1])
+                elif (split_string[split_counter]=='3'):   self.data_3            =float(split_string[split_counter+1])
+                elif (split_string[split_counter]=='4'):   self.data_4            =float(split_string[split_counter+1])
+                elif (split_string[split_counter]=='5'):   self.data_5            =float(split_string[split_counter+1])
+                elif (split_string[split_counter]=='6'):   self.data_6            =float(split_string[split_counter+1])
+
+                elif (split_string[split_counter]=='K'):   self.P_speed            =float(split_string[split_counter+1])
+                elif (split_string[split_counter]=='I'):   self.I_speed            =float(split_string[split_counter+1])
+                elif (split_string[split_counter]=='j'):   self.torque_P_speed     =float(split_string[split_counter+1])
+                elif (split_string[split_counter]=='i'):   self.torque_I_speed     =float(split_string[split_counter+1])  
+                '''
+                split_counter+=1
+
+
     def read_data_from_stm32(self):
         bytes = 1
         #info = ''   #info needs to be set before splitting it, otherwise pythons says it is uninitialized
@@ -527,8 +602,31 @@ class Serial_Stm32f4(object):
                                 " I: %12.8f:"               %self.torque_I_speed              + extra_information
         
         elif self.print_selection==11:
-                self.new_data_line= "t: %6.2f "                  %self.time                + \
-                                    "frequency %6.2f"                 %self.electric_frequency
+                self.new_data_line= "t %6.2f "                  %self.time                      + \
+                                    " ref_freq %6.2f"           %self.reference_frequency   + \
+                                    " electric_frequency %6.2f" %self.electric_frequency    + \
+                                    " hall_freq %6.2f"          %self.hall_frequency        + \
+                                    " isA %6.2f"                %self.isA                   + \
+                                    " isB %6.2f"                %self.isB                   + \
+                                    " isC %6.2f"                %self.isC                   + \
+                                    " isD %6.2f"                %self.isD                   + \
+                                    " isQ %6.2f"                %self.isQ                   + \
+                                    " VsD %6.2f"                %self.VsD                   + \
+                                    " VsQ %6.2f"                %self.VsQ                   + \
+                                    " Vs %6.2f"                 %self.Vs                    + \
+                                    " Vs_cita %6.2f"            %self.Vs_cita               + \
+                                    " Vs_cita_relative %6.2f"   %self.Vs_relative_cita      + \
+                                    " psisD %10.8f"              %self.psi_sD               + \
+                                    " psisQ %10.8f"              %self.psi_sQ               + \
+                                    " psis %6.2f"               %self.psi_s                 + \
+                                    " psis_alpha %6.2f"         %self.psi_s_alpha           + \
+                                    " psis_ref %10.8f"           %self.psi_s_reference      + \
+                                    " te %6.2f"                 %self.te                    + \
+                                    " Ud %6.2f"                 %self.Ud                    + \
+                                    " pi_control %12.9f"         %self.pi_control           + \
+                                    " pi_max %10.6f"             %self.pi_max               
+                                    #"t: %6.2f "                  %self.time                + \
+                                    #"frequency %6.2f"                 %self.electric_frequency
                                     #" psis: %10.6f"              %self.psi_s               + \
                                     #" psis_alpha: %6.2f"         %self.psi_s_alpha         + \
                                     #" psis_ref: %10.8f"          %self.psi_s_reference       
@@ -818,7 +916,11 @@ class Serial_Stm32f4(object):
             plt.figure(num=9, figsize=plot_figsize, dpi=plot_dpi, facecolor=plot_face_color, edgecolor=plot_edge_color)
             self.plot_phase_advance                      (rows,columns,subplot_index)
             plt.savefig(plot_name+"phase_advance_pi"+".jpg")
-            plt.close()    
+            plt.close()  
+
+        elif self.print_selection==11:
+            self.plot_all_in_one()
+            self.plot_one_by_one()  
 
 
     def __init__(self):
@@ -840,7 +942,10 @@ class Serial_Stm32f4(object):
         	    	    		
 		
     def read(self): 
-            self.read_data_from_stm32()
+            if self.read_strings==True:
+                self.read_data_from_stm32_strings()
+            else:                
+                self.read_data_from_stm32()
                                         
             if self.capture_data==True and self.transmition_error==False:
                 
@@ -1134,142 +1239,7 @@ class Serial_Stm32f4(object):
         self.write_a_line( 'p '+str(selection) )              
 
 
-    def write(self):	
 
-         #finite state machines
-         self.P_test()
-         self.I_test()
-         self.testing_for_various_frequencies()
-         self.driving_tests_for_every_set_of_data()
-         self.testing_routine()
-
-         self.torque_driving_tests_for_every_set_of_data()
-         self.torque_testing_routine()
-         self.torque_P_test()
-         #if self.transmition_error: print "transmition_error"         
-
-
-         while sys.stdin in select.select([sys.stdin], [], [], 0)[0]:	#read from standart input if there is something, otherwise not 
-            line = sys.stdin.readline()     #you must press enter before typing the new command
-            if line:
-                line=raw_input("Enter new command: ")   #the printing of the stm32f4 data is stopped until you type a new reference
-                if line:
-                    #print "line captured in the first while: " + line
-                    #raw_input("Enter enter if you want to live: ")
-                    split_command = line.split()
-
-                    #updating reference frequency
-                    if     split_command[0]=='d':
-                        self.write_a_line(line)
-
-                    #updating reference torque
-                    elif     split_command[0]=='Q':
-                        self.write_a_line(line)
-                    
-                    #capturing data into csv
-                    elif   split_command[0]=='c':
-                        self.write_a_line(line)
-                        self.capturing_data()
-                        self.tag_comment       =line#raw_input("Enter comment: ") 
-
-                    elif split_command[0]=='f':
-                        self.end_capturing_data()
-
-                    #selecting what to print
-                    elif split_command[0]=='p':
-                        #self.capture_data=False
-                        #self.print_selection=int(split_command[1])     
-                        #self.write_a_line(line)
-                        self.print_selection_setup(int(split_command[1]))
-
-                    elif split_command[0]=='t':
-                        
-                        self.start_driving_test=True;
-                        self.test_frequency    =split_command[1]
-                        self.tag_comment       =line#raw_input("Enter comment: ") 
-                        self.path              =self.root_path + "["+datetime.datetime.now().ctime() +"] ["+self.tag_comment+"]"+'/'  
-                        self.title_extra=''
-
-                    elif split_command[0]=='ttorque':
-                        
-                        self.torque_start_driving_test=True;
-                        self.test_torque              =split_command[1]
-                        self.tag_comment              =line 
-                        self.path                     =self.root_path + "["+datetime.datetime.now().ctime() +"] ["+self.tag_comment+"]"+'/'  
-                        self.title_extra=''
-
-                    elif split_command[0]=='va':
-                        
-                        self.start_various_test=True;
-                        #self.test_frequency    =split_command[1]
-                        self.type_of_test      =int(split_command[1])
-                        self.tag_comment       =line#raw_input("Enter comment: ") 
-                        self.path              =self.root_path + "["+datetime.datetime.now().ctime() +"] ["+self.tag_comment+"]"+'/'  
-
-                    elif split_command[0]=='all':
-                        
-                        self.start_test=True;
-                        self.print_selection_setup(9)
-                        self.test_frequency    =split_command[1]
-                        self.tag_comment       =line#raw_input("Enter comment: ") 
-                        self.path              =self.root_path + "["+datetime.datetime.now().ctime() +"] ["+self.tag_comment+"]"+'/'  
-
-
-                    elif split_command[0]=='one':
-                        
-                        self.start_test=True;
-                        self.print_selection_setup(int(split_command[2]))
-                        self.test_frequency    =split_command[1]
-                        self.tag_comment       =line+'  0.0005 rotating angle increment'#raw_input("Enter comment: ") 
-                        self.path              =self.root_path + "["+datetime.datetime.now().ctime() +"] ["+self.tag_comment+"]"+'/'  
-
-                    elif split_command[0]=='onetorque':
-                        
-                        self.torque_start_test  =True;
-                        self.test_torque        =split_command[1]
-                        self.print_selection_setup(int(split_command[2]))
-                        self.tag_comment        =line 
-                        self.tag_comment=self.tag_comment+' torque controller P=0.00001 I=0 PIMax=0.0005 Helix off, propdrive, Psi_ref=Psi_F' 
-                        self.path                =self.root_path + "["+datetime.datetime.now().ctime() +"] ["+self.tag_comment+"]"+'/'  
-                        #print "test_torque: " + self.test_torque + " print selection: "+split_command[2]
-                        #raw_input("Enter comment: ") 
-
-                    
-                    elif split_command[0]=='pp':
-                        
-                        #self.start_test=True;
-                        self.start_P_test=True
-                        self.print_selection_setup(8)
-                        self.test_frequency    =split_command[1]
-                        self.tag_comment       =line
-                        #if (len(split_command)>=3): 
-                        #    self.tag_comment       =line#raw_input("Enter comment: ") 
-                        self.path              =self.root_path + "["+datetime.datetime.now().ctime() +"] ["+self.tag_comment+"]"+'/'  
-
-                    elif split_command[0]=='pi':
-                        
-                        #self.start_test=True;
-                        self.start_I_test=True
-                        self.print_selection_setup(10)
-                        self.test_frequency    =split_command[1]
-                        self.tag_comment       =line
-                        self.path              =self.root_path + "["+datetime.datetime.now().ctime() +"] ["+self.tag_comment+"]"+'/'  
-
-
-                    elif split_command[0]=='ptorque':
-                        
-                        #self.start_test=True;
-                        self.torque_start_P_test=True
-                        self.print_selection_setup(10)
-                        self.test_torque    =split_command[1]
-                        self.tag_comment       =line
-                        #if (len(split_command)>=3): 
-                        #    self.tag_comment       =line#raw_input("Enter comment: ") 
-                        self.path              =self.root_path + "["+datetime.datetime.now().ctime() +"] ["+self.tag_comment+"]"+'/'  
-
-                    self.tag_comment=self.tag_comment+' torque controller P=0.00001 I=0 PIMax=0.0005 Helix on'
-
-                      
     def P_test(self):                                          
 
         '''
@@ -1505,4 +1475,172 @@ class Serial_Stm32f4(object):
 
        
         
+
+
+
+
+
+    def write(self):	
+
+         #finite state machines
+         self.debug_code()
+         self.P_test()
+         self.I_test()
+         self.testing_for_various_frequencies()
+         self.driving_tests_for_every_set_of_data()
+         self.testing_routine()
+
+         self.torque_driving_tests_for_every_set_of_data()
+         self.torque_testing_routine()
+         self.torque_P_test()
+         #if self.transmition_error: print "transmition_error"         
+
+
+         while sys.stdin in select.select([sys.stdin], [], [], 0)[0]:	#read from standart input if there is something, otherwise not 
+            line = sys.stdin.readline()     #you must press enter before typing the new command
+            if line:
+                line=raw_input("Enter new command: ")   #the printing of the stm32f4 data is stopped until you type a new reference
+                if line:
+                    #print "line captured in the first while: " + line
+                    #raw_input("Enter enter if you want to live: ")
+                    split_command = line.split()
+
+                    #updating reference frequency
+                    if     split_command[0]=='d':
+                        self.write_a_line(line)
+
+                    #updating reference torque
+                    elif     split_command[0]=='Q':
+                        self.write_a_line(line)
+                    
+                    #capturing data into csv
+                    elif   split_command[0]=='c':
+                        self.write_a_line(line)
+                        self.capturing_data()
+                        self.tag_comment       =line#raw_input("Enter comment: ") 
+
+                    elif split_command[0]=='f':
+                        self.end_capturing_data()
+
+                    #selecting what to print
+                    elif split_command[0]=='p':
+                        #self.capture_data=False
+                        #self.print_selection=int(split_command[1])     
+                        #self.write_a_line(line)
+                        self.print_selection_setup(int(split_command[1]))
+
+                    elif split_command[0]=='t':
+                        
+                        self.start_driving_test=True;
+                        self.test_frequency    =split_command[1]
+                        self.tag_comment       =line#raw_input("Enter comment: ") 
+                        self.path              =self.root_path + "["+datetime.datetime.now().ctime() +"] ["+self.tag_comment+"]"+'/'  
+                        self.title_extra=''
+
+                    elif split_command[0]=='ttorque':
+                        
+                        self.torque_start_driving_test=True;
+                        self.test_torque              =split_command[1]
+                        self.tag_comment              =line 
+                        self.path                     =self.root_path + "["+datetime.datetime.now().ctime() +"] ["+self.tag_comment+"]"+'/'  
+                        self.title_extra=''
+
+                    elif split_command[0]=='va':
+                        
+                        self.start_various_test=True;
+                        #self.test_frequency    =split_command[1]
+                        self.type_of_test      =int(split_command[1])
+                        self.tag_comment       =line#raw_input("Enter comment: ") 
+                        self.path              =self.root_path + "["+datetime.datetime.now().ctime() +"] ["+self.tag_comment+"]"+'/'  
+
+                    elif split_command[0]=='all':
+                        
+                        self.start_test=True;
+                        self.print_selection_setup(9)
+                        self.test_frequency    =split_command[1]
+                        self.tag_comment       =line#raw_input("Enter comment: ") 
+                        self.path              =self.root_path + "["+datetime.datetime.now().ctime() +"] ["+self.tag_comment+"]"+'/'  
+
+
+                    elif split_command[0]=='one':
+                        
+                        self.start_test=True;
+                        self.print_selection_setup(int(split_command[2]))
+                        self.test_frequency    =split_command[1]
+                        self.tag_comment       =line+'  0.0005 rotating angle increment'#raw_input("Enter comment: ") 
+                        self.path              =self.root_path + "["+datetime.datetime.now().ctime() +"] ["+self.tag_comment+"]"+'/'  
+
+                    elif split_command[0]=='onetorque':
+                        
+                        self.torque_start_test  =True;
+                        self.test_torque        =split_command[1]
+                        self.print_selection_setup(int(split_command[2]))
+                        self.tag_comment        =line 
+                        self.tag_comment=self.tag_comment+' torque controller P=0.00001 I=0 PIMax=0.0005 Helix off, propdrive, Psi_ref=Psi_F' 
+                        self.path                =self.root_path + "["+datetime.datetime.now().ctime() +"] ["+self.tag_comment+"]"+'/'  
+                        #print "test_torque: " + self.test_torque + " print selection: "+split_command[2]
+                        #raw_input("Enter comment: ") 
+
+                    
+                    elif split_command[0]=='pp':
+                        
+                        #self.start_test=True;
+                        self.start_P_test=True
+                        self.print_selection_setup(8)
+                        self.test_frequency    =split_command[1]
+                        self.tag_comment       =line
+                        #if (len(split_command)>=3): 
+                        #    self.tag_comment       =line#raw_input("Enter comment: ") 
+                        self.path              =self.root_path + "["+datetime.datetime.now().ctime() +"] ["+self.tag_comment+"]"+'/'  
+
+                    elif split_command[0]=='pi':
+                        
+                        #self.start_test=True;
+                        self.start_I_test=True
+                        self.print_selection_setup(10)
+                        self.test_frequency    =split_command[1]
+                        self.tag_comment       =line
+                        self.path              =self.root_path + "["+datetime.datetime.now().ctime() +"] ["+self.tag_comment+"]"+'/'  
+
+
+                    elif split_command[0]=='ptorque':
+                        
+                        #self.start_test=True;
+                        self.torque_start_P_test=True
+                        self.print_selection_setup(10)
+                        self.test_torque    =split_command[1]
+                        self.tag_comment       =line
+                        #if (len(split_command)>=3): 
+                        #    self.tag_comment       =line#raw_input("Enter comment: ") 
+                        self.path              =self.root_path + "["+datetime.datetime.now().ctime() +"] ["+self.tag_comment+"]"+'/'  
+
+                    elif split_command[0]=='debug':
+                        self.start_debugging=True
+                        self.read_strings=True
+                        self.print_selection_setup(11)
+                        #self.change_frequency (split_command[1])
+                        self.write_a_line('d 1')                  
+                        self.tag_comment       =line
+                        self.path              =self.root_path + "["+datetime.datetime.now().ctime() +"] ["+self.tag_comment+"]"+'/'
+
+                    self.tag_comment=self.tag_comment+' debuggin SVM algorithm'
+
+
+    def debug_code(self):
+        
+        if self.start_debugging==True and self.time !=1 and self.debugging_state=='initial':
+            self.write_a_line('d 1') 
+            self.debugging_state='initial'
+     
+
+        elif self.start_debugging==True and self.time ==1 and self.debugging_state=='initial':
+            self.capturing_data()         
+            self.debugging_state='debugging'
+
+        elif self.debugging_state=='debugging' and self.time>=497: 
+            self.end_capturing_data()
+            self.debugging_state='initial'
+            self.start_debugging=False
+            self.read_strings=False 
+                      
 

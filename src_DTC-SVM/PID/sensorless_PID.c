@@ -354,7 +354,7 @@ if (reference_torque == 0)
     increment=0.0f;
     
 
-#define W_CUTOFF_TORQUE 100.0f
+//#define W_CUTOFF_TORQUE 100.0f
     //*rotating_angle=(*rotating_angle+pi_control_sensorless)/(1.0f+switching_frequency*W_CUTOFF_TORQUE);
     
 
