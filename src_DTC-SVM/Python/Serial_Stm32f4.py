@@ -50,6 +50,7 @@ class Serial_Stm32f4(object):
         self.new_data_line      = ''
         self.read_capture_state = 'not_collecting'
         self.tag_comment        = ''
+        self.aditional_comment=' debuggin SVM algorithm,psi_F=0.0005f, variable Ud and currents'
         self.driving_counter    = 0
         self.various_counter     = 0
         self.type_of_test       = 0        
@@ -818,42 +819,42 @@ class Serial_Stm32f4(object):
                         columns = 1 
                         subplot_index = 1
                                               
-                        plt.figure(num=2, figsize=(20, 20), dpi=300, facecolor='w', edgecolor='k') 
+                        plt.figure(num=2, figsize=(10, 10), dpi=300, facecolor='w', edgecolor='k') 
                         self.plot_frequencies                   (rows,columns,subplot_index)
                         plt.savefig(self.path+datetime.datetime.now().ctime()+"."+self.tag_comment+"._frequencies" +".jpg")
                         plt.close()
 
-                        plt.figure(num=3, figsize=(20, 20), dpi=300, facecolor='w', edgecolor='k') 
+                        plt.figure(num=3, figsize=(10, 10), dpi=300, facecolor='w', edgecolor='k') 
                         self.plot_three_phase_currents          (rows,columns,subplot_index)
                         plt.savefig(self.path+ "three-phase_currents" +"." + datetime.datetime.now().ctime() +self.tag_comment+".jpg")
                         plt.close()
 
-                        plt.figure(num=4, figsize=(20, 20), dpi=300, facecolor='w', edgecolor='k') 
+                        plt.figure(num=4, figsize=(10, 10), dpi=300, facecolor='w', edgecolor='k') 
                         self.plot_quadrature_vs_direct_currents (rows,columns,subplot_index)
                         plt.savefig(self.path+ "isQ_vs_isD" +"." + datetime.datetime.now().ctime() +self.tag_comment+".jpg")
                         plt.close()
 
-                        plt.figure(num=5, figsize=(20, 20), dpi=300, facecolor='w', edgecolor='k')
+                        plt.figure(num=5, figsize=(10, 10), dpi=300, facecolor='w', edgecolor='k')
                         self.plot_quadrature_vs_direct_voltages (rows,columns,subplot_index)
                         plt.savefig(self.path+ "VsQ_vs_VsD" +"." + datetime.datetime.now().ctime() +self.tag_comment+".jpg")
                         plt.close()
 
-                        plt.figure(num=6, figsize=(20, 20), dpi=300, facecolor='w', edgecolor='k')
+                        plt.figure(num=6, figsize=(10, 10), dpi=300, facecolor='w', edgecolor='k')
                         self.plot_voltage_magnitude             (rows,columns,subplot_index)
                         plt.savefig(self.path+ "voltage_magnitude" +"." + datetime.datetime.now().ctime() +self.tag_comment+".jpg")
                         plt.close()
                
-                        plt.figure(num=7, figsize=(20, 20), dpi=300, facecolor='w', edgecolor='k')
+                        plt.figure(num=7, figsize=(10, 10), dpi=300, facecolor='w', edgecolor='k')
                         self.plot_flux_linkage                       (rows,columns,subplot_index)
                         plt.savefig(self.path+ "flux-linkage" +"." + datetime.datetime.now().ctime() +self.tag_comment+".jpg")
                         plt.close()
 
-                        plt.figure(num=8, figsize=(20, 20), dpi=300, facecolor='w', edgecolor='k')
+                        plt.figure(num=8, figsize=(10, 10), dpi=300, facecolor='w', edgecolor='k')
                         self.plot_electromagnetic_torque             (rows,columns,subplot_index)
                         plt.savefig(self.path+ "electromagnetic_torque" +"." + datetime.datetime.now().ctime() +self.tag_comment+".jpg")
                         plt.close()
 
-                        plt.figure(num=9, figsize=(20, 20), dpi=300, facecolor='w', edgecolor='k')
+                        plt.figure(num=9, figsize=(10, 10), dpi=300, facecolor='w', edgecolor='k')
                         self.plot_phase_advance                      (rows,columns,subplot_index)
                         plt.savefig(self.path+ "phase_advance_pi" +"." + datetime.datetime.now().ctime() +self.tag_comment+".jpg")
                         plt.close()
@@ -1517,7 +1518,7 @@ class Serial_Stm32f4(object):
                     elif   split_command[0]=='c':
                         self.write_a_line(line)
                         self.capturing_data()
-                        self.tag_comment       =line#raw_input("Enter comment: ") 
+                        self.tag_comment       =line+self.aditional_comment#raw_input("Enter comment: ") 
 
                     elif split_command[0]=='f':
                         self.end_capturing_data()
@@ -1533,7 +1534,7 @@ class Serial_Stm32f4(object):
                         
                         self.start_driving_test=True;
                         self.test_frequency    =split_command[1]
-                        self.tag_comment       =line#raw_input("Enter comment: ") 
+                        self.tag_comment       =line+self.aditional_comment#raw_input("Enter comment: ") 
                         self.path              =self.root_path + "["+datetime.datetime.now().ctime() +"] ["+self.tag_comment+"]"+'/'  
                         self.title_extra=''
 
@@ -1541,7 +1542,7 @@ class Serial_Stm32f4(object):
                         
                         self.torque_start_driving_test=True;
                         self.test_torque              =split_command[1]
-                        self.tag_comment              =line 
+                        self.tag_comment              =line+self.aditional_comment 
                         self.path                     =self.root_path + "["+datetime.datetime.now().ctime() +"] ["+self.tag_comment+"]"+'/'  
                         self.title_extra=''
 
@@ -1550,7 +1551,7 @@ class Serial_Stm32f4(object):
                         self.start_various_test=True;
                         #self.test_frequency    =split_command[1]
                         self.type_of_test      =int(split_command[1])
-                        self.tag_comment       =line#raw_input("Enter comment: ") 
+                        self.tag_comment       =line+self.aditional_comment#raw_input("Enter comment: ") 
                         self.path              =self.root_path + "["+datetime.datetime.now().ctime() +"] ["+self.tag_comment+"]"+'/'  
 
                     elif split_command[0]=='all':
@@ -1558,7 +1559,7 @@ class Serial_Stm32f4(object):
                         self.start_test=True;
                         self.print_selection_setup(9)
                         self.test_frequency    =split_command[1]
-                        self.tag_comment       =line#raw_input("Enter comment: ") 
+                        self.tag_comment       =line+self.aditional_comment#raw_input("Enter comment: ") 
                         self.path              =self.root_path + "["+datetime.datetime.now().ctime() +"] ["+self.tag_comment+"]"+'/'  
 
 
@@ -1567,7 +1568,7 @@ class Serial_Stm32f4(object):
                         self.start_test=True;
                         self.print_selection_setup(int(split_command[2]))
                         self.test_frequency    =split_command[1]
-                        self.tag_comment       =line+'  0.0005 rotating angle increment'#raw_input("Enter comment: ") 
+                        self.tag_comment       =line+self.aditional_comment#raw_input("Enter comment: ") 
                         self.path              =self.root_path + "["+datetime.datetime.now().ctime() +"] ["+self.tag_comment+"]"+'/'  
 
                     elif split_command[0]=='onetorque':
@@ -1575,8 +1576,8 @@ class Serial_Stm32f4(object):
                         self.torque_start_test  =True;
                         self.test_torque        =split_command[1]
                         self.print_selection_setup(int(split_command[2]))
-                        self.tag_comment        =line 
-                        self.tag_comment=self.tag_comment+' torque controller P=0.00001 I=0 PIMax=0.0005 Helix off, propdrive, Psi_ref=Psi_F' 
+                        self.tag_comment        =line+self.aditional_comment 
+                        
                         self.path                =self.root_path + "["+datetime.datetime.now().ctime() +"] ["+self.tag_comment+"]"+'/'  
                         #print "test_torque: " + self.test_torque + " print selection: "+split_command[2]
                         #raw_input("Enter comment: ") 
@@ -1588,7 +1589,7 @@ class Serial_Stm32f4(object):
                         self.start_P_test=True
                         self.print_selection_setup(8)
                         self.test_frequency    =split_command[1]
-                        self.tag_comment       =line
+                        self.tag_comment       =line+self.aditional_comment
                         #if (len(split_command)>=3): 
                         #    self.tag_comment       =line#raw_input("Enter comment: ") 
                         self.path              =self.root_path + "["+datetime.datetime.now().ctime() +"] ["+self.tag_comment+"]"+'/'  
@@ -1599,7 +1600,7 @@ class Serial_Stm32f4(object):
                         self.start_I_test=True
                         self.print_selection_setup(10)
                         self.test_frequency    =split_command[1]
-                        self.tag_comment       =line
+                        self.tag_comment       =line+self.aditional_comment
                         self.path              =self.root_path + "["+datetime.datetime.now().ctime() +"] ["+self.tag_comment+"]"+'/'  
 
 
@@ -1609,7 +1610,7 @@ class Serial_Stm32f4(object):
                         self.torque_start_P_test=True
                         self.print_selection_setup(10)
                         self.test_torque    =split_command[1]
-                        self.tag_comment       =line
+                        self.tag_comment       =line+self.aditional_comment
                         #if (len(split_command)>=3): 
                         #    self.tag_comment       =line#raw_input("Enter comment: ") 
                         self.path              =self.root_path + "["+datetime.datetime.now().ctime() +"] ["+self.tag_comment+"]"+'/'  
@@ -1620,10 +1621,10 @@ class Serial_Stm32f4(object):
                         self.print_selection_setup(11)
                         #self.change_frequency (split_command[1])
                         self.write_a_line('d 1')                  
-                        self.tag_comment       =line
+                        self.tag_comment       =line+self.aditional_comment
                         self.path              =self.root_path + "["+datetime.datetime.now().ctime() +"] ["+self.tag_comment+"]"+'/'
 
-                    self.tag_comment=self.tag_comment+' debuggin SVM algorithm'
+                    
 
 
     def debug_code(self):

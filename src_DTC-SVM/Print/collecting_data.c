@@ -156,7 +156,7 @@ void collecting_collected_in_buffer (void)
         collected_V_sQ[collected_pointer]=V_sQ;
         collected_V_s [collected_pointer]=V_s;
         collected_cita_V_s[collected_pointer]=cita_V_s;
-        collected_cita_V_s_relative_angle[collected_pointer]=cita_V_s;
+        collected_cita_V_s_relative_angle[collected_pointer]=V_s_ref_relative_angle ;
 
         collected_psi_sD[collected_pointer]=psi_sD;
         collected_psi_sQ[collected_pointer]=psi_sQ;
