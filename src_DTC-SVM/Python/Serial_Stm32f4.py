@@ -50,7 +50,7 @@ class Serial_Stm32f4(object):
         self.new_data_line      = ''
         self.read_capture_state = 'not_collecting'
         self.tag_comment        = ''
-        self.aditional_comment=' debuggin SVM algorithm,psi_F=0.0005f, variable Ud and currents'
+        self.aditional_comment=' torque controller, psi_ref=Psi_F=0.0016, Ud=70%, wcutoff=1000, P=4, PIMAX=40,'
         self.driving_counter    = 0
         self.various_counter     = 0
         self.type_of_test       = 0        
@@ -67,7 +67,7 @@ class Serial_Stm32f4(object):
         self.title_extra            = ''
 
         #test routine
-        self.max_test_time      = 50000#298#100000#100000#50000#100000
+        self.max_test_time      = 200000#298#100000#100000#50000#100000
         self.min_test_time      = 300
         self.test_routine_state = 'initial'
         self.driving_test_state = 'initial'
@@ -979,6 +979,10 @@ class Serial_Stm32f4(object):
         line = 'd 0' 
         self.write_a_line(line)
 
+    def break_the_motor_torque(self):
+        line = 'Q 0' 
+        self.write_a_line(line)
+
     def change_frequency (self, frequency):
         line='d '+ frequency
         #print "change_frequency :::: new frequency to test: " + frequency
@@ -1092,13 +1096,13 @@ class Serial_Stm32f4(object):
         if   (self.torque_test_routine_state=='initial' and 
               self.torque_start_test==True                      ): 
  
-            self.break_the_motor()
+            self.break_the_motor_torque()
             self.torque_test_routine_state='changing_frequency_reference'#'breaking'
 
 
         elif   (self.torque_test_routine_state=='breaking' and 
                self.electric_frequency>2.0               ): 
-            self.break_the_motor()
+            self.break_the_motor_torque()
             self.torque_test_routine_state='breaking'
 
  
@@ -1129,7 +1133,7 @@ class Serial_Stm32f4(object):
         elif (  self.torque_test_routine_state=='changing_frequency'                   and 
                 self.transmition_error ==              False                    and 
                 self.time>=self.max_test_time                                       ):
-            self.break_the_motor();
+            self.break_the_motor_torque();
             self.end_capturing_data()
             self.torque_test_routine_state='stopping_the_motor'
 
