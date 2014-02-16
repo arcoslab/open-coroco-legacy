@@ -35,7 +35,7 @@ class Serial_Stm32f4(object):
     def initializing_values(self):
 
         #pyserial configuration
-        self.root_path           = "/home/tumacher/local/src/repositories/arcoslab/open-coroco/src_DTC-SVM/Python/measures/"
+        self.root_path           = "/home/tumacher/local/src/repositories/arcoslab/light-open-coroco/open-coroco/src_DTC-SVM/Python/measures/"
         self.dev_type       ="/dev/ttyACM"
         self.serial_speed   =115200
         self.serial_timeout =1
@@ -50,7 +50,7 @@ class Serial_Stm32f4(object):
         self.new_data_line      = ''
         self.read_capture_state = 'not_collecting'
         self.tag_comment        = ''
-        self.aditional_comment=' torque controller, psi_ref=Psi_F=0.0016, Ud=70%, wcutoff=1000, P=4, PIMAX=40,'
+        self.aditional_comment=' ntm_motor, torque controller, psi_ref=Psi_F=0.0014, Ud=70%,actual Ud and currents, wcutoff=2000, load angle=15deg'
         self.driving_counter    = 0
         self.various_counter     = 0
         self.type_of_test       = 0        
@@ -67,7 +67,7 @@ class Serial_Stm32f4(object):
         self.title_extra            = ''
 
         #test routine
-        self.max_test_time      = 200000#298#100000#100000#50000#100000
+        self.max_test_time      = 50000#298#100000#100000#50000#100000
         self.min_test_time      = 300
         self.test_routine_state = 'initial'
         self.driving_test_state = 'initial'
@@ -700,7 +700,7 @@ class Serial_Stm32f4(object):
     def plot_frequencies(self,rows,columns,subplot_index):
                         plt.subplot(rows,columns,subplot_index)
                         plt.plot(self.time_vector,self.electric_frequency_vector ,self.plotting_character,label='electric')
-                        #plt.plot(self.time_vector,self.hall_frequency_vector     ,self.plotting_character,label='hall'     )
+                        plt.plot(self.time_vector,self.hall_frequency_vector     ,self.plotting_character,label='hall'     )
                         plt.plot(self.time_vector,self.reference_frequency_vector,self.plotting_character,label='reference')                     
                         plt.title('frequency vs time'+self.title_extra)
                         plt.xlabel('time (ticks)')
@@ -719,7 +719,7 @@ class Serial_Stm32f4(object):
 
     def plot_quadrature_vs_direct_currents(self,rows,columns,subplot_index):
                         plt.subplot(rows,columns,subplot_index)
-                        plt.plot(self.isD_vector, self.isQ_vector,self.plotting_character)
+                        plt.plot(self.isD_vector, self.isQ_vector,self.plotting_character_0)
                         plt.title ('isQ vs isD'+self.title_extra)
                         plt.xlabel('isD (A)')
                         plt.ylabel('isQ (A)')
@@ -727,7 +727,7 @@ class Serial_Stm32f4(object):
 
     def plot_quadrature_vs_direct_voltages(self,rows,columns,subplot_index):
                         plt.subplot(rows,columns,subplot_index)
-                        plt.plot(self.VsD_vector, self.VsQ_vector,self.plotting_character)
+                        plt.plot(self.VsD_vector, self.VsQ_vector,self.plotting_character_0)
                         plt.title('VsQ vs VsD'+self.title_extra)
                         plt.xlabel('VsD (A)')
                         plt.ylabel('VsQ (A)')
@@ -1103,6 +1103,9 @@ class Serial_Stm32f4(object):
         elif   (self.torque_test_routine_state=='breaking' and 
                self.electric_frequency>2.0               ): 
             self.break_the_motor_torque()
+            self.break_the_motor_torque()
+            self.break_the_motor_torque()
+            self.break_the_motor_torque()
             self.torque_test_routine_state='breaking'
 
  
@@ -1110,7 +1113,10 @@ class Serial_Stm32f4(object):
                 self.transmition_error ==False      and 
                 self.electric_frequency<4.0            ):
 
-           self.change_torque(self.test_torque)    #######################################**********************
+           self.change_torque(self.test_torque)
+           self.change_torque(self.test_torque)
+           self.change_torque(self.test_torque)
+           self.change_torque(self.test_torque)
            self.capturing_data()
            self.torque_test_routine_state='changing_frequency_reference'
            
@@ -1118,6 +1124,9 @@ class Serial_Stm32f4(object):
                 self.transmition_error ==False                and 
                 self.time>self.min_test_time):#self.reference_frequency!=float(self.test_frequency) ):
            self.change_torque(self.test_torque)   #######################################********************
+           self.change_torque(self.test_torque)
+           self.change_torque(self.test_torque)
+           self.change_torque(self.test_torque) 
            self.capturing_data()
            self.torque_test_routine_state='changing_frequency_reference'
            
@@ -1126,6 +1135,9 @@ class Serial_Stm32f4(object):
                 self.transmition_error ==False                and 
                 self.time<self.min_test_time):#self.reference_frequency!=float(self.test_frequency) ):
 
+           self.change_torque(self.test_torque)
+           self.change_torque(self.test_torque)
+           self.change_torque(self.test_torque)
            self.change_torque(self.test_torque) #################################********************
            self.capturing_data()
            self.torque_test_routine_state='changing_frequency'
@@ -1133,7 +1145,10 @@ class Serial_Stm32f4(object):
         elif (  self.torque_test_routine_state=='changing_frequency'                   and 
                 self.transmition_error ==              False                    and 
                 self.time>=self.max_test_time                                       ):
-            self.break_the_motor_torque();
+            self.break_the_motor_torque()
+            self.break_the_motor_torque()
+            self.break_the_motor_torque()
+            self.break_the_motor_torque()
             self.end_capturing_data()
             self.torque_test_routine_state='stopping_the_motor'
 
@@ -1634,7 +1649,7 @@ class Serial_Stm32f4(object):
     def debug_code(self):
         
         if self.start_debugging==True and self.time !=1 and self.debugging_state=='initial':
-            self.write_a_line('d 1') 
+            self.write_a_line('Q 1') 
             self.debugging_state='initial'
      
 

@@ -344,6 +344,8 @@ void frequency_input(void)
 
       if (strcmp(cmd, "Q") == 0)
       {
+        collected_permission=true;
+        timer=1;
         //print_selection=0;
         regular_print=true;
         dtc_on=true;

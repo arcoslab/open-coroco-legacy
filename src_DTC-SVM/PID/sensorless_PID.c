@@ -286,8 +286,11 @@ void sensorless_torque_pi_controller(
     
   }
 */
-  *rotating_angle=pi_control_sensorless;//(*rotating_angle+pi_control_sensorless)/(1.0f+switching_frequency*W_CUTOFF_TORQUE);
-    
+  if (reference_torque!=0)
+    *rotating_angle=15.0f;//pi_control_sensorless;//(*rotating_angle+pi_control_sensorless)/(1.0f+switching_frequency*W_CUTOFF_TORQUE);
+  
+  else 
+    *rotating_angle=0.0f;
 
 
 
