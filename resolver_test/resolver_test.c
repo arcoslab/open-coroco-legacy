@@ -49,7 +49,7 @@ void spi_init(void) {
 		  GPIO13 | GPIO14 | GPIO15);
   gpio_set_af(GPIOB, GPIO_AF5, GPIO13 | GPIO14 | GPIO15);
 
-  //spi initialization;
+  //spi initialization, SPI2 working at 21MHz
   spi_init_master(SPI2, SPI_CR1_BR_FPCLK_DIV_8, SPI_CR1_CPOL_CLK_TO_0_WHEN_IDLE , SPI_CR1_CPHA_CLK_TRANSITION_1, SPI_CR1_DFF_8BIT, SPI_CR1_MSBFIRST);
 
   //spi_set_master_mode(SPI2);
@@ -113,27 +113,44 @@ int main(void)
   int counter=0;
   while (1){
     counter+=1;
-    wait(10);
+    wait(50);
+    //configure
     gpio_clear(GPIOA, GPIO2);
     spi_write(SPI2, 0x91);
-    gpio_set(GPIOA, GPIO2);
-    gpio_clear(GPIOA, GPIO2);
     spi_data1=spi_read(SPI2);
     gpio_set(GPIOA, GPIO2);
+    //gpio_clear(GPIOA, GPIO2);
+    //gpio_set(GPIOA, GPIO2);
     gpio_clear(GPIOA, GPIO2);
-    if (counter>50) {
+    if (counter>20) {
       spi_write(SPI2, 0x28);
     } else {
       spi_write(SPI2, 0x12);
     }
-    if (counter>100) {
+    if (counter>40) {
       counter=0;
     }
-    gpio_set(GPIOA, GPIO2);
-    gpio_clear(GPIOA, GPIO2);
     spi_data2=spi_read(SPI2);
     gpio_set(GPIOA, GPIO2);
-    printf("testo: %d\n", spi_data1);
+    //gpio_clear(GPIOA, GPIO2);
+    //gpio_set(GPIOA, GPIO2);
+
+    //status
+    gpio_clear(GPIOA, GPIO2);
+    spi_write(SPI2, 0xff);
+    spi_data1=spi_read(SPI2);
+    gpio_set(GPIOA, GPIO2);
+    //gpio_clear(GPIOA, GPIO2);
+    //gpio_set(GPIOA, GPIO2);
+    gpio_clear(GPIOA, GPIO2);
+    spi_write(SPI2, 0x00);
+    spi_data1=spi_read(SPI2);
+    gpio_set(GPIOA, GPIO2);
+    //gpio_clear(GPIOA, GPIO2);
+    //gpio_set(GPIOA, GPIO2);
+
+
+    printf("testo: 0x%02X\n", spi_data1);
     //printled(1, LRED);
     if ((poll(stdin) > 0)) {
       i=0;
