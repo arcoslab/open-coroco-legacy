@@ -13,6 +13,9 @@
 *.pdf
 *.ods
 *.jpg
+*.png
+*.pyc
 motor.h
 .gdb_history
 .gdb_history
+measures/
