@@ -13,6 +13,8 @@
 *.pdf
 *.ods
 *.jpg
+*.png
+*.pyc
 motor.h
 atan_table.h
 sine_table.h
