@@ -50,7 +50,7 @@ class Serial_Stm32f4(object):
         self.new_data_line      = ''
         self.read_capture_state = 'not_collecting'
         self.tag_comment        = ''
-        self.aditional_comment=' ntm_motor, torque controller, psi_ref=Psi_F=0.0014, Ud=70%,actual Ud and currents, wcutoff=100, load angle=5deg'
+        self.aditional_comment=' multirotor_motor, torque controller, psi_ref=Psi_F=0.0016, Ud=70%,actual Ud and currents, wcutoff=100, load angle=15deg'
         self.driving_counter    = 0
         self.various_counter     = 0
         self.type_of_test       = 0        
