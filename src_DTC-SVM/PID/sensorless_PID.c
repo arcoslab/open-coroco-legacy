@@ -43,10 +43,10 @@ float w_r=0;
 
 
 
-#define I_MAX_SENSORLESS              0.0005f//(90.0f*frequency/interrupt_frequency) 
-#define P_MAX_SENSORLESS              0.0005f//(90.0f*frequency/interrupt_frequency) 
-#define PI_MAX_SENSORLESS             0.0005f//(90.0f*frequency/interrupt_frequency) 
-#define PI_MIN_SENSORLESS            -0.0005f//-(90.0f*frequency/interrupt_frequency) 
+#define I_MAX_SENSORLESS            90.0f//  0.0005f//(90.0f*frequency/interrupt_frequency) 
+#define P_MAX_SENSORLESS            90.0f//  0.0005f//(90.0f*frequency/interrupt_frequency) 
+#define PI_MAX_SENSORLESS           90.0f//  0.0005f//(90.0f*frequency/interrupt_frequency) 
+#define PI_MIN_SENSORLESS          -90.0f// -0.0005f//-(90.0f*frequency/interrupt_frequency) 
 
 
 
@@ -131,11 +131,15 @@ if (w_r<100.0f&& reference_frequency!=0.0f)
 else if (reference_frequency!=0.0f && w_r<200.0f)
       *rotating_angle=5.0f;//0.00000005;
 */
-
+/*
     if (reference_frequency>0.0f)
-        *rotating_angle=45.0f;//0.00000005;
+        *rotating_angle=pi_control_sensorless;//45.0f;//0.00000005;
     else 
         *rotating_angle=0.0f;
+*/
+
+    *rotating_angle=pi_control_sensorless;
+
 /*
   else if (reference_frequency==0.0f)
     *rotating_angle=0.0005f;    
@@ -241,10 +245,10 @@ void psi_finitite_state_machine (float reference_frequency, float actual_frequen
 #define PI_MIN_SENSORLESS_TORQUE            -(9.0f*400.0f/switching_frequency) 
 */
 
-#define I_MAX_SENSORLESS_TORQUE            40.0f//  0.005f//(90.0f*frequency/interrupt_frequency) 
-#define P_MAX_SENSORLESS_TORQUE            40.0f//  0.005f//(90.0f*frequency/interrupt_frequency) 
-#define PI_MAX_SENSORLESS_TORQUE           40.0f//  0.005f//(90.0f*frequency/interrupt_frequency) 
-#define PI_MIN_SENSORLESS_TORQUE          -40.0f//  -0.005f//-(90.0f*frequency/interrupt_frequency) 
+#define I_MAX_SENSORLESS_TORQUE            90.0f//  0.005f//(90.0f*frequency/interrupt_frequency) 
+#define P_MAX_SENSORLESS_TORQUE            90.0f//  0.005f//(90.0f*frequency/interrupt_frequency) 
+#define PI_MAX_SENSORLESS_TORQUE           90.0f//  0.005f//(90.0f*frequency/interrupt_frequency) 
+#define PI_MIN_SENSORLESS_TORQUE          -90.0f//  -0.005f//-(90.0f*frequency/interrupt_frequency) 
 
 /*
 #define I_MAX_SENSORLESS_TORQUE              1.0f//(90.0f*frequency/interrupt_frequency) 
