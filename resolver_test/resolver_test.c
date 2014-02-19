@@ -30,6 +30,58 @@
 #include <limits.h>
 #include <stdbool.h>
 
+
+#define AD2S1210_WRPIN GPIO2
+#define AD2S1210_WRPIN_PORT GPIOA
+#define AD2S1210_SPI SPI2
+#define AD2S1210_SAMPLEPIN GPIO2
+#define AD2S1210_SAMPLEPIN_PORT GPIOC
+
+#define AD2S1210_REG_FAULT 0xff
+#define AD2S1210_REG_POS_H 0x80
+#define AD2S1210_REG_POS_L 0x81
+#define AD2S1210_REG_VEL_H 0x82
+#define AD2S1210_REG_VEL_L 0x83
+
+#define AD2S1210_WR(reg, data) {\
+  gpio_clear(AD2S1210_WRPIN_PORT, AD2S1210_WRPIN);\
+  spi_write(AD2S1210_SPI, reg);			  \
+  spi_read(AD2S1210_SPI); \
+  gpio_set(AD2S1210_WRPIN_PORT, AD2S1210_WRPIN);\
+  gpio_clear(AD2S1210_WRPIN_PORT, AD2S1210_WRPIN);\
+  spi_write(AD2S1210_SPI, data);			  \
+  spi_read(AD2S1210_SPI); \
+  gpio_set(AD2S1210_WRPIN_PORT, AD2S1210_WRPIN);\
+  }
+
+#define AD2S1210_RD(reg) ({\
+  uint8_t data;\
+  gpio_clear(AD2S1210_WRPIN_PORT, AD2S1210_WRPIN);\
+  spi_write(AD2S1210_SPI, reg);			  \
+  spi_read(AD2S1210_SPI); \
+  gpio_set(AD2S1210_WRPIN_PORT, AD2S1210_WRPIN);\
+  gpio_clear(AD2S1210_WRPIN_PORT, AD2S1210_WRPIN);\
+  spi_write(AD2S1210_SPI, 0x00); \
+  data = spi_read(AD2S1210_SPI); \
+  gpio_set(AD2S1210_WRPIN_PORT, AD2S1210_WRPIN);\
+  data;\
+    })
+
+#define WAIT(ms) {\
+  int i;\
+  for (i = 0; i < 800*ms; i++)    /* Wait a bit. */	\
+    __asm__("nop");\
+  }
+
+
+#define AD2S1210_SAMPLE() {\
+  gpio_set(AD2S1210_SAMPLEPIN_PORT, AD2S1210_SAMPLEPIN);\
+  gpio_clear(AD2S1210_SAMPLEPIN_PORT, AD2S1210_SAMPLEPIN);\
+  WAIT(300); /*ms*/ \
+  gpio_set(AD2S1210_SAMPLEPIN_PORT, AD2S1210_SAMPLEPIN);\
+  WAIT(1000); /*ms*/ \
+  }
+
 void leds_init(void) {
   rcc_peripheral_enable_clock(&RCC_AHB1ENR, RCC_AHB1ENR_IOPDEN);
   gpio_mode_setup(GPIOD, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO12 | GPIO13 | GPIO14 | GPIO15);
@@ -123,9 +175,9 @@ int main(void)
     //gpio_set(GPIOA, GPIO2);
     gpio_clear(GPIOA, GPIO2);
     if (counter>20) {
-      spi_write(SPI2, 0x28);
+      spi_write(SPI2, 0x28); // 10KHz
     } else {
-      spi_write(SPI2, 0x12);
+      spi_write(SPI2, 0x12); // 4.5KHz
     }
     if (counter>40) {
       counter=0;
@@ -135,22 +187,29 @@ int main(void)
     //gpio_clear(GPIOA, GPIO2);
     //gpio_set(GPIOA, GPIO2);
 
-    //status
-    gpio_clear(GPIOA, GPIO2);
-    spi_write(SPI2, 0xff);
-    spi_data1=spi_read(SPI2);
-    gpio_set(GPIOA, GPIO2);
-    //gpio_clear(GPIOA, GPIO2);
-    //gpio_set(GPIOA, GPIO2);
-    gpio_clear(GPIOA, GPIO2);
-    spi_write(SPI2, 0x00);
-    spi_data1=spi_read(SPI2);
-    gpio_set(GPIOA, GPIO2);
-    //gpio_clear(GPIOA, GPIO2);
-    //gpio_set(GPIOA, GPIO2);
+    //fault register
+    spi_data1=AD2S1210_RD(AD2S1210_REG_FAULT);
+    /* gpio_clear(GPIOA, GPIO2); */
+    /* spi_write(SPI2, 0xff); */
+    /* spi_data1=spi_read(SPI2); */
+    /* gpio_set(GPIOA, GPIO2); */
+    /* //gpio_clear(GPIOA, GPIO2); */
+    /* //gpio_set(GPIOA, GPIO2); */
+    /* gpio_clear(GPIOA, GPIO2); */
+    /* spi_write(SPI2, 0x00); */
+    /* spi_data1=spi_read(SPI2); */
+    /* gpio_set(GPIOA, GPIO2); */
+    /* //gpio_clear(GPIOA, GPIO2); */
+    /* //gpio_set(GPIOA, GPIO2); */
 
+    AD2S1210_SAMPLE();
 
-    printf("testo: 0x%02X\n", spi_data1);
+    uint16_t pos;
+    pos=(AD2S1210_RD(AD2S1210_REG_POS_H << 8) | (AD2S1210_RD(AD2S1210_REG_POS_L)));
+    int16_t vel;
+    vel=(AD2S1210_RD(AD2S1210_REG_VEL_H << 8) | (AD2S1210_RD(AD2S1210_REG_VEL_L)));
+
+    printf("testo: fault reg: 0x%02X, pos: 0x%04X, vel: 0x%04X %04d\n", spi_data1, pos, vel, vel);
     //printled(1, LRED);
     if ((poll(stdin) > 0)) {
       i=0;
