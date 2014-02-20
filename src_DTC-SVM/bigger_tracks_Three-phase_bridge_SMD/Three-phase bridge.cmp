@@ -1,4 +1,4 @@
-Cmp-Mod V01 Created by CvPcb (2013-jul-07)-stable date = Tue 18 Feb 2014 11:51:30 AM CST
+Cmp-Mod V01 Created by CvPcb (2013-jul-07)-stable date = Wed 19 Feb 2014 06:50:01 PM CST
 
 BeginCmp
 TimeStamp = /528E7FD9;
@@ -39,14 +39,14 @@ BeginCmp
 TimeStamp = /528E79DD;
 Reference = BT1;
 ValeurCmp = BATTERY_12V;
-IdModule  = PIN_ARRAY_2X1;
+IdModule  = Battery_2x1;
 EndCmp
 
 BeginCmp
 TimeStamp = /529393B9;
 Reference = BT2;
 ValeurCmp = BATTERY_48;
-IdModule  = PIN_ARRAY_2X1;
+IdModule  = Battery_2x1;
 EndCmp
 
 BeginCmp
@@ -397,6 +397,55 @@ TimeStamp = /529C3E13;
 Reference = P6;
 ValeurCmp = POWER_FUSE;
 IdModule  = fuse_holder_SMD;
+EndCmp
+
+BeginCmp
+TimeStamp = /5305554A;
+Reference = P7;
+ValeurCmp = CONN_1;
+IdModule  = 1pin;
+EndCmp
+
+BeginCmp
+TimeStamp = /53055559;
+Reference = P8;
+ValeurCmp = CONN_1;
+IdModule  = 1pin;
+EndCmp
+
+BeginCmp
+TimeStamp = /53055568;
+Reference = P9;
+ValeurCmp = CONN_1;
+IdModule  = 1pin;
+EndCmp
+
+BeginCmp
+TimeStamp = /53055577;
+Reference = P10;
+ValeurCmp = CONN_1;
+IdModule  = 1pin;
+EndCmp
+
+BeginCmp
+TimeStamp = /53055586;
+Reference = P11;
+ValeurCmp = CONN_1;
+IdModule  = 1pin;
+EndCmp
+
+BeginCmp
+TimeStamp = /5305553B;
+Reference = P12;
+ValeurCmp = CONN_1;
+IdModule  = 1pin;
+EndCmp
+
+BeginCmp
+TimeStamp = /53055595;
+Reference = P13;
+ValeurCmp = CONN_1;
+IdModule  = 1pin;
 EndCmp
 
 BeginCmp
