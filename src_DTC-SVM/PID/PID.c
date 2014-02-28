@@ -43,8 +43,8 @@ float fake_P_SENSORLESS = 0.0f;
 float I_DOWN_SENSORLESS = 0.0000000000000001f;//0.0000000000001f//0.000000000000001f //0.000000000001f
 float fake_I_SENSORLESS = 0.0f;
 */
-float P_SENSORLESS      = 0.1f;//0.00001f; 
-float P_DOWN_SENSORLESS = 0.1f;//0.00001f; 
+float P_SENSORLESS      = 1.0f;//0.00001f; 
+float P_DOWN_SENSORLESS = 1.f;//0.00001f; 
 float fake_P_SENSORLESS = 0.0f;
 
 
@@ -336,7 +336,7 @@ void frequency_input(void)
         }
         
         collecting_speed=true;
-        timer=1;
+        timer=0;
 
         pi_mode=0;  //speed pi controller
 
@@ -345,7 +345,7 @@ void frequency_input(void)
       if (strcmp(cmd, "Q") == 0)
       {
         collected_permission=true;
-        timer=1;
+        timer=0;
         //print_selection=0;
         regular_print=true;
         dtc_on=true;

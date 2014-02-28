@@ -463,7 +463,7 @@ void print_captured_collected_char(void)
           collected_V_s          [collected_pointer]
           );
           //printf (":phase_adv: %12.8f :isA: %6.2f :isB: %6.2f :isC: %6.2f :isD: %6.2f :isQ: %6.2f :is: %6.2f :iscita: %6.2f :psisD: %7.4f :psisQ: %7.4f :psis: %6.4f :psisa: %6.2f :psiref: %6.4f :te: %6.2f :VsD: %8.2f :VsQ: %8.2f :Vs: %6.2f :Vscita: %6.2f :Vscitar: %6.2f :T1: %4.2f :T2: %4.2f :Tmin: %5.2f :Tmed: %4.2f :Tmax: %4.2f :Ud: %6.2f :pi: %12.8f :maxpi: %12.8f\n",
-          printf ("pA %12.8f A %6.2f B %6.2f C %6.2f D %6.2f Q %6.2f p %7.4f P %7.4f L %6.4f O %6.2f v %6.4f W %6.2f d %8.2f q %8.2f s %6.2f c %6.2f R %6.2f U %6.2f l %12.8f x %12.8f\n",
+          printf ("pA %12.8f A %6.2f B %6.2f C %6.2f D %6.2f Q %6.2f p %7.4f P %7.4f L %6.4f O %6.2f v %6.4f W %6.2f d %8.2f q %8.2f s %6.2f c %6.2f R %6.2f U %6.2f l %12.8f x %12.8f < %12.9f \n",
 
           collected_phase_advance_SVM[collected_pointer],
           collected_i_sA [collected_pointer],  
@@ -496,7 +496,8 @@ void print_captured_collected_char(void)
 
           collected_U_d[collected_pointer],
           collected_pi_control_SVM[collected_pointer],
-          pi_max
+          pi_max,
+          collected_rotating_angle_SVM[collected_pointer]
           );
 
 

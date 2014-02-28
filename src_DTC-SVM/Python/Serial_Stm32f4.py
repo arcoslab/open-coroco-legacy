@@ -50,7 +50,7 @@ class Serial_Stm32f4(object):
         self.new_data_line      = ''
         self.read_capture_state = 'not_collecting'
         self.tag_comment        = ''
-        self.aditional_comment=' multirotor_motor, speed controller, psi_ref=Psi_F=0.0016, Ud=70%,actual Ud and currents, wcutoff=100, load angle=pi_controller, P=0.01'
+        self.aditional_comment=' no motor, speed controller, psi_ref=Psi_F=0.0016, Ud=70%, Ud=12V fixed and currents=0, wcutoff=0, load angle=pi_controller, load_angle=5 final speed = 346.78 Hz cte'
         self.driving_counter    = 0
         self.various_counter     = 0
         self.type_of_test       = 0        
@@ -171,7 +171,8 @@ class Serial_Stm32f4(object):
         self.te_ref                 = 0.0
         self.Ud                     = 0.0
         self.pi_control             = 0.0
-        self.pi_max                 = 0.0   
+        self.pi_max                 = 0.0
+        self.load_angle             = 0.0   
 
         self.checksum_stm32         = 0.0
         self.checksum_python        = 0.0
@@ -212,6 +213,7 @@ class Serial_Stm32f4(object):
         self.Ud_vector          = []
         self.pi_control_vector  = []
         self.pi_max_vector      = []
+        self.load_angle_vector  = []
 
         self.data_1_vector          = []
         self.data_2_vector          = []
@@ -378,6 +380,7 @@ class Serial_Stm32f4(object):
                 elif (split_string[split_counter]=='U'):   self.Ud                =float(split_string[split_counter+1])
                 elif (split_string[split_counter]=='l'):   self.pi_control        =float(split_string[split_counter+1])
                 elif (split_string[split_counter]=='x'):   self.pi_max            =float(split_string[split_counter+1])
+                elif (split_string[split_counter]=='<'):   self.load_angle        =float(split_string[split_counter+1])
                 '''
                 elif (split_string[split_counter]=='1'):   self.data_1            =float(split_string[split_counter+1])
                 elif (split_string[split_counter]=='2'):   self.data_2            =float(split_string[split_counter+1])
@@ -507,8 +510,10 @@ class Serial_Stm32f4(object):
                 self.te_ref_vector.append(self.te_ref)
                 self.Ud_vector.append(self.Ud)
                 self.pi_control_vector.append(self.pi_control)
-                self.pi_max_vector.append(self.pi_max)        
-
+                self.pi_max_vector.append(self.pi_max)
+                        
+                self.load_angle_vector.append(self.load_angle)
+                
 
     def full_print_string (self):
            #print "inside full_print_string"
@@ -537,6 +542,7 @@ class Serial_Stm32f4(object):
                                     " Ud %6.2f"                 %self.Ud                    + \
                                     " pi_control %12.9f"         %self.pi_control           + \
                                     " pi_max %10.6f"             %self.pi_max               + \
+                                    " load_angle %12.9f"        %self.load_angle            + \
                                     " psi_rotating_angle %12.9f"         %self.data_1            + \
                                     " R_s %12.9f"         %self.data_2            + \
                                     " tick_period %12.9f"         %self.data_3            + \
@@ -625,7 +631,8 @@ class Serial_Stm32f4(object):
                                     " te %6.2f"                 %self.te                    + \
                                     " Ud %6.2f"                 %self.Ud                    + \
                                     " pi_control %12.9f"         %self.pi_control           + \
-                                    " pi_max %10.6f"             %self.pi_max               
+                                    " pi_max %10.6f"             %self.pi_max               + \
+                                    " load_angle %12.9f"        %self.load_angle            
                                     #"t: %6.2f "                  %self.time                + \
                                     #"frequency %6.2f"                 %self.electric_frequency
                                     #" psis: %10.6f"              %self.psi_s               + \
@@ -769,6 +776,26 @@ class Serial_Stm32f4(object):
                         plt.ylabel('pi (degrees)')
                         plt.legend()
 
+
+    def plot_load_angle_and_frequency(self,rows,columns,subplot_index):    
+                        plt.subplot(rows,columns,subplot_index)
+                        plt.plot(self.time_vector, self.load_angle_vector,self.plotting_character,label='load angle')
+                        plt.ylabel('load angle (degrees)')
+                        plt.twinx() # to activate a second axis
+                        plt.plot(self.time_vector,self.electric_frequency_vector ,self.plotting_character,label='electric frequency',color='r')
+                        plt.title('frequency vs load angle'+self.title_extra)
+                        plt.xlabel('time (ticks)')
+                        plt.ylabel('frequency(Hz)')
+                        plt.legend()
+
+    def plot_load_angle_vs_frequency(self,rows,columns,subplot_index):    
+                        plt.subplot(rows,columns,subplot_index)
+                        plt.plot(self.load_angle_vector,self.electric_frequency_vector ,self.plotting_character,label='')
+                        plt.title('frequency vs load angle'+self.title_extra)
+                        plt.xlabel('load angle (degrees)')
+                        plt.ylabel('frequency (Hz)')
+                        plt.legend()
+
     def plot_all_in_one(self):
                         rows = 4
                         columns = 2 
@@ -800,6 +827,8 @@ class Serial_Stm32f4(object):
                         self.plot_phase_advance                      (rows,columns,subplot_index)
                         subplot_index=subplot_index+1  
                         
+             
+
                         '''
                         left  = 0.125  # the left side of the subplots of the figure
                         right = 0.9    # the right side of the subplots of the figure
@@ -857,6 +886,16 @@ class Serial_Stm32f4(object):
                         plt.figure(num=9, figsize=(10, 10), dpi=300, facecolor='w', edgecolor='k')
                         self.plot_phase_advance                      (rows,columns,subplot_index)
                         plt.savefig(self.path+ "phase_advance_pi" +"." + datetime.datetime.now().ctime() +self.tag_comment+".jpg")
+                        plt.close()
+
+                        plt.figure(num=10, figsize=(10, 10), dpi=300, facecolor='w', edgecolor='k')
+                        self.plot_load_angle_vs_frequency            (rows,columns,subplot_index)
+                        plt.savefig(self.path+ "frequency vs load angle" +"." + datetime.datetime.now().ctime() +self.tag_comment+".jpg")
+                        plt.close()
+
+                        plt.figure(num=11, figsize=(10, 10), dpi=300, facecolor='w', edgecolor='k')
+                        self.plot_load_angle_and_frequency           (rows,columns,subplot_index)
+                        plt.savefig(self.path+ "frequency and load angle vs time" +"." + datetime.datetime.now().ctime() +self.tag_comment+".jpg")
                         plt.close()
 
     
@@ -1639,28 +1678,37 @@ class Serial_Stm32f4(object):
                         self.read_strings=True
                         self.print_selection_setup(11)
                         #self.change_frequency (split_command[1])
-                        self.write_a_line('d 1')                  
+                        #self.write_a_line('d 1')                  
                         self.tag_comment       =line+self.aditional_comment
                         self.path              =self.root_path + "["+datetime.datetime.now().ctime() +"] ["+self.tag_comment+"]"+'/'
-
+                        self.old_time =0
                     
 
 
     def debug_code(self):
-        
+                
+
         if self.start_debugging==True and self.time !=1 and self.debugging_state=='initial':
             self.write_a_line('d 1') 
             self.debugging_state='initial'
      
 
         elif self.start_debugging==True and self.time ==1 and self.debugging_state=='initial':
+            #self.capturing_data()         
+            self.debugging_state='pre-debugging'
+        
+
+        elif self.start_debugging==True and self.time ==2 and self.old_time==1 and self.debugging_state=='pre-debugging':
             self.capturing_data()         
             self.debugging_state='debugging'
+        
 
         elif self.debugging_state=='debugging' and self.time>=497: 
             self.end_capturing_data()
             self.debugging_state='initial'
             self.start_debugging=False
-            self.read_strings=False 
+            self.read_strings=False
+
+        self.old_time=self.time   
                       
 

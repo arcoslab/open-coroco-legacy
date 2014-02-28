@@ -131,14 +131,14 @@ if (w_r<100.0f&& reference_frequency!=0.0f)
 else if (reference_frequency!=0.0f && w_r<200.0f)
       *rotating_angle=5.0f;//0.00000005;
 */
-/*
+
     if (reference_frequency>0.0f)
-        *rotating_angle=pi_control_sensorless;//45.0f;//0.00000005;
+        *rotating_angle=*rotating_angle+0.001f;//pi_control_sensorless;//45.0f;//0.00000005;
     else 
         *rotating_angle=0.0f;
-*/
 
-    *rotating_angle=pi_control_sensorless;
+
+    //*rotating_angle=15.0f;//pi_control_sensorless;
 
 /*
   else if (reference_frequency==0.0f)
