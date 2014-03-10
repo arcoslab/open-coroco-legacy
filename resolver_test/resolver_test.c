@@ -67,9 +67,9 @@
   data;\
     })
 
-#define WAIT(ms) {\
+#define WAIT_100NANO(ns) {\
   int i;\
-  for (i = 0; i < 800*ms; i++)    /* Wait a bit. */	\
+  for (i = 0; i < 7*ns; i++)    /* Wait a bit. */	\
     __asm__("nop");\
   }
 
@@ -77,9 +77,9 @@
 #define AD2S1210_SAMPLE() {\
   gpio_set(AD2S1210_SAMPLEPIN_PORT, AD2S1210_SAMPLEPIN);\
   gpio_clear(AD2S1210_SAMPLEPIN_PORT, AD2S1210_SAMPLEPIN);\
-  WAIT(300); /*ms*/ \
+  WAIT_100NANO(2); \
   gpio_set(AD2S1210_SAMPLEPIN_PORT, AD2S1210_SAMPLEPIN);\
-  WAIT(1000); /*ms*/ \
+  WAIT_100NANO(5); \
   }
 
 void leds_init(void) {
@@ -102,12 +102,12 @@ void spi_init(void) {
   gpio_set_af(GPIOB, GPIO_AF5, GPIO13 | GPIO14 | GPIO15);
 
   //spi initialization, SPI2 working at 21MHz
-  spi_init_master(SPI2, SPI_CR1_BR_FPCLK_DIV_8, SPI_CR1_CPOL_CLK_TO_0_WHEN_IDLE , SPI_CR1_CPHA_CLK_TRANSITION_1, SPI_CR1_DFF_8BIT, SPI_CR1_MSBFIRST);
+  spi_init_master(SPI2, SPI_CR1_BR_FPCLK_DIV_64, SPI_CR1_CPOL_CLK_TO_0_WHEN_IDLE , SPI_CR1_CPHA_CLK_TRANSITION_1, SPI_CR1_DFF_8BIT, SPI_CR1_MSBFIRST);
 
   //spi_set_master_mode(SPI2);
-  //spi_set_baudrate_prescaler(SPI2, SPI_CR1_BR_FPCLK_DIV_64);
-  //spi_set_clock_polarity_0(SPI2);
-  //spi_set_clock_phase_1(SPI2);
+  spi_set_baudrate_prescaler(SPI2, SPI_CR1_BR_FPCLK_DIV_16);
+  spi_set_clock_polarity_0(SPI2);
+  spi_set_clock_phase_1(SPI2);
   //spi_set_full_duplex_mode(SPI2);
   //spi_set_unidirectional_mode(SPI2); /* bidirectional but in 3-wire */
   //spi_set_data_size(SPI2, SPI_CR2_DS_8BIT);
@@ -174,11 +174,11 @@ int main(void)
     //gpio_clear(GPIOA, GPIO2);
     //gpio_set(GPIOA, GPIO2);
     gpio_clear(GPIOA, GPIO2);
-    if (counter>20) {
-      spi_write(SPI2, 0x28); // 10KHz
-    } else {
+    //if (counter>20) {
+    //  spi_write(SPI2, 0x28); // 10KHz
+    //} else {
       spi_write(SPI2, 0x12); // 4.5KHz
-    }
+      //}
     if (counter>40) {
       counter=0;
     }
@@ -205,11 +205,11 @@ int main(void)
     AD2S1210_SAMPLE();
 
     uint16_t pos;
-    pos=(AD2S1210_RD(AD2S1210_REG_POS_H << 8) | (AD2S1210_RD(AD2S1210_REG_POS_L)));
+    pos=((AD2S1210_RD(AD2S1210_REG_POS_H) << 8) | (AD2S1210_RD(AD2S1210_REG_POS_L)));
     int16_t vel;
-    vel=(AD2S1210_RD(AD2S1210_REG_VEL_H << 8) | (AD2S1210_RD(AD2S1210_REG_VEL_L)));
+    vel=((AD2S1210_RD(AD2S1210_REG_VEL_H) << 8) | (AD2S1210_RD(AD2S1210_REG_VEL_L)));
 
-    printf("testo: fault reg: 0x%02X, pos: 0x%04X, vel: 0x%04X %04d\n", spi_data1, pos, vel, vel);
+    printf("testo: fault reg: 0x%02X, pos: 0x%04X %04d, vel: 0x%04X %04d\n", spi_data1, pos, pos, vel, vel);
     //printled(1, LRED);
     if ((poll(stdin) > 0)) {
       i=0;
