@@ -46,7 +46,7 @@
 #define HALL_A() gpio_get(GPIOE, GPIO15);
 #define OPEN_LOOP_FREQ 3.0f
 #define INCR 0.1f
-#define MAX_FREQ 250.0f
+#define MAX_FREQ 30.0f
 
 float attenuation=MIN_ATTENUATION;
 int hall_a;
@@ -361,13 +361,11 @@ void gen_pwm(void) {
     //paso=1.0f*PI/180.0f;
     cont=0;
     ref_freq=ref_freq+INCR;
-  } else 
+  } else
     {//paso=0.0f;
-     
 }
 
   if (ref_freq >= MAX_FREQ){ref_freq = MAX_FREQ;}
-  
 cur_angle+=2.0f*PI*TICK_PERIOD*ref_freq+paso;
   //converting big angles into something between 0 and 2pi
   if (cur_angle >= (2.0f*PI)) {

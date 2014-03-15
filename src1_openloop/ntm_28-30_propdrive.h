@@ -1,4 +1,4 @@
-#define MIN_ATTENUATION 0.3f
+#define MIN_ATTENUATION 0.4f
 #define MAX_ATTENUATION 1.0f
 #define MAX_MOTOR_FREQ 780.0f
 #define P 0.01
@@ -15,7 +15,7 @@
 #define PI_MAX 87*PI/180.0f //acceleration torque
 #define PI_MIN -1*PI/180.0f //braking torque
 #define START_ATTENUATION_FREQ 20.0f
-#define START_UP_REF_FREQ 5.0f
+#define START_UP_REF_FREQ 1.0f
 #define MIN_CLOSE_LOOP_FREQ 3.0f
 #define FIRST_CLOSE_LOOP_REF_FREQ 60.0f
 #define HALL_CAL_OFFSET 136.0f //degrees (H1)

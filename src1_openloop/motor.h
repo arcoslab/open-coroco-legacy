@@ -1,1 +1,1 @@
-multi-rotor-530kv.h
+ntm_28-30_propdrive.h
