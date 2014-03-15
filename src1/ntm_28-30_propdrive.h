@@ -21,5 +21,5 @@
 #define HALL_CAL_OFFSET 136.0f //degrees (H1)
 #define HALL_CAL_OFFSET 140.0f //degrees (H3)
 #define HALL_CAL_OFFSET 300.0f //degrees (H2)
-#define HALL_CAL_OFFSET 136.0f //degrees (H1)
+#define HALL_CAL_OFFSET 180.0f //degrees (H1)
 #define FREQ_TO_STOP_MOTOR 30.0f
