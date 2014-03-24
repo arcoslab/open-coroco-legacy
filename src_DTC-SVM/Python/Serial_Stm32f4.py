@@ -50,7 +50,7 @@ class Serial_Stm32f4(object):
         self.new_data_line      = ''
         self.read_capture_state = 'not_collecting'
         self.tag_comment        = ''
-        self.aditional_comment=' no motor, speed controller, psi_ref=Psi_F=0.0016, Ud=70%, Ud=12V fixed and currents=0, wcutoff=0, load angle=pi_controller, load_angle=5 final speed = 346.78 Hz cte'
+        self.aditional_comment=' no motor, speed controller, psi_ref=Psi_F=0.0016, Ud=70%, Ud=12V fixed and currents=0, wcutoff=0, load angle=pi_controller, P=0.010, I=0, reference_frequency=300'
         self.driving_counter    = 0
         self.various_counter     = 0
         self.type_of_test       = 0        
@@ -1674,6 +1674,7 @@ class Serial_Stm32f4(object):
                         self.path              =self.root_path + "["+datetime.datetime.now().ctime() +"] ["+self.tag_comment+"]"+'/'  
 
                     elif split_command[0]=='debug':
+                        self.debug_command = split_command[1]
                         self.start_debugging=True
                         self.read_strings=True
                         self.print_selection_setup(11)
@@ -1689,7 +1690,7 @@ class Serial_Stm32f4(object):
                 
 
         if self.start_debugging==True and self.time !=1 and self.debugging_state=='initial':
-            self.write_a_line('d 1') 
+            self.write_a_line('d '+str(self.debug_command))#('d 1') 
             self.debugging_state='initial'
      
 

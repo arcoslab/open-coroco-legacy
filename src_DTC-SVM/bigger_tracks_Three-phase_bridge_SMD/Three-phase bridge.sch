@@ -37,7 +37,7 @@ $Descr A4 11693 8268
 encoding utf-8
 Sheet 1 1
 Title ""
-Date "20 feb 2014"
+Date "24 mar 2014"
 Rev ""
 Comp ""
 Comment1 ""
@@ -2711,4 +2711,43 @@ NoConn ~ 13900 6750
 NoConn ~ 13900 6950
 NoConn ~ 13900 7300
 NoConn ~ 13950 7600
+Wire Wire Line
+	8310 1165 8310 1215
+Wire Wire Line
+	8310 1215 8440 1215
+Wire Wire Line
+	8440 1215 8440 1310
+Wire Wire Line
+	8440 1310 9495 1310
+Wire Wire Line
+	9495 1310 9495 1190
+Wire Wire Line
+	9495 1190 9550 1190
+Connection ~ 9550 1190
+Wire Wire Line
+	8130 4140 8130 4200
+Wire Wire Line
+	8130 4200 8250 4200
+Wire Wire Line
+	8250 4200 8250 4280
+Wire Wire Line
+	8250 4280 8910 4280
+Wire Wire Line
+	8910 4280 8910 4200
+Wire Wire Line
+	8910 4200 9370 4200
+Connection ~ 9370 4200
+Wire Wire Line
+	8130 5730 8130 5780
+Wire Wire Line
+	8130 5780 8260 5780
+Wire Wire Line
+	8260 5780 8260 5890
+Wire Wire Line
+	8260 5890 8925 5890
+Wire Wire Line
+	8925 5890 8925 5835
+Wire Wire Line
+	8925 5835 9370 5835
+Connection ~ 9370 5835
 $EndSCHEMATC

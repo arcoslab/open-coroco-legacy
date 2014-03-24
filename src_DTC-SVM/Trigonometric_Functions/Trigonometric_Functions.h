@@ -25,17 +25,38 @@ float fast_cos(float angle);
 float fast_atan(float tan_value);
 float sine_linear_interpolation(float angle, int rounded_angle);
 float atan_linear_interpolation(float transformed_tan,int rounded_tan);
+int corrected_rounded_angle(int rounded_angle);
+int corrected_atan_rounded_angle(int rounded_angle);
 
+
+int corrected_rounded_angle(int rounded_angle)
+{
+  if (rounded_angle>SIN_TABLE_SIZE_F)   {rounded_angle=rounded_angle-SIN_TABLE_SIZE_F;}
+  if (rounded_angle<0               )   {rounded_angle=rounded_angle+SIN_TABLE_SIZE_F;}
+
+  return rounded_angle;
+}
+
+int corrected_atan_rounded_angle(int rounded_angle)
+{
+  if (rounded_angle>ATAN_TABLE_SIZE_F)   {rounded_angle=rounded_angle-ATAN_TABLE_SIZE_F;}
+  if (rounded_angle<0               )   {rounded_angle=rounded_angle+ATAN_TABLE_SIZE_F;}
+
+  return rounded_angle;
+}
+
+/*
 float sine_linear_interpolation(float angle, int rounded_angle)
 {
   float fixed_angle;
   
+
+
+
+
   if (angle>=rounded_angle) 
   {
-/*    fixed_angle =  sine_table[rounded_angle]+
-                  (sine_table[rounded_angle+1]-sine_table[rounded_angle])*
-                  (angle-rounded_angle)/(rounded_angle+1-rounded_angle);
-*/
+
     fixed_angle =  sine_table[rounded_angle]+
                   (sine_table[rounded_angle+1]-sine_table[rounded_angle])*
                   (angle-(float)(rounded_angle))/1.0f;//(rounded_angle+1-rounded_angle);
@@ -45,15 +66,38 @@ float sine_linear_interpolation(float angle, int rounded_angle)
     fixed_angle =  sine_table[rounded_angle-1]+
                   (sine_table[rounded_angle]-sine_table[rounded_angle-1])*
                   (angle-(float)(rounded_angle-1))/1.0f;//(rounded_angle-(rounded_angle-1));
-
-
-
   }
 
 
   return fixed_angle;
 }
+*/
 
+float sine_linear_interpolation(float angle, int rounded_angle)
+{
+  float fixed_angle;
+  
+
+
+
+
+  if (angle>=rounded_angle) 
+  {
+
+    fixed_angle =  sine_table[corrected_rounded_angle(rounded_angle)  ]+
+                  (sine_table[corrected_rounded_angle(rounded_angle+1)]-sine_table[corrected_rounded_angle(rounded_angle)])*
+                  (angle-(float)(rounded_angle))/1.0f;//(rounded_angle+1-rounded_angle);
+  }
+  else
+  {
+    fixed_angle =  sine_table[corrected_rounded_angle(rounded_angle-1)]+
+                  (sine_table[corrected_rounded_angle(rounded_angle  )]-sine_table[corrected_rounded_angle(rounded_angle-1)])*
+                  (angle-(float)(rounded_angle-1))/1.0f;//(rounded_angle-(rounded_angle-1));
+  }
+
+
+  return fixed_angle;
+}
 
 float fast_sine(float angle)
 {
@@ -210,16 +254,15 @@ float fast_atan(float tan_value)
 }
 */
 
+
+/*
 float atan_linear_interpolation(float transformed_tan,int rounded_tan)
 {
   float fixed_atan;
   
   if (transformed_tan>=rounded_tan) 
   {
-/*    fixed_angle =  sine_table[rounded_angle]+
-                  (sine_table[rounded_angle+1]-sine_table[rounded_angle])*
-                  (angle-rounded_angle)/(rounded_angle+1-rounded_angle);
-*/
+
     fixed_atan =  atan_table[rounded_tan]+
                   (atan_table[rounded_tan+1]-atan_table[rounded_tan])*
                   (transformed_tan-(float)(rounded_tan))/1.0f;//(rounded_angle+1-rounded_angle);
@@ -233,10 +276,37 @@ float atan_linear_interpolation(float transformed_tan,int rounded_tan)
 
 
   }
+*/
 
+
+float atan_linear_interpolation(float transformed_tan,int rounded_tan)
+{
+  float fixed_atan;
+  
+  if (transformed_tan>=rounded_tan) 
+  {
+/*    fixed_angle =  sine_table[rounded_angle]+
+                  (sine_table[rounded_angle+1]-sine_table[rounded_angle])*
+                  (angle-rounded_angle)/(rounded_angle+1-rounded_angle);
+*/
+    fixed_atan =   atan_table[corrected_atan_rounded_angle(rounded_tan  )]+
+                  (atan_table[corrected_atan_rounded_angle(rounded_tan+1)]-atan_table[corrected_atan_rounded_angle(rounded_tan)])*
+                  (transformed_tan-(float)(rounded_tan))/1.0f;//(rounded_angle+1-rounded_angle);
+  }
+  else
+  {
+    fixed_atan =   atan_table[corrected_atan_rounded_angle(rounded_tan-1)]+
+                  (atan_table[corrected_atan_rounded_angle(rounded_tan  )]-atan_table[corrected_atan_rounded_angle(rounded_tan-1)])*
+                  (transformed_tan-(float)(rounded_tan-1))/1.0f;//(rounded_angle-(rounded_angle-1));
+  }
 
   return fixed_atan;
 }
+
+
+
+
+
 
 
 float fast_atan(float tan_value)

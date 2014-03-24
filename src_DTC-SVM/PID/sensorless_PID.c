@@ -89,9 +89,9 @@ void sensorless_speed_pi_controller(
   sensorless_error=reference_frequency-frequency;
 
   if (sensorless_error > 0.0f) {  p_sensorless_error  = P_SENSORLESS      * sensorless_error;
-                                  i_sensorless_error += I_SENSORLESS      * sensorless_error; } 
+                                  i_sensorless_error += (I_SENSORLESS      * sensorless_error); } 
   else                         {  p_sensorless_error  = P_DOWN_SENSORLESS * sensorless_error;
-                                  i_sensorless_error += I_DOWN_SENSORLESS * sensorless_error; }
+                                  i_sensorless_error += (I_DOWN_SENSORLESS * sensorless_error); }
 
   if      (i_sensorless_error >  I_MAX) { i_sensorless_error =  I_MAX; }
   else if (i_sensorless_error < -I_MAX) { i_sensorless_error = -I_MAX; }
@@ -99,6 +99,14 @@ void sensorless_speed_pi_controller(
   if      (p_sensorless_error >  P_MAX_SENSORLESS) { p_sensorless_error =  P_MAX_SENSORLESS; }
   else if (p_sensorless_error < -P_MAX_SENSORLESS) { p_sensorless_error = -P_MAX_SENSORLESS; }
 
+
+  static float nan_counter=0;
+  if (i_sensorless_error!=i_sensorless_error)
+    {
+      i_sensorless_error=0.0f;
+      nan_counter+=1;
+    }
+    
   pi_control_sensorless=p_sensorless_error+i_sensorless_error;
 
   if      (pi_control_sensorless > PI_MAX_SENSORLESS) { pi_control_sensorless = PI_MAX_SENSORLESS; }
@@ -131,12 +139,14 @@ if (w_r<100.0f&& reference_frequency!=0.0f)
 else if (reference_frequency!=0.0f && w_r<200.0f)
       *rotating_angle=5.0f;//0.00000005;
 */
-
+/*
     if (reference_frequency>0.0f)
         *rotating_angle=*rotating_angle+0.001f;//pi_control_sensorless;//45.0f;//0.00000005;
     else 
         *rotating_angle=0.0f;
-
+*/
+    if (reference_frequency!=0.0f)
+      *rotating_angle=pi_control_sensorless;
 
     //*rotating_angle=15.0f;//pi_control_sensorless;
 
@@ -146,7 +156,7 @@ else if (reference_frequency!=0.0f && w_r<200.0f)
 */
 
 
-  SVM_pi_control=pi_control_sensorless;
+  SVM_pi_control=nan_counter;//i_sensorless_error;//pi_control_sensorless;
   phase_advance_SVM=pi_control_sensorless;//*rotating_angle;//pi_control_sensorless;
   //pi_max=*rotating_angle;//P_MAX_SENSORLESS;//*interrupt_frequency;
   pi_max=P_MAX_SENSORLESS;//*interrupt_frequency;
