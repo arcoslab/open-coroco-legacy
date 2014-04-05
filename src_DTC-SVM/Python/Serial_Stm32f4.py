@@ -50,7 +50,7 @@ class Serial_Stm32f4(object):
         self.new_data_line      = ''
         self.read_capture_state = 'not_collecting'
         self.tag_comment        = ''
-        self.aditional_comment=' no motor, speed controller, psi_ref=Psi_F=0.0016, Ud=70%, Ud=12V fixed and currents=0, wcutoff=0, load angle=pi_controller, P=0.010, I=0, reference_frequency=300'
+        self.aditional_comment=' motor connected, speed controller, psi_ref=Psi_F=0.0016, Ud=70%, , wcutoff=0, load angle=pi_controller, P=0.010   f, I=0.00001f, reference_frequency=from 10 to 90'
         self.driving_counter    = 0
         self.various_counter     = 0
         self.type_of_test       = 0        
@@ -770,7 +770,7 @@ class Serial_Stm32f4(object):
     def plot_phase_advance(self,rows,columns,subplot_index):    
                         plt.subplot(rows,columns,subplot_index)
                         plt.plot(self.time_vector, self.pi_control_vector,self.plotting_character,label='pi_control')
-                        plt.plot(self.time_vector, self.pi_max_vector,self.plotting_character,label='pi_max')
+                        #plt.plot(self.time_vector, self.pi_max_vector,self.plotting_character,label='pi_max')
                         plt.title('pi increment vs time'+self.title_extra)
                         plt.xlabel('time (ticks)')
                         plt.ylabel('pi (degrees)')
@@ -1678,6 +1678,8 @@ class Serial_Stm32f4(object):
                         self.start_debugging=True
                         self.read_strings=True
                         self.print_selection_setup(11)
+
+
                         #self.change_frequency (split_command[1])
                         #self.write_a_line('d 1')                  
                         self.tag_comment       =line+self.aditional_comment
