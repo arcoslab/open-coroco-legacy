@@ -19,6 +19,9 @@
 
 float SVM_V_s_ref_D               (float psi_s_ref, float psi_s, float psi_s_angle, float phase_advance,float i_sD, float R_s,float T_s);
 float SVM_V_s_ref_Q               (float psi_s_ref, float psi_s, float psi_s_angle, float phase_advance,float i_sQ, float R_s,float T_s);
+void initial_rotor_position_voltage(float* Vs, float* cita_Vs,
+                                    float initial_stator_voltage, float initial_rotor_angle, 
+                                    bool * initial_rotor_position_ignition, bool maximum_pulse_ticks,bool shutdown);
 void  SVM_Maximum_allowed_V_s_ref (float* V_sD,float* V_sQ  ,float* V_s_ref,float U_d);
 float SVM_V_s_relative_angle      (float V_s_angle);
 float SVM_T1                      (float T_s,float U_s, float U1, float V_s_ref_relative_angle);

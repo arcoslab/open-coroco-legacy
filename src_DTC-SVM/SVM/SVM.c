@@ -515,6 +515,81 @@ void catching_NaNs_data (float data_4, float data_5, float data_6)
 
 }
 
+#define ROTOR_POSITION_UNKNOWN      0
+#define VOLTAGE_PULSE_REQUESTED     1
+#define WAITING_FOR_PULSE_TO_END    2
+#define END_OF_PULSE                3
+void initial_rotor_position_voltage(float *Vs, float *cita_Vs,
+                                    float initial_stator_voltage, float initial_rotor_angle, 
+                                    bool *initial_rotor_position_ignition, bool maximum_pulse_ticks,bool shutdown_motor)
+{
+
+    static int initial_rotor_position_state = ROTOR_POSITION_UNKNOWN;
+    static int pulse_tick_counter=0;
+
+    if (initial_rotor_position_state== ROTOR_POSITION_UNKNOWN &&
+        *initial_rotor_position_ignition==false)
+    {
+       *Vs=*Vs;
+       *cita_Vs=*cita_Vs;
+       pulse_tick_counter=0;
+       initial_rotor_position_state=ROTOR_POSITION_UNKNOWN;
+       *initial_rotor_position_ignition=false;
+    }
+
+    else if (initial_rotor_position_state== ROTOR_POSITION_UNKNOWN &&
+            *initial_rotor_position_ignition==true && shutdown_motor ==false)
+    {
+       *Vs=*Vs;
+       *cita_Vs=*cita_Vs;
+       pulse_tick_counter=0;
+       initial_rotor_position_state=ROTOR_POSITION_UNKNOWN;
+       *initial_rotor_position_ignition=false;
+    }
+
+
+    else if (initial_rotor_position_state== ROTOR_POSITION_UNKNOWN &&
+            *initial_rotor_position_ignition==true && shutdown_motor ==true)
+    {
+       *Vs    =initial_stator_voltage;
+       *cita_Vs=initial_rotor_angle;
+       pulse_tick_counter+=1;
+       initial_rotor_position_state=WAITING_FOR_PULSE_TO_END;
+       *initial_rotor_position_ignition=true;
+    }
+
+    else if (initial_rotor_position_state== WAITING_FOR_PULSE_TO_END &&
+             pulse_tick_counter<maximum_pulse_ticks)
+    {
+       *Vs    =initial_stator_voltage;
+       *cita_Vs=initial_rotor_angle;
+       pulse_tick_counter+=1;
+       initial_rotor_position_state=WAITING_FOR_PULSE_TO_END;
+       *initial_rotor_position_ignition=true;
+    }
+
+    else if (initial_rotor_position_state== WAITING_FOR_PULSE_TO_END &&
+             pulse_tick_counter>=maximum_pulse_ticks)
+    {
+       *Vs    =initial_stator_voltage;
+       *cita_Vs=initial_rotor_angle;
+       pulse_tick_counter=0;
+       initial_rotor_position_state=ROTOR_POSITION_UNKNOWN;
+       *initial_rotor_position_ignition=false;
+    }
+    
+    else
+    {
+       *Vs=*Vs;
+       *cita_Vs=*cita_Vs;
+       pulse_tick_counter=0;
+       initial_rotor_position_state=ROTOR_POSITION_UNKNOWN;
+       *initial_rotor_position_ignition=false;
+    }
+
+
+}
+
 void  DTC_SVM(void)
 {
   //---------------------------------DTC algorithm--------------------------------------------//
@@ -579,14 +654,24 @@ gpio_clear(GPIOD, GPIO9);
 
 else
 {
-gpio_set(GPIOD, GPIO9);
-  V_s                    = vector_magnitude            (V_sQ,V_sD);
-  
+    static bool shutdown=true; 
+
+  gpio_set(GPIOD, GPIO9);
+
+
+
+  V_s                    = vector_magnitude            (V_sQ,V_sD);  
   ////cita_V_s               = vector_angle                (V_sQ,V_sD);
   cita_V_s               = fast_vector_angle                (V_sQ,V_sD);
+             //SVM_Maximum_allowed_V_s_ref (&V_s,U_d);   //maximum U_d
+
+
+
+  initial_rotor_position_voltage(&V_s,&cita_V_s,U_d,0.0f,
+                                 &initial_rotor_position_start,5,shutdown);
+  SVM_Maximum_allowed_V_s_ref (&V_sD,&V_sQ,&V_s,U_d*0.70f);
+
   V_s_ref_relative_angle = SVM_V_s_relative_angle      (cita_V_s);
-                            //SVM_Maximum_allowed_V_s_ref (&V_s,U_d);   //maximum U_d
-			   SVM_Maximum_allowed_V_s_ref (&V_sD,&V_sQ,&V_s,U_d*0.70f);
 
 
 
@@ -600,7 +685,7 @@ gpio_set(GPIOD, GPIO9);
   T_max_on = SVM_T_max_on (T_med_on,T1,T2,cita_V_s);
 
   SVM_phase_duty_cycles           (&duty_a, &duty_b, &duty_c, cita_V_s,T_max_on,T_med_on,T_min_on);
-  static bool shutdown=true; 
+
 
   //shutdown_SVM_speed (t_e_ref,w_r,&shutdown);
   shutdown_SVM_speed (ref_freq_SVM,w_r,&shutdown);

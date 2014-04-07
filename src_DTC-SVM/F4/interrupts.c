@@ -119,7 +119,6 @@ if (center_aligned_state==FIRST_HALF)
 else 
 {
   DTC_SVM();
-
   collecting_floating_data();
   colllecting_flux_linkage();
 }

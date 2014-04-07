@@ -34,6 +34,7 @@
 
 int pi_mode=0;
 bool collected_permission=false;
+bool initial_rotor_position_start=false;
 /*
 float P_SENSORLESS      = 0.00001f; 
 float P_DOWN_SENSORLESS = 0.00001f; 
