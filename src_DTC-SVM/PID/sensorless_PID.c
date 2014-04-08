@@ -145,8 +145,10 @@ else if (reference_frequency!=0.0f && w_r<200.0f)
     else 
         *rotating_angle=0.0f;
 */
-    //if (reference_frequency!=0.0f)
-      *rotating_angle=pi_control_sensorless;
+    if (reference_frequency!=0.0f)
+      *rotating_angle=45.0f;//********pi_control_sensorless;
+    else 
+      *rotating_angle=0.0f;  
 
     //*rotating_angle=15.0f;//pi_control_sensorless;
 
@@ -156,7 +158,7 @@ else if (reference_frequency!=0.0f && w_r<200.0f)
 */
 
 
-  SVM_pi_control=pi_control_sensorless;//nan_counter;//i_sensorless_error;//pi_control_sensorless;
+  SVM_pi_control=*rotating_angle;//pi_control_sensorless;//nan_counter;//i_sensorless_error;//pi_control_sensorless;
   phase_advance_SVM=pi_control_sensorless;//*rotating_angle;//pi_control_sensorless;
   //pi_max=*rotating_angle;//P_MAX_SENSORLESS;//*interrupt_frequency;
   pi_max=P_MAX_SENSORLESS;//*interrupt_frequency;

@@ -709,10 +709,11 @@ else
              //SVM_Maximum_allowed_V_s_ref (&V_s,U_d);   //maximum U_d
 
 
-
+/*
   initial_rotor_position_voltage(&V_sD,&V_sQ,&V_s,&cita_V_s,U_d,0.0f,
-                                 &initial_rotor_position_start,10,shutdown);
-  SVM_Maximum_allowed_V_s_ref (&V_sD,&V_sQ,&V_s,U_d*1.0f,initial_rotor_position_start);//0.70f);
+                                 &initial_rotor_position_start,1000,shutdown);
+*/
+  //SVM_Maximum_allowed_V_s_ref (&V_sD,&V_sQ,&V_s,U_d*0.70f,initial_rotor_position_start);//0.70f);
 
   V_s_ref_relative_angle = SVM_V_s_relative_angle      (cita_V_s);
 
@@ -731,11 +732,11 @@ else
 
 
   //shutdown_SVM_speed (t_e_ref,w_r,&shutdown);
-  shutdown_SVM_speed (ref_freq_SVM,w_r,&shutdown);
+  shutdown_SVM_speed (ref_freq_SVM,w_r,&shutdown); 
   //shutdown_SVM_torque (t_e_ref,t_e,&shutdown);
 
 
-  if (initial_rotor_position_start==false) { shutdown = true; }
+  //if (initial_rotor_position_start==false) { shutdown = true; }
 
   SVM_voltage_switch_inverter_VSI ( duty_a,  duty_b,  duty_c,shutdown);
 gpio_clear(GPIOD, GPIO9);

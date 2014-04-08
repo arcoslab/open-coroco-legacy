@@ -171,9 +171,9 @@ void adc_isr(void)
     U_d        = V_stm32_Ud*BATTERY_VOLTAGE_CONVERTION_FACTOR; 
 
     //***********//
-    //U_d=12.0f;
-    //i_sA=0.0f;
-    //i_sB=0.0f;
+    U_d=12.0f;
+    i_sA=0.0f;
+    i_sB=0.0f;
     //**********//
        
 
