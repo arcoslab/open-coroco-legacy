@@ -322,6 +322,8 @@ void frequency_input(void)
       
       if (strcmp(cmd, "d") == 0)
       {
+        
+        initial_rotor_position_start=true;
 
         collected_permission=true;
 
