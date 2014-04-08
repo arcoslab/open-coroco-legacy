@@ -142,7 +142,7 @@ void adc_isr(void)
   {
     V_stm32_A = adc_read_regular(ADC1)*(VREF/ADC_CONVERSION_FACTOR);
     V_shunt_A = (V_stm32_A-V_DIFFERENTIAL_AMPLIFIER_REFFERENCE)/G_OP_AMP_A;
-    i_sA      = V_shunt_A/R_SHUNT_A;
+    i_sA      = V_stm32_A;//V_shunt_A/R_SHUNT_A;
     
     //oscilloscope flag: start of ADC current measuring 
     gpio_clear(GPIOB, GPIO15);
