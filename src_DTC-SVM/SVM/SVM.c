@@ -711,7 +711,7 @@ else
 
 
   initial_rotor_position_voltage(&V_sD,&V_sQ,&V_s,&cita_V_s,U_d,0.0f,
-                                 &initial_rotor_position_start,50000,shutdown);
+                                 &initial_rotor_position_start,10000,shutdown);
   SVM_Maximum_allowed_V_s_ref (&V_sD,&V_sQ,&V_s,U_d*1.0f,initial_rotor_position_start);//0.70f);
 
   V_s_ref_relative_angle = SVM_V_s_relative_angle      (cita_V_s);
