@@ -1692,7 +1692,7 @@ class Serial_Stm32f4(object):
                 
 
         if self.start_debugging==True and self.time !=1 and self.debugging_state=='initial':
-            self.write_a_line('d '+str(self.debug_command))#('d 1') 
+            self.write_a_line('Q '+str(self.debug_command))#('d 1') 
             self.debugging_state='initial'
      
 

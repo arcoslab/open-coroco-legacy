@@ -170,11 +170,11 @@ void adc_isr(void)
     V_stm32_Ud = adc_read_regular(ADC1)*(VREF/ADC_CONVERSION_FACTOR);
     U_d        = V_stm32_Ud*BATTERY_VOLTAGE_CONVERTION_FACTOR; 
 
-    //***********//
-    U_d=12.0f;
-    i_sA=0.0f;
+    
+    U_d=40.0f;
+    /*i_sA=0.0f;
     i_sB=0.0f;
-    //**********//
+    */
        
 
     adc_counter=0;

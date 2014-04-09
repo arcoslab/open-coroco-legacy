@@ -74,13 +74,13 @@ float I_DOWN_SENSORLESS_TORQUE = 0.0f;//0.0000000000000001f;//0.0000000000001f//
 float fake_I_SENSORLESS_TORQUE = 0.0f;
 */
 
-float P_SENSORLESS_TORQUE      = 4.0f;//0.0005f;//0.00001f; //0.000001f
-float P_DOWN_SENSORLESS_TORQUE = 4.0f;//0.0005f;//0.00001f; //0.000001f
-float fake_P_SENSORLESS_TORQUE = 0.f;
+float P_SENSORLESS_TORQUE      = 0.0f;//0.0005f;//0.00001f; //0.000001f
+float P_DOWN_SENSORLESS_TORQUE = 0.0f;//0.0005f;//0.00001f; //0.000001f
+float fake_P_SENSORLESS_TORQUE = 0.0f;
 
-float I_SENSORLESS_TORQUE      = 0.0f;//0.0000000000000001f;//0.0000000000001f//0.000000000000001f //0.000000000001f
-float I_DOWN_SENSORLESS_TORQUE = 0.0f;//0.0000000000000001f;//0.0000000000001f//0.000000000000001f //0.000000000001f
-float fake_I_SENSORLESS_TORQUE = 0.0f;
+float I_SENSORLESS_TORQUE      = 0.1f;//0.0000000000000001f;//0.0000000000001f//0.000000000000001f //0.000000000001f
+float I_DOWN_SENSORLESS_TORQUE = 0.1f;//0.0000000000000001f;//0.0000000000001f//0.000000000000001f //0.000000000001f
+float fake_I_SENSORLESS_TORQUE = 0.1f;
 
 
 
@@ -347,6 +347,8 @@ void frequency_input(void)
 
       if (strcmp(cmd, "Q") == 0)
       {
+        initial_rotor_position_start=true;
+
         collected_permission=true;
         timer=0;
         //print_selection=0;

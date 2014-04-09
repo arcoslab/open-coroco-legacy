@@ -678,8 +678,8 @@ if (center_aligned_state==FIRST_HALF)
   if (pi_mode==0)   {   sensorless_speed_pi_controller  (ref_freq_SVM   ,w_r, PWMFREQ_F         ,&psi_rotating_angle_SVM    );     }
   else              {   sensorless_torque_pi_controller (t_e_ref        ,t_e, TICK_PERIOD*2.0f  ,&psi_rotating_angle_SVM    );  } 
 */
-  //sensorless_torque_pi_controller (t_e_ref        ,t_e, TICK_PERIOD*2.0f  ,&psi_rotating_angle_SVM    );
-  sensorless_speed_pi_controller  (ref_freq_SVM   ,w_r, PWMFREQ_F         ,&psi_rotating_angle_SVM    );
+  sensorless_torque_pi_controller (t_e_ref        ,t_e, TICK_PERIOD*2.0f  ,&psi_rotating_angle_SVM    );
+  //***sensorless_speed_pi_controller  (ref_freq_SVM   ,w_r, PWMFREQ_F         ,&psi_rotating_angle_SVM    );
   //sensorless_torque_pi_controller_from_speed(t_e_ref, t_e,TICK_PERIOD*2.0f, &psi_rotating_angle_SVM,w_r,&ref_freq_SVM);
   //sensorless_speed_pi_controller            (ref_freq_SVM   ,w_r, PWMFREQ_F         ,&psi_rotating_angle_SVM    );
 
@@ -713,7 +713,7 @@ else
   initial_rotor_position_voltage(&V_sD,&V_sQ,&V_s,&cita_V_s,U_d,0.0f,
                                  &initial_rotor_position_start,1000,shutdown);
 */
-  //SVM_Maximum_allowed_V_s_ref (&V_sD,&V_sQ,&V_s,U_d*0.70f,initial_rotor_position_start);//0.70f);
+  SVM_Maximum_allowed_V_s_ref (&V_sD,&V_sQ,&V_s,U_d*0.70f,initial_rotor_position_start);//0.70f);
 
   V_s_ref_relative_angle = SVM_V_s_relative_angle      (cita_V_s);
 
@@ -732,8 +732,20 @@ else
 
 
   //shutdown_SVM_speed (t_e_ref,w_r,&shutdown);
-  shutdown_SVM_speed (ref_freq_SVM,w_r,&shutdown); 
-  //shutdown_SVM_torque (t_e_ref,t_e,&shutdown);
+  //shutdown_SVM_speed (ref_freq_SVM,w_r,&shutdown); 
+  shutdown_SVM_torque (t_e_ref,t_e,&shutdown);
+
+  if (shutdown==true)
+  {V_sD=0.0f;
+    V_sQ=0.0f;
+    V_s=0.0f;
+    cita_V_s=0.0f;
+    V_s_ref_relative_angle=0.0f;
+    psi_sD=0.0f;
+    psi_sQ=0.0f;
+    psi_s=0.0f;
+    psi_s_alpha_SVM=0.0f;
+   }
 
 
   //if (initial_rotor_position_start==false) { shutdown = true; }

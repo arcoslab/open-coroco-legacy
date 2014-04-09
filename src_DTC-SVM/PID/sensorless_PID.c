@@ -146,7 +146,7 @@ else if (reference_frequency!=0.0f && w_r<200.0f)
         *rotating_angle=0.0f;
 */
     if (reference_frequency!=0.0f)
-      *rotating_angle=45.0f;//********pi_control_sensorless;
+      *rotating_angle+=0.0000001f;//********pi_control_sensorless;
     else 
       *rotating_angle=0.0f;  
 
@@ -303,7 +303,7 @@ void sensorless_torque_pi_controller(
   }
 */
   if (reference_torque!=0)
-    *rotating_angle=15.0f;//pi_control_sensorless;//(*rotating_angle+pi_control_sensorless)/(1.0f+switching_frequency*W_CUTOFF_TORQUE);
+    *rotating_angle=*rotating_angle+0.000005f;//pi_control_sensorless;//(*rotating_angle+pi_control_sensorless)/(1.0f+switching_frequency*W_CUTOFF_TORQUE);
   
   else 
     *rotating_angle=0.0f;
