@@ -50,7 +50,7 @@ class Serial_Stm32f4(object):
         self.new_data_line      = ''
         self.read_capture_state = 'not_collecting'
         self.tag_comment        = ''
-        self.aditional_comment=' motor connected, speed controller, psi_ref=Psi_F=0.0016, Ud=70%, , wcutoff=0, load angle=pi_controller, P=0.010   f, I=0.00001f, reference_frequency=from 10 to 90'
+        self.aditional_comment=' motor connected, controlling just Voltage angle, increasing 0.0001 voltage angle every cicle'
         self.driving_counter    = 0
         self.various_counter     = 0
         self.type_of_test       = 0        
@@ -67,7 +67,7 @@ class Serial_Stm32f4(object):
         self.title_extra            = ''
 
         #test routine
-        self.max_test_time      = 50000#298#100000#100000#50000#100000
+        self.max_test_time      = 500000#50000#298#100000#100000#50000#100000
         self.min_test_time      = 300
         self.test_routine_state = 'initial'
         self.driving_test_state = 'initial'
@@ -1692,7 +1692,7 @@ class Serial_Stm32f4(object):
                 
 
         if self.start_debugging==True and self.time !=1 and self.debugging_state=='initial':
-            self.write_a_line('Q '+str(self.debug_command))#('d 1') 
+            self.write_a_line('d '+str(self.debug_command))#('d 1') 
             self.debugging_state='initial'
      
 

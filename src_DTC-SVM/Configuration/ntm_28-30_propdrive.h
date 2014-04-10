@@ -1,3 +1,5 @@
+//ntm motor configuration
+
 #define MIN_ATTENUATION 0.2f
 #define MAX_ATTENUATION 1.0f
 

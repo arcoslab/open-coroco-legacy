@@ -660,18 +660,34 @@ if (center_aligned_state==FIRST_HALF)
 
   //--------------------------------SVM algorithm--------------------------------------------//
 
-  sensorless_torque_pi_controller (t_e_ref        ,t_e, TICK_PERIOD*2.0f  ,&psi_rotating_angle_SVM    );
+  //sensorless_torque_pi_controller (t_e_ref        ,t_e, TICK_PERIOD*2.0f  ,&psi_rotating_angle_SVM    );
   //sensorless_speed_pi_controller  (ref_freq_SVM   ,w_r, PWMFREQ_F         ,&psi_rotating_angle_SVM    );
   
-  static float extra_cita=0.0f;
+
+/*
+  static float extra_voltage_angle=0.0f;
+  static float extra_load_angle=0.0f;
+  static float extra_load_angle_increase=0.0f;
+  bool extra_permission=true;
   if (t_e_ref!=0.0f || ref_freq_SVM!=0)
   {
 
-  extra_cita+=0.005f;
-  if (extra_cita>=360.0f) {extra_cita=extra_cita-360.0f;}
-  V_sD = U_d*fast_cos(extra_cita);//SVM_V_s_ref_D (psi_s_ref,psi_s,psi_s_alpha_SVM,psi_rotating_angle_SVM,i_sD,R_s,2.0f*TICK_PERIOD);
-  V_sQ = U_d*fast_sine(extra_cita);//SVM_V_s_ref_Q (psi_s_ref,psi_s,psi_s_alpha_SVM,psi_rotating_angle_SVM,i_sQ,R_s,2.0f*TICK_PERIOD);
+      if (CUR_FREQ<300.0f && extra_permission==true) {extra_load_angle=extra_load_angle+0.00001f;}
+      else {extra_permission=false;}
+
+      extra_voltage_angle=extra_voltage_angle+extra_load_angle;
+      if (extra_voltage_angle>=360.0f) {extra_voltage_angle=extra_voltage_angle-360.0f;}
+      V_sD = U_d*fast_cos(extra_voltage_angle);//SVM_V_s_ref_D (psi_s_ref,psi_s,psi_s_alpha_SVM,psi_rotating_angle_SVM,i_sD,R_s,2.0f*TICK_PERIOD);
+      V_sQ = U_d*fast_sine(extra_voltage_angle);//SVM_V_s_ref_Q (psi_s_ref,psi_s,psi_s_alpha_SVM,psi_rotating_angle_SVM,i_sQ,R_s,2.0f*TICK_PERIOD);
   }
+  else extra_permission=true    ;
+*/
+  if (ref_freq_SVM!=0.0f && CUR_FREQ < 300.0f && ref_freq_SVM< 300.0f) psi_rotating_angle_SVM=15.0f;
+  else                psi_rotating_angle_SVM=0.0f;  
+
+  V_sD = SVM_V_s_ref_D (psi_s_ref,psi_s,psi_s_alpha_SVM,psi_rotating_angle_SVM,i_sD,R_s,2.0f*TICK_PERIOD);
+  V_sQ = SVM_V_s_ref_Q (psi_s_ref,psi_s,psi_s_alpha_SVM,psi_rotating_angle_SVM,i_sQ,R_s,2.0f*TICK_PERIOD);
+  
 gpio_clear(GPIOD, GPIO9);
 } 
 
@@ -704,8 +720,8 @@ else
   SVM_phase_duty_cycles           (&duty_a, &duty_b, &duty_c, cita_V_s,T_max_on,T_med_on,T_min_on);
 
 
-  //shutdown_SVM_speed (ref_freq_SVM,w_r,&shutdown); 
-  shutdown_SVM_torque (t_e_ref,t_e,&shutdown);
+  shutdown_SVM_speed (ref_freq_SVM,w_r,&shutdown); 
+  //shutdown_SVM_torque (t_e_ref,t_e,&shutdown);
 
   /*
   if (shutdown==true)
