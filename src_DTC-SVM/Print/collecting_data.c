@@ -129,7 +129,7 @@ void collecting_collected_in_buffer (void)
         collected_w_r          [collected_pointer] = w_r;
         collected_ref_freq_SVM [collected_pointer] = ref_freq_SVM;
 
-        collected_state_SVM    [collected_pointer] = state;
+        //collected_state_SVM    [collected_pointer] = state;
         collected_CUR_FREQ     [collected_pointer] = CUR_FREQ;
 
         collected_psi_sD    [collected_pointer]=psi_sD;
@@ -345,7 +345,7 @@ void collecting_samples(void)
         data_w_r           = w_r;
         data_ref_freq_SVM  = ref_freq_SVM;
 
-        data_state_SVM     = state;
+        //data_state_SVM     = state;
         data_CUR_FREQ      = CUR_FREQ;
 
         data_psi_sD    =psi_sD;
