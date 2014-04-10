@@ -666,8 +666,11 @@ if (center_aligned_state==FIRST_HALF)
   static float extra_cita=0.0f;
   if (t_e_ref!=0.0f || ref_freq_SVM!=0)
   {
+
+  extra_cita+=0.005f;
+  if (extra_cita>=360.0f) {extra_cita=extra_cita-360.0f;}
   V_sD = U_d*fast_cos(extra_cita);//SVM_V_s_ref_D (psi_s_ref,psi_s,psi_s_alpha_SVM,psi_rotating_angle_SVM,i_sD,R_s,2.0f*TICK_PERIOD);
-  V_sQ = U_d*fast_sin(extra_cita);//SVM_V_s_ref_Q (psi_s_ref,psi_s,psi_s_alpha_SVM,psi_rotating_angle_SVM,i_sQ,R_s,2.0f*TICK_PERIOD);
+  V_sQ = U_d*fast_sine(extra_cita);//SVM_V_s_ref_Q (psi_s_ref,psi_s,psi_s_alpha_SVM,psi_rotating_angle_SVM,i_sQ,R_s,2.0f*TICK_PERIOD);
   }
 gpio_clear(GPIOD, GPIO9);
 } 
