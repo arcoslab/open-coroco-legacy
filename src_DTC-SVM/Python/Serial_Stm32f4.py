@@ -25,6 +25,7 @@ from serial import SerialException
 import sys
 import select
 import matplotlib.pyplot as plt
+import math
 
 from byte_to_float import *
 import os
@@ -67,7 +68,7 @@ class Serial_Stm32f4(object):
         self.title_extra            = ''
 
         #test routine
-        self.max_test_time      = 500000#50000#298#100000#100000#50000#100000
+        self.max_test_time      = 50000#50000#298#100000#100000#50000#100000
         self.min_test_time      = 300
         self.test_routine_state = 'initial'
         self.driving_test_state = 'initial'
@@ -587,7 +588,10 @@ class Serial_Stm32f4(object):
         elif self.print_selection==5:
             self.new_data_line= "t: %6.2f "                  %self.time                + \
                                 " psisD: %10.6f"             %self.psi_sD              + \
-                                " psisQ: %10.6f"             %self.psi_sQ              + extra_information
+                                " psisQ: %10.6f"             %self.psi_sQ              + \
+                                " psis:  %10.6f"             %math.sqrt(self.psi_sD*self.psi_sD+self.psi_sQ*self.psi_sQ) + \
+                                " psis_angle %10.6f"         %math.atan(self.psi_sQ/self.psi_sD) + extra_information
+
 
         elif self.print_selection==6:
             self.new_data_line= "t: %6.2f "                  %self.time                + \
