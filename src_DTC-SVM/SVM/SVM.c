@@ -698,15 +698,15 @@ if (center_aligned_state==FIRST_HALF)
 
 
 
-  if (ref_freq_SVM!=0.0f && CUR_FREQ < 300.0f && ref_freq_SVM< 300.0f) psi_rotating_angle_SVM=15.0f;
+  if (ref_freq_SVM!=0.0f && CUR_FREQ < 300.0f && ref_freq_SVM< 300.0f) psi_rotating_angle_SVM=10.0f;
   else                psi_rotating_angle_SVM=0.0f;  
 
-  //V_sD = SVM_V_s_ref_D (psi_s_ref,psi_s,psi_s_alpha_SVM,psi_rotating_angle_SVM,i_sD,R_s,2.0f*TICK_PERIOD);
-  //    V_sQ = SVM_V_s_ref_Q (psi_s_ref,psi_s,psi_s_alpha_SVM,psi_rotating_angle_SVM,i_sQ,R_s,2.0f*TICK_PERIOD);
+  V_sD = SVM_V_s_ref_D (psi_s_ref,psi_s,psi_s_alpha_SVM,psi_rotating_angle_SVM,i_sD,R_s,2.0f*TICK_PERIOD);
+  V_sQ = SVM_V_s_ref_Q (psi_s_ref,psi_s,psi_s_alpha_SVM,psi_rotating_angle_SVM,i_sQ,R_s,2.0f*TICK_PERIOD);
  
 
-  V_sD=0.0f;
-  V_sQ=0.0f;
+  //V_sD=0.0f;
+  //V_sQ=0.0f;
 
 gpio_clear(GPIOD, GPIO9);
 } 
@@ -723,7 +723,7 @@ else
 
   V_s                    = vector_magnitude            (V_sQ,V_sD);  
   cita_V_s               = fast_vector_angle                (V_sQ,V_sD);
-  initial_rotor_position_voltage(psi_s_alpha_SVM,&psi_sD,&psi_sQ,&V_sD,&V_sQ,&V_s,&cita_V_s,U_d,30.0f,&initial_rotor_position_start,500000,shutdown);
+  initial_rotor_position_voltage(psi_s_alpha_SVM,&psi_sD,&psi_sQ,&V_sD,&V_sQ,&V_s,&cita_V_s,U_d,0.0f,&initial_rotor_position_start,100000,shutdown);
   SVM_Maximum_allowed_V_s_ref (&V_sD,&V_sQ,&V_s,U_d*0.70f,initial_rotor_position_start);//0.70f);
   V_s_ref_relative_angle = SVM_V_s_relative_angle      (cita_V_s);
   
