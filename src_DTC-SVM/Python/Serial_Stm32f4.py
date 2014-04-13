@@ -51,7 +51,7 @@ class Serial_Stm32f4(object):
         self.new_data_line      = ''
         self.read_capture_state = 'not_collecting'
         self.tag_comment        = ''
-        self.aditional_comment=' motor connected, controlling just Voltage angle, increasing 0.0001 voltage angle every cicle'
+        self.aditional_comment=' motor connected, initial rotor position, forced to 90degrees'
         self.driving_counter    = 0
         self.various_counter     = 0
         self.type_of_test       = 0        
@@ -68,7 +68,7 @@ class Serial_Stm32f4(object):
         self.title_extra            = ''
 
         #test routine
-        self.max_test_time      = 50000#50000#298#100000#100000#50000#100000
+        self.max_test_time      = 105000#50000#298#100000#100000#50000#100000
         self.min_test_time      = 300
         self.test_routine_state = 'initial'
         self.driving_test_state = 'initial'
@@ -479,10 +479,17 @@ class Serial_Stm32f4(object):
             self.transmition_error=True            
  
 
- 
+     
     def append_new_data_to_vectors(self):
 
         if self.transmition_error==False: 
+
+                #------------calculating values from gotten data----------------------------------------
+                #---(they are inside the stm32, but we do not want to waste time sending them)----------        
+                self.psi_s       = math.sqrt(self.psi_sD*self.psi_sD+self.psi_sQ*self. psi_sQ)
+                self.psi_s_alpha = self.fast_vector_angle(self.psi_sQ,self.psi_sD)
+                #----------------------------------------------------------------------------------------
+
 
                 self.time_vector.append(self.time)
                 self.reference_frequency_vector.append(self.reference_frequency)
@@ -503,9 +510,9 @@ class Serial_Stm32f4(object):
 
                 self.psi_sD_vector.append(self.psi_sD)
                 self.psi_sQ_vector.append(self.psi_sQ)
-                self.psi_s_vector.append(self.psi_s_vector)
-                self.psi_s_alpha_vector.append(self.psi_s_alpha_vector)
-                self.psi_s_reference_vector.append(self.psi_s_reference_vector)
+                self.psi_s_vector.append(self.psi_s)
+                self.psi_s_alpha_vector.append(self.psi_s_alpha)
+                self.psi_s_reference_vector.append(self.psi_s_reference)
                          
                 self.te_vector.append(self.te)
                 self.te_ref_vector.append(self.te_ref)
@@ -515,6 +522,25 @@ class Serial_Stm32f4(object):
                         
                 self.load_angle_vector.append(self.load_angle)
                 
+
+    def fast_vector_angle(self,y,x):
+        if   (x==0.0 and y==0.0           )  : angle = 0.0                     #division by zero
+        elif (x>=0.0 and y>=0.0 and  x>= y)  : angle =       (180.0/math.pi)*math.atan( y/ x)  #1st quadrant
+        elif (x>=0.0 and y>=0.0 and  y>  x)  : angle =  90.0-(180.0/math.pi)*math.atan( x/ y)  #2nd quadrant
+        elif (x< 0.0 and y>=0.0 and  y>=-x)  : angle =  90.0+(180.0/math.pi)*math.atan(-x/ y)  #3rd quadrant
+        elif (x< 0.0 and y>=0.0 and -x>  y)  : angle = 180.0-(180.0/math.pi)*math.atan( y/-x)  #4th quadrant
+        elif (x< 0.0 and y< 0.0 and -x>=-y)  : angle = 180.0+(180.0/math.pi)*math.atan(-y/-x)  #5th quadrant
+        elif (x< 0.0 and y< 0.0 and -y> -x)  : angle = 270.0-(180.0/math.pi)*math.atan(-x/-y)  #6th quadrant
+        elif (x>=0.0 and y< 0.0 and -y>= x)  : angle = 270.0+(180.0/math.pi)*math.atan( x/-y)  #7th quadrant 
+        elif (x>=0.0 and y< 0.0 and  x> -y)  : angle = 360.0-(180.0/math.pi)*math.atan(-y/ x)  #8th quadrant 
+        else                                 : angle =   0.0                 
+          
+        if   angle>=360.0: angle=angle-360.0
+        elif angle<   0.0: angle=angle+360.0
+            
+        return angle
+
+
 
     def full_print_string (self):
            #print "inside full_print_string"
@@ -590,7 +616,9 @@ class Serial_Stm32f4(object):
                                 " psisD: %10.6f"             %self.psi_sD              + \
                                 " psisQ: %10.6f"             %self.psi_sQ              + \
                                 " psis:  %10.6f"             %math.sqrt(self.psi_sD*self.psi_sD+self.psi_sQ*self.psi_sQ) + \
-                                " psis_angle %10.6f"         %math.atan(self.psi_sQ/self.psi_sD) + extra_information
+                                " psis_angle %10.6f"         %self.fast_vector_angle(self.psi_sQ,self.psi_sD) + extra_information
+
+
 
 
         elif self.print_selection==6:
@@ -755,11 +783,22 @@ class Serial_Stm32f4(object):
 
     def plot_flux_linkage(self,rows,columns,subplot_index):    
                         plt.subplot(rows,columns,subplot_index)
-                        plt.plot(self.psi_sD_vector, self.psi_sQ_vector,self.plotting_character_0)
+                        plt.plot(self.psi_sD_vector, self.psi_sQ_vector)#,self.plotting_character_0)
                         plt.title('psi_sQ vs psi_sD'+self.title_extra)
                         plt.xlabel('psi_sD (Wb)')
                         plt.ylabel('psi_sQ (Wb)')
                         plt.legend() 
+
+
+    def plot_flux_linkage_angle(self,rows,columns,subplot_index):    
+                        plt.subplot(rows,columns,subplot_index)
+                        plt.plot(self.time_vector, self.psi_s_alpha_vector)#,self.plotting_character_0)
+                        plt.title('psi_s_alpha vs time'+self.title_extra)
+                        plt.xlabel('time (degrees)')
+                        plt.ylabel('psi_s_alpha (Wb)')
+                        plt.legend() 
+
+
 
     def plot_electromagnetic_torque(self,rows,columns,subplot_index):    
                         plt.subplot(rows,columns,subplot_index)
@@ -950,14 +989,19 @@ class Serial_Stm32f4(object):
             plt.savefig(plot_name+"flux-linkage"+".jpg")
             plt.close()
 
-        elif self.print_selection==6:
             plt.figure(num=8, figsize=plot_figsize, dpi=plot_dpi, facecolor=plot_face_color, edgecolor=plot_edge_color)
+            self.plot_flux_linkage_angle                 (rows,columns,subplot_index)
+            plt.savefig(plot_name+"flux-linkage angle vs time"+".jpg")
+            plt.close()
+
+        elif self.print_selection==6:
+            plt.figure(num=9, figsize=plot_figsize, dpi=plot_dpi, facecolor=plot_face_color, edgecolor=plot_edge_color)
             self.plot_electromagnetic_torque             (rows,columns,subplot_index)
             plt.savefig(plot_name+"electromagnetic_torque" +".jpg")
             plt.close()
 
         elif self.print_selection==7:
-            plt.figure(num=9, figsize=plot_figsize, dpi=plot_dpi, facecolor=plot_face_color, edgecolor=plot_edge_color)
+            plt.figure(num=10, figsize=plot_figsize, dpi=plot_dpi, facecolor=plot_face_color, edgecolor=plot_edge_color)
             self.plot_phase_advance                      (rows,columns,subplot_index)
             plt.savefig(plot_name+"phase_advance_pi"+".jpg")
             plt.close()  

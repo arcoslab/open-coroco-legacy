@@ -525,7 +525,7 @@ void catching_NaNs_data (float data_4, float data_5, float data_6)
 #define VOLTAGE_PULSE_REQUESTED     1
 #define WAITING_FOR_PULSE_TO_END    2
 #define END_OF_PULSE                3
-void initial_rotor_position_voltage(float *psisD,float*psisQ,float *VsD,float *VsQ,float *Vs, float *cita_Vs,
+void initial_rotor_position_voltage(float psi_s_alpha,float *psisD,float*psisQ,float *VsD,float *VsQ,float *Vs, float *cita_Vs,
                                     float initial_stator_voltage, float initial_rotor_angle, 
                                     bool *initial_rotor_position_ignition, int maximum_pulse_ticks,bool shutdown_motor)
 {
@@ -598,7 +598,7 @@ void initial_rotor_position_voltage(float *psisD,float*psisQ,float *VsD,float *V
     }
 
     else if (initial_rotor_position_state== WAITING_FOR_PULSE_TO_END &&
-             pulse_tick_counter<maximum_pulse_ticks)
+             pulse_tick_counter<maximum_pulse_ticks                   )
     {
        *Vs    =initial_stator_voltage;
        *cita_Vs=initial_rotor_angle;
@@ -610,7 +610,7 @@ void initial_rotor_position_voltage(float *psisD,float*psisQ,float *VsD,float *V
     }
 
     else if (initial_rotor_position_state== WAITING_FOR_PULSE_TO_END &&
-             pulse_tick_counter>=maximum_pulse_ticks)
+                pulse_tick_counter>=maximum_pulse_ticks )
     {
        *Vs    =initial_stator_voltage;
        *cita_Vs=initial_rotor_angle;
@@ -723,7 +723,7 @@ else
 
   V_s                    = vector_magnitude            (V_sQ,V_sD);  
   cita_V_s               = fast_vector_angle                (V_sQ,V_sD);
-  initial_rotor_position_voltage(&psi_sD,&psi_sQ,&V_sD,&V_sQ,&V_s,&cita_V_s,U_d,0.0f,&initial_rotor_position_start,50000,shutdown);
+  initial_rotor_position_voltage(psi_s_alpha_SVM,&psi_sD,&psi_sQ,&V_sD,&V_sQ,&V_s,&cita_V_s,U_d,30.0f,&initial_rotor_position_start,500000,shutdown);
   SVM_Maximum_allowed_V_s_ref (&V_sD,&V_sQ,&V_s,U_d*0.70f,initial_rotor_position_start);//0.70f);
   V_s_ref_relative_angle = SVM_V_s_relative_angle      (cita_V_s);
   
