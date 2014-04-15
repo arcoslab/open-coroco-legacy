@@ -689,11 +689,12 @@ void print_regular_data(void)
         
         if (serial_print_collected_data==true)
         {  
-            collected_pointer+=1;
+            
             //printf ("t")  ;  checksum=           print_float_as_bytes(collected_pointer                   );
             //print_collected_data_buffer(&checksum);
 
             print_captured_collected_char();
+            collected_pointer+=1;
             
         }
         else 

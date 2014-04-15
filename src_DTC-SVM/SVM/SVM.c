@@ -600,7 +600,17 @@ else
   V_s                    = vector_magnitude            (V_sQ,V_sD);  
   cita_V_s               = fast_vector_angle                (V_sQ,V_sD);
 
-  initial_rotor_position_ABC_pulses(&psi_sD,&psi_sQ,&V_sD,&V_sQ,&V_s,&cita_V_s,U_d,&initial_rotor_position_start,20,20,shutdown);
+  static float Ia_peak__short_pulse=0.0f;
+  static float Ib_peak__short_pulse=0.0f;
+  static float Ic_peak__short_pulse=0.0f;
+  static float initial_rotor_angle=0.0f;
+  static int   initial_rotor_zone=0;
+
+  initial_rotor_position_ABC_pulses
+                              (&Ia_peak__short_pulse,&Ib_peak__short_pulse,&Ic_peak__short_pulse,i_sA,i_sB,&psi_sD,&psi_sQ,&V_sD,&V_sQ,&V_s,&cita_V_s,U_d*0.1f,&initial_rotor_position_start,6,100,shutdown);
+ 
+  initial_rotor_angle=initial_rotor_position_I_VI_quadrants (Ia_peak__short_pulse,Ib_peak__short_pulse,Ic_peak__short_pulse);
+
 
   SVM_Maximum_allowed_V_s_ref (&V_sD,&V_sQ,&V_s,U_d*0.70f);//0.70f);
   V_s_ref_relative_angle = SVM_V_s_relative_angle      (cita_V_s);

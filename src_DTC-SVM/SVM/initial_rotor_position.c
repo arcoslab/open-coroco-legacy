@@ -329,9 +329,10 @@ void zero_voltage_vector(float* Vs,float* cita_Vs,float* VsD, float* VsQ, float 
 
 
 
-void initial_rotor_position_ABC_pulses(float *psisD,float*psisQ,float *VsD,float *VsQ,float *Vs, float *cita_Vs,
-                                    float initial_stator_voltage, 
-                                    bool *initial_rotor_position_ignition, int short_maximum_pulse_ticks,int off_delay,bool shutdown_motor)
+void initial_rotor_position_ABC_pulses( float*Ia_peak,float*Ib_peak,float* Ic_peak,float isA,float isB,
+                                        float *psisD,float*psisQ,float *VsD,float *VsQ,float *Vs, float *cita_Vs,
+                                        float initial_stator_voltage, 
+                                        bool *initial_rotor_position_ignition, int short_maximum_pulse_ticks,int off_delay,bool shutdown_motor)
 {
 
     static int initial_rotor_position_state = ROTOR_POSITION_UNKNOWN;
@@ -359,7 +360,7 @@ void initial_rotor_position_ABC_pulses(float *psisD,float*psisQ,float *VsD,float
                                                                 {
                                                                    zero_voltage_vector(Vs,cita_Vs,VsD,VsQ,psisD,psisQ);
                                                                    pulse_tick_counter=0;
-                                                                   initial_rotor_position_state=INITIAL_DELAY;//WAITING_FOR_A_PULSE_TO_END;//INITIAL_DELAY;
+                                                                   initial_rotor_position_state=WAITING_FOR_A_PULSE_TO_END;//INITIAL_DELAY;
                                                                    *initial_rotor_position_ignition=true;
                                                                 }
 
@@ -395,7 +396,7 @@ void initial_rotor_position_ABC_pulses(float *psisD,float*psisQ,float *VsD,float
 
     else if (initial_rotor_position_state== WAITING_FOR_A_PULSE_TO_END &&
                 pulse_tick_counter>=short_maximum_pulse_ticks )
-                                                                {
+                                                                {  *Ia_peak=isA;
                                                                    negative_A_pulse_voltage_vector(Vs,cita_Vs,VsD,VsQ,psisD,psisQ,initial_stator_voltage);
                                                                    pulse_tick_counter=0;
                                                                    initial_rotor_position_state=WAITING_FOR_NEGATIVE_A_PULSE_TO_END;
@@ -451,7 +452,7 @@ void initial_rotor_position_ABC_pulses(float *psisD,float*psisQ,float *VsD,float
 
     else if (initial_rotor_position_state== WAITING_FOR_B_PULSE_TO_END &&
                 pulse_tick_counter>=short_maximum_pulse_ticks )
-                                                            {
+                                                            {  *Ib_peak=isB;
                                                                negative_B_pulse_voltage_vector(Vs,cita_Vs,VsD,VsQ,psisD,psisQ,initial_stator_voltage);   
                                                                pulse_tick_counter=0;
                                                                initial_rotor_position_state=WAITING_FOR_NEGATIVE_B_PULSE_TO_END;
@@ -506,7 +507,7 @@ void initial_rotor_position_ABC_pulses(float *psisD,float*psisQ,float *VsD,float
 
     else if (initial_rotor_position_state== WAITING_FOR_C_PULSE_TO_END &&
                 pulse_tick_counter>=short_maximum_pulse_ticks )
-                                                            {
+                                                            {  *Ic_peak=isA+isB;
                                                                negative_C_pulse_voltage_vector(Vs,cita_Vs,VsD,VsQ,psisD,psisQ,initial_stator_voltage);   
                                                                pulse_tick_counter=0;
                                                                initial_rotor_position_state=WAITING_FOR_NEGATIVE_C_PULSE_TO_END;

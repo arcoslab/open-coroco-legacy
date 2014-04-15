@@ -37,7 +37,8 @@ void negative_B_pulse_voltage_vector(float* Vs,float* cita_Vs,float* VsD, float*
 void C_pulse_voltage_vector         (float* Vs,float* cita_Vs,float* VsD, float* VsQ, float *psisD, float* psisQ,float initial_stator_voltage);
 void negative_C_pulse_voltage_vector(float* Vs,float* cita_Vs,float* VsD, float* VsQ, float *psisD, float* psisQ,float initial_stator_voltage);
 
-void initial_rotor_position_ABC_pulses  (float *psisD,float*psisQ,float *VsD,float *VsQ,float *Vs, float *cita_Vs,
+void initial_rotor_position_ABC_pulses  (float*Ia_peak,float*Ib_peak,float* Ic_peak,float IsA,float IsB,
+                                         float *psisD,float*psisQ,float *VsD,float *VsQ,float *Vs, float *cita_Vs,
                                          float initial_stator_voltage, 
                                          bool *initial_rotor_position_ignition, int short_maximum_pulse_ticks,int off_delay,bool shutdown_motor);
 
