@@ -1739,18 +1739,20 @@ class Serial_Stm32f4(object):
     def debug_code(self):
                 
 
-        if self.start_debugging==True and self.time !=1 and self.debugging_state=='initial':
-        #if self.start_debugging==True and self.time >5 and self.debugging_state=='initial':
+        #if self.start_debugging==True and self.time !=1 and self.debugging_state=='initial':
+        if self.start_debugging==True and self.time >497 and self.debugging_state=='initial':
             self.write_a_line('d '+str(self.debug_command))#('d 1') 
             self.debugging_state='initial'
      
-        elif self.start_debugging==True and self.time ==1 and self.debugging_state=='initial':
-        #elif self.start_debugging==True and self.time <10 and self.debugging_state=='initial':
+        #elif self.start_debugging==True and self.time ==1 and self.debugging_state=='initial':
+        elif self.start_debugging==True and self.time <10 and self.debugging_state=='initial':
             #self.capturing_data()         
             self.debugging_state='pre-debugging'
         
 
-        elif self.start_debugging==True and self.time ==2 and self.old_time==1 and self.debugging_state=='pre-debugging':
+        #elif self.start_debugging==True and self.time ==2 and self.old_time==1 and self.debugging_state=='pre-debugging':
+        elif self.start_debugging==True and self.time<20 and self.old_time<10 and self.debugging_state=='pre-debugging':
+
             self.capturing_data()         
             self.debugging_state='debugging'
         

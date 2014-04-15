@@ -23,13 +23,21 @@ int initial_rotor_sector_120_degrees_ABC (float voltage_vector_angle, float Ia, 
 float initial_rotor_position_angle_discrimination(float undetermined_angle, int ABC_sector);
 
 
-void initial_rotor_position_voltage(float psi_s_alpha,float *psisD,float*psisQ,
+void initial_rotor_position_pulses(float *psisD,float*psisQ,
                                     float *VsD,float *VsQ,float *Vs, float *cita_Vs,
                                     float initial_stator_voltage, float initial_rotor_angle, 
                                     bool *initial_rotor_position_ignition, int maximum_pulse_ticks,bool shutdown_motor);
 
+void do_nothing                     (float* Vs,float* cita_Vs,float* VsD, float* VsQ, float *psisD, float* psisQ);
+void zero_voltage_vector            (float* Vs,float* cita_Vs,float* VsD, float* VsQ, float *psisD, float* psisQ);
+void A_pulse_voltage_vector         (float* Vs,float* cita_Vs,float* VsD, float* VsQ, float *psisD, float* psisQ,float initial_stator_voltage);
+void negative_A_pulse_voltage_vector(float* Vs,float* cita_Vs,float* VsD, float* VsQ, float *psisD, float* psisQ,float initial_stator_voltage);
+void B_pulse_voltage_vector         (float* Vs,float* cita_Vs,float* VsD, float* VsQ, float *psisD, float* psisQ,float initial_stator_voltage);
+void negative_B_pulse_voltage_vector(float* Vs,float* cita_Vs,float* VsD, float* VsQ, float *psisD, float* psisQ,float initial_stator_voltage);
+void C_pulse_voltage_vector         (float* Vs,float* cita_Vs,float* VsD, float* VsQ, float *psisD, float* psisQ,float initial_stator_voltage);
+void negative_C_pulse_voltage_vector(float* Vs,float* cita_Vs,float* VsD, float* VsQ, float *psisD, float* psisQ,float initial_stator_voltage);
 
-void initial_rotor_position_ABC_pulses(float psi_s_alpha,float *psisD,float*psisQ,float *VsD,float *VsQ,float *Vs, float *cita_Vs,
-                                    float initial_stator_voltage, float initial_rotor_angle, 
-                                    bool *initial_rotor_position_ignition, int maximum_pulse_ticks,bool shutdown_motor);
+void initial_rotor_position_ABC_pulses  (float *psisD,float*psisQ,float *VsD,float *VsQ,float *Vs, float *cita_Vs,
+                                         float initial_stator_voltage, 
+                                         bool *initial_rotor_position_ignition, int short_maximum_pulse_ticks,int off_delay,bool shutdown_motor);
 

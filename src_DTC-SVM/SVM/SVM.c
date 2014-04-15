@@ -42,7 +42,7 @@ float SVM_V_s_ref_Q(float psi_s_ref, float psi_s, float psi_s_angle, float phase
   return ( psi_s_ref*fast_sine((psi_s_angle+phase_advance)) - psi_s*fast_sine(psi_s_angle) )/T_s  +  i_sQ*R_s;
 }
 
-void SVM_Maximum_allowed_V_s_ref(float* VsD, float* VsQ,float* V_s_ref,float U_d,bool initial_rotor_start)
+void SVM_Maximum_allowed_V_s_ref(float* VsD, float* VsQ,float* V_s_ref,float U_d)
 {
   //if   (*V_s_ref<=U_d/sqrtf(3.0f)) { *V_s_ref = *V_s_ref;       }
   //else                            { *V_s_ref = U_d/sqrtf(3.0f); }
@@ -599,8 +599,10 @@ else
 
   V_s                    = vector_magnitude            (V_sQ,V_sD);  
   cita_V_s               = fast_vector_angle                (V_sQ,V_sD);
-  initial_rotor_position_ABC_pulses(psi_s_alpha_SVM,&psi_sD,&psi_sQ,&V_sD,&V_sQ,&V_s,&cita_V_s,U_d,0.0f,&initial_rotor_position_start,6,shutdown);
-  SVM_Maximum_allowed_V_s_ref (&V_sD,&V_sQ,&V_s,U_d*0.70f,initial_rotor_position_start);//0.70f);
+
+  initial_rotor_position_ABC_pulses(&psi_sD,&psi_sQ,&V_sD,&V_sQ,&V_s,&cita_V_s,U_d,&initial_rotor_position_start,20,20,shutdown);
+
+  SVM_Maximum_allowed_V_s_ref (&V_sD,&V_sQ,&V_s,U_d*0.70f);//0.70f);
   V_s_ref_relative_angle = SVM_V_s_relative_angle      (cita_V_s);
   
 

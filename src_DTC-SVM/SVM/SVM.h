@@ -20,7 +20,7 @@
 float SVM_V_s_ref_D               (float psi_s_ref, float psi_s, float psi_s_angle, float phase_advance,float i_sD, float R_s,float T_s);
 float SVM_V_s_ref_Q               (float psi_s_ref, float psi_s, float psi_s_angle, float phase_advance,float i_sQ, float R_s,float T_s);
 
-void  SVM_Maximum_allowed_V_s_ref (float* V_sD,float* V_sQ  ,float* V_s_ref,float U_d,bool initial_rotor_start);
+void  SVM_Maximum_allowed_V_s_ref (float* V_sD,float* V_sQ  ,float* V_s_ref,float U_d);
 float SVM_V_s_relative_angle      (float V_s_angle);
 float SVM_T1                      (float T_s,float U_s, float U1, float V_s_ref_relative_angle);
 float SVM_T2                      (float T_s,float U_s, float U2, float V_s_ref_relative_angle);

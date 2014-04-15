@@ -77,7 +77,7 @@ float initial_rotor_position_angle_discrimination(float undetermined_angle, int 
 #define VOLTAGE_PULSE_REQUESTED     1
 #define WAITING_FOR_PULSE_TO_END    2
 #define END_OF_PULSE                3
-void initial_rotor_position_pulses(float psi_s_alpha,float *psisD,float*psisQ,float *VsD,float *VsQ,float *Vs, float *cita_Vs,
+void initial_rotor_position_pulses(float *psisD,float*psisQ,float *VsD,float *VsQ,float *Vs, float *cita_Vs,
                                     float initial_stator_voltage, float initial_rotor_angle, 
                                     bool *initial_rotor_position_ignition, int maximum_pulse_ticks,bool shutdown_motor)
 {
@@ -208,6 +208,8 @@ void initial_rotor_position_pulses(float psi_s_alpha,float *psisD,float*psisQ,fl
 
 #define ROTOR_POSITION_UNKNOWN               0
 
+#define INITIAL_DELAY                       17
+
 #define A_PULSE_START                        1
 #define WAITING_FOR_A_PULSE_TO_END           2
 #define NEGATIVE_A_PULSE_START               3
@@ -232,229 +234,329 @@ void initial_rotor_position_pulses(float psi_s_alpha,float *psisD,float*psisQ,fl
 
 
 
-void initial_rotor_position_ABC_pulses(float psi_s_alpha,float *psisD,float*psisQ,float *VsD,float *VsQ,float *Vs, float *cita_Vs,
-                                    float initial_stator_voltage, float initial_rotor_angle, 
-                                    bool *initial_rotor_position_ignition, int short_maximum_pulse_ticks,bool shutdown_motor)
+
+void do_nothing(float* Vs,float* cita_Vs,float* VsD, float* VsQ, float *psisD, float* psisQ)
+{
+       *Vs=*Vs;
+       *cita_Vs=*cita_Vs;
+       *VsD=*VsD;
+       *VsQ=*VsQ;
+   
+       *psisD=*psisD;
+       *psisQ=*psisQ;
+}
+
+void A_pulse_voltage_vector(float* Vs,float* cita_Vs,float* VsD, float* VsQ, float *psisD, float* psisQ,float initial_stator_voltage)
+{
+       *Vs    =initial_stator_voltage;
+       *cita_Vs=0.0f;
+       *VsD=initial_stator_voltage;
+       *VsQ=0.0f;
+
+       *psisD=*psisD;
+       *psisQ=*psisQ;      
+}
+
+void negative_A_pulse_voltage_vector(float* Vs,float* cita_Vs,float* VsD, float* VsQ, float *psisD, float* psisQ,float initial_stator_voltage)
+{
+       *Vs    =initial_stator_voltage;
+       *cita_Vs=180.0f;
+       *VsD=-initial_stator_voltage;
+       *VsQ=0.0f;
+       *psisD=*psisD;
+       *psisQ=*psisQ;    
+}
+
+void B_pulse_voltage_vector(float* Vs,float* cita_Vs,float* VsD, float* VsQ, float *psisD, float* psisQ,float initial_stator_voltage)
+{
+       *Vs    =initial_stator_voltage;
+       *cita_Vs=120.0f;
+       *VsD=initial_stator_voltage*fast_cos(120.0f);
+       *VsQ=initial_stator_voltage*fast_sine(120.0f);
+
+       *psisD=*psisD;
+       *psisQ=*psisQ;      
+}
+
+void negative_B_pulse_voltage_vector(float* Vs,float* cita_Vs,float* VsD, float* VsQ, float *psisD, float* psisQ,float initial_stator_voltage)
+{
+       *Vs    =initial_stator_voltage;
+       *cita_Vs=300.0f;
+       *VsD=initial_stator_voltage*fast_cos(300.0f);
+       *VsQ=initial_stator_voltage*fast_sine(300.0f);
+
+       *psisD=*psisD;
+       *psisQ=*psisQ;       
+}
+
+void C_pulse_voltage_vector(float* Vs,float* cita_Vs,float* VsD, float* VsQ, float *psisD, float* psisQ,float initial_stator_voltage)
+{
+       *Vs    =initial_stator_voltage;
+       *cita_Vs=240.0f;
+       *VsD=initial_stator_voltage*fast_cos(240.0f);
+       *VsQ=initial_stator_voltage*fast_sine(240.0f);
+
+       *psisD=*psisD;
+       *psisQ=*psisQ;      
+}
+
+void negative_C_pulse_voltage_vector(float* Vs,float* cita_Vs,float* VsD, float* VsQ, float *psisD, float* psisQ,float initial_stator_voltage)
+{
+       *Vs    =initial_stator_voltage;
+       *cita_Vs=60.0f;
+       *VsD=initial_stator_voltage*fast_cos(60.0f);
+       *VsQ=initial_stator_voltage*fast_sine(60.0f);
+
+       *psisD=*psisD;
+       *psisQ=*psisQ;       
+}
+
+
+
+
+void zero_voltage_vector(float* Vs,float* cita_Vs,float* VsD, float* VsQ, float *psisD, float* psisQ)
+{
+       *Vs    =0.0f;
+       *cita_Vs=0.0f;
+       *VsD=0.0f;
+       *VsQ=0.0f;
+       *psisD=*psisD;
+       *psisQ=*psisQ;    
+}
+
+
+
+
+
+
+void initial_rotor_position_ABC_pulses(float *psisD,float*psisQ,float *VsD,float *VsQ,float *Vs, float *cita_Vs,
+                                    float initial_stator_voltage, 
+                                    bool *initial_rotor_position_ignition, int short_maximum_pulse_ticks,int off_delay,bool shutdown_motor)
 {
 
     static int initial_rotor_position_state = ROTOR_POSITION_UNKNOWN;
     static int pulse_tick_counter=0;
 
     if (initial_rotor_position_state== ROTOR_POSITION_UNKNOWN &&
-        *initial_rotor_position_ignition==false)
-    {
-
-       *Vs=*Vs;
-       *cita_Vs=*cita_Vs;
-       *VsD=*VsD;
-       *VsQ=*VsQ;
-   
-       *psisD=*psisD;
-       *psisQ=*psisQ;
-
-       pulse_tick_counter=0;
-       initial_rotor_position_state=ROTOR_POSITION_UNKNOWN;
-       *initial_rotor_position_ignition=false;
-    }
+        *initial_rotor_position_ignition==false)                {
+                                                                   do_nothing(Vs,cita_Vs,VsD,VsQ,psisD,psisQ);
+                                                                   pulse_tick_counter=0;
+                                                                   initial_rotor_position_state=ROTOR_POSITION_UNKNOWN;
+                                                                   *initial_rotor_position_ignition=false;
+                                                                }
 
     else if (initial_rotor_position_state== ROTOR_POSITION_UNKNOWN &&
             *initial_rotor_position_ignition==true && shutdown_motor ==false)
-    {
-       *Vs=*Vs;
-       *cita_Vs=*cita_Vs;
-       *VsD=*VsD;
-       *VsQ=*VsQ;
-       *psisD=*psisD;
-       *psisQ=*psisQ;
-
-       pulse_tick_counter=0;
-       initial_rotor_position_state=ROTOR_POSITION_UNKNOWN;
-       *initial_rotor_position_ignition=false;
-    }
+                                                                {
+                                                                   do_nothing(Vs,cita_Vs,VsD,VsQ,psisD,psisQ);
+                                                                   pulse_tick_counter=0;
+                                                                   initial_rotor_position_state=ROTOR_POSITION_UNKNOWN;
+                                                                   *initial_rotor_position_ignition=false;
+                                                                }
 
     else if (initial_rotor_position_state== ROTOR_POSITION_UNKNOWN &&
             *initial_rotor_position_ignition==true && shutdown_motor ==true)
-    {
-       *Vs    =initial_stator_voltage;
-       *cita_Vs=0.0f;
-       *VsD=initial_stator_voltage;
-       *VsQ=0.0f;
+                                                                {
+                                                                   zero_voltage_vector(Vs,cita_Vs,VsD,VsQ,psisD,psisQ);
+                                                                   pulse_tick_counter=0;
+                                                                   initial_rotor_position_state=INITIAL_DELAY;//WAITING_FOR_A_PULSE_TO_END;//INITIAL_DELAY;
+                                                                   *initial_rotor_position_ignition=true;
+                                                                }
 
-       *psisD=0.0f;
-       *psisQ=0.0f;      
+    else if (initial_rotor_position_state== INITIAL_DELAY &&
+             pulse_tick_counter<off_delay                   )
+                                                            {
+                                                               zero_voltage_vector(Vs,cita_Vs,VsD,VsQ,psisD,psisQ);  
+                                                               pulse_tick_counter+=1;
+                                                               initial_rotor_position_state=INITIAL_DELAY;
+                                                               *initial_rotor_position_ignition=true;
+                                                            }
 
-       pulse_tick_counter+=1;
-       initial_rotor_position_state=WAITING_FOR_A_PULSE_TO_END;
-       *initial_rotor_position_ignition=true;
-    }
+
+    else if (initial_rotor_position_state== INITIAL_DELAY &&
+                pulse_tick_counter>=off_delay )
+                                                            {
+                                                               A_pulse_voltage_vector(Vs,cita_Vs,VsD,VsQ,psisD,psisQ,initial_stator_voltage);    
+                                                               pulse_tick_counter=0;
+                                                               initial_rotor_position_state=WAITING_FOR_A_PULSE_TO_END;
+                                                               *initial_rotor_position_ignition=true;
+                                                            }
+
 
     else if (initial_rotor_position_state== WAITING_FOR_A_PULSE_TO_END &&
-             pulse_tick_counter<short_maximum_pulse_ticks                   )
-    {
-       *Vs    =initial_stator_voltage;
-       *cita_Vs=0.0f;
-       *VsD=initial_stator_voltage;
-       *VsQ=0.0f;
-       pulse_tick_counter+=1;
-       initial_rotor_position_state=WAITING_FOR_A_PULSE_TO_END;
-       *initial_rotor_position_ignition=true;
-    }
+             pulse_tick_counter<short_maximum_pulse_ticks )
+                                                                {
+                                                                   A_pulse_voltage_vector(Vs,cita_Vs,VsD,VsQ,psisD,psisQ,initial_stator_voltage);
+                                                                   pulse_tick_counter+=1;
+                                                                   initial_rotor_position_state=WAITING_FOR_A_PULSE_TO_END;
+                                                                   *initial_rotor_position_ignition=true;
+                                                                }
 
 
     else if (initial_rotor_position_state== WAITING_FOR_A_PULSE_TO_END &&
                 pulse_tick_counter>=short_maximum_pulse_ticks )
-    {
-       *Vs    =initial_stator_voltage;
-       *cita_Vs=180.0f;
-       *VsD=-initial_stator_voltage;
-       *VsQ=0.0f;
-       //*psisD=0.0f;
-       //*psisQ=0.0f;   
-       pulse_tick_counter=0;
-       initial_rotor_position_state=WAITING_FOR_NEGATIVE_A_PULSE_TO_END;
-       *initial_rotor_position_ignition=true;
-    }
+                                                                {
+                                                                   negative_A_pulse_voltage_vector(Vs,cita_Vs,VsD,VsQ,psisD,psisQ,initial_stator_voltage);
+                                                                   pulse_tick_counter=0;
+                                                                   initial_rotor_position_state=WAITING_FOR_NEGATIVE_A_PULSE_TO_END;
+                                                                   *initial_rotor_position_ignition=true;
+                                                                }
     
     else if (initial_rotor_position_state== WAITING_FOR_NEGATIVE_A_PULSE_TO_END &&
              pulse_tick_counter<short_maximum_pulse_ticks                   )
-    {
-       *Vs    =initial_stator_voltage;
-       *cita_Vs=180.0f;
-       *VsD=-initial_stator_voltage;
-       *VsQ=0.0f;
-       //*psisD=0.0f;
-       //*psisQ=0.0f;   
-       pulse_tick_counter+=1;
-       initial_rotor_position_state=WAITING_FOR_NEGATIVE_A_PULSE_TO_END;
-       *initial_rotor_position_ignition=true;
-    }
+                                                                {
+                                                                   negative_A_pulse_voltage_vector(Vs,cita_Vs,VsD,VsQ,psisD,psisQ,initial_stator_voltage);   
+                                                                   pulse_tick_counter+=1;
+                                                                   initial_rotor_position_state=WAITING_FOR_NEGATIVE_A_PULSE_TO_END;
+                                                                   *initial_rotor_position_ignition=true;
+                                                                }
 
     else if (initial_rotor_position_state== WAITING_FOR_NEGATIVE_A_PULSE_TO_END &&
                 pulse_tick_counter>=short_maximum_pulse_ticks )
-    {
-       *Vs    =initial_stator_voltage;
-       *cita_Vs=180.0f;
-       *VsD=-initial_stator_voltage;
-       *VsQ=0.0f;
-       //*psisD=0.0f;
-       //*psisQ=0.0f;   
-       pulse_tick_counter=0;
-       initial_rotor_position_state=A_DELAY;
-       *initial_rotor_position_ignition=false;
-    }
-
-
-
-
+                                                                {
+                                                                   zero_voltage_vector(Vs,cita_Vs,VsD,VsQ,psisD,psisQ);  
+                                                                   pulse_tick_counter=0;
+                                                                   initial_rotor_position_state=A_DELAY;
+                                                                   *initial_rotor_position_ignition=true;
+                                                                }
 
     else if (initial_rotor_position_state== A_DELAY &&
              pulse_tick_counter<off_delay                   )
-    {
-       *Vs     =0.0f;
-       *cita_Vs=0.0f;
-       *VsD=0.0f;
-       *VsQ=0.0f;
-       pulse_tick_counter+=1;
-       initial_rotor_position_state=A_DELAY;
-       *initial_rotor_position_ignition=true;
-    }
+                                                            {
+                                                               zero_voltage_vector(Vs,cita_Vs,VsD,VsQ,psisD,psisQ);  
+                                                               pulse_tick_counter+=1;
+                                                               initial_rotor_position_state=A_DELAY;
+                                                               *initial_rotor_position_ignition=true;
+                                                            }
 
 
     else if (initial_rotor_position_state== A_DELAY &&
                 pulse_tick_counter>=off_delay )
-    {
-       *Vs    =0.0f;
-       *cita_Vs=0.0f;
-       *VsD=0.0f;
-       *VsQ=0.0f;
-       //*psisD=0.0f;
-       //*psisQ=0.0f;   
-       pulse_tick_counter=0;
-       initial_rotor_position_state=WAITING_FOR_B_PULSE_TO_END;
-       *initial_rotor_position_ignition=true;
-    }
-   
+                                                            {
+                                                               B_pulse_voltage_vector(Vs,cita_Vs,VsD,VsQ,psisD,psisQ,initial_stator_voltage);    
+                                                               pulse_tick_counter=0;
+                                                               initial_rotor_position_state=WAITING_FOR_B_PULSE_TO_END;
+                                                               *initial_rotor_position_ignition=true;
+                                                            }
+                                                           
 
     else if (initial_rotor_position_state== WAITING_FOR_B_PULSE_TO_END &&
              pulse_tick_counter<short_maximum_pulse_ticks                   )
-    {
-       *Vs    =initial_stator_voltage;
-       *cita_Vs=180.0f;
-       *VsD=-initial_stator_voltage;
-       *VsQ=0.0f;
-       //*psisD=0.0f;
-       //*psisQ=0.0f;   
-       pulse_tick_counter+=1;
-       initial_rotor_position_state=WAITING_FOR_NEGATIVE_A_PULSE_TO_END;
-       *initial_rotor_position_ignition=true;
-    }
+                                                            {
+                                                               B_pulse_voltage_vector(Vs,cita_Vs,VsD,VsQ,psisD,psisQ,initial_stator_voltage);     
+                                                               pulse_tick_counter+=1;
+                                                               initial_rotor_position_state=WAITING_FOR_B_PULSE_TO_END;
+                                                               *initial_rotor_position_ignition=true;
+                                                            }
 
-    else if (initial_rotor_position_state== WAITING_FOR_NEGATIVE_A_PULSE_TO_END &&
+    else if (initial_rotor_position_state== WAITING_FOR_B_PULSE_TO_END &&
                 pulse_tick_counter>=short_maximum_pulse_ticks )
-    {
-       *Vs    =initial_stator_voltage;
-       *cita_Vs=180.0f;
-       *VsD=-initial_stator_voltage;
-       *VsQ=0.0f;
-       //*psisD=0.0f;
-       //*psisQ=0.0f;   
-       pulse_tick_counter=0;
-       initial_rotor_position_state=ROTOR_POSITION_UNKNOWN;
-       *initial_rotor_position_ignition=false;
-    }
-
-
+                                                            {
+                                                               negative_B_pulse_voltage_vector(Vs,cita_Vs,VsD,VsQ,psisD,psisQ,initial_stator_voltage);   
+                                                               pulse_tick_counter=0;
+                                                               initial_rotor_position_state=WAITING_FOR_NEGATIVE_B_PULSE_TO_END;
+                                                               *initial_rotor_position_ignition=true;
+                                                            }
  
-    else if (initial_rotor_position_state== WAITING_FOR_NEGATIVE_A_PULSE_TO_END &&
+    else if (initial_rotor_position_state== WAITING_FOR_NEGATIVE_B_PULSE_TO_END &&
              pulse_tick_counter<short_maximum_pulse_ticks                   )
-    {
-       *Vs    =initial_stator_voltage;
-       *cita_Vs=180.0f;
-       *VsD=-initial_stator_voltage;
-       *VsQ=0.0f;
-       //*psisD=0.0f;
-       //*psisQ=0.0f;   
-       pulse_tick_counter+=1;
-       initial_rotor_position_state=WAITING_FOR_NEGATIVE_A_PULSE_TO_END;
-       *initial_rotor_position_ignition=true;
-    }
+                                                            {
+                                                               negative_B_pulse_voltage_vector(Vs,cita_Vs,VsD,VsQ,psisD,psisQ,initial_stator_voltage);     
+                                                               pulse_tick_counter+=1;
+                                                               initial_rotor_position_state=WAITING_FOR_NEGATIVE_B_PULSE_TO_END;
+                                                               *initial_rotor_position_ignition=true;
+                                                            }
 
-    else if (initial_rotor_position_state== WAITING_FOR_NEGATIVE_A_PULSE_TO_END &&
+    else if (initial_rotor_position_state== WAITING_FOR_NEGATIVE_B_PULSE_TO_END &&
                 pulse_tick_counter>=short_maximum_pulse_ticks )
-    {
-       *Vs    =initial_stator_voltage;
-       *cita_Vs=180.0f;
-       *VsD=-initial_stator_voltage;
-       *VsQ=0.0f;
-       //*psisD=0.0f;
-       //*psisQ=0.0f;   
-       pulse_tick_counter=0;
-       initial_rotor_position_state=ROTOR_POSITION_UNKNOWN;
-       *initial_rotor_position_ignition=false;
-    }
+                                                            {
+                                                               zero_voltage_vector(Vs,cita_Vs,VsD,VsQ,psisD,psisQ);  
+                                                               initial_rotor_position_state=B_DELAY;
+                                                               *initial_rotor_position_ignition=true;
+                                                            }
+
+    else if (initial_rotor_position_state== B_DELAY &&
+             pulse_tick_counter<off_delay                   )
+                                                            {
+                                                               zero_voltage_vector(Vs,cita_Vs,VsD,VsQ,psisD,psisQ);  
+                                                               pulse_tick_counter+=1;
+                                                               initial_rotor_position_state=B_DELAY;
+                                                               *initial_rotor_position_ignition=true;
+                                                            }
 
 
+    else if (initial_rotor_position_state== B_DELAY &&
+                pulse_tick_counter>=off_delay )
+                                                            {
+                                                               C_pulse_voltage_vector(Vs,cita_Vs,VsD,VsQ,psisD,psisQ,initial_stator_voltage);    
+                                                               pulse_tick_counter=0;
+                                                               initial_rotor_position_state=WAITING_FOR_C_PULSE_TO_END;
+                                                               *initial_rotor_position_ignition=true;
+                                                            }
+                                                           
+
+    else if (initial_rotor_position_state== WAITING_FOR_C_PULSE_TO_END &&
+             pulse_tick_counter<short_maximum_pulse_ticks                   )
+                                                            {
+                                                               C_pulse_voltage_vector(Vs,cita_Vs,VsD,VsQ,psisD,psisQ,initial_stator_voltage);     
+                                                               pulse_tick_counter+=1;
+                                                               initial_rotor_position_state=WAITING_FOR_C_PULSE_TO_END;
+                                                               *initial_rotor_position_ignition=true;
+                                                            }
+
+    else if (initial_rotor_position_state== WAITING_FOR_C_PULSE_TO_END &&
+                pulse_tick_counter>=short_maximum_pulse_ticks )
+                                                            {
+                                                               negative_C_pulse_voltage_vector(Vs,cita_Vs,VsD,VsQ,psisD,psisQ,initial_stator_voltage);   
+                                                               pulse_tick_counter=0;
+                                                               initial_rotor_position_state=WAITING_FOR_NEGATIVE_C_PULSE_TO_END;
+                                                               *initial_rotor_position_ignition=true;
+                                                            }
+ 
+    else if (initial_rotor_position_state== WAITING_FOR_NEGATIVE_C_PULSE_TO_END &&
+             pulse_tick_counter<short_maximum_pulse_ticks                   )
+                                                            {
+                                                               negative_C_pulse_voltage_vector(Vs,cita_Vs,VsD,VsQ,psisD,psisQ,initial_stator_voltage);     
+                                                               pulse_tick_counter+=1;
+                                                               initial_rotor_position_state=WAITING_FOR_NEGATIVE_C_PULSE_TO_END;
+                                                               *initial_rotor_position_ignition=true;
+                                                            }
+
+    else if (initial_rotor_position_state== WAITING_FOR_NEGATIVE_C_PULSE_TO_END &&
+                pulse_tick_counter>=short_maximum_pulse_ticks )
+                                                            {
+                                                               zero_voltage_vector(Vs,cita_Vs,VsD,VsQ,psisD,psisQ);  
+                                                               initial_rotor_position_state=C_DELAY;
+                                                               *initial_rotor_position_ignition=true;
+                                                            }
+
+    else if (initial_rotor_position_state== C_DELAY &&
+             pulse_tick_counter<off_delay                   )
+                                                            {
+                                                               zero_voltage_vector(Vs,cita_Vs,VsD,VsQ,psisD,psisQ);  
+                                                               pulse_tick_counter+=1;
+                                                               initial_rotor_position_state=C_DELAY;
+                                                               *initial_rotor_position_ignition=true;
+                                                            }
 
 
-
-
-
-
-
+    else if (initial_rotor_position_state== C_DELAY &&
+                pulse_tick_counter>=off_delay )
+                                                            {
+                                                               zero_voltage_vector(Vs,cita_Vs,VsD,VsQ,psisD,psisQ);    
+                                                               pulse_tick_counter=0;
+                                                               initial_rotor_position_state=ROTOR_POSITION_UNKNOWN;
+                                                               *initial_rotor_position_ignition=false;
+                                                            }
 
 
     else
-    {
-
-       *Vs=*Vs;
-       *cita_Vs=*cita_Vs;
-       *VsD=*VsD;
-       *VsQ=*VsQ;
-
-       pulse_tick_counter=0;
-       initial_rotor_position_state=ROTOR_POSITION_UNKNOWN;
-       *initial_rotor_position_ignition=false;
-    }
+                                                            {
+                                                               do_nothing(Vs,cita_Vs,VsD,VsQ,psisD,psisQ);
+                                                               pulse_tick_counter=0;
+                                                               initial_rotor_position_state=ROTOR_POSITION_UNKNOWN;
+                                                               *initial_rotor_position_ignition=false;
+                                                            }
 
 }
 

@@ -33,7 +33,7 @@ float pi_max=0.0f;
 
 
 void sensorless_speed_pi_controller(
-                           float reference_frequency, float frequency,float interrupt_frequency, float* rotating_angle) 
+                           float reference_frequency, float frequency, float* rotating_angle) 
 {
   float        sensorless_error         = 0.0f;
   float        p_sensorless_error       = 0.0f;
@@ -114,7 +114,7 @@ float psi_advance_calculator(float reference_frequency, float interrupt_frequenc
 
 
 void sensorless_torque_pi_controller(
-                           float reference_torque, float torque,float switching_frequency, float* rotating_angle) 
+                           float reference_torque, float torque, float* rotating_angle) 
 {
   float        sensorless_error         = 0.0f;
   float        p_sensorless_error       = 0.0f;
@@ -153,7 +153,7 @@ void sensorless_torque_pi_controller(
 }
 
 
-
+/*
 void sensorless_torque_pi_controller_from_speed(
                            float reference_torque, float torque,float switching_frequency, float* rotating_angle,float frequency,float  *reference_frequency) 
 {
@@ -203,7 +203,7 @@ if (reference_torque == 0)
     
 
 //#define W_CUTOFF_TORQUE 100.0f
-    //*rotating_angle=(*rotating_angle+pi_control_sensorless)/(1.0f+switching_frequency*W_CUTOFF_TORQUE);
+    // *rotating_angle=(*rotating_angle+pi_control_sensorless)/(1.0f+switching_frequency*W_CUTOFF_TORQUE);
     
 
 
@@ -215,4 +215,5 @@ if (reference_torque == 0)
 
 
 }
+*/
 
