@@ -672,6 +672,12 @@ float fast_vector_angle(float y, float x)
 }
 
 
+float extended_fast_atan(float tan_value)
+{
+    return fast_vector_angle(tan_value,1.0f); //this makes the fast_atan able to give as a result angles between -90° and 90 ° (I and II quadrants). 
+                                              //Originally fast_atan could only give values between 0° and 45°
+}
+
 float A_inverse_clark_transformation(float V_sD)//(float V_sD,V_sQ)
 {
 	//return V_sQ;

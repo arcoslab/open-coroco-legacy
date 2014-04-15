@@ -59,6 +59,8 @@
 #include "DTC/DTC.h"
 #include "DTC/DTC.c"
 
+#include "SVM/initial_rotor_position.h"
+#include "SVM/initial_rotor_position.c"
 #include "SVM/SVM.h"
 #include "SVM/SVM.c"
 

@@ -22,6 +22,8 @@
 float vector_magnitude              (float quadrature_component, float direct_component);
 float vector_angle                  (float quadrature_component, float direct_component);
 float fast_vector_angle                  (float quadrature_component, float direct_component);
+float extended_fast_atan(float tan_value);
+
 
 float A_inverse_clark_transformation(float V_sD);
 float B_inverse_clark_transformation(float V_sQ,                 float V_sD);
