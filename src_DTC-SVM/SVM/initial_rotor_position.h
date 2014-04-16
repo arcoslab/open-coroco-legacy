@@ -19,7 +19,8 @@
 
 bool checking_initial_rotor_currents_sign(float Ia, float Ib, float Ic);
 float initial_rotor_position_I_VI_quadrants (float Ia, float Ib, float Ic);
-int initial_rotor_sector_120_degrees_ABC (float voltage_vector_angle, float Ia, float Ib, float Ic);
+//int initial_rotor_sector_120_degrees_ABC (float voltage_vector_angle, float Ia, float Ib, float Ic);
+int initial_rotor_sector_120_degrees_ABC (float Ia, float Ib, float Ic);
 float initial_rotor_position_angle_discrimination(float undetermined_angle, int ABC_sector);
 
 

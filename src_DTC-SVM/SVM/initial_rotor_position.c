@@ -30,10 +30,13 @@ float initial_rotor_position_I_VI_quadrants (float Ia, float Ib, float Ic)
     return 0.5f*extended_fast_atan( SQRT_3*(Ib-Ia)/(2.0f*Ia-Ib-Ic) );
 }
 
+
+
 #define ZONE_A 1
 #define ZONE_B 2
 #define ZONE_C 3
 #define NO_ZONE 0
+/*
 int initial_rotor_sector_120_degrees_ABC (float voltage_vector_angle, float Ia, float Ib, float Ic)
 {
     if      (   voltage_vector_angle==  0.0f&& Ia>Ib && Ia>Ic)  {   return ZONE_A;   }   //zone A=>-60°<cita<=60°
@@ -41,9 +44,16 @@ int initial_rotor_sector_120_degrees_ABC (float voltage_vector_angle, float Ia, 
     else if (   voltage_vector_angle==240.0f&& Ic>Ib && Ic>Ia)  {   return ZONE_C;   }   //zone B=> 60°<cita<=180°
     else                                                        {   return NO_ZONE;   }   //no zone at all (error)
 }
+*/
+int initial_rotor_sector_120_degrees_ABC (float Ia, float Ib, float Ic)
+{
+    if      (Ia>Ib && Ia>Ic)  {   return ZONE_A;   }   //zone A=>-60°<cita<=60°
+    else if (Ib>Ia && Ib>Ic)  {   return ZONE_B;   }   //zone B=> 60°<cita<=180°
+    else if (Ic>Ib && Ic>Ia)  {   return ZONE_C;   }   //zone B=> 60°<cita<=180°
+    else                      {   return NO_ZONE;   }   //no zone at all (error)
+}
 
-
-
+/*
 float initial_rotor_position_angle_discrimination(float undetermined_angle, int ABC_sector)
 {
     float angle;
@@ -63,6 +73,54 @@ float initial_rotor_position_angle_discrimination(float undetermined_angle, int 
     else if (undetermined_angle>=270.0f && undetermined_angle<315.0f && ABC_sector==ZONE_A)    {  angle=undetermined_angle       ;} //seventh sector
     else if (undetermined_angle>=270.0f && undetermined_angle<315.0f && ABC_sector==ZONE_B)    {  angle=undetermined_angle+180.0f;} //third   sector
     else if (undetermined_angle>=270.0f && undetermined_angle<315.0f && ABC_sector==ZONE_C)    {  angle=undetermined_angle       ;} //seventh sector
+
+    else                                                                    {  angle=0.0f                     ;} //error
+
+ 
+    if (angle>=360.0f)      angle=angle-360.0f;
+    else if (angle <0.0f)   angle=angle+360.0f;  
+
+    return angle;
+}
+*/
+float initial_rotor_position_angle_discrimination(float undetermined_angle, int ABC_sector)
+{
+    float angle;
+
+    if      (undetermined_angle>=  0.0f && undetermined_angle< 45.0f && ABC_sector==ZONE_A)    {  angle=undetermined_angle       ;} //first sector
+    else if (undetermined_angle>=  0.0f && undetermined_angle< 45.0f && ABC_sector==ZONE_B)    {  angle=0.0f                     ;} //error
+    else if (undetermined_angle>=  0.0f && undetermined_angle< 45.0f && ABC_sector==ZONE_C)    {  angle=undetermined_angle+180.0f;} //fith  sector
+
+    else if (undetermined_angle>= 45.0f && undetermined_angle< 90.0f && ABC_sector==ZONE_A)    {  angle=undetermined_angle       ;} //second sector
+    else if (undetermined_angle>= 45.0f && undetermined_angle< 90.0f && ABC_sector==ZONE_B)    {  angle=undetermined_angle       ;} //second sector
+    else if (undetermined_angle>= 45.0f && undetermined_angle< 90.0f && ABC_sector==ZONE_C)    {  angle=undetermined_angle+180.0f;} //sixth  sector
+    
+    else if (undetermined_angle>= 90.0f && undetermined_angle<135.0f && ABC_sector==ZONE_A)    {  angle=undetermined_angle+180.0f;} //seventh sector
+    else if (undetermined_angle>= 90.0f && undetermined_angle<135.0f && ABC_sector==ZONE_B)    {  angle=undetermined_angle       ;} //third   sector
+    else if (undetermined_angle>= 90.0f && undetermined_angle<135.0f && ABC_sector==ZONE_C)    {  angle=undetermined_angle+180.0f;} //seventh sector
+
+    else if (undetermined_angle>=135.0f && undetermined_angle<180.0f && ABC_sector==ZONE_A)    {  angle=undetermined_angle+180.0f;} //eight sector
+    else if (undetermined_angle>=135.0f && undetermined_angle<180.0f && ABC_sector==ZONE_B)    {  angle=undetermined_angle       ;} //fourth sector
+    else if (undetermined_angle>=135.0f && undetermined_angle<180.0f && ABC_sector==ZONE_C)    {  angle=0.0f                     ;} //error
+
+    else if (undetermined_angle>=180.0f && undetermined_angle<225.0f && ABC_sector==ZONE_A)    {  angle=undetermined_angle+180.0f;} //first sector
+    else if (undetermined_angle>=180.0f && undetermined_angle<225.0f && ABC_sector==ZONE_B)    {  angle=0.0f                     ;} //error
+    else if (undetermined_angle>=180.0f && undetermined_angle<225.0f && ABC_sector==ZONE_C)    {  angle=undetermined_angle       ;} //fifth  sector
+
+    else if (undetermined_angle>=225.0f && undetermined_angle<270.0f && ABC_sector==ZONE_A)    {  angle=undetermined_angle+180.0f;} //second sector
+    else if (undetermined_angle>=225.0f && undetermined_angle<270.0f && ABC_sector==ZONE_B)    {  angle=undetermined_angle+180.0f;} //second sector
+    else if (undetermined_angle>=225.0f && undetermined_angle<270.0f && ABC_sector==ZONE_C)    {  angle=undetermined_angle       ;} //sixth  sector
+
+
+    else if (undetermined_angle>=270.0f && undetermined_angle<315.0f && ABC_sector==ZONE_A)    {  angle=undetermined_angle       ;} //seventh sector
+    else if (undetermined_angle>=270.0f && undetermined_angle<315.0f && ABC_sector==ZONE_B)    {  angle=undetermined_angle+180.0f;} //third   sector
+    else if (undetermined_angle>=270.0f && undetermined_angle<315.0f && ABC_sector==ZONE_C)    {  angle=undetermined_angle       ;} //seventh sector
+
+    else if (undetermined_angle>=315.0f && undetermined_angle<  0.0f && ABC_sector==ZONE_A)    {  angle=undetermined_angle       ;} //eigth  sector
+    else if (undetermined_angle>=315.0f && undetermined_angle<  0.0f && ABC_sector==ZONE_B)    {  angle=undetermined_angle+180.0f;} //fourth sector
+    else if (undetermined_angle>=315.0f && undetermined_angle<  0.0f && ABC_sector==ZONE_C)    {  angle=0.0f                     ;} //error
+
+
 
     else                                                                    {  angle=0.0f                     ;} //error
 
@@ -507,7 +565,7 @@ void initial_rotor_position_ABC_pulses( float*Ia_peak,float*Ib_peak,float* Ic_pe
 
     else if (initial_rotor_position_state== WAITING_FOR_C_PULSE_TO_END &&
                 pulse_tick_counter>=short_maximum_pulse_ticks )
-                                                            {  *Ic_peak=isA+isB;
+                                                            {  *Ic_peak=-isA-isB;
                                                                negative_C_pulse_voltage_vector(Vs,cita_Vs,VsD,VsQ,psisD,psisQ,initial_stator_voltage);   
                                                                pulse_tick_counter=0;
                                                                initial_rotor_position_state=WAITING_FOR_NEGATIVE_C_PULSE_TO_END;

@@ -745,6 +745,18 @@ void print_regular_data(void)
         //printf ("i")  ;  checksum=checksum  +print_float_as_bytes(fake_I_SENSORLESS_TORQUE                  );
     }
 
+    else if (print_selection==12)
+    {
+        printf ("7")  ;  checksum=           print_float_as_bytes(Ia_peak__short_pulse                  );
+        printf ("8")  ;  checksum=          +print_float_as_bytes(Ib_peak__short_pulse                  );
+        printf ("9")  ;  checksum=checksum  +print_float_as_bytes(Ic_peak__short_pulse                  );
+        printf ("0")  ;  checksum=checksum  +print_float_as_bytes(initial_rotor_angle                   );
+        printf ("-")  ;  checksum=checksum  +print_float_as_bytes(initial_rotor_zone                    );
+        printf ("_")  ;  checksum=checksum  +print_float_as_bytes(absolute_initial_rotor_angle          );
+    }
+
+
+
 
 
     printf ("k");

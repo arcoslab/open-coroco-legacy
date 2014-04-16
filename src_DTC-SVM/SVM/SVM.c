@@ -521,6 +521,13 @@ void catching_NaNs_data (float data_4, float data_5, float data_6)
 
 }
 
+float Ia_peak__short_pulse=0.0f;
+float Ib_peak__short_pulse=0.0f;
+float Ic_peak__short_pulse=0.0f;
+float initial_rotor_angle=0.0f;
+float absolute_initial_rotor_angle=0.0f;
+int   initial_rotor_zone=0;
+
 
 void  DTC_SVM(void)
 {
@@ -600,16 +607,17 @@ else
   V_s                    = vector_magnitude            (V_sQ,V_sD);  
   cita_V_s               = fast_vector_angle                (V_sQ,V_sD);
 
-  static float Ia_peak__short_pulse=0.0f;
-  static float Ib_peak__short_pulse=0.0f;
-  static float Ic_peak__short_pulse=0.0f;
-  static float initial_rotor_angle=0.0f;
-  static int   initial_rotor_zone=0;
 
+  
   initial_rotor_position_ABC_pulses
-                              (&Ia_peak__short_pulse,&Ib_peak__short_pulse,&Ic_peak__short_pulse,i_sA,i_sB,&psi_sD,&psi_sQ,&V_sD,&V_sQ,&V_s,&cita_V_s,U_d*0.1f,&initial_rotor_position_start,6,100,shutdown);
+                              (&Ia_peak__short_pulse,&Ib_peak__short_pulse,&Ic_peak__short_pulse,i_sA,i_sB,&psi_sD,&psi_sQ,&V_sD,&V_sQ,&V_s,&cita_V_s,U_d*0.3f,&initial_rotor_position_start,6,110,shutdown);
  
   initial_rotor_angle=initial_rotor_position_I_VI_quadrants (Ia_peak__short_pulse,Ib_peak__short_pulse,Ic_peak__short_pulse);
+
+  //initial_rotor_zone=initial_rotor_sector_120_degrees_ABC (initial_rotor_angle,Ia_peak__short_pulse,Ib_peak__short_pulse, Ic_peak__short_pulse);
+  initial_rotor_zone=initial_rotor_sector_120_degrees_ABC (Ia_peak__short_pulse,Ib_peak__short_pulse, Ic_peak__short_pulse);
+  absolute_initial_rotor_angle=initial_rotor_position_angle_discrimination(initial_rotor_angle,initial_rotor_zone);
+    
 
 
   SVM_Maximum_allowed_V_s_ref (&V_sD,&V_sQ,&V_s,U_d*0.70f);//0.70f);

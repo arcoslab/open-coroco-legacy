@@ -149,6 +149,15 @@ class Serial_Stm32f4(object):
         self.reference_frequency    = 0.0
         self.electric_frequency     = 0.0
         self.hall_frequency         = 0.0
+
+        self.Ia_peak__short_pulse = 0.0;
+        self.Ib_peak__short_pulse = 0.0;
+        self.Ic_peak__short_pulse = 0.0;
+        self.initial_rotor_angle  = 0.0;
+        self.initial_rotor_zone   = 0.0;
+        self.absolute_initial_rotor_angle  = 0.0;
+
+
   
         self.isA                    = 0.0
         self.isB                    = 0.0
@@ -450,8 +459,15 @@ class Serial_Stm32f4(object):
                 elif (single_character=='K'):   self.P_speed            =self.get_data_and_checksum()
                 elif (single_character=='I'):   self.I_speed            =self.get_data_and_checksum()
                 elif (single_character=='j'):   self.torque_P_speed     =self.get_data_and_checksum()
-                elif (single_character=='i'):   self.torque_I_speed     =self.get_data_and_checksum()               
+                elif (single_character=='i'):   self.torque_I_speed     =self.get_data_and_checksum()    
 
+
+                elif (single_character=='7'):   self.Ia_peak__short_pulse =self.get_data_and_checksum()
+                elif (single_character=='8'):   self.Ib_peak__short_pulse =self.get_data_and_checksum()
+                elif (single_character=='9'):   self.Ic_peak__short_pulse =self.get_data_and_checksum()
+                elif (single_character=='0'):   self.initial_rotor_angle  =self.get_data_and_checksum()         
+                elif (single_character=='_'):   self.absolute_initial_rotor_angle  =self.get_data_and_checksum()
+                elif (single_character=='-'):   self.initial_rotor_zone   =self.get_data_and_checksum()    
 
                 elif (single_character=='N'):   
                     self.exception  = self.ser.read(bytes)
@@ -669,7 +685,16 @@ class Serial_Stm32f4(object):
                                     #"frequency %6.2f"                 %self.electric_frequency
                                     #" psis: %10.6f"              %self.psi_s               + \
                                     #" psis_alpha: %6.2f"         %self.psi_s_alpha         + \
-                                    #" psis_ref: %10.8f"          %self.psi_s_reference       
+                                    #" psis_ref: %10.8f"          %self.psi_s_reference
+
+        elif self.print_selection==12:
+            self.new_data_line= " Ias: %10.4f:"       %self.Ia_peak__short_pulse  + \
+                                " Ibs: %10.4f:"       %self.Ib_peak__short_pulse  + \
+                                " Ics: %10.4f:"       %self.Ic_peak__short_pulse  + \
+                                " zone: %10.4f:"  %self.initial_rotor_zone  + \
+                                " angle: %10.4f:" %self.initial_rotor_angle  + \
+                                " ab_angle: %10.4f:" %self.absolute_initial_rotor_angle   + extra_information
+               
         
 
     def save_data_to_csv_file(self):
