@@ -558,7 +558,7 @@ void SVM_speed_close_loop(float reference_frequency, float frequency,bool close_
     if (close_loop_active==false) { *VsD=*VsD;
                              *VsQ=*VsQ;
                            } 
-    else if (close_loop_active==true && frequency<450.0f) {    psi_rotating_angle_SVM=65.0f;
+    else if (close_loop_active==true && frequency<450.0f) {    psi_rotating_angle_SVM=5.0f;
 
                                                         *VsD = SVM_V_s_ref_D (psi_s_ref,psi_s,psi_s_alpha_SVM,psi_rotating_angle_SVM,i_sD,R_s,2.0f*TICK_PERIOD);
                                                         *VsQ = SVM_V_s_ref_Q (psi_s_ref,psi_s,psi_s_alpha_SVM,psi_rotating_angle_SVM,i_sQ,R_s,2.0f*TICK_PERIOD);
@@ -585,12 +585,16 @@ void SVM_loop_control(float frequency,float maximum_open_loop_frequency,bool shu
                                                                                  *close_loop_SVM=false;
                                                                              }
     else if (SVM_loop_state==INITIAL_SVM && (te_ref!=0.0f || freq_ref!=0.0f) )  {   SVM_loop_state=OPEN_LOOP_SVM;
-                                                                                    *open_loop=true;
-                                                                                    *close_loop_SVM=false;
+                                                                                    //*open_loop=true;
+                                                                                    //*close_loop_SVM=false;
+                                                                                    *open_loop=false;
+                                                                                    *close_loop_SVM=true;
                                                                                 }
     else if (SVM_loop_state==OPEN_LOOP_SVM && frequency<maximum_open_loop_frequency)  {   SVM_loop_state=OPEN_LOOP_SVM;
-                                                                                          *open_loop=true;
-                                                                                          *close_loop_SVM=false;
+                                                                                          //*open_loop=true;
+                                                                                          //*close_loop_SVM=false;
+                                                                                          *open_loop=false;
+                                                                                          *close_loop_SVM=true;
                                                                                       }
 
     else if (SVM_loop_state==OPEN_LOOP_SVM && frequency>=maximum_open_loop_frequency)  {   SVM_loop_state=CLOSE_LOOP_SVM;

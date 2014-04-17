@@ -68,7 +68,7 @@ class Serial_Stm32f4(object):
         self.title_extra            = ''
 
         #test routine
-        self.max_test_time      = 500000#50000#298#100000#100000#50000#100000
+        self.max_test_time      = 100000#50000#298#100000#100000#50000#100000
         self.min_test_time      = 300
         self.test_routine_state = 'initial'
         self.driving_test_state = 'initial'
@@ -1647,6 +1647,9 @@ class Serial_Stm32f4(object):
                     
                     #capturing data into csv
                     elif   split_command[0]=='c':
+                        self.tag_comment       =line+self.aditional_comment#raw_input("Enter comment: ") 
+                        self.path              =self.root_path + "["+datetime.datetime.now().ctime() +"] ["+self.tag_comment+"]"+'/'  
+                        self.title_extra=''
                         self.write_a_line(line)
                         self.capturing_data()
                         self.tag_comment       =line+self.aditional_comment#raw_input("Enter comment: ") 
