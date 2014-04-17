@@ -17,6 +17,13 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+
+void SVM_starting_open_loop(bool open_loop,float* VsD, float*VsQ, float U_d);
+void SVM_speed_close_loop(float reference_frequency, float frequency,bool close_loop_active, float* VsD, float* VsQ);
+void SVM_loop_control(float frequency,float maximum_open_loop_frequency,bool shutdown, float te_ref, float freq_ref, bool* open_loop, bool* close_loop);
+
+
+
 float SVM_V_s_ref_D               (float psi_s_ref, float psi_s, float psi_s_angle, float phase_advance,float i_sD, float R_s,float T_s);
 float SVM_V_s_ref_Q               (float psi_s_ref, float psi_s, float psi_s_angle, float phase_advance,float i_sQ, float R_s,float T_s);
 

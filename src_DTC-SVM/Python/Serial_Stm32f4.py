@@ -51,7 +51,7 @@ class Serial_Stm32f4(object):
         self.new_data_line      = ''
         self.read_capture_state = 'not_collecting'
         self.tag_comment        = ''
-        self.aditional_comment=' motor connected, initial rotor position, current pulses A and negativeA'
+        self.aditional_comment='voltage open-loop 80Hz hall (0.000005f increase), SVM load angle 60degrees cte'
         self.driving_counter    = 0
         self.various_counter     = 0
         self.type_of_test       = 0        
@@ -68,7 +68,7 @@ class Serial_Stm32f4(object):
         self.title_extra            = ''
 
         #test routine
-        self.max_test_time      = 200000#50000#298#100000#100000#50000#100000
+        self.max_test_time      = 500000#50000#298#100000#100000#50000#100000
         self.min_test_time      = 300
         self.test_routine_state = 'initial'
         self.driving_test_state = 'initial'
@@ -793,8 +793,8 @@ class Serial_Stm32f4(object):
                         plt.subplot(rows,columns,subplot_index)
                         plt.plot(self.VsD_vector, self.VsQ_vector,self.plotting_character_0)
                         plt.title('VsQ vs VsD'+self.title_extra)
-                        plt.xlabel('VsD (A)')
-                        plt.ylabel('VsQ (A)')
+                        plt.xlabel('VsD (V)')
+                        plt.ylabel('VsQ (V)')
                         plt.legend() 
 
     def plot_voltage_magnitude(self,rows,columns,subplot_index):    

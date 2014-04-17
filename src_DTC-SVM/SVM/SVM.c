@@ -529,9 +529,90 @@ float absolute_initial_rotor_angle=0.0f;
 int   initial_rotor_zone=0;
 
 
+void SVM_starting_open_loop(bool open_loop,float* VsD, float*VsQ, float Ud)
+{
+    static float extra_voltage_angle=0.0f;
+    static float extra_load_angle=0.0f;
+    //static float extra_load_angle_increase=0.0f;
+
+    if (open_loop==false) { extra_voltage_angle=0.0f;
+                            extra_load_angle=0.0f;
+                            //extra_load_angle_increase=0.0f;
+                            *VsD=*VsD;
+                            *VsQ=*VsQ;
+                          } 
+    else if (open_loop==true) { extra_load_angle=extra_load_angle+0.000005f;
+                                extra_voltage_angle=extra_voltage_angle+extra_load_angle;
+                                if (extra_voltage_angle>=360.0f) {extra_voltage_angle=extra_voltage_angle-360.0f;}
+
+                             *VsD = Ud*fast_cos(extra_voltage_angle);
+                             *VsQ = Ud*fast_sine(extra_voltage_angle);
+                           } 
+}
+
+
+void SVM_speed_close_loop(float reference_frequency, float frequency,bool close_loop_active, float* VsD, float* VsQ)
+{
+    //float psi_rotating_angle;
+
+    if (close_loop_active==false) { *VsD=*VsD;
+                             *VsQ=*VsQ;
+                           } 
+    else if (close_loop_active==true && frequency<450.0f) {    psi_rotating_angle_SVM=65.0f;
+
+                                                        *VsD = SVM_V_s_ref_D (psi_s_ref,psi_s,psi_s_alpha_SVM,psi_rotating_angle_SVM,i_sD,R_s,2.0f*TICK_PERIOD);
+                                                        *VsQ = SVM_V_s_ref_Q (psi_s_ref,psi_s,psi_s_alpha_SVM,psi_rotating_angle_SVM,i_sQ,R_s,2.0f*TICK_PERIOD);
+                                                   }
+    else if (close_loop_active==true && frequency>=450.0f) {    psi_rotating_angle_SVM=0.0f;
+
+                                                        *VsD = SVM_V_s_ref_D (psi_s_ref,psi_s,psi_s_alpha_SVM,psi_rotating_angle_SVM,i_sD,R_s,2.0f*TICK_PERIOD);
+                                                        *VsQ = SVM_V_s_ref_Q (psi_s_ref,psi_s,psi_s_alpha_SVM,psi_rotating_angle_SVM,i_sQ,R_s,2.0f*TICK_PERIOD);
+                                                   }
+}
+
+
+
+#define INITIAL_SVM    0
+#define OPEN_LOOP_SVM  1
+#define CLOSE_LOOP_SVM 2
+
+void SVM_loop_control(float frequency,float maximum_open_loop_frequency,bool shutdown, float te_ref, float freq_ref, bool* open_loop, bool* close_loop_SVM)
+{
+    static int SVM_loop_state=INITIAL_SVM;
+
+    if      (SVM_loop_state==INITIAL_SVM && te_ref==0.0f && freq_ref==0.0f)  {   SVM_loop_state=INITIAL_SVM;
+                                                                                 *open_loop=false;
+                                                                                 *close_loop_SVM=false;
+                                                                             }
+    else if (SVM_loop_state==INITIAL_SVM && (te_ref!=0.0f || freq_ref!=0.0f) )  {   SVM_loop_state=OPEN_LOOP_SVM;
+                                                                                    *open_loop=true;
+                                                                                    *close_loop_SVM=false;
+                                                                                }
+    else if (SVM_loop_state==OPEN_LOOP_SVM && frequency<maximum_open_loop_frequency)  {   SVM_loop_state=OPEN_LOOP_SVM;
+                                                                                          *open_loop=true;
+                                                                                          *close_loop_SVM=false;
+                                                                                      }
+
+    else if (SVM_loop_state==OPEN_LOOP_SVM && frequency>=maximum_open_loop_frequency)  {   SVM_loop_state=CLOSE_LOOP_SVM;
+                                                                                          *open_loop=false;
+                                                                                          *close_loop_SVM=true;
+                                                                                      }
+
+    else if (SVM_loop_state==CLOSE_LOOP_SVM && shutdown==false)  {  SVM_loop_state=CLOSE_LOOP_SVM;
+                                                                    *open_loop=false;
+                                                                    *close_loop_SVM=true;
+                                                                 }
+
+    else if (SVM_loop_state==CLOSE_LOOP_SVM && shutdown==true)  {  SVM_loop_state=INITIAL_SVM;
+                                                                    *open_loop=false;
+                                                                    *close_loop_SVM=false;
+                                                                 }
+}
+
+
 void  DTC_SVM(void)
 {
-
+static bool shutdown=true;
 
 if (center_aligned_state==FIRST_HALF)
 {
@@ -559,37 +640,16 @@ if (center_aligned_state==FIRST_HALF)
   //sensorless_torque_pi_controller (t_e_ref        ,t_e, TICK_PERIOD*2.0f  ,&psi_rotating_angle_SVM    );
   //sensorless_speed_pi_controller  (ref_freq_SVM   ,w_r, PWMFREQ_F         ,&psi_rotating_angle_SVM    );
   
+  static bool open_loop_SVM  = false;
+  static bool close_loop_SVM = false;
+  
 
-/*
-  static float extra_voltage_angle=0.0f;
-  static float extra_load_angle=0.0f;
-  static float extra_load_angle_increase=0.0f;
-  bool extra_permission=true;
-  if (t_e_ref!=0.0f || ref_freq_SVM!=0)
-  {
-
-      if (CUR_FREQ<300.0f && extra_permission==true) {extra_load_angle=extra_load_angle+0.00001f;}
-      else {extra_permission=false;}
-
-      extra_voltage_angle=extra_voltage_angle+extra_load_angle;
-      if (extra_voltage_angle>=360.0f) {extra_voltage_angle=extra_voltage_angle-360.0f;}
-      V_sD = U_d*fast_cos(extra_voltage_angle);//SVM_V_s_ref_D (psi_s_ref,psi_s,psi_s_alpha_SVM,psi_rotating_angle_SVM,i_sD,R_s,2.0f*TICK_PERIOD);
-      V_sQ = U_d*fast_sine(extra_voltage_angle);//SVM_V_s_ref_Q (psi_s_ref,psi_s,psi_s_alpha_SVM,psi_rotating_angle_SVM,i_sQ,R_s,2.0f*TICK_PERIOD);
-  }
-  else extra_permission=true    ;
-*/
+  SVM_starting_open_loop(open_loop_SVM,&V_sD,&V_sQ,U_d);
+  SVM_speed_close_loop(ref_freq_SVM,CUR_FREQ,close_loop_SVM,&V_sD,&V_sQ);
+  SVM_loop_control(CUR_FREQ,80.0f,shutdown,t_e_ref,ref_freq_SVM,&open_loop_SVM,&close_loop_SVM); 
 
 
 
-  if (ref_freq_SVM!=0.0f && CUR_FREQ < 300.0f && ref_freq_SVM< 300.0f) psi_rotating_angle_SVM=10.0f;
-  else                psi_rotating_angle_SVM=0.0f;  
-
-  //V_sD = SVM_V_s_ref_D (psi_s_ref,psi_s,psi_s_alpha_SVM,psi_rotating_angle_SVM,i_sD,R_s,2.0f*TICK_PERIOD);
-  //V_sQ = SVM_V_s_ref_Q (psi_s_ref,psi_s,psi_s_alpha_SVM,psi_rotating_angle_SVM,i_sQ,R_s,2.0f*TICK_PERIOD);
- 
-
-  V_sD=0.0f;
-  V_sQ=0.0f;
 
 gpio_clear(GPIOD, GPIO9);
 } 
@@ -599,7 +659,7 @@ gpio_clear(GPIOD, GPIO9);
 
 else
 {
-  static bool shutdown=true; 
+ 
 
   gpio_set(GPIOD, GPIO9);
 
@@ -609,14 +669,14 @@ else
 
 
   
-  initial_rotor_position_ABC_pulses
-                              (&Ia_peak__short_pulse,&Ib_peak__short_pulse,&Ic_peak__short_pulse,i_sA,i_sB,&psi_sD,&psi_sQ,&V_sD,&V_sQ,&V_s,&cita_V_s,U_d*0.3f,&initial_rotor_position_start,6,110,shutdown);
+  //initial_rotor_position_ABC_pulses
+  //                            (&Ia_peak__short_pulse,&Ib_peak__short_pulse,&Ic_peak__short_pulse,i_sA,i_sB,&psi_sD,&psi_sQ,&V_sD,&V_sQ,&V_s,&cita_V_s,U_d*0.3f,&initial_rotor_position_start,6,110,shutdown);
  
-  initial_rotor_angle=initial_rotor_position_I_VI_quadrants (Ia_peak__short_pulse,Ib_peak__short_pulse,Ic_peak__short_pulse);
+  //initial_rotor_angle=initial_rotor_position_I_VI_quadrants (Ia_peak__short_pulse,Ib_peak__short_pulse,Ic_peak__short_pulse);
 
   //initial_rotor_zone=initial_rotor_sector_120_degrees_ABC (initial_rotor_angle,Ia_peak__short_pulse,Ib_peak__short_pulse, Ic_peak__short_pulse);
-  initial_rotor_zone=initial_rotor_sector_120_degrees_ABC (Ia_peak__short_pulse,Ib_peak__short_pulse, Ic_peak__short_pulse);
-  absolute_initial_rotor_angle=initial_rotor_position_angle_discrimination(initial_rotor_angle,initial_rotor_zone);
+  //initial_rotor_zone=initial_rotor_sector_120_degrees_ABC (Ia_peak__short_pulse,Ib_peak__short_pulse, Ic_peak__short_pulse);
+  //absolute_initial_rotor_angle=initial_rotor_position_angle_discrimination(initial_rotor_angle,initial_rotor_zone);
     
 
 
