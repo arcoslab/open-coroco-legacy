@@ -558,18 +558,42 @@ void SVM_speed_close_loop(float reference_frequency, float frequency,bool close_
     if (close_loop_active==false) { *VsD=*VsD;
                              *VsQ=*VsQ;
                            } 
-    else if (close_loop_active==true && frequency<450.0f) {    psi_rotating_angle_SVM=5.0f;
+    else if (close_loop_active==true && CUR_FREQ<500.0f) { 
+                                                            sensorless_speed_pi_controller(reference_frequency,frequency, &psi_rotating_angle_SVM); 
 
-                                                        *VsD = SVM_V_s_ref_D (psi_s_ref,psi_s,psi_s_alpha_SVM,psi_rotating_angle_SVM,i_sD,R_s,2.0f*TICK_PERIOD);
-                                                        *VsQ = SVM_V_s_ref_Q (psi_s_ref,psi_s,psi_s_alpha_SVM,psi_rotating_angle_SVM,i_sQ,R_s,2.0f*TICK_PERIOD);
-                                                   }
+                                                            *VsD = SVM_V_s_ref_D (psi_s_ref,psi_s,psi_s_alpha_SVM,psi_rotating_angle_SVM,i_sD,R_s,2.0f*TICK_PERIOD);
+                                                            *VsQ = SVM_V_s_ref_Q (psi_s_ref,psi_s,psi_s_alpha_SVM,psi_rotating_angle_SVM,i_sQ,R_s,2.0f*TICK_PERIOD);
+                                                         }
+/*
     else if (close_loop_active==true && frequency>=450.0f) {    psi_rotating_angle_SVM=0.0f;
-
+                                                            
                                                         *VsD = SVM_V_s_ref_D (psi_s_ref,psi_s,psi_s_alpha_SVM,psi_rotating_angle_SVM,i_sD,R_s,2.0f*TICK_PERIOD);
                                                         *VsQ = SVM_V_s_ref_Q (psi_s_ref,psi_s,psi_s_alpha_SVM,psi_rotating_angle_SVM,i_sQ,R_s,2.0f*TICK_PERIOD);
                                                    }
+*/
 }
 
+void SVM_torque_close_loop(float reference_torque, float torque,bool close_loop_active, float* VsD, float* VsQ)
+{
+    //float psi_rotating_angle;
+
+    if (close_loop_active==false) { *VsD=*VsD;
+                             *VsQ=*VsQ;
+                           } 
+    else if (close_loop_active==true && CUR_FREQ<500.0f) { 
+                                                            sensorless_torque_pi_controller(reference_torque,torque, &psi_rotating_angle_SVM); 
+
+                                                            *VsD = SVM_V_s_ref_D (psi_s_ref,psi_s,psi_s_alpha_SVM,psi_rotating_angle_SVM,i_sD,R_s,2.0f*TICK_PERIOD);
+                                                            *VsQ = SVM_V_s_ref_Q (psi_s_ref,psi_s,psi_s_alpha_SVM,psi_rotating_angle_SVM,i_sQ,R_s,2.0f*TICK_PERIOD);
+                                                         }
+/*
+    else if (close_loop_active==true && frequency>=450.0f) {    psi_rotating_angle_SVM=0.0f;
+                                                            
+                                                        *VsD = SVM_V_s_ref_D (psi_s_ref,psi_s,psi_s_alpha_SVM,psi_rotating_angle_SVM,i_sD,R_s,2.0f*TICK_PERIOD);
+                                                        *VsQ = SVM_V_s_ref_Q (psi_s_ref,psi_s,psi_s_alpha_SVM,psi_rotating_angle_SVM,i_sQ,R_s,2.0f*TICK_PERIOD);
+                                                   }
+*/
+}
 
 
 #define INITIAL_SVM    0
@@ -585,16 +609,16 @@ void SVM_loop_control(float frequency,float maximum_open_loop_frequency,bool shu
                                                                                  *close_loop_SVM=false;
                                                                              }
     else if (SVM_loop_state==INITIAL_SVM && (te_ref!=0.0f || freq_ref!=0.0f) )  {   SVM_loop_state=OPEN_LOOP_SVM;
-                                                                                    //*open_loop=true;
-                                                                                    //*close_loop_SVM=false;
-                                                                                    *open_loop=false;
-                                                                                    *close_loop_SVM=true;
+                                                                                    *open_loop=true;
+                                                                                    *close_loop_SVM=false;
+                                                                                    //*open_loop=false;
+                                                                                    //*close_loop_SVM=true;
                                                                                 }
     else if (SVM_loop_state==OPEN_LOOP_SVM && frequency<maximum_open_loop_frequency)  {   SVM_loop_state=OPEN_LOOP_SVM;
-                                                                                          //*open_loop=true;
-                                                                                          //*close_loop_SVM=false;
-                                                                                          *open_loop=false;
-                                                                                          *close_loop_SVM=true;
+                                                                                          *open_loop=true;
+                                                                                          *close_loop_SVM=false;
+                                                                                          //*open_loop=false;
+                                                                                          //*close_loop_SVM=true;
                                                                                       }
 
     else if (SVM_loop_state==OPEN_LOOP_SVM && frequency>=maximum_open_loop_frequency)  {   SVM_loop_state=CLOSE_LOOP_SVM;
@@ -649,7 +673,8 @@ if (center_aligned_state==FIRST_HALF)
   
 
   SVM_starting_open_loop(open_loop_SVM,&V_sD,&V_sQ,U_d);
-  SVM_speed_close_loop(ref_freq_SVM,CUR_FREQ,close_loop_SVM,&V_sD,&V_sQ);
+  //SVM_speed_close_loop(ref_freq_SVM,w_r,close_loop_SVM,&V_sD,&V_sQ);
+  SVM_torque_close_loop(t_e_ref,t_e,close_loop_SVM,&V_sD,&V_sQ);
   SVM_loop_control(CUR_FREQ,80.0f,shutdown,t_e_ref,ref_freq_SVM,&open_loop_SVM,&close_loop_SVM); 
 
 
@@ -699,8 +724,9 @@ else
 
   SVM_phase_duty_cycles           (&duty_a, &duty_b, &duty_c, cita_V_s,T_max_on,T_med_on,T_min_on);
 
-
-  shutdown_SVM_speed (ref_freq_SVM,w_r,&shutdown); 
+  
+  shutdown_SVM_speed (t_e_ref,CUR_FREQ,&shutdown); 
+  //shutdown_SVM_speed (ref_freq_SVM,w_r,&shutdown); 
   //shutdown_SVM_torque (t_e_ref,t_e,&shutdown);
 
   /*

@@ -21,10 +21,10 @@
 float w_r=0.0f;
 
 
-#define I_MAX_SENSORLESS            90.0f//  0.0005f//(90.0f*frequency/interrupt_frequency) 
-#define P_MAX_SENSORLESS            90.0f//  0.0005f//(90.0f*frequency/interrupt_frequency) 
-#define PI_MAX_SENSORLESS           90.0f//  0.0005f//(90.0f*frequency/interrupt_frequency) 
-#define PI_MIN_SENSORLESS          -90.0f// -0.0005f//-(90.0f*frequency/interrupt_frequency) 
+#define I_MAX_SENSORLESS            45.0f//  0.0005f//(90.0f*frequency/interrupt_frequency) 
+#define P_MAX_SENSORLESS            45.0f//  0.0005f//(90.0f*frequency/interrupt_frequency) 
+#define PI_MAX_SENSORLESS           45.0f//  0.0005f//(90.0f*frequency/interrupt_frequency) 
+#define PI_MIN_SENSORLESS          -45.0f// -0.0005f//-(90.0f*frequency/interrupt_frequency) 
 
 float SVM_pi_control=0.0f;
 float psi_rotating_angle_SVM=0.0f;
@@ -72,7 +72,7 @@ void sensorless_speed_pi_controller(
 
 
   if (reference_frequency!=0.0f)
-    *rotating_angle=*rotating_angle+0.0005f;//pi_control_sensorless;
+    *rotating_angle=pi_control_sensorless;
   else 
     *rotating_angle=0.0f;  
 
@@ -110,10 +110,10 @@ float psi_advance_calculator(float reference_frequency, float interrupt_frequenc
 
 
 
-#define I_MAX_SENSORLESS_TORQUE            90.0f//  0.005f//(90.0f*frequency/interrupt_frequency) 
-#define P_MAX_SENSORLESS_TORQUE            90.0f//  0.005f//(90.0f*frequency/interrupt_frequency) 
-#define PI_MAX_SENSORLESS_TORQUE           90.0f//  0.005f//(90.0f*frequency/interrupt_frequency) 
-#define PI_MIN_SENSORLESS_TORQUE          -90.0f//  -0.005f//-(90.0f*frequency/interrupt_frequency) 
+#define I_MAX_SENSORLESS_TORQUE            45.0f//  0.005f//(90.0f*frequency/interrupt_frequency) 
+#define P_MAX_SENSORLESS_TORQUE            45.0f//  0.005f//(90.0f*frequency/interrupt_frequency) 
+#define PI_MAX_SENSORLESS_TORQUE           45.0f//  0.005f//(90.0f*frequency/interrupt_frequency) 
+#define PI_MIN_SENSORLESS_TORQUE          -45.0f//  -0.005f//-(90.0f*frequency/interrupt_frequency) 
 
 
 void sensorless_torque_pi_controller(
@@ -144,7 +144,7 @@ void sensorless_torque_pi_controller(
 
 
   if (reference_torque!=0)
-    *rotating_angle=*rotating_angle+0.0005f;//pi_control_sensorless;
+    *rotating_angle=pi_control_sensorless;
   
   else 
     *rotating_angle=0.0f;
