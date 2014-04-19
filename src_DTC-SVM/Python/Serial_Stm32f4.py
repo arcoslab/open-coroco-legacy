@@ -18,6 +18,7 @@
 # *  You should have received a copy of the GNU General Public License
 # *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 # */
+import time 
 import datetime
 import csv
 import serial
@@ -35,6 +36,9 @@ class Serial_Stm32f4(object):
 
     def initializing_values(self):
 
+        self.time_starting_c_capture=datetime.datetime.now()
+        self.force_append =False
+
         #pyserial configuration
         self.root_path           = "/home/tumacher/local/src/repositories/arcoslab/light-open-coroco/open-coroco/src_DTC-SVM/Python/measures/"
         self.dev_type       ="/dev/ttyACM"
@@ -51,7 +55,7 @@ class Serial_Stm32f4(object):
         self.new_data_line      = ''
         self.read_capture_state = 'not_collecting'
         self.tag_comment        = ''
-        self.aditional_comment='voltage open-loop 5Hz hall (0.000005f increase), Ud 40%'
+        self.aditional_comment=' voltage open-loop hall+SVM 20Hz(0.000002f increase), Ud 40%, wcutoff=25'
         self.driving_counter    = 0
         self.various_counter     = 0
         self.type_of_test       = 0        
@@ -68,7 +72,7 @@ class Serial_Stm32f4(object):
         self.title_extra            = ''
 
         #test routine
-        self.max_test_time      = 5000#50000#298#100000#100000#50000#100000
+        self.max_test_time      = 50000#50000#298#100000#100000#50000#100000
         self.min_test_time      = 300
         self.test_routine_state = 'initial'
         self.driving_test_state = 'initial'
@@ -97,7 +101,7 @@ class Serial_Stm32f4(object):
         self.P_divisor      =1000000000
         '''
         self.start_P_test       = False
-        self.P              =100.0#0.000000999999997475#0.000001
+        self.P              =600.0#0.000000999999997475#0.000001
         self.final_P        =0.000001
         self.P_increment    =10 
         self.P_test_counter =0
@@ -142,6 +146,9 @@ class Serial_Stm32f4(object):
         self.I_speed=0.0
         self.P_speed_state='initial'
         self.I_speed_state='initial'
+
+        self.capture_c_button = False
+        self.capture_c_button_state='initial'
 
         #data from stm32F4 (impedance control+DTC-SVM+PID+HALL)
         self.time                   = 0.0
@@ -1062,7 +1069,7 @@ class Serial_Stm32f4(object):
                                         
             if self.capture_data==True and self.transmition_error==False:
                 
-                if   self.read_capture_state == 'not_collecting' and self.time <= self.min_test_time:#  30 cycles for the regularbyte sending
+                if   self.read_capture_state == 'not_collecting' and (self.time <= self.min_test_time or self.force_append ==True):#  30 cycles for the regularbyte sending
                                                                                       # and 300 for the whole data 
                     self.read_capture_state = 'collecting'
                     #print "not appending, timer: " + str(self.time)
@@ -1606,11 +1613,107 @@ class Serial_Stm32f4(object):
             self.start_various_test=False
 
        
-        
+          
+    def capture_c_button_end(self):
 
 
 
+        if self.capture_c_button_state=='initial' and  self.capture_c_button == True and self.time<2:
+            self.capture_c_button_state='capturing'
 
+        elif self.capture_c_button_state=='capturing' and self.capture_c_button == True and self.time>=self.max_test_time:
+            self.end_capturing_data()
+            self.capture_c_button=False
+            self.capture_c_button_state='initial'
+    
+
+    '''
+    def capture_c_button_end(self):
+         
+        self.time_window=0.1
+
+        self.time_now_c_capture=datetime.datetime.now()
+        self.time_difference_c_capture=self.time_now_c_capture-self.time_starting_c_capture
+        self.seconds=self.time_difference_c_capture.seconds+self.time_difference_c_capture.microseconds/1000000.0
+
+
+        if self.capture_c_button_state=='initial' and  self.capture_c_button == True:
+            self.capture_c_button_state='initial frequencies'
+            self.print_selection_setup(0)
+            #self.print_selection_setup(0)
+            #self.write_a_line('c ')
+            #self.write_a_line('c ')
+            print "waiting like idiots 1"
+  
+ 
+        elif self.capture_c_button_state=='initial frequencies' and  self.capture_c_button == True:
+            self.capture_c_button_state='capturing frequencies'
+            time.sleep(1)
+            self.capturing_data()
+            self.force_append =True
+            self.time_starting_c_capture=datetime.datetime.now()
+            
+
+        elif self.capture_c_button_state=='capturing frequencies' and self.capture_c_button == True and self.seconds>=self.time_window:
+            self.end_capturing_data()
+            self.force_append =False
+            self.capture_c_button_state='initial three-phase currents'
+            self.print_selection_setup(1)
+            #self.print_selection_setup(1)
+            #self.write_a_line('c ')
+            self.write_a_line('c ')
+            print "waiting like idiots 2"
+  
+
+        elif self.capture_c_button_state=='initial three-phase currents' and  self.capture_c_button == True: 
+            self.capture_c_button_state='capturing three-phase currents'
+            time.sleep(1)
+            self.capturing_data()  
+            self.force_append =True  
+            self.time_starting_c_capture=datetime.datetime.now() 
+            print "waiting like idiots 3"
+            self.seconds=0.0
+            #time.sleep(1)  
+
+        elif self.capture_c_button_state=='capturing three-phase currents' and self.capture_c_button == True and self.seconds<self.time_window:
+            #self.end_capturing_data()
+            #self.capture_c_button_state='initial'
+            print "waiting like idiots 4"
+            #self.print_selection_setup(1)
+            #self.print_selection_setup(1)
+            #self.write_a_line('c ')
+            #self.write_a_line('c ')
+            #time.sleep(1) 
+
+
+        elif self.capture_c_button_state=='capturing three-phase currents' and self.capture_c_button == True and self.seconds>=self.time_window:
+            self.end_capturing_data()
+            self.capture_c_button_state='initial'
+            print "waiting like idiots 5"
+            self.force_append =False
+            #self.print_selection_setup(1)
+            #self.print_selection_setup(1)
+            #self.write_a_line('c ')
+            #self.write_a_line('c ')
+            time.sleep(5)            
+
+            self.capture_c_button=False
+    '''
+    
+    def print_selection_tags(self):
+        if   self.print_selection==0: tag='frequencies'
+        elif self.print_selection==1: tag='three-phase_currents'
+        elif self.print_selection==2: tag='isQ_vs_isD'
+        elif self.print_selection==3: tag='VsQ_vs_VsD'
+        elif self.print_selection==4: tag='voltage_magnitude'
+        elif self.print_selection==5: tag='flux-linkage'
+        elif self.print_selection==6: tag='electromagnetic_torque'
+        elif self.print_selection==7: tag='phase_advance_pi'
+        elif self.print_selection==8: tag=''
+        elif self.print_selection==9: tag=''
+        else                        : tag=''
+
+        return tag
 
     def write(self):	
 
@@ -1625,7 +1728,11 @@ class Serial_Stm32f4(object):
          self.torque_driving_tests_for_every_set_of_data()
          self.torque_testing_routine()
          self.torque_P_test()
-         #if self.transmition_error: print "transmition_error"         
+         #if self.transmition_error: print "transmition_error"    
+
+         self.capture_c_button_end()
+
+              
 
 
          while sys.stdin in select.select([sys.stdin], [], [], 0)[0]:	#read from standart input if there is something, otherwise not 
@@ -1647,12 +1754,13 @@ class Serial_Stm32f4(object):
                     
                     #capturing data into csv
                     elif   split_command[0]=='c':
-                        self.tag_comment       =line+self.aditional_comment#raw_input("Enter comment: ") 
+                        self.tag_comment       =line+self.aditional_comment+self.print_selection_tags()#raw_input("Enter comment: ") 
                         self.path              =self.root_path + "["+datetime.datetime.now().ctime() +"] ["+self.tag_comment+"]"+'/'  
                         self.title_extra=''
                         self.write_a_line(line)
                         self.capturing_data()
-                        self.tag_comment       =line+self.aditional_comment#raw_input("Enter comment: ") 
+                        #self.tag_comment       =line+self.aditional_comment+self.print_selection_tags()#raw_input("Enter comment: ") 
+                        self.capture_c_button = True
 
                     elif split_command[0]=='f':
                         self.end_capturing_data()

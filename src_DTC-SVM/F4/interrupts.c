@@ -131,8 +131,8 @@ else
 void adc_isr(void)
 { 
   static int adc_counter=0;
-  float V_stm32_A  = 0.0f;
-  float V_stm32_B  = 0.0f;
+  static float V_stm32_A  = 0.0f;
+  static float V_stm32_B  = 0.0f;
   float V_stm32_Ud = 0.0f;
   float V_shunt_A  = 0.0f;
   float V_shunt_B  = 0.0f;
@@ -140,9 +140,14 @@ void adc_isr(void)
 
   if (adc_counter==0)
   {
+/*
     V_stm32_A = adc_read_regular(ADC1)*(VREF/ADC_CONVERSION_FACTOR);
     V_shunt_A = (V_stm32_A-V_DIFFERENTIAL_AMPLIFIER_REFFERENCE)/G_OP_AMP_A;
     i_sA      = V_shunt_A/R_SHUNT_A;
+*/
+    V_stm32_A = adc_read_regular(ADC1);
+
+
     
     //oscilloscope flag: start of ADC current measuring 
     gpio_clear(GPIOB, GPIO15);
@@ -152,9 +157,12 @@ void adc_isr(void)
   }
   else if (adc_counter==1)
   {
+/*
     V_stm32_B = adc_read_regular(ADC1)*(VREF/ADC_CONVERSION_FACTOR);
     V_shunt_B = (V_stm32_B-V_DIFFERENTIAL_AMPLIFIER_REFFERENCE)/G_OP_AMP_B;
     i_sB      = V_shunt_B/R_SHUNT_B;
+*/
+    V_stm32_B = adc_read_regular(ADC1);
     
     //oscilloscope flag: start of ADC Voltage measuring
     gpio_set(GPIOB, GPIO15);
@@ -175,6 +183,17 @@ void adc_isr(void)
     i_sA=0.0f;
     i_sB=0.0f;
     */
+
+    V_shunt_A = (V_stm32_A*(VREF/ADC_CONVERSION_FACTOR)-V_DIFFERENTIAL_AMPLIFIER_REFFERENCE)/G_OP_AMP_A;
+    i_sA      = V_shunt_A/R_SHUNT_A;
+
+    V_shunt_B = (V_stm32_B*(VREF/ADC_CONVERSION_FACTOR)-V_DIFFERENTIAL_AMPLIFIER_REFFERENCE)/G_OP_AMP_B;
+    i_sB      = V_shunt_B/R_SHUNT_B;
+
+
+
+
+
        
 
     adc_counter=0;
