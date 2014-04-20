@@ -56,7 +56,7 @@ class Serial_Stm32f4(object):
         self.new_data_line      = ''
         self.read_capture_state = 'not_collecting'
         self.tag_comment        = ''
-        self.aditional_comment=' voltage open-loop hall+SVM 20Hz(0.000002f increase), DTC-SVM open loop 90degree cte,Ud 40%, wcutoff=800Hz'
+        self.aditional_comment=' voltage open-loop hall+SVM 20Hz(0.000002f increase), DTC-SVM open loop 60degree cte,Ud 40%, wcutoff=200Hz'
         self.driving_counter    = 0
         self.various_counter     = 0
         self.type_of_test       = 0        

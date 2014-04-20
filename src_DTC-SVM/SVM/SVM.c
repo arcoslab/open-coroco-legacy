@@ -556,14 +556,14 @@ void SVM_speed_close_loop(float reference_frequency, float frequency,bool close_
                                     *VsQ=*VsQ;
                                     //psi_rotating_angle_SVM=3.0f;
                                   } 
-    else if (close_loop_active==true && CUR_FREQ<500.0f) {  psi_rotating_angle_SVM=90.0f;
+    else if (close_loop_active==true && CUR_FREQ<500.0f) {  psi_rotating_angle_SVM=60.0f;
                                                             //sensorless_speed_pi_controller(reference_frequency,frequency, &psi_rotating_angle_SVM); 
 
                                                             *VsD = SVM_V_s_ref_D (psi_s_ref,psi_s,psi_s_alpha_SVM,psi_rotating_angle_SVM,i_sD,R_s,2.0f*TICK_PERIOD);
                                                             *VsQ = SVM_V_s_ref_Q (psi_s_ref,psi_s,psi_s_alpha_SVM,psi_rotating_angle_SVM,i_sQ,R_s,2.0f*TICK_PERIOD);
                                                          }
    else {
-                                                            psi_rotating_angle_SVM=90.0f;
+                                                            psi_rotating_angle_SVM=60.0f;
                                                             //sensorless_speed_pi_controller(reference_frequency,frequency, &psi_rotating_angle_SVM); 
 
                                                             *VsD = SVM_V_s_ref_D (psi_s_ref,psi_s,psi_s_alpha_SVM,psi_rotating_angle_SVM,i_sD,R_s,2.0f*TICK_PERIOD);
