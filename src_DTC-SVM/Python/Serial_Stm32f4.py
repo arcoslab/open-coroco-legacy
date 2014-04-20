@@ -56,7 +56,7 @@ class Serial_Stm32f4(object):
         self.new_data_line      = ''
         self.read_capture_state = 'not_collecting'
         self.tag_comment        = ''
-        self.aditional_comment=' voltage open-loop hall+SVM 20Hz(0.000002f increase), DTC-SVM open loop 90degree cte,Ud 40%, wcutoff=500Hz'
+        self.aditional_comment=' voltage open-loop hall+SVM 20Hz(0.000002f increase), DTC-SVM open loop 90degree cte,Ud 40%, wcutoff=800Hz'
         self.driving_counter    = 0
         self.various_counter     = 0
         self.type_of_test       = 0        
@@ -73,7 +73,7 @@ class Serial_Stm32f4(object):
         self.title_extra            = ''
 
         #test routine
-        self.max_test_time      = 50000#50000#298#100000#100000#50000#100000
+        self.max_test_time      = 5000000#50000#298#100000#100000#50000#100000
         self.min_test_time      = 300
         self.test_routine_state = 'initial'
         self.driving_test_state = 'initial'
@@ -998,7 +998,7 @@ class Serial_Stm32f4(object):
         plot_edge_color='k'  
 
         if   self.print_selection==0:
-           if len(self.time_vector)==0 or len(self.electric_frequency_vector)==0 or len(self.hall_frequency_vector)==0 or len(self.reference_frequency_vector)==0:
+           if len(self.time_vector)==0 or len(self.electric_frequency_vector)==0 or len(self.hall_frequency_vector)==0: #or len(self.reference_frequency_vector)==0:
                 self.empty_vectors=True;
             
            else:
@@ -1049,7 +1049,7 @@ class Serial_Stm32f4(object):
                 plt.close()
 
         elif self.print_selection==5:
-            if len(self.psi_sD_vector)==0 or len(self.psi_sQ_vector)==0 or len(self.time_vector)==0 or len(self.psi_s_alpha_vector)==0:
+            if len(self.psi_sD_vector)==0 or len(self.psi_sQ_vector)==0: #or len(self.time_vector)==0 or len(self.psi_s_alpha_vector)==0:
                 self.empty_vectors=True
 
             else: 
@@ -1064,7 +1064,7 @@ class Serial_Stm32f4(object):
                 plt.close()
 
         elif self.print_selection==6:
-            if len(self.time_vector)==0 or len(self.te_vector)==0 or  len(self.te_ref_vector)==0:
+            if len(self.time_vector)==0 or len(self.te_vector)==0: #or  len(self.te_ref_vector)==0:
                 self.empty_vectors=True
 
             else: 
@@ -1675,23 +1675,7 @@ class Serial_Stm32f4(object):
         if self.capture_c_button_state=='initial' and  self.capture_c_button == True and self.time<2:
             self.capture_c_button_state='capturing'
             self.capturing_data()
-            self.empty_vectors=False
 
-      
-
-        elif self.capture_c_button_state=='capturing' and self.capture_c_button == True and self.time>=self.max_test_time:
-            self.end_capturing_data()
-            
-            if self.empty_vectors==True:
-                self.capture_c_button=True
-                self.write_a_line('c ')
-            else: 
-                self.capture_c_button=False
-
-            self.capture_c_button_state='initial'
-
-
-        '''
         elif self.capture_c_button_state=='capturing' and self.capture_c_button == True and self.time>=self.max_test_time and self.empty_vectors==True:
             self.end_capturing_data()
             self.empty_vectors=False
@@ -1700,7 +1684,21 @@ class Serial_Stm32f4(object):
             #self.tag_comment       =line+self.aditional_comment+self.print_selection_tags()#raw_input("Enter comment: ") 
             self.capture_c_button = True
             self.capture_c_button_state='initial'
-        ''' 
+                  
+
+        elif self.capture_c_button_state=='capturing' and self.capture_c_button == True and self.time>=self.max_test_time:
+            self.end_capturing_data()
+            
+            if self.empty_vectors==True:
+                self.capture_c_button=True
+                self.empty_vectors=False
+                self.write_a_line('c ')
+                self.write_a_line('c ')
+                self.write_a_line('c ')
+            else: 
+                self.capture_c_button=False
+
+            self.capture_c_button_state='initial'
 
 
     '''
@@ -1834,6 +1832,9 @@ class Serial_Stm32f4(object):
                         self.path              =self.root_path + "["+datetime.datetime.now().ctime() +"] ["+self.tag_comment+"]"+'/'  
                         self.title_extra=''
                         self.write_a_line(line)
+                        self.write_a_line('c ')
+                        self.write_a_line('c ')
+
                         #self.capturing_data()
                         #self.tag_comment       =line+self.aditional_comment+self.print_selection_tags()#raw_input("Enter comment: ") 
                         self.capture_c_button = True
@@ -1843,6 +1844,9 @@ class Serial_Stm32f4(object):
                         #self.path              =self.root_path + "["+datetime.datetime.now().ctime() +"] ["+self.tag_comment+"]"+'/'  
                         #self.title_extra=''
                         self.write_a_line('c ')
+                        self.write_a_line('c ')
+                        self.write_a_line('c ')
+
                         #self.capturing_data()
                         #self.tag_comment       =line+self.aditional_comment+self.print_selection_tags()#raw_input("Enter comment: ") 
                         self.capture_c_button = True
