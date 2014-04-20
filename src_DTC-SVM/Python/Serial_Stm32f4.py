@@ -1675,7 +1675,23 @@ class Serial_Stm32f4(object):
         if self.capture_c_button_state=='initial' and  self.capture_c_button == True and self.time<2:
             self.capture_c_button_state='capturing'
             self.capturing_data()
+            self.empty_vectors=False
 
+      
+
+        elif self.capture_c_button_state=='capturing' and self.capture_c_button == True and self.time>=self.max_test_time:
+            self.end_capturing_data()
+            
+            if self.empty_vectors==True:
+                self.capture_c_button=True
+                self.write_a_line('c ')
+            else: 
+                self.capture_c_button=False
+
+            self.capture_c_button_state='initial'
+
+
+        '''
         elif self.capture_c_button_state=='capturing' and self.capture_c_button == True and self.time>=self.max_test_time and self.empty_vectors==True:
             self.end_capturing_data()
             self.empty_vectors=False
@@ -1684,17 +1700,7 @@ class Serial_Stm32f4(object):
             #self.tag_comment       =line+self.aditional_comment+self.print_selection_tags()#raw_input("Enter comment: ") 
             self.capture_c_button = True
             self.capture_c_button_state='initial'
-                  
-
-        elif self.capture_c_button_state=='capturing' and self.capture_c_button == True and self.time>=self.max_test_time:
-            self.end_capturing_data()
-            
-            if self.empty_vectors==True:
-                self.capture_c_button=True
-            else: 
-                self.capture_c_button=False
-
-            self.capture_c_button_state='initial'
+        ''' 
 
 
     '''
