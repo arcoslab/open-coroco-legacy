@@ -110,7 +110,7 @@ float floating_switches_quadrature_stator_voltage_V_SQ (float S_B, float S_C,flo
 }
 
 //---------------------stator flux-linkage space vector estimation-------------------------------
-#define W_CUTOFF 25.0f
+#define W_CUTOFF 500.0f
 
 //#define a_sD (-0.000008721f+0.00000905405538680536f)*2.0f
 //#define b_sQ (-0.00000227445533769063f)*2.0f
