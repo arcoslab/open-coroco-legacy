@@ -56,7 +56,7 @@ class Serial_Stm32f4(object):
         self.new_data_line      = ''
         self.read_capture_state = 'not_collecting'
         self.tag_comment        = ''
-        self.aditional_comment=' voltage open-loop hall+SVM 20Hz(0.000002f increase), DTC-SVM open loop 60degree cte,Ud 40%, wcutoff=200Hz'
+        self.aditional_comment=' voltage open-loop hall+SVM 20Hz(0.000005f increase), DTC-SVM closeloop,Ud 40%, wcutoff=100Hz'
         self.driving_counter    = 0
         self.various_counter     = 0
         self.type_of_test       = 0        
@@ -73,7 +73,7 @@ class Serial_Stm32f4(object):
         self.title_extra            = ''
 
         #test routine
-        self.max_test_time      = 5000000#50000#298#100000#100000#50000#100000
+        self.max_test_time      = 500000#50000#298#100000#100000#50000#100000
         self.min_test_time      = 300
         self.test_routine_state = 'initial'
         self.driving_test_state = 'initial'

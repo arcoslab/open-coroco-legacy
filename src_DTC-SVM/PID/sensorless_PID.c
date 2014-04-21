@@ -110,10 +110,10 @@ float psi_advance_calculator(float reference_frequency, float interrupt_frequenc
 
 
 
-#define I_MAX_SENSORLESS_TORQUE            45.0f//  0.005f//(90.0f*frequency/interrupt_frequency) 
-#define P_MAX_SENSORLESS_TORQUE            45.0f//  0.005f//(90.0f*frequency/interrupt_frequency) 
-#define PI_MAX_SENSORLESS_TORQUE           45.0f//  0.005f//(90.0f*frequency/interrupt_frequency) 
-#define PI_MIN_SENSORLESS_TORQUE          -45.0f//  -0.005f//-(90.0f*frequency/interrupt_frequency) 
+#define I_MAX_SENSORLESS_TORQUE            90.0f//  0.005f//(90.0f*frequency/interrupt_frequency) 
+#define P_MAX_SENSORLESS_TORQUE            90.0f//  0.005f//(90.0f*frequency/interrupt_frequency) 
+#define PI_MAX_SENSORLESS_TORQUE           90.0f//  0.005f//(90.0f*frequency/interrupt_frequency) 
+#define PI_MIN_SENSORLESS_TORQUE          -90.0f//  -0.005f//-(90.0f*frequency/interrupt_frequency) 
 
 
 void sensorless_torque_pi_controller(
