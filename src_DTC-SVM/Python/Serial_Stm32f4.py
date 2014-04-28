@@ -56,7 +56,7 @@ class Serial_Stm32f4(object):
         self.new_data_line      = ''
         self.read_capture_state = 'not_collecting'
         self.tag_comment        = ''
-        self.aditional_comment=' voltage open-loop hall+SVM 20Hz(0.000005f increase), DTC-SVM closeloop,Ud 40%, wcutoff=100Hz'
+        self.aditional_comment=' voltage open-loop hall+SVM 20Hz(0.00001f increase), DTC-SVM closeloop,Ud 40%, wcutoff=0.2Hz , final freq=250Hz'
         self.driving_counter    = 0
         self.various_counter     = 0
         self.type_of_test       = 0        
@@ -73,7 +73,7 @@ class Serial_Stm32f4(object):
         self.title_extra            = ''
 
         #test routine
-        self.max_test_time      = 500000#50000#298#100000#100000#50000#100000
+        self.max_test_time      = 520000#50000#298#100000#100000#50000#100000
         self.min_test_time      = 300
         self.test_routine_state = 'initial'
         self.driving_test_state = 'initial'
@@ -1904,6 +1904,16 @@ class Serial_Stm32f4(object):
                         self.test_frequency    =split_command[1]
                         self.tag_comment       =line+self.aditional_comment#raw_input("Enter comment: ") 
                         self.path              =self.root_path + "["+datetime.datetime.now().ctime() +"] ["+self.tag_comment+"]"+'/'  
+
+
+                    elif split_command[0]=='ONE':
+                        
+                        self.start_test=True;
+                        self.print_selection_setup(int(split_command[2]))
+                        self.test_frequency    =split_command[1]
+                        self.tag_comment       =line+self.aditional_comment#raw_input("Enter comment: ") 
+                        #self.path              =self.root_path + "["+datetime.datetime.now().ctime() +"] ["+self.tag_comment+"]"+'/'  
+
 
                     elif split_command[0]=='onetorque':
                         
