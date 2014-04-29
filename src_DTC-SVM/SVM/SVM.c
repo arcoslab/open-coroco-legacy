@@ -524,7 +524,7 @@ void SVM_starting_open_loop(bool open_loop,float* VsD, float*VsQ, float Ud)
                                                         extra_load_angle_increase=0.0f;
                                                      }
                                 //else if (CUR_FREQ<ref_freq_SVM) extra_load_angle_increase=0.000005f;
-                                else if (CUR_FREQ<250.0f) extra_load_angle_increase=0.00001f;
+                                else if (CUR_FREQ<250.0f) extra_load_angle_increase=0.00002f;
                                 else                extra_load_angle_increase=0.0f;
                                 
 
@@ -605,7 +605,8 @@ void SVM_speed_close_loop(float reference_frequency, float frequency,bool close_
                                     *VsQ=*VsQ;
                                     //psi_rotating_angle_SVM=3.0f;
                                   } 
-    else if (close_loop_active==true && CUR_FREQ<500.0f) {  psi_rotating_angle_SVM=45.0f;
+    else if (close_loop_active==true && CUR_FREQ<500.0f) 
+                                                        {  psi_rotating_angle_SVM=45.0f;
                                                             //sensorless_speed_pi_controller(reference_frequency,frequency, &psi_rotating_angle_SVM); 
 
                                                             *VsD = SVM_V_s_ref_D (psi_s_ref,psi_s,psi_s_alpha_SVM,psi_rotating_angle_SVM,i_sD,R_s,2.0f*TICK_PERIOD);
@@ -676,7 +677,7 @@ void SVM_loop_control(float frequency,float maximum_open_loop_frequency,bool shu
                                                                                           //*open_loop=false;
                                                                                           //*close_loop_SVM=true;
                                                                                       }
-/*
+
     else if (SVM_loop_state==OPEN_LOOP_SVM && frequency>=maximum_open_loop_frequency)  {  SVM_loop_state=CLOSE_LOOP_SVM;
                                                                                           *open_loop=false;
                                                                                           *close_loop_SVM=true;
@@ -694,7 +695,8 @@ void SVM_loop_control(float frequency,float maximum_open_loop_frequency,bool shu
                                                                     *open_loop=false;
                                                                     *close_loop_SVM=false;
                                                                  }
-*/
+
+
 }
 
 
@@ -707,10 +709,13 @@ if (center_aligned_state==FIRST_HALF)
   i_sD     = direct_stator_current_i_sD     (i_sA);
   i_sQ     = quadrature_stator_current_i_sQ (i_sA,i_sB);
 
-  psi_sD          = direct_stator_flux_linkage_estimator_psi_sD     (2.0f*TICK_PERIOD,V_sD,i_sD,R_s);
-  psi_sQ          = quadrature_stator_flux_linkage_estimator_psi_sQ (2.0f*TICK_PERIOD,V_sQ,i_sQ,R_s);
-//  psi_sD          = direct_stator_flux_linkage_estimator_psi_sD     (2.0f*TICK_PERIOD,V_sD,1.0f,R_s);
-  //psi_sQ          = quadrature_stator_flux_linkage_estimator_psi_sQ (2.0f*TICK_PERIOD,V_sQ,1.0f,R_s);
+  //psi_sD          = direct_stator_flux_linkage_estimator_psi_sD     (2.0f*TICK_PERIOD,V_sD,i_sD,R_s,CUR_FREQ);
+  //psi_sQ          = quadrature_stator_flux_linkage_estimator_psi_sQ (2.0f*TICK_PERIOD,V_sQ,i_sQ,R_s,CUR_FREQ);
+
+
+  flux_linkage_estimator (2.0f*TICK_PERIOD,V_sD,V_sQ,i_sD,i_sQ,R_s,CUR_FREQ,&psi_sD,&psi_sQ);
+
+
   psi_s           = stator_flux_linkage_magnite_psi_s               (psi_sD,psi_sQ);
   psi_s_alpha_SVM = fast_vector_angle                               (psi_sQ,psi_sD);
 
@@ -719,6 +724,8 @@ if (center_aligned_state==FIRST_HALF)
                                                            //it has to be multiplied by two in order because the switching frequency
                                                            //is half the pwm frequency due to the two-cycle center-aligned signal
   
+  if (w_r!=w_r) w_r=0.0f;
+
   t_e       = electromagnetic_torque_estimation_t_e   (psi_sD,i_sQ,psi_sQ,i_sD,pole_pairs);
   //t_e_ref = DTC_torque_reference_PI                 (CUR_FREQ, ref_freq);
   //psi_s_ref = stator_flux_linkage_reference_psi_s_ref (psi_F,t_e_ref,L_sq,pole_pairs);
@@ -737,7 +744,7 @@ if (center_aligned_state==FIRST_HALF)
   SVM_starting_open_loop(open_loop_SVM,&V_sD,&V_sQ,U_d);
   SVM_speed_close_loop(ref_freq_SVM,w_r,close_loop_SVM,&V_sD,&V_sQ);
   //SVM_torque_close_loop(t_e_ref,t_e,close_loop_SVM,&V_sD,&V_sQ);
-  SVM_loop_control(CUR_FREQ,100.0f,shutdown,t_e_ref,ref_freq_SVM,&open_loop_SVM,&close_loop_SVM); 
+  SVM_loop_control(CUR_FREQ,200.0f,shutdown,t_e_ref,ref_freq_SVM,&open_loop_SVM,&close_loop_SVM); 
 
   //SVM_pi_control=psi_rotating_angle_SVM;
 

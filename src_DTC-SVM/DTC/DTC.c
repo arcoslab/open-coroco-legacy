@@ -110,14 +110,18 @@ float floating_switches_quadrature_stator_voltage_V_SQ (float S_B, float S_C,flo
 }
 
 //---------------------stator flux-linkage space vector estimation-------------------------------
-#define W_CUTOFF 0.2f
+#define W_CUTOFF 2000.0f
+#define F_CUTOFF 5.0f
+#define CTE (150.0f)  
+#define K_LPF  0.2f
+#define PI_CTE 3.14159265359f 
 
 //#define a_sD (-0.000008721f+0.00000905405538680536f)*2.0f
 //#define b_sQ (-0.00000227445533769063f)*2.0f
 #define a_sD 0.0f
 #define b_sQ 0.0f
 
-
+/*
 float direct_stator_flux_linkage_estimator_psi_sD     (float T,float V_sD,float i_sD,float R_s)
 {
   static float previous_psi_sD=0.0f;
@@ -133,6 +137,99 @@ float quadrature_stator_flux_linkage_estimator_psi_sQ (float T,float V_sQ,float 
   previous_psi_sQ = ( previous_psi_sQ+T*(V_sQ-i_sQ*R_s) )/(1.0f+T*W_CUTOFF);
 
   return previous_psi_sQ;
+}
+*/
+
+float direct_stator_flux_linkage_estimator_psi_sD     (float T,float V_sD,float i_sD,float R_s,float electric_frequency)
+{
+  static float previous_psi_sD=0.0f;
+
+  //if (electric_frequency<1.0f) electric_frequency=1.0f;
+
+  //if (electric_frequency<=200.0f) electric_frequency=200.0f;
+  if (electric_frequency>=0) previous_psi_sD = ( previous_psi_sD+T*(V_sD-i_sD*R_s) )/(1.0f+T*( K_LPF*2.0f*PI_CTE*electric_frequency));
+  else                       previous_psi_sD = ( previous_psi_sD+T*(V_sD-i_sD*R_s) )/(1.0f+T*(-K_LPF*2.0f*PI_CTE*electric_frequency));
+                       
+  //previous_psi_sD = ( previous_psi_sD+T*(V_sD-i_sD*R_s) )/(1.0f+T*W_CUTOFF);
+  //previous_psi_sD = ( previous_psi_sD+T*(V_sD-i_sD*R_s) )*(1.0f-2.0f*PI_CTE*F_CUTOFF*T);
+
+
+
+  //previous_psi_sD = previous_psi_sD *sqrtf(1.0f+W_CUTOFF*W_CUTOFF/(electric_frequency*electric_frequency) );
+  
+
+  return previous_psi_sD;
+}
+
+float quadrature_stator_flux_linkage_estimator_psi_sQ (float T,float V_sQ,float i_sQ,float R_s,float electric_frequency)
+{
+  static float previous_psi_sQ=0.0f;
+
+    //if (electric_frequency<=1.0f) electric_frequency=1.0f;
+
+  //previous_psi_sQ = ( previous_psi_sQ+T*(V_sQ-i_sQ*R_s) )/(1.0f+T*(electric_frequency*CTE));
+  //previous_psi_sQ = ( previous_psi_sQ+T*(V_sQ-i_sQ*R_s) )/(1.0f+T*W_CUTOFF);
+  if (electric_frequency>=0)  previous_psi_sQ=( previous_psi_sQ+T*(V_sQ-i_sQ*R_s) )*(1.0f+T*( K_LPF*2.0f*PI_CTE*electric_frequency));
+  else                        previous_psi_sQ=( previous_psi_sQ+T*(V_sQ-i_sQ*R_s) )*(1.0f+T*( K_LPF*2.0f*PI_CTE*electric_frequency));
+     
+/*
+  if (electric_frequency<1.0f) electric_frequency=1.0f;
+
+  previous_psi_sQ = previous_psi_sQ *sqrtf(1.0f+W_CUTOFF*W_CUTOFF/(electric_frequency*electric_frequency) );
+*/
+  return previous_psi_sQ;
+}
+
+
+void flux_linkage_estimator (float T,float V_sD,float V_sQ,float i_sD,float i_sQ,float R_s,float electric_frequency, float* psisD, float* psisQ)
+{
+  static float previous_psi_sD=0.0f;
+  static float previous_psi_sQ=0.0f;
+
+  float LPF_psi_sD=0.0f;
+  float LPF_psi_sQ=0.0f;
+  float LPF_lag_angle=0.0f;
+
+  float LPF_psi_s_alpha=0.0f;
+  float LPF_psi_s=0.0f;
+
+  if (electric_frequency>=0.0f) LPF_psi_sD = ( previous_psi_sD+T*(V_sD-i_sD*R_s) )/(1.0f+T*( K_LPF*2.0f*PI_CTE*electric_frequency));
+  else                          LPF_psi_sD = ( previous_psi_sD+T*(V_sD-i_sD*R_s) )/(1.0f+T*(-K_LPF*2.0f*PI_CTE*electric_frequency));
+   
+  if (electric_frequency>=0.0f) LPF_psi_sQ = ( previous_psi_sQ+T*(V_sQ-i_sQ*R_s) )/(1.0f+T*( K_LPF*2.0f*PI_CTE*electric_frequency));
+  else                          LPF_psi_sQ = ( previous_psi_sQ+T*(V_sQ-i_sQ*R_s) )/(1.0f+T*(-K_LPF*2.0f*PI_CTE*electric_frequency));
+  
+  
+  LPF_lag_angle=90.0f-extended_fast_atan(1.0f/K_LPF);
+  //previous_psi_sD=sqrtf(1.0f+K_LPF*K_LPF)*( LPF_psi_sD*fast_cos (LPF_lag_angle)+LPF_psi_sQ*fast_sine(LPF_lag_angle));
+  //previous_psi_sQ=sqrtf(1.0f+K_LPF*K_LPF)*(-LPF_psi_sD*fast_sine(LPF_lag_angle)+LPF_psi_sQ*fast_cos (LPF_lag_angle));
+
+  LPF_psi_s       = stator_flux_linkage_magnite_psi_s               (LPF_psi_sD,LPF_psi_sQ);
+  LPF_psi_s_alpha = fast_vector_angle                               (LPF_psi_sQ,LPF_psi_sD);
+  
+
+  if (electric_frequency<1.0f)
+  {
+    previous_psi_sD=0.0f;
+    previous_psi_sQ=0.0f;
+  }
+  else
+  {
+/*
+    previous_psi_sD=sqrtf(1.0f+K_LPF*K_LPF)*LPF_psi_s*fast_cos (LPF_psi_s_alpha-LPF_lag_angle/2.0f);
+    previous_psi_sQ=sqrtf(1.0f+K_LPF*K_LPF)*LPF_psi_s*fast_sine(LPF_psi_s_alpha-LPF_lag_angle/2.0f);
+*/
+
+    previous_psi_sD=LPF_psi_s*fast_cos (LPF_psi_s_alpha+LPF_lag_angle/8.0f+180.0f);
+    previous_psi_sQ=LPF_psi_s*fast_sine(LPF_psi_s_alpha+LPF_lag_angle/8.0f+180.0f);
+
+  }
+
+  *psisD=previous_psi_sD;
+  *psisQ=previous_psi_sQ;
+
+  //*psisD=LPF_lag_angle;//previous_psi_sD;
+  //*psisQ=extended_fast_atan(1.0f/K_LPF);//previous_psi_sQ;
 }
 
 float stator_flux_linkage_magnite_psi_s               (float psi_sD,float psi_sQ)

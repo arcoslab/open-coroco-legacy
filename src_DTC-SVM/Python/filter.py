@@ -26,21 +26,27 @@ from scipy.signal import butter, lfilter, filtfilt, freqz
 import numpy as np
 import matplotlib.pyplot as plt
 
+
+
+
 #butterworth filter variables
 sample_frequency=40000.0
 nyquist_frequency=sample_frequency/2.0
 butterworth_order=1.0
-cutoff_frequency=1000.0
+cutoff_frequency=2.0*np.pi*1000.0
 normalized_cutoff_frequency=cutoff_frequency/nyquist_frequency
 butterworth_type='low'
 
 #butterworth filter
 #b,a=butter(butterworth_order,normalized_cutoff_frequency,butterworth_type)
 
+#LPF 1+T*WCUTOFF
 b=[(1.0/sample_frequency) ,  0.0]
 a=[(1.0+(1/sample_frequency)*cutoff_frequency) , -1.0]
-#a=[(1.0+0.00000000002) , -1.0]
-#a=[(1.0) , -1.0]  
+
+#LPF 1-Wc*Ts
+a_1=[1.0/(1.0-cutoff_frequency*1.0/sample_frequency)  ,   -1]
+b_1=[1.0/sample_frequency , 0.0]
 
 #pure integrator
 b_pure=[1.0/sample_frequency , 0.0]
@@ -82,7 +88,7 @@ plt.plot(w_Hz_pure,h_decibels_pure,linewidth=2,label='pure integrator')
 plt.title('Frequency response')
 plt.ylabel("Magnitude [dB]")
 #ax11=plt.axes([.16,.59,.2,.2])
-plt.plot(cutoff_frequency,-3,'ro')
+plt.plot(cutoff_frequency/(2.0*np.pi),-3,'ro')
 plt.legend()
 
 plt.subplot(2,1,2)
@@ -91,7 +97,7 @@ plt.plot(w_Hz_pure,angles_pure,linewidth=2,label='pure integrator')
 plt.title('Phase response')
 plt.xlabel("Frequency [Hz]")
 plt.ylabel("Phase [degrees]")
-plt.plot(cutoff_frequency,-45.0,'ro')
+plt.plot(cutoff_frequency/(2.0*np.pi),-45.0,'ro')
 plt.legend()
 #ax1.grid();ax11.grid();ax2.grid();
 plt.show()
