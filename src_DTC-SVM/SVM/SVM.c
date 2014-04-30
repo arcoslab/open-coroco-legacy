@@ -677,7 +677,7 @@ void SVM_loop_control(float frequency,float maximum_open_loop_frequency,bool shu
                                                                                           //*open_loop=false;
                                                                                           //*close_loop_SVM=true;
                                                                                       }
-
+/*
     else if (SVM_loop_state==OPEN_LOOP_SVM && frequency>=maximum_open_loop_frequency)  {  SVM_loop_state=CLOSE_LOOP_SVM;
                                                                                           *open_loop=false;
                                                                                           *close_loop_SVM=true;
@@ -696,7 +696,7 @@ void SVM_loop_control(float frequency,float maximum_open_loop_frequency,bool shu
                                                                     *close_loop_SVM=false;
                                                                  }
 
-
+*/
 }
 
 

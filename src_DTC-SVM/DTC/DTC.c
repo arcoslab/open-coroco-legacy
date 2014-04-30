@@ -147,6 +147,8 @@ float direct_stator_flux_linkage_estimator_psi_sD     (float T,float V_sD,float 
   //if (electric_frequency<1.0f) electric_frequency=1.0f;
 
   //if (electric_frequency<=200.0f) electric_frequency=200.0f;
+
+
   if (electric_frequency>=0) previous_psi_sD = ( previous_psi_sD+T*(V_sD-i_sD*R_s) )/(1.0f+T*( K_LPF*2.0f*PI_CTE*electric_frequency));
   else                       previous_psi_sD = ( previous_psi_sD+T*(V_sD-i_sD*R_s) )/(1.0f+T*(-K_LPF*2.0f*PI_CTE*electric_frequency));
                        
@@ -192,27 +194,27 @@ void flux_linkage_estimator (float T,float V_sD,float V_sQ,float i_sD,float i_sQ
 
   float LPF_psi_s_alpha=0.0f;
   float LPF_psi_s=0.0f;
-
+/*
   if (electric_frequency>=0.0f) LPF_psi_sD = ( previous_psi_sD+T*(V_sD-i_sD*R_s) )/(1.0f+T*( K_LPF*2.0f*PI_CTE*electric_frequency));
   else                          LPF_psi_sD = ( previous_psi_sD+T*(V_sD-i_sD*R_s) )/(1.0f+T*(-K_LPF*2.0f*PI_CTE*electric_frequency));
    
   if (electric_frequency>=0.0f) LPF_psi_sQ = ( previous_psi_sQ+T*(V_sQ-i_sQ*R_s) )/(1.0f+T*( K_LPF*2.0f*PI_CTE*electric_frequency));
   else                          LPF_psi_sQ = ( previous_psi_sQ+T*(V_sQ-i_sQ*R_s) )/(1.0f+T*(-K_LPF*2.0f*PI_CTE*electric_frequency));
+*/ 
   
-  
-  LPF_lag_angle=90.0f-extended_fast_atan(1.0f/K_LPF);
+  //LPF_lag_angle=90.0f-extended_fast_atan(1.0f/K_LPF);
   //previous_psi_sD=sqrtf(1.0f+K_LPF*K_LPF)*( LPF_psi_sD*fast_cos (LPF_lag_angle)+LPF_psi_sQ*fast_sine(LPF_lag_angle));
   //previous_psi_sQ=sqrtf(1.0f+K_LPF*K_LPF)*(-LPF_psi_sD*fast_sine(LPF_lag_angle)+LPF_psi_sQ*fast_cos (LPF_lag_angle));
 
-  LPF_psi_s       = stator_flux_linkage_magnite_psi_s               (LPF_psi_sD,LPF_psi_sQ);
-  LPF_psi_s_alpha = fast_vector_angle                               (LPF_psi_sQ,LPF_psi_sD);
-  
 
+  
+/*
   if (electric_frequency<1.0f)
   {
     previous_psi_sD=0.0f;
     previous_psi_sQ=0.0f;
   }
+
   else
   {
 /*
@@ -220,16 +222,59 @@ void flux_linkage_estimator (float T,float V_sD,float V_sQ,float i_sD,float i_sQ
     previous_psi_sQ=sqrtf(1.0f+K_LPF*K_LPF)*LPF_psi_s*fast_sine(LPF_psi_s_alpha-LPF_lag_angle/2.0f);
 */
 
+/*
     previous_psi_sD=LPF_psi_s*fast_cos (LPF_psi_s_alpha+LPF_lag_angle/8.0f+180.0f);
     previous_psi_sQ=LPF_psi_s*fast_sine(LPF_psi_s_alpha+LPF_lag_angle/8.0f+180.0f);
 
   }
+*/
+
+/*
+//fixed wcutoff, lag compensation
+  LPF_psi_sD = ( previous_psi_sD+T*(V_sD-i_sD*R_s) )/(1.0f+T*( 2.0f*PI_CTE*F_CUTOFF));
+  LPF_psi_sQ = ( previous_psi_sQ+T*(V_sQ-i_sQ*R_s) )/(1.0f+T*( 2.0f*PI_CTE*F_CUTOFF));
+
+  LPF_psi_s       = stator_flux_linkage_magnite_psi_s               (LPF_psi_sD,LPF_psi_sQ);
+  LPF_psi_s_alpha = fast_vector_angle                               (LPF_psi_sQ,LPF_psi_sD);
+
+  LPF_lag_angle =1.0f;
+
+  previous_psi_sD=LPF_psi_s*fast_cos (LPF_psi_s_alpha+LPF_lag_angle);
+  previous_psi_sQ=LPF_psi_s*fast_sine(LPF_psi_s_alpha+LPF_lag_angle);
+
+  if (CUR_FREQ<100.0f)
+  {
+    previous_psi_sD=0.0f;
+    previous_psi_sQ=0.0f;
+ 
+  }  
 
   *psisD=previous_psi_sD;
   *psisQ=previous_psi_sQ;
+*/
+/*
+//fixed wcutoff, no lag compensation
 
-  //*psisD=LPF_lag_angle;//previous_psi_sD;
-  //*psisQ=extended_fast_atan(1.0f/K_LPF);//previous_psi_sQ;
+  LPF_psi_sD = ( previous_psi_sD+T*(V_sD-i_sD*R_s) )/(1.0f+T*( 2.0f*PI_CTE*F_CUTOFF));
+  LPF_psi_sQ = ( previous_psi_sQ+T*(V_sQ-i_sQ*R_s) )/(1.0f+T*( 2.0f*PI_CTE*F_CUTOFF));
+
+  previous_psi_sD=LPF_psi_sD;
+  previous_psi_sQ=LPF_psi_sQ;
+
+  *psisD=previous_psi_sD;
+  *psisQ=previous_psi_sQ;
+*/
+
+//no filter, neglecting currents
+
+  LPF_psi_sD = ( previous_psi_sD+T*(V_sD-i_sD*R_s) )/(1.0f+T*( 2.0f*PI_CTE*F_CUTOFF));
+  LPF_psi_sQ = ( previous_psi_sQ+T*(V_sQ-i_sD*R_s) )/(1.0f+T*( 2.0f*PI_CTE*F_CUTOFF));
+
+  previous_psi_sD=LPF_psi_sD;
+  previous_psi_sQ=LPF_psi_sQ;
+
+  *psisD=previous_psi_sD;
+  *psisQ=previous_psi_sQ;
 }
 
 float stator_flux_linkage_magnite_psi_s               (float psi_sD,float psi_sQ)

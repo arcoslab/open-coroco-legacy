@@ -47,6 +47,8 @@
 #include "Print/Print.c"
 #include "PID/PID.h"
 #include "PID/PID.c"
+#include "Filtering/filters.h"
+#include "Filtering/filters.c"
 #include "F4/initial_setup.h"
 #include "F4/initial_setup.c"
 
