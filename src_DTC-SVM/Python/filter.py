@@ -32,17 +32,17 @@ import matplotlib.pyplot as plt
 #butterworth filter variables
 sample_frequency=40000.0
 nyquist_frequency=sample_frequency/2.0
-butterworth_order=1.0
-cutoff_frequency=2.0*np.pi*1000.0
+butterworth_order=4.0
+cutoff_frequency=2.0*np.pi*600.0
 normalized_cutoff_frequency=cutoff_frequency/nyquist_frequency
 butterworth_type='low'
 
 #butterworth filter
-#b,a=butter(butterworth_order,normalized_cutoff_frequency,butterworth_type)
+b,a=butter(butterworth_order,normalized_cutoff_frequency,butterworth_type)
 
 #LPF 1+T*WCUTOFF
-b=[(1.0/sample_frequency) ,  0.0]
-a=[(1.0+(1/sample_frequency)*cutoff_frequency) , -1.0]
+#b=[(1.0/sample_frequency) ,  0.0]
+#a=[(1.0+(1/sample_frequency)*cutoff_frequency) , -1.0]
 
 #LPF 1-Wc*Ts
 a_1=[1.0/(1.0-cutoff_frequency*1.0/sample_frequency)  ,   -1]

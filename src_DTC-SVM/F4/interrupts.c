@@ -195,7 +195,6 @@ void adc_isr(void)
     //filtering currents
     i_sA = isA_moving_average_filter(i_sA);
     i_sB = isB_moving_average_filter(i_sB);
-
        
 
     adc_counter=0;

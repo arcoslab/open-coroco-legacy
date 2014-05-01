@@ -56,7 +56,7 @@ class Serial_Stm32f4(object):
         self.new_data_line      = ''
         self.read_capture_state = 'not_collecting'
         self.tag_comment        = ''
-        self.aditional_comment=' voltage open-loop 0.00001f,Ud 40%,k=0,finalfreq=250Hz,corrected moving_average_filter for currents, cutoff=5Hz'
+        self.aditional_comment=' voltage open-loop 0.00001f,close loop 45degrees, Ud 40%,k=0,finalfreq=200Hz,no filter for currents,neglected currents cutoff=5Hz'
         self.driving_counter    = 0
         self.various_counter     = 0
         self.type_of_test       = 0        
@@ -70,6 +70,7 @@ class Serial_Stm32f4(object):
         #plotting
         self.plotting_character     = ''
         self.plotting_character_0   = 'o'
+        self.plotting_character_1   = '.'
         self.title_extra            = ''
 
         #test routine
@@ -565,6 +566,30 @@ class Serial_Stm32f4(object):
         return angle
 
 
+    def vector_angle(self,quadrature_component,direct_component):
+    	angle=0.0
+	    #angle=180.0f/PI*atanf(quadrature_component/direct_component);
+
+        if (direct_component!=0.0):
+            angle=57.295779513082320*math.atan(quadrature_component/direct_component)
+        else:
+            angle=0.0
+
+        if (angle>=360.0):
+		    angle=angle-360.0
+        elif (angle<0.0):
+		    angle=angle+360.0
+
+        if ( (quadrature_component<=0.0) and (direct_component<0.0) ):
+		    angle=angle+180.0
+
+        elif ( (quadrature_component>0.0)and(direct_component<0.0)):
+		    angle=angle-180.0
+
+        return angle;
+
+
+
 
     def full_print_string (self):
            #print "inside full_print_string"
@@ -579,6 +604,8 @@ class Serial_Stm32f4(object):
                                     " isC %6.2f"                %self.isC                   + \
                                     " isD %6.2f"                %self.isD                   + \
                                     " isQ %6.2f"                %self.isQ                   + \
+                                    " is  %6.2f"                %math.sqrt(self.isQ*self.isQ+self.isD*self.isD) + \
+                                    " is_cita %6.2f"            %self.vector_angle(self.isQ,self.isD)           + \
                                     " VsD %6.2f"                %self.VsD                   + \
                                     " VsQ %6.2f"                %self.VsQ                   + \
                                     " Vs %6.2f"                 %self.Vs                    + \
@@ -621,12 +648,16 @@ class Serial_Stm32f4(object):
         elif self.print_selection==2:
             self.new_data_line= "t: %6.2f "                   %self.time                + \
                                 " isD: %6.2f"                %self.isD                  + \
-                                " isQ: %6.2f"                %self.isQ                  + extra_information
+                                " isQ: %6.2f"                %self.isQ                  + \
+                                " is:  %6.2f"                %math.sqrt(self.isQ*self.isQ+self.isD*self.isD) + \
+                                " is_cita: %6.2f"            %self.vector_angle(self.isQ,self.isD)     + extra_information       
 
         elif self.print_selection==3:
             self.new_data_line= "t: %6.2f "                  %self.time                + \
                                 " VsD: %6.2f"                %self.VsD                 + \
-                                " VsQ: %6.2f"                %self.VsQ                 + extra_information
+                                " VsQ: %6.2f"                %self.VsQ                 + \
+                                " Vs:  %6.2f"                %math.sqrt(self.VsQ*self.VsQ+self.VsD*self.VsD) + \
+                                " Vs_cita: %6.2f"            %self.vector_angle(self.VsQ,self.VsD)     + extra_information
 
         elif self.print_selection==4:
             self.new_data_line= "t: %6.2f "                  %self.time                + \
@@ -674,20 +705,22 @@ class Serial_Stm32f4(object):
                                     " isC %6.2f"                %self.isC                   + \
                                     " isD %6.2f"                %self.isD                   + \
                                     " isQ %6.2f"                %self.isQ                   + \
+                                    " is:  %6.2f"               %math.sqrt(self.isQ*self.isQ+self.isD*self.isD) + \
+                                    " is_cita: %6.2f"           %self.vector_angle(self.isQ,self.isD)           + \
                                     " VsD %6.2f"                %self.VsD                   + \
                                     " VsQ %6.2f"                %self.VsQ                   + \
                                     " Vs %6.2f"                 %self.Vs                    + \
                                     " Vs_cita %6.2f"            %self.Vs_cita               + \
                                     " Vs_cita_relative %6.2f"   %self.Vs_relative_cita      + \
-                                    " psisD %10.8f"              %self.psi_sD               + \
-                                    " psisQ %10.8f"              %self.psi_sQ               + \
+                                    " psisD %10.8f"             %self.psi_sD               + \
+                                    " psisQ %10.8f"             %self.psi_sQ               + \
                                     " psis %6.2f"               %self.psi_s                 + \
                                     " psis_alpha %6.2f"         %self.psi_s_alpha           + \
-                                    " psis_ref %10.8f"           %self.psi_s_reference      + \
+                                    " psis_ref %10.8f"          %self.psi_s_reference      + \
                                     " te %6.2f"                 %self.te                    + \
                                     " Ud %6.2f"                 %self.Ud                    + \
-                                    " pi_control %12.9f"         %self.pi_control           + \
-                                    " pi_max %10.6f"             %self.pi_max               + \
+                                    " pi_control %12.9f"        %self.pi_control           + \
+                                    " pi_max %10.6f"            %self.pi_max               + \
                                     " load_angle %12.9f"        %self.load_angle            
                                     #"t: %6.2f "                  %self.time                + \
                                     #"frequency %6.2f"                 %self.electric_frequency

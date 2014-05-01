@@ -111,7 +111,7 @@ float floating_switches_quadrature_stator_voltage_V_SQ (float S_B, float S_C,flo
 
 //---------------------stator flux-linkage space vector estimation-------------------------------
 #define W_CUTOFF 2000.0f
-#define F_CUTOFF 5.0f
+#define F_CUTOFF 5.0f//5.0f
 #define CTE (150.0f)  
 #define K_LPF  0.2f
 #define PI_CTE 3.14159265359f 
@@ -269,6 +269,9 @@ void flux_linkage_estimator (float T,float V_sD,float V_sQ,float i_sD,float i_sQ
 
   LPF_psi_sD = ( previous_psi_sD+T*(V_sD-i_sD*R_s) )/(1.0f+T*( 2.0f*PI_CTE*F_CUTOFF));
   LPF_psi_sQ = ( previous_psi_sQ+T*(V_sQ-i_sD*R_s) )/(1.0f+T*( 2.0f*PI_CTE*F_CUTOFF));
+
+  //LPF_psi_sD = ( previous_psi_sD+T*(V_sD) )/(1.0f+T*( 2.0f*PI_CTE*F_CUTOFF));
+  //LPF_psi_sQ = ( previous_psi_sQ+T*(V_sQ) )/(1.0f+T*( 2.0f*PI_CTE*F_CUTOFF));
 
   previous_psi_sD=LPF_psi_sD;
   previous_psi_sQ=LPF_psi_sQ;

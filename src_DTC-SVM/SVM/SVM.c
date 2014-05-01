@@ -744,7 +744,7 @@ if (center_aligned_state==FIRST_HALF)
   SVM_starting_open_loop(open_loop_SVM,&V_sD,&V_sQ,U_d);
   SVM_speed_close_loop(ref_freq_SVM,w_r,close_loop_SVM,&V_sD,&V_sQ);
   //SVM_torque_close_loop(t_e_ref,t_e,close_loop_SVM,&V_sD,&V_sQ);
-  SVM_loop_control(CUR_FREQ,200.0f,shutdown,t_e_ref,ref_freq_SVM,&open_loop_SVM,&close_loop_SVM); 
+  SVM_loop_control(CUR_FREQ,250.0f,shutdown,t_e_ref,ref_freq_SVM,&open_loop_SVM,&close_loop_SVM); 
 
   //SVM_pi_control=psi_rotating_angle_SVM;
 
