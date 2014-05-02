@@ -677,7 +677,7 @@ void SVM_loop_control(float frequency,float maximum_open_loop_frequency,bool shu
                                                                                           //*open_loop=false;
                                                                                           //*close_loop_SVM=true;
                                                                                       }
-/*
+
     else if (SVM_loop_state==OPEN_LOOP_SVM && frequency>=maximum_open_loop_frequency)  {  SVM_loop_state=CLOSE_LOOP_SVM;
                                                                                           *open_loop=false;
                                                                                           *close_loop_SVM=true;
@@ -696,9 +696,10 @@ void SVM_loop_control(float frequency,float maximum_open_loop_frequency,bool shu
                                                                     *close_loop_SVM=false;
                                                                  }
 
-*/
+
 }
 
+#define IS_ANGLE_OFFSET (-20.0)//110.0f
 
 void  DTC_SVM(void)
 {
@@ -709,6 +710,13 @@ if (center_aligned_state==FIRST_HALF)
   i_sD     = direct_stator_current_i_sD     (i_sA);
   i_sQ     = quadrature_stator_current_i_sQ (i_sA,i_sB);
 
+  fast_vector_angle_and_magnitude(i_sQ,i_sD,&i_s,&cita_i_s);
+  
+  cita_i_s = cita_i_s+IS_ANGLE_OFFSET;
+  i_sD     = i_s*fast_cos(cita_i_s);
+  i_sQ     = i_s*fast_sine(cita_i_s);
+    
+    
   //psi_sD          = direct_stator_flux_linkage_estimator_psi_sD     (2.0f*TICK_PERIOD,V_sD,i_sD,R_s,CUR_FREQ);
   //psi_sQ          = quadrature_stator_flux_linkage_estimator_psi_sQ (2.0f*TICK_PERIOD,V_sQ,i_sQ,R_s,CUR_FREQ);
 
@@ -744,7 +752,7 @@ if (center_aligned_state==FIRST_HALF)
   SVM_starting_open_loop(open_loop_SVM,&V_sD,&V_sQ,U_d);
   SVM_speed_close_loop(ref_freq_SVM,w_r,close_loop_SVM,&V_sD,&V_sQ);
   //SVM_torque_close_loop(t_e_ref,t_e,close_loop_SVM,&V_sD,&V_sQ);
-  SVM_loop_control(CUR_FREQ,250.0f,shutdown,t_e_ref,ref_freq_SVM,&open_loop_SVM,&close_loop_SVM); 
+  SVM_loop_control(CUR_FREQ,100.0f,shutdown,t_e_ref,ref_freq_SVM,&open_loop_SVM,&close_loop_SVM); 
 
   //SVM_pi_control=psi_rotating_angle_SVM;
 
@@ -762,9 +770,10 @@ else
   gpio_set(GPIOD, GPIO9);
 
 
-  V_s                    = vector_magnitude            (V_sQ,V_sD);  
-  cita_V_s               = fast_vector_angle                (V_sQ,V_sD);
+  //V_s                    = vector_magnitude            (V_sQ,V_sD);  
+  //cita_V_s               = fast_vector_angle                (V_sQ,V_sD);
 
+  fast_vector_angle_and_magnitude(V_sQ,V_sD,&V_s,&cita_V_s);
 
   
   //initial_rotor_position_ABC_pulses

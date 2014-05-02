@@ -208,19 +208,18 @@ void flux_linkage_estimator (float T,float V_sD,float V_sQ,float i_sD,float i_sQ
   LPF_psi_sD = ( previous_psi_sD+T*(V_sD-i_sD*R_s) )/(1.0f+T*( 2.0f*PI_CTE*F_CUTOFF));
   LPF_psi_sQ = ( previous_psi_sQ+T*(V_sQ-i_sQ*R_s) )/(1.0f+T*( 2.0f*PI_CTE*F_CUTOFF));
 
-  LPF_psi_s       = stator_flux_linkage_magnite_psi_s               (LPF_psi_sD,LPF_psi_sQ);
-  LPF_psi_s_alpha = fast_vector_angle                               (LPF_psi_sQ,LPF_psi_sD);
-  LPF_lag_angle   = 1.0f;
+  //LPF_psi_s       = stator_flux_linkage_magnite_psi_s               (LPF_psi_sD,LPF_psi_sQ);
+  //LPF_psi_s_alpha = fast_vector_angle                               (LPF_psi_sQ,LPF_psi_sD);
+  //LPF_lag_angle   = 1.0f;
 
-  fast_vector_angle_and_magnitude(float y,float x, float* magnitude, float* angle)
-
+  fast_vector_angle_and_magnitude(LPF_psi_sQ,LPF_psi_sD,&LPF_psi_s,&LPF_psi_s_alpha);
+  LPF_lag_angle   = 0.0f;
 
   *psis       = LPF_psi_s;
   *psis_alpha = LPF_psi_s_alpha+LPF_lag_angle;
 
   previous_psi_sD = LPF_psi_s*fast_cos (*psis_alpha);
   previous_psi_sQ = LPF_psi_s*fast_sine(*psis_alpha);
-
 
   *psisD=previous_psi_sD;
   *psisQ=previous_psi_sQ;
