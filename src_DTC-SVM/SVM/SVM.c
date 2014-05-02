@@ -524,7 +524,7 @@ void SVM_starting_open_loop(bool open_loop,float* VsD, float*VsQ, float Ud)
                                                         extra_load_angle_increase=0.0f;
                                                      }
                                 //else if (CUR_FREQ<ref_freq_SVM) extra_load_angle_increase=0.000005f;
-                                else if (CUR_FREQ<250.0f) extra_load_angle_increase=0.00002f;
+                                else if (CUR_FREQ<250.0f) extra_load_angle_increase=0.00005f;
                                 else                extra_load_angle_increase=0.0f;
                                 
 
@@ -713,11 +713,11 @@ if (center_aligned_state==FIRST_HALF)
   //psi_sQ          = quadrature_stator_flux_linkage_estimator_psi_sQ (2.0f*TICK_PERIOD,V_sQ,i_sQ,R_s,CUR_FREQ);
 
 
-  flux_linkage_estimator (2.0f*TICK_PERIOD,V_sD,V_sQ,i_sD,i_sQ,R_s,CUR_FREQ,&psi_sD,&psi_sQ);
+  flux_linkage_estimator (2.0f*TICK_PERIOD,V_sD,V_sQ,i_sD,i_sQ,R_s,CUR_FREQ,&psi_sD,&psi_sQ,&psi_s,&psi_s_alpha_SVM);
 
 
-  psi_s           = stator_flux_linkage_magnite_psi_s               (psi_sD,psi_sQ);
-  psi_s_alpha_SVM = fast_vector_angle                               (psi_sQ,psi_sD);
+  //psi_s           = stator_flux_linkage_magnite_psi_s               (psi_sD,psi_sQ);
+  //psi_s_alpha_SVM = fast_vector_angle                               (psi_sQ,psi_sD);
 
   //w_r             = (1.0f/(2.0f*PI))     *rotor_speed_w_r                                 (psi_sD,psi_sQ,TICK_PERIOD*2.0f);
   w_r             = 0.15915494309189533576f*rotor_speed_w_r                                 (psi_sD,psi_sQ,TICK_PERIOD*2.0f);  

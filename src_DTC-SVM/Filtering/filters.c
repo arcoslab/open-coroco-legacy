@@ -365,7 +365,7 @@ float isB_moving_average_filter(float isB)
 
 float isA_moving_average_filter(float isA)
 {
-/*
+
     static float isA_49=0.0f;
     static float isA_48=0.0f;
     static float isA_47=0.0f;
@@ -405,7 +405,7 @@ float isA_moving_average_filter(float isA)
     static float isA_13=0.0f;
     static float isA_12=0.0f;
     static float isA_11=0.0f;
-    static float isA_10=0.0f;*/
+    static float isA_10=0.0f;
     static float isA_09=0.0f;
     static float isA_08=0.0f;
     static float isA_07=0.0f;
@@ -421,7 +421,7 @@ float isA_moving_average_filter(float isA)
 
     if (k==0)
     {
-/*
+
     isA_49=isA;
     isA_48=isA;
     isA_47=isA;
@@ -461,7 +461,7 @@ float isA_moving_average_filter(float isA)
     isA_13=isA;
     isA_12=isA;
     isA_11=isA;
-    isA_10=isA;*/
+    isA_10=isA;
     isA_09=isA;
     isA_08=isA;
     isA_07=isA;
@@ -472,9 +472,9 @@ float isA_moving_average_filter(float isA)
     isA_02=isA;
     isA_01=isA;
     isA_00=isA;
-        k         = 1;
+    k         = 1;
     }
-/*
+
         isA_49=isA_48;
         isA_48=isA_47;
         isA_47=isA_46;
@@ -514,7 +514,7 @@ float isA_moving_average_filter(float isA)
         isA_13=isA_12;
         isA_12=isA_11;
         isA_11=isA_10;
-        isA_10=isA_09;*/
+        isA_10=isA_09;
         isA_09=isA_08;
         isA_08=isA_07;
         isA_07=isA_06;
@@ -526,11 +526,11 @@ float isA_moving_average_filter(float isA)
         isA_01=isA_00;
         isA_00=isA;
 
-    filtered_isA = (isA_00+isA_01+isA_02+isA_03+isA_04+isA_05+isA_06+isA_07+isA_08+isA_09)/10.0f;/*+
+    filtered_isA = (isA_00+isA_01+isA_02+isA_03+isA_04+isA_05+isA_06+isA_07+isA_08+isA_09+
                     isA_10+isA_11+isA_12+isA_13+isA_14+isA_15+isA_16+isA_17+isA_18+isA_19+
                     isA_20+isA_21+isA_22+isA_23+isA_24+isA_25+isA_26+isA_27+isA_28+isA_29+
                     isA_30+isA_31+isA_32+isA_33+isA_34+isA_35+isA_36+isA_37+isA_38+isA_39+
-                    isA_40+isA_41+isA_42+isA_43+isA_44+isA_45+isA_46+isA_47+isA_48+isA_49)/50.0f;*/
+                    isA_40+isA_41+isA_42+isA_43+isA_44+isA_45+isA_46+isA_47+isA_48+isA_49)/50.0f;
     
     return filtered_isA;
 }
@@ -539,7 +539,7 @@ float isA_moving_average_filter(float isA)
 
 float isB_moving_average_filter(float isB)
 {
-/*
+
     static float isB_49=0.0f;
     static float isB_48=0.0f;
     static float isB_47=0.0f;
@@ -579,7 +579,7 @@ float isB_moving_average_filter(float isB)
     static float isB_13=0.0f;
     static float isB_12=0.0f;
     static float isB_11=0.0f;
-    static float isB_10=0.0f;*/
+    static float isB_10=0.0f;
     static float isB_09=0.0f;
     static float isB_08=0.0f;
     static float isB_07=0.0f;
@@ -595,7 +595,7 @@ float isB_moving_average_filter(float isB)
 
     if (k==0)
     {
-/*
+
     isB_49=isB;
     isB_48=isB;
     isB_47=isB;
@@ -635,7 +635,7 @@ float isB_moving_average_filter(float isB)
     isB_13=isB;
     isB_12=isB;
     isB_11=isB;
-    isB_10=isB;*/
+    isB_10=isB;
     isB_09=isB;
     isB_08=isB;
     isB_07=isB;
@@ -646,9 +646,9 @@ float isB_moving_average_filter(float isB)
     isB_02=isB;
     isB_01=isB;
     isB_00=isB;
-        k         = 1;
+    k         = 1;
     }
-/*
+
         isB_49=isB_48;
         isB_48=isB_47;
         isB_47=isB_46;
@@ -688,7 +688,7 @@ float isB_moving_average_filter(float isB)
         isB_13=isB_12;
         isB_12=isB_11;
         isB_11=isB_10;
-        isB_10=isB_09;*/
+        isB_10=isB_09;
         isB_09=isB_08;
         isB_08=isB_07;
         isB_07=isB_06;
@@ -700,11 +700,11 @@ float isB_moving_average_filter(float isB)
         isB_01=isB_00;
         isB_00=isB;
 
-    filtered_isB = (isB_00+isB_01+isB_02+isB_03+isB_04+isB_05+isB_06+isB_07+isB_08+isB_09)/10.0f;/*+
+    filtered_isB = (isB_00+isB_01+isB_02+isB_03+isB_04+isB_05+isB_06+isB_07+isB_08+isB_09+
                     isB_10+isB_11+isB_12+isB_13+isB_14+isB_15+isB_16+isB_17+isB_18+isB_19+
                     isB_20+isB_21+isB_22+isB_23+isB_24+isB_25+isB_26+isB_27+isB_28+isB_29+
                     isB_30+isB_31+isB_32+isB_33+isB_34+isB_35+isB_36+isB_37+isB_38+isB_39+
-                    isB_40+isB_41+isB_42+isB_43+isB_44+isB_45+isB_46+isB_47+isB_48+isB_49)/50.0f;*/
+                    isB_40+isB_41+isB_42+isB_43+isB_44+isB_45+isB_46+isB_47+isB_48+isB_49)/50.0f;
     
     return filtered_isB;
 }

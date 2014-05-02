@@ -56,7 +56,7 @@ class Serial_Stm32f4(object):
         self.new_data_line      = ''
         self.read_capture_state = 'not_collecting'
         self.tag_comment        = ''
-        self.aditional_comment=' voltage open-loop 0.00001f,close loop 45degrees, Ud 40%,k=0,finalfreq=200Hz,no filter for currents,neglected currents cutoff=5Hz'
+        self.aditional_comment=' CURRENT MEDIA AVERAGE FILTER BUFFER 50,LAG COMP 1.0,CURRENT OFFSET 10.0,open-loop 0.00005f,Ud 40%,finalfreq 250Hz,Fcutoff 5Hz'
         self.driving_counter    = 0
         self.various_counter     = 0
         self.type_of_test       = 0        
@@ -74,7 +74,7 @@ class Serial_Stm32f4(object):
         self.title_extra            = ''
 
         #test routine
-        self.max_test_time      = 520000#50000#298#100000#100000#50000#100000
+        self.max_test_time      = 200000#50000#298#100000#100000#50000#100000
         self.min_test_time      = 300
         self.test_routine_state = 'initial'
         self.driving_test_state = 'initial'
