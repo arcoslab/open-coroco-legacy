@@ -677,7 +677,7 @@ void SVM_loop_control(float frequency,float maximum_open_loop_frequency,bool shu
                                                                                           //*open_loop=false;
                                                                                           //*close_loop_SVM=true;
                                                                                       }
-
+/*
     else if (SVM_loop_state==OPEN_LOOP_SVM && frequency>=maximum_open_loop_frequency)  {  SVM_loop_state=CLOSE_LOOP_SVM;
                                                                                           *open_loop=false;
                                                                                           *close_loop_SVM=true;
@@ -696,10 +696,10 @@ void SVM_loop_control(float frequency,float maximum_open_loop_frequency,bool shu
                                                                     *close_loop_SVM=false;
                                                                  }
 
-
+*/
 }
 
-#define IS_ANGLE_OFFSET (-20.0)//110.0f
+#define IS_ANGLE_OFFSET (180.0f)//110.0f
 
 void  DTC_SVM(void)
 {
@@ -707,6 +707,10 @@ static bool shutdown=true;
 
 if (center_aligned_state==FIRST_HALF)
 {
+
+
+
+
   i_sD     = direct_stator_current_i_sD     (i_sA);
   i_sQ     = quadrature_stator_current_i_sQ (i_sA,i_sB);
 
@@ -721,7 +725,22 @@ if (center_aligned_state==FIRST_HALF)
   //psi_sQ          = quadrature_stator_flux_linkage_estimator_psi_sQ (2.0f*TICK_PERIOD,V_sQ,i_sQ,R_s,CUR_FREQ);
 
 
+
+  //nan erradication
+  if (psi_sD!=psi_sD) psi_sD=0.0f;
+  if (psi_sQ!=psi_sQ) psi_sQ=0.0f;
+  if (psi_s !=psi_s ) psi_s =0.0f;
+  if (t_e!=t_e      ) t_e    =0.0f;
+  if (psi_s_alpha_SVM!=psi_s_alpha_SVM) psi_s_alpha_SVM=0.0f;
+
   flux_linkage_estimator (2.0f*TICK_PERIOD,V_sD,V_sQ,i_sD,i_sQ,R_s,CUR_FREQ,&psi_sD,&psi_sQ,&psi_s,&psi_s_alpha_SVM);
+
+  //nan erradication
+  if (psi_sD!=psi_sD) psi_sD=0.0f;
+  if (psi_sQ!=psi_sQ) psi_sQ=0.0f;
+  if (psi_s !=psi_s ) psi_s =0.0f;
+  if (t_e!=t_e      ) t_e    =0.0f;
+  if (psi_s_alpha_SVM!=psi_s_alpha_SVM) psi_s_alpha_SVM=0.0f;
 
 
   //psi_s           = stator_flux_linkage_magnite_psi_s               (psi_sD,psi_sQ);
@@ -752,7 +771,7 @@ if (center_aligned_state==FIRST_HALF)
   SVM_starting_open_loop(open_loop_SVM,&V_sD,&V_sQ,U_d);
   SVM_speed_close_loop(ref_freq_SVM,w_r,close_loop_SVM,&V_sD,&V_sQ);
   //SVM_torque_close_loop(t_e_ref,t_e,close_loop_SVM,&V_sD,&V_sQ);
-  SVM_loop_control(CUR_FREQ,100.0f,shutdown,t_e_ref,ref_freq_SVM,&open_loop_SVM,&close_loop_SVM); 
+  SVM_loop_control(CUR_FREQ,200.0f,shutdown,t_e_ref,ref_freq_SVM,&open_loop_SVM,&close_loop_SVM); 
 
   //SVM_pi_control=psi_rotating_angle_SVM;
 
