@@ -56,7 +56,7 @@ class Serial_Stm32f4(object):
         self.new_data_line      = ''
         self.read_capture_state = 'not_collecting'
         self.tag_comment        = ''
-        self.aditional_comment='  NO CURRENT FILTER,NO psi lag,CURRENT OFFSET 360.0,open-loop 0.00005f,Ud 40%,finalfreq 250Hz,Fcutoff 5Hz,psi_ref=0.0016'
+        self.aditional_comment=',  close 20, actual i,open 0.00005f,Ud 40%,k 0.2,psi_ref=0.0016'
         self.driving_counter    = 0
         self.various_counter     = 0
         self.type_of_test       = 0        
@@ -513,6 +513,10 @@ class Serial_Stm32f4(object):
                 #---(they are inside the stm32, but we do not want to waste time sending them)----------        
                 self.psi_s       = math.sqrt(self.psi_sD*self.psi_sD+self.psi_sQ*self. psi_sQ)
                 self.psi_s_alpha = self.fast_vector_angle(self.psi_sQ,self.psi_sD)
+
+                if self.print_selection==1:
+                    self.isD=self.isA;
+                    self.isQ=(self.isA+2.0*self.isB)/math.sqrt(3.0)
                 #----------------------------------------------------------------------------------------
 
 
@@ -640,10 +644,16 @@ class Serial_Stm32f4(object):
                                 " hall_freq: %6.2f"           %self.hall_frequency      + extra_information
 
         elif self.print_selection==1:
+            self.isD=self.isA;
+            self.isQ=(self.isA+2.0*self.isB)/math.sqrt(3.0)
             self.new_data_line= "t: %6.2f "                  %self.time                 + \
                                 " isA: %6.2f"                %self.isA                  + \
                                 " isB: %6.2f"                %self.isB                  + \
-                                " isC: %6.2f"                %self.isC                  + extra_information
+                                " isC: %6.2f"                %self.isC                  + \
+                                " isD: %6.2f"                %(self.isD)                + \
+                                " isQ: %6.2f"                %(self.isQ)                + \
+                                " is:  %6.2f"                %math.sqrt(self.isQ*self.isQ+self.isD*self.isD) + \
+                                " is_cita: %6.2f"            %self.vector_angle(self.isQ,self.isD)     + extra_information  
 
         elif self.print_selection==2:
             self.new_data_line= "t: %6.2f "                   %self.time                + \
@@ -1050,12 +1060,17 @@ class Serial_Stm32f4(object):
                 plt.savefig(plot_name+"three-phase_currents"+".jpg")
                 plt.close()
 
+                plt.figure(num=4, figsize=plot_figsize, dpi=plot_dpi, facecolor=plot_face_color, edgecolor=plot_edge_color) 
+                self.plot_quadrature_vs_direct_currents (rows,columns,subplot_index)
+                plt.savefig(plot_name+"isQ_vs_isD"+".jpg")
+                plt.close()
+
         elif self.print_selection==2:
             if len(self.isD_vector)==0 or len(self.isQ_vector)==0:
                 self.empty_vectors=True
 
             else:
-                plt.figure(num=4, figsize=plot_figsize, dpi=plot_dpi, facecolor=plot_face_color, edgecolor=plot_edge_color) 
+                plt.figure(num=5, figsize=plot_figsize, dpi=plot_dpi, facecolor=plot_face_color, edgecolor=plot_edge_color) 
                 self.plot_quadrature_vs_direct_currents (rows,columns,subplot_index)
                 plt.savefig(plot_name+"isQ_vs_isD"+".jpg")
                 plt.close()
@@ -1065,7 +1080,7 @@ class Serial_Stm32f4(object):
                 self.empty_vectors=True
 
             else:
-                plt.figure(num=5, figsize=plot_figsize, dpi=plot_dpi, facecolor=plot_face_color, edgecolor=plot_edge_color)
+                plt.figure(num=6, figsize=plot_figsize, dpi=plot_dpi, facecolor=plot_face_color, edgecolor=plot_edge_color)
                 self.plot_quadrature_vs_direct_voltages (rows,columns,subplot_index)
                 plt.savefig(plot_name+"VsQ_vs_VsD"+".jpg")
                 plt.close()
@@ -1076,7 +1091,7 @@ class Serial_Stm32f4(object):
 
             else:
 
-                plt.figure(num=6, figsize=plot_figsize, dpi=plot_dpi, facecolor=plot_face_color, edgecolor=plot_edge_color)
+                plt.figure(num=7, figsize=plot_figsize, dpi=plot_dpi, facecolor=plot_face_color, edgecolor=plot_edge_color)
                 self.plot_voltage_magnitude             (rows,columns,subplot_index)
                 plt.savefig(plot_name+"voltage_magnitude"+".jpg")
                 plt.close()
@@ -1086,12 +1101,12 @@ class Serial_Stm32f4(object):
                 self.empty_vectors=True
 
             else: 
-                plt.figure(num=7, figsize=plot_figsize, dpi=plot_dpi, facecolor=plot_face_color, edgecolor=plot_edge_color)
+                plt.figure(num=8, figsize=plot_figsize, dpi=plot_dpi, facecolor=plot_face_color, edgecolor=plot_edge_color)
                 self.plot_flux_linkage                       (rows,columns,subplot_index)
                 plt.savefig(plot_name+"flux-linkage"+".jpg")
                 plt.close()
 
-                plt.figure(num=8, figsize=plot_figsize, dpi=plot_dpi, facecolor=plot_face_color, edgecolor=plot_edge_color)
+                plt.figure(num=9, figsize=plot_figsize, dpi=plot_dpi, facecolor=plot_face_color, edgecolor=plot_edge_color)
                 self.plot_flux_linkage_angle                 (rows,columns,subplot_index)
                 plt.savefig(plot_name+"flux-linkage angle vs time"+".jpg")
                 plt.close()
@@ -1101,7 +1116,7 @@ class Serial_Stm32f4(object):
                 self.empty_vectors=True
 
             else: 
-                plt.figure(num=9, figsize=plot_figsize, dpi=plot_dpi, facecolor=plot_face_color, edgecolor=plot_edge_color)
+                plt.figure(num=10, figsize=plot_figsize, dpi=plot_dpi, facecolor=plot_face_color, edgecolor=plot_edge_color)
                 self.plot_electromagnetic_torque             (rows,columns,subplot_index)
                 plt.savefig(plot_name+"electromagnetic_torque" +".jpg")
                 plt.close()
@@ -1111,7 +1126,7 @@ class Serial_Stm32f4(object):
                 self.empty_vectors=True
 
             else: 
-                plt.figure(num=10, figsize=plot_figsize, dpi=plot_dpi, facecolor=plot_face_color, edgecolor=plot_edge_color)
+                plt.figure(num=11, figsize=plot_figsize, dpi=plot_dpi, facecolor=plot_face_color, edgecolor=plot_edge_color)
                 self.plot_phase_advance                      (rows,columns,subplot_index)
                 plt.savefig(plot_name+"phase_advance_pi"+".jpg")
                 plt.close()  

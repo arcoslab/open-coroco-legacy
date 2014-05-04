@@ -207,8 +207,23 @@ void flux_linkage_estimator (float T,float V_sD,float V_sQ,float i_sD,float i_sQ
 //fixed wcutoff, lag compensation
   //LPF_psi_sD = ( previous_psi_sD+T*(V_sD-i_sD*R_s) )/(1.0f+T*( 2.0f*PI_CTE*F_CUTOFF));
   //LPF_psi_sQ = ( previous_psi_sQ+T*(V_sQ-i_sQ*R_s) )/(1.0f+T*( 2.0f*PI_CTE*F_CUTOFF));
-  LPF_psi_sD = ( previous_psi_sD+T*(V_sD) )/(1.0f+T*( 2.0f*PI_CTE*F_CUTOFF));
-  LPF_psi_sQ = ( previous_psi_sQ+T*(V_sQ) )/(1.0f+T*( 2.0f*PI_CTE*F_CUTOFF));
+  
+  if (K_LPF*electric_frequency<5.0f)
+  {
+    LPF_psi_sD = ( previous_psi_sD+T*(V_sD-i_sD*R_s) )/(1.0f+T*( 2.0f*PI_CTE*F_CUTOFF));
+    LPF_psi_sQ = ( previous_psi_sQ+T*(V_sQ-i_sQ*R_s) )/(1.0f+T*( 2.0f*PI_CTE*F_CUTOFF));   
+    //LPF_psi_sD = ( previous_psi_sD+T*(V_sD) )/(1.0f+T*( 2.0f*PI_CTE*F_CUTOFF));
+    //LPF_psi_sQ = ( previous_psi_sQ+T*(V_sQ) )/(1.0f+T*( 2.0f*PI_CTE*F_CUTOFF));   
+  }
+  else 
+  {
+    LPF_psi_sD = ( previous_psi_sD+T*(V_sD-i_sD*R_s) )/(1.0f+T*( K_LPF*2.0f*PI_CTE*electric_frequency));
+    LPF_psi_sQ = ( previous_psi_sQ+T*(V_sQ-i_sQ*R_s) )/(1.0f+T*( K_LPF*2.0f*PI_CTE*electric_frequency));
+    //LPF_psi_sD = ( previous_psi_sD+T*(V_sD) )/(1.0f+T*( K_LPF*2.0f*PI_CTE*electric_frequency));
+    //LPF_psi_sQ = ( previous_psi_sQ+T*(V_sQ) )/(1.0f+T*( K_LPF*2.0f*PI_CTE*electric_frequency)); 
+  }
+  //LPF_psi_sD = ( previous_psi_sD+T*(V_sD) )/(1.0f+T*( 2.0f*PI_CTE*F_CUTOFF));
+  //LPF_psi_sQ = ( previous_psi_sQ+T*(V_sQ) )/(1.0f+T*( 2.0f*PI_CTE*F_CUTOFF));
 
 
   //LPF_psi_s       = stator_flux_linkage_magnite_psi_s               (LPF_psi_sD,LPF_psi_sQ);
@@ -357,7 +372,20 @@ float electromagnetic_torque_estimation_t_e(float psi_sD,float i_sQ, float psi_s
 {
   //float t_e=0.0f;
   //t_e=(3.0f/2.0f)*pole_pairs* (psi_sD*i_sQ-psi_sQ*i_sD);
+/*
+  float psis=0.0f;
+  float psis_alpha=0.0f;
+  float lag_angle=0.0f;
+  fast_vector_angle_and_magnitude(psi_sQ,psi_sD,&psis,&psis_alpha);
+  lag_angle   = 30.0f;
 
+  
+  psis_alpha = psis_alpha+lag_angle;
+
+  psi_sD = psis*fast_cos (psis_alpha);
+  psi_sQ = psis*fast_sine(psis_alpha);
+
+*/
 
   return ( 1.5f*pole_pairs* (psi_sD*i_sQ-psi_sQ*i_sD) );//t_e;
 }
