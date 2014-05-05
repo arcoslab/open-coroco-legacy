@@ -611,14 +611,14 @@ void SVM_speed_close_loop(float reference_frequency, float frequency,bool close_
                                     *VsQ=0.0f; }
 
     else if (close_loop_active==true && CUR_FREQ<500.0f) 
-                                                        {  psi_rotating_angle_SVM=20.0f;
+                                                        {  psi_rotating_angle_SVM=45.0f;
                                                             //sensorless_speed_pi_controller(reference_frequency,frequency, &psi_rotating_angle_SVM); 
 
                                                             *VsD = SVM_V_s_ref_D (psi_s_ref,psi_s,psi_s_alpha_SVM,psi_rotating_angle_SVM,i_sD,R_s,2.0f*TICK_PERIOD);
                                                             *VsQ = SVM_V_s_ref_Q (psi_s_ref,psi_s,psi_s_alpha_SVM,psi_rotating_angle_SVM,i_sQ,R_s,2.0f*TICK_PERIOD);
                                                          }
    else {
-                                                            psi_rotating_angle_SVM=20.0f;
+                                                            psi_rotating_angle_SVM=45.0;
                                                             //sensorless_speed_pi_controller(reference_frequency,frequency, &psi_rotating_angle_SVM); 
 
                                                             *VsD = SVM_V_s_ref_D (psi_s_ref,psi_s,psi_s_alpha_SVM,psi_rotating_angle_SVM,i_sD,R_s,2.0f*TICK_PERIOD);
@@ -761,7 +761,14 @@ if (center_aligned_state==FIRST_HALF)
   if (t_e!=t_e      ) t_e    =0.0f;
   if (psi_s_alpha_SVM!=psi_s_alpha_SVM) psi_s_alpha_SVM=0.0f;
 
-  flux_linkage_estimator (2.0f*TICK_PERIOD,V_sD,V_sQ,i_sD,i_sQ,R_s,CUR_FREQ,&psi_sD,&psi_sQ,&psi_s,&psi_s_alpha_SVM);
+
+  static float psi_sD_i_neglected=0.0f;
+  static float psi_sQ_i_neglected=0.0f;
+
+  flux_linkage_estimator                    (2.0f*TICK_PERIOD,V_sD,V_sQ,i_sD,i_sQ,R_s,CUR_FREQ,&psi_sD,&psi_sQ,&psi_s,&psi_s_alpha_SVM);
+  flux_linkage_estimator_neglected_currents (2.0f*TICK_PERIOD,V_sD,V_sQ,              CUR_FREQ,&psi_sD_i_neglected,&psi_sQ_i_neglected);//,&psi_s,&psi_s_alpha_SVM);
+
+  
 
   //nan erradication
   if (psi_sD!=psi_sD) psi_sD=0.0f;
@@ -775,13 +782,23 @@ if (center_aligned_state==FIRST_HALF)
   //psi_s_alpha_SVM = fast_vector_angle                               (psi_sQ,psi_sD);
 
   //w_r             = (1.0f/(2.0f*PI))     *rotor_speed_w_r                                 (psi_sD,psi_sQ,TICK_PERIOD*2.0f);
-  w_r             = 0.15915494309189533576f*rotor_speed_w_r                                 (psi_sD,psi_sQ,TICK_PERIOD*2.0f);  
+  //w_r             = 0.15915494309189533576f*rotor_speed_w_r                                 (psi_sD,psi_sQ,TICK_PERIOD*2.0f);  
                                                            //it has to be multiplied by two in order because the switching frequency
                                                            //is half the pwm frequency due to the two-cycle center-aligned signal
+ 
+  //actual value
+  w_r = 0.15915494309189533576f*rotor_speed_w_r (psi_sD,psi_sQ,TICK_PERIOD*2.0f);  
+  //using neglected-currents flux-linkage estimator
+  //w_r = 0.15915494309189533576f*rotor_speed_w_r (psi_sD_i_neglected,psi_sQ_i_neglected,TICK_PERIOD*2.0f);  
   
+
+  
+ 
   if (w_r!=w_r) w_r=0.0f;
 
   t_e       = electromagnetic_torque_estimation_t_e   (psi_sD,i_sQ,psi_sQ,i_sD,pole_pairs);
+  //t_e       = electromagnetic_torque_estimation_t_e   (psi_sD_i_neglected,i_sQ,psi_sQ_i_neglected,i_sD,pole_pairs);
+
   //t_e_ref = DTC_torque_reference_PI                 (CUR_FREQ, ref_freq);
   //psi_s_ref = stator_flux_linkage_reference_psi_s_ref (psi_F,t_e_ref,L_sq,pole_pairs);
   psi_s_ref = psi_F;
@@ -834,7 +851,7 @@ else
     
 
 
-  SVM_Maximum_allowed_V_s_ref (&V_sD,&V_sQ,&V_s,U_d*0.4f);//0.70f);
+  SVM_Maximum_allowed_V_s_ref (&V_sD,&V_sQ,&V_s,U_d*0.45f);//0.70f);
   V_s_ref_relative_angle = SVM_V_s_relative_angle      (cita_V_s);
   
 

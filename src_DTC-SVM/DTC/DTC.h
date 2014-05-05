@@ -55,7 +55,8 @@ float quadrature_stator_flux_linkage_estimator_psi_sQ (float T,float V_sQ,float 
 
 float stator_flux_linkage_magnite_psi_s               (float psi_sD,float psi_sQ);
 float flux_linkage_angle_psi_s_angle(float cmd_angle_PID);//float psi_sD, float psi_sQ)
-void flux_linkage_estimator (float T,float V_sD,float V_sQ,float i_sD,float i_sQ,float R_s,float electric_frequency, float* psisD, float* psisQ,float*psis,float* psi_s_alpha);
+void  flux_linkage_estimator                    (float T,float V_sD,float V_sQ,float i_sD,float i_sQ,float R_s,float electric_frequency, float* psisD, float* psisQ,float*psis,float* psi_s_alpha);
+void  flux_linkage_estimator_neglected_currents (float T,float V_sD,float V_sQ,                                float electric_frequency, float* psisD, float* psisQ);//, float*psis,float* psis_alpha);
 int   stator_flux_linkage_sector_alpha                (float psi_sD, float psi_sQ);
 
 

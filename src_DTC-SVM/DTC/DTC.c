@@ -271,6 +271,34 @@ void flux_linkage_estimator (float T,float V_sD,float V_sQ,float i_sD,float i_sQ
 */
 }
 
+
+void flux_linkage_estimator_neglected_currents (float T,float V_sD,float V_sQ,float electric_frequency, float* psisD, float* psisQ)//, float*psis,float* psis_alpha)
+{
+  static float previous_psi_sD=0.0f;
+  static float previous_psi_sQ=0.0f;
+
+
+
+  if (K_LPF*electric_frequency<5.0f)
+  {
+    *psisD = ( previous_psi_sD+T*(V_sD) )/(1.0f+T*( 2.0f*PI_CTE*F_CUTOFF));
+    *psisQ = ( previous_psi_sQ+T*(V_sQ) )/(1.0f+T*( 2.0f*PI_CTE*F_CUTOFF));   
+  }
+  else 
+  {
+    *psisD = ( previous_psi_sD+T*(V_sD) )/(1.0f+T*( K_LPF*2.0f*PI_CTE*electric_frequency));
+    *psisQ = ( previous_psi_sQ+T*(V_sQ) )/(1.0f+T*( K_LPF*2.0f*PI_CTE*electric_frequency)); 
+  }
+    
+  //fast_vector_angle_and_magnitude(*psisQ,*psisD,psis,psis_alpha);
+
+  previous_psi_sD = *psisD;
+  previous_psi_sQ = *psisQ;
+}
+
+
+
+
 float stator_flux_linkage_magnite_psi_s               (float psi_sD,float psi_sQ)
 {
   return sqrtf( (psi_sQ*psi_sQ+psi_sD*psi_sD) );

@@ -56,7 +56,7 @@ class Serial_Stm32f4(object):
         self.new_data_line      = ''
         self.read_capture_state = 'not_collecting'
         self.tag_comment        = ''
-        self.aditional_comment=',  close 20, actual i,open 0.00005f,Ud 40%,k 0.2,psi_ref=0.0016'
+        self.aditional_comment=', one psi,wr actual psi,k 0.2,close 45, actual i,open 0.00005f,Ud 45%,psi_ref=0.0016'
         self.driving_counter    = 0
         self.various_counter     = 0
         self.type_of_test       = 0        
