@@ -19,3 +19,5 @@
 
 float isA_moving_average_filter(float isA);
 float isB_moving_average_filter(float isB);
+float te_moving_average_filter(float te);
+float wr_moving_average_filter(float wr);

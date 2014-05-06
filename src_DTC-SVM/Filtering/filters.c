@@ -708,3 +708,356 @@ float isB_moving_average_filter(float isB)
     
     return filtered_isB;
 }
+
+
+float te_moving_average_filter(float te)
+{
+
+    static float te_49=0.0f;
+    static float te_48=0.0f;
+    static float te_47=0.0f;
+    static float te_46=0.0f;
+    static float te_45=0.0f;
+    static float te_44=0.0f;
+    static float te_43=0.0f;
+    static float te_42=0.0f;
+    static float te_41=0.0f;
+    static float te_40=0.0f;
+    static float te_39=0.0f;
+    static float te_38=0.0f;
+    static float te_37=0.0f;
+    static float te_36=0.0f;
+    static float te_35=0.0f;
+    static float te_34=0.0f;
+    static float te_33=0.0f;
+    static float te_32=0.0f;
+    static float te_31=0.0f;
+    static float te_30=0.0f;
+    static float te_29=0.0f;
+    static float te_28=0.0f;
+    static float te_27=0.0f;
+    static float te_26=0.0f;
+    static float te_25=0.0f;
+    static float te_24=0.0f;
+    static float te_23=0.0f;
+    static float te_22=0.0f;
+    static float te_21=0.0f;
+    static float te_20=0.0f;
+    static float te_19=0.0f;
+    static float te_18=0.0f;
+    static float te_17=0.0f;
+    static float te_16=0.0f;
+    static float te_15=0.0f;
+    static float te_14=0.0f;
+    static float te_13=0.0f;
+    static float te_12=0.0f;
+    static float te_11=0.0f;
+    static float te_10=0.0f;
+    static float te_09=0.0f;
+    static float te_08=0.0f;
+    static float te_07=0.0f;
+    static float te_06=0.0f;
+    static float te_05=0.0f;
+    static float te_04=0.0f;
+    static float te_03=0.0f;
+    static float te_02=0.0f;
+    static float te_01=0.0f;
+    static float te_00=0.0f;
+    static int   k=0;
+    float filtered_te=0.0f;
+
+    if (k==0)
+    {
+
+    te_49=te;
+    te_48=te;
+    te_47=te;
+    te_46=te;
+    te_45=te;
+    te_44=te;
+    te_43=te;
+    te_42=te;
+    te_41=te;
+    te_40=te;
+    te_39=te;
+    te_38=te;
+    te_37=te;
+    te_36=te;
+    te_35=te;
+    te_34=te;
+    te_33=te;
+    te_32=te;
+    te_31=te;
+    te_30=te;
+    te_29=te;
+    te_28=te;
+    te_27=te;
+    te_26=te;
+    te_25=te;
+    te_24=te;
+    te_23=te;
+    te_22=te;
+    te_21=te;
+    te_20=te;
+    te_19=te;
+    te_18=te;
+    te_17=te;
+    te_16=te;
+    te_15=te;
+    te_14=te;
+    te_13=te;
+    te_12=te;
+    te_11=te;
+    te_10=te;
+    te_09=te;
+    te_08=te;
+    te_07=te;
+    te_06=te;
+    te_05=te;
+    te_04=te;
+    te_03=te;
+    te_02=te;
+    te_01=te;
+    te_00=te;
+    k         = 1;
+    }
+
+        te_49=te_48;
+        te_48=te_47;
+        te_47=te_46;
+        te_46=te_45;
+        te_45=te_44;
+        te_44=te_43;
+        te_43=te_42;
+        te_42=te_41;
+        te_41=te_40;
+        te_40=te_39;
+        te_39=te_38;
+        te_38=te_37;
+        te_37=te_36;
+        te_36=te_35;
+        te_35=te_34;
+        te_34=te_33;
+        te_33=te_32;
+        te_32=te_31;
+        te_31=te_30;
+        te_30=te_29;
+        te_29=te_28;
+        te_28=te_27;
+        te_27=te_26;
+        te_26=te_25;
+        te_25=te_24;
+        te_24=te_23;
+        te_23=te_22;
+        te_22=te_21;
+        te_21=te_20;
+        te_20=te_19;
+        te_19=te_18;
+        te_18=te_17;
+        te_17=te_16;
+        te_16=te_15;
+        te_15=te_14;
+        te_14=te_13;
+        te_13=te_12;
+        te_12=te_11;
+        te_11=te_10;
+        te_10=te_09;
+        te_09=te_08;
+        te_08=te_07;
+        te_07=te_06;
+        te_06=te_05;
+        te_05=te_04;
+        te_04=te_03;
+        te_03=te_02;
+        te_02=te_01;
+        te_01=te_00;
+        te_00=te;
+
+    filtered_te = (te_00+te_01+te_02+te_03+te_04+te_05+te_06+te_07+te_08+te_09+
+                    te_10+te_11+te_12+te_13+te_14+te_15+te_16+te_17+te_18+te_19+
+                    te_20+te_21+te_22+te_23+te_24+te_25+te_26+te_27+te_28+te_29+
+                    te_30+te_31+te_32+te_33+te_34+te_35+te_36+te_37+te_38+te_39+
+                    te_40+te_41+te_42+te_43+te_44+te_45+te_46+te_47+te_48+te_49)/50.0f;
+    
+    return filtered_te;
+}
+
+
+
+float wr_moving_average_filter(float wr)
+{
+
+    static float wr_49=0.0f;
+    static float wr_48=0.0f;
+    static float wr_47=0.0f;
+    static float wr_46=0.0f;
+    static float wr_45=0.0f;
+    static float wr_44=0.0f;
+    static float wr_43=0.0f;
+    static float wr_42=0.0f;
+    static float wr_41=0.0f;
+    static float wr_40=0.0f;
+    static float wr_39=0.0f;
+    static float wr_38=0.0f;
+    static float wr_37=0.0f;
+    static float wr_36=0.0f;
+    static float wr_35=0.0f;
+    static float wr_34=0.0f;
+    static float wr_33=0.0f;
+    static float wr_32=0.0f;
+    static float wr_31=0.0f;
+    static float wr_30=0.0f;
+    static float wr_29=0.0f;
+    static float wr_28=0.0f;
+    static float wr_27=0.0f;
+    static float wr_26=0.0f;
+    static float wr_25=0.0f;
+    static float wr_24=0.0f;
+    static float wr_23=0.0f;
+    static float wr_22=0.0f;
+    static float wr_21=0.0f;
+    static float wr_20=0.0f;
+    static float wr_19=0.0f;
+    static float wr_18=0.0f;
+    static float wr_17=0.0f;
+    static float wr_16=0.0f;
+    static float wr_15=0.0f;
+    static float wr_14=0.0f;
+    static float wr_13=0.0f;
+    static float wr_12=0.0f;
+    static float wr_11=0.0f;
+    static float wr_10=0.0f;
+    static float wr_09=0.0f;
+    static float wr_08=0.0f;
+    static float wr_07=0.0f;
+    static float wr_06=0.0f;
+    static float wr_05=0.0f;
+    static float wr_04=0.0f;
+    static float wr_03=0.0f;
+    static float wr_02=0.0f;
+    static float wr_01=0.0f;
+    static float wr_00=0.0f;
+    static int   k=0;
+    float filwrred_wr=0.0f;
+
+    if (k==0)
+    {
+
+    wr_49=wr;
+    wr_48=wr;
+    wr_47=wr;
+    wr_46=wr;
+    wr_45=wr;
+    wr_44=wr;
+    wr_43=wr;
+    wr_42=wr;
+    wr_41=wr;
+    wr_40=wr;
+    wr_39=wr;
+    wr_38=wr;
+    wr_37=wr;
+    wr_36=wr;
+    wr_35=wr;
+    wr_34=wr;
+    wr_33=wr;
+    wr_32=wr;
+    wr_31=wr;
+    wr_30=wr;
+    wr_29=wr;
+    wr_28=wr;
+    wr_27=wr;
+    wr_26=wr;
+    wr_25=wr;
+    wr_24=wr;
+    wr_23=wr;
+    wr_22=wr;
+    wr_21=wr;
+    wr_20=wr;
+    wr_19=wr;
+    wr_18=wr;
+    wr_17=wr;
+    wr_16=wr;
+    wr_15=wr;
+    wr_14=wr;
+    wr_13=wr;
+    wr_12=wr;
+    wr_11=wr;
+    wr_10=wr;
+    wr_09=wr;
+    wr_08=wr;
+    wr_07=wr;
+    wr_06=wr;
+    wr_05=wr;
+    wr_04=wr;
+    wr_03=wr;
+    wr_02=wr;
+    wr_01=wr;
+    wr_00=wr;
+    k         = 1;
+    }
+
+        wr_49=wr_48;
+        wr_48=wr_47;
+        wr_47=wr_46;
+        wr_46=wr_45;
+        wr_45=wr_44;
+        wr_44=wr_43;
+        wr_43=wr_42;
+        wr_42=wr_41;
+        wr_41=wr_40;
+        wr_40=wr_39;
+        wr_39=wr_38;
+        wr_38=wr_37;
+        wr_37=wr_36;
+        wr_36=wr_35;
+        wr_35=wr_34;
+        wr_34=wr_33;
+        wr_33=wr_32;
+        wr_32=wr_31;
+        wr_31=wr_30;
+        wr_30=wr_29;
+        wr_29=wr_28;
+        wr_28=wr_27;
+        wr_27=wr_26;
+        wr_26=wr_25;
+        wr_25=wr_24;
+        wr_24=wr_23;
+        wr_23=wr_22;
+        wr_22=wr_21;
+        wr_21=wr_20;
+        wr_20=wr_19;
+        wr_19=wr_18;
+        wr_18=wr_17;
+        wr_17=wr_16;
+        wr_16=wr_15;
+        wr_15=wr_14;
+        wr_14=wr_13;
+        wr_13=wr_12;
+        wr_12=wr_11;
+        wr_11=wr_10;
+        wr_10=wr_09;
+        wr_09=wr_08;
+        wr_08=wr_07;
+        wr_07=wr_06;
+        wr_06=wr_05;
+        wr_05=wr_04;
+        wr_04=wr_03;
+        wr_03=wr_02;
+        wr_02=wr_01;
+        wr_01=wr_00;
+        wr_00=wr;
+
+    filwrred_wr = (wr_00+wr_01+wr_02+wr_03+wr_04+wr_05+wr_06+wr_07+wr_08+wr_09+
+                    wr_10+wr_11+wr_12+wr_13+wr_14+wr_15+wr_16+wr_17+wr_18+wr_19+
+                    wr_20+wr_21+wr_22+wr_23+wr_24+wr_25+wr_26+wr_27+wr_28+wr_29+
+                    wr_30+wr_31+wr_32+wr_33+wr_34+wr_35+wr_36+wr_37+wr_38+wr_39+
+                    wr_40+wr_41+wr_42+wr_43+wr_44+wr_45+wr_46+wr_47+wr_48+wr_49)/50.0f;
+    
+    return filwrred_wr;
+}
+
+
+
+
+
+

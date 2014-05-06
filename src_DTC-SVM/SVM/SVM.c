@@ -611,19 +611,20 @@ void SVM_speed_close_loop(float reference_frequency, float frequency,bool close_
                                     *VsQ=0.0f; }
 
     else if (close_loop_active==true && CUR_FREQ<500.0f) 
-                                                        {  psi_rotating_angle_SVM=45.0f;
-                                                            //sensorless_speed_pi_controller(reference_frequency,frequency, &psi_rotating_angle_SVM); 
+    {  //psi_rotating_angle_SVM=30.0f;
+       sensorless_speed_pi_controller(reference_frequency,frequency, &psi_rotating_angle_SVM); 
 
-                                                            *VsD = SVM_V_s_ref_D (psi_s_ref,psi_s,psi_s_alpha_SVM,psi_rotating_angle_SVM,i_sD,R_s,2.0f*TICK_PERIOD);
-                                                            *VsQ = SVM_V_s_ref_Q (psi_s_ref,psi_s,psi_s_alpha_SVM,psi_rotating_angle_SVM,i_sQ,R_s,2.0f*TICK_PERIOD);
+       *VsD = SVM_V_s_ref_D (psi_s_ref,psi_s,psi_s_alpha_SVM,psi_rotating_angle_SVM,i_sD,R_s,2.0f*TICK_PERIOD);
+       *VsQ = SVM_V_s_ref_Q (psi_s_ref,psi_s,psi_s_alpha_SVM,psi_rotating_angle_SVM,i_sQ,R_s,2.0f*TICK_PERIOD);
                                                          }
-   else {
-                                                            psi_rotating_angle_SVM=45.0;
-                                                            //sensorless_speed_pi_controller(reference_frequency,frequency, &psi_rotating_angle_SVM); 
+    else 
+    {
+      //psi_rotating_angle_SVM=30.0;
+      sensorless_speed_pi_controller(reference_frequency,frequency, &psi_rotating_angle_SVM); 
 
-                                                            *VsD = SVM_V_s_ref_D (psi_s_ref,psi_s,psi_s_alpha_SVM,psi_rotating_angle_SVM,i_sD,R_s,2.0f*TICK_PERIOD);
-                                                            *VsQ = SVM_V_s_ref_Q (psi_s_ref,psi_s,psi_s_alpha_SVM,psi_rotating_angle_SVM,i_sQ,R_s,2.0f*TICK_PERIOD);
-        }
+      *VsD = SVM_V_s_ref_D (psi_s_ref,psi_s,psi_s_alpha_SVM,psi_rotating_angle_SVM,i_sD,R_s,2.0f*TICK_PERIOD);
+      *VsQ = SVM_V_s_ref_Q (psi_s_ref,psi_s,psi_s_alpha_SVM,psi_rotating_angle_SVM,i_sQ,R_s,2.0f*TICK_PERIOD);
+    }
 /*
     else if (close_loop_active==true && frequency>=450.0f) {    psi_rotating_angle_SVM=0.0f;
                                                             
@@ -711,7 +712,8 @@ void SVM_loop_control(float frequency,float maximum_open_loop_frequency,bool shu
 void  DTC_SVM(void)
 {
 static bool shutdown=true;
-
+  static bool open_loop_SVM  = false;
+  static bool close_loop_SVM = false;
 if (center_aligned_state==FIRST_HALF)
 {
 
@@ -748,11 +750,6 @@ if (center_aligned_state==FIRST_HALF)
   i_sQ     = i_s*fast_sine(cita_i_s);
 */
  
-    
-  //psi_sD          = direct_stator_flux_linkage_estimator_psi_sD     (2.0f*TICK_PERIOD,V_sD,i_sD,R_s,CUR_FREQ);
-  //psi_sQ          = quadrature_stator_flux_linkage_estimator_psi_sQ (2.0f*TICK_PERIOD,V_sQ,i_sQ,R_s,CUR_FREQ);
-
-
 
   //nan erradication
   if (psi_sD!=psi_sD) psi_sD=0.0f;
@@ -765,8 +762,8 @@ if (center_aligned_state==FIRST_HALF)
   static float psi_sD_i_neglected=0.0f;
   static float psi_sQ_i_neglected=0.0f;
 
-  flux_linkage_estimator                    (2.0f*TICK_PERIOD,V_sD,V_sQ,i_sD,i_sQ,R_s,CUR_FREQ,&psi_sD,&psi_sQ,&psi_s,&psi_s_alpha_SVM);
-  flux_linkage_estimator_neglected_currents (2.0f*TICK_PERIOD,V_sD,V_sQ,              CUR_FREQ,&psi_sD_i_neglected,&psi_sQ_i_neglected);//,&psi_s,&psi_s_alpha_SVM);
+  flux_linkage_estimator(2.0f*TICK_PERIOD,V_sD,V_sQ,i_sD,i_sQ,R_s,CUR_FREQ,&psi_sD,&psi_sQ,&psi_s,&psi_s_alpha_SVM);
+  //flux_linkage_estimator_neglected_currents (2.0f*TICK_PERIOD,V_sD,V_sQ,CUR_FREQ,&psi_sD_i_neglected,&psi_sQ_i_neglected);
 
   
 
@@ -777,26 +774,38 @@ if (center_aligned_state==FIRST_HALF)
   if (t_e!=t_e      ) t_e    =0.0f;
   if (psi_s_alpha_SVM!=psi_s_alpha_SVM) psi_s_alpha_SVM=0.0f;
 
-
-  //psi_s           = stator_flux_linkage_magnite_psi_s               (psi_sD,psi_sQ);
-  //psi_s_alpha_SVM = fast_vector_angle                               (psi_sQ,psi_sD);
-
   //w_r             = (1.0f/(2.0f*PI))     *rotor_speed_w_r                                 (psi_sD,psi_sQ,TICK_PERIOD*2.0f);
   //w_r             = 0.15915494309189533576f*rotor_speed_w_r                                 (psi_sD,psi_sQ,TICK_PERIOD*2.0f);  
                                                            //it has to be multiplied by two in order because the switching frequency
                                                            //is half the pwm frequency due to the two-cycle center-aligned signal
- 
   //actual value
-  w_r = 0.15915494309189533576f*rotor_speed_w_r (psi_sD,psi_sQ,TICK_PERIOD*2.0f);  
+  w_r = 0.15915494309189533576f*rotor_speed_w_r (psi_sD,psi_sQ,TICK_PERIOD*2.0f); 
+  w_r = wr_moving_average_filter(w_r); 
   //using neglected-currents flux-linkage estimator
   //w_r = 0.15915494309189533576f*rotor_speed_w_r (psi_sD_i_neglected,psi_sQ_i_neglected,TICK_PERIOD*2.0f);  
-  
-
-  
  
   if (w_r!=w_r) w_r=0.0f;
 
   t_e       = electromagnetic_torque_estimation_t_e   (psi_sD,i_sQ,psi_sQ,i_sD,pole_pairs);
+
+  
+
+  
+
+
+
+
+
+
+} 
+
+
+
+
+else
+{
+
+  t_e =  te_moving_average_filter(t_e);
   //t_e       = electromagnetic_torque_estimation_t_e   (psi_sD_i_neglected,i_sQ,psi_sQ_i_neglected,i_sD,pole_pairs);
 
   //t_e_ref = DTC_torque_reference_PI                 (CUR_FREQ, ref_freq);
@@ -808,12 +817,11 @@ if (center_aligned_state==FIRST_HALF)
 
   //sensorless_torque_pi_controller (t_e_ref        ,t_e, TICK_PERIOD*2.0f  ,&psi_rotating_angle_SVM    );
   //sensorless_speed_pi_controller  (ref_freq_SVM   ,w_r, PWMFREQ_F         ,&psi_rotating_angle_SVM    );
-  
-  static bool open_loop_SVM  = false;
-  static bool close_loop_SVM = false;
-  
 
-  SVM_starting_open_loop(open_loop_SVM,&V_sD,&V_sQ,U_d);
+
+    SVM_starting_open_loop(open_loop_SVM,&V_sD,&V_sQ,U_d);
+
+  //SVM_speed_close_loop(ref_freq_SVM,CUR_FREQ,close_loop_SVM,&V_sD,&V_sQ);
   SVM_speed_close_loop(ref_freq_SVM,w_r,close_loop_SVM,&V_sD,&V_sQ);
   //SVM_torque_close_loop(t_e_ref,t_e,close_loop_SVM,&V_sD,&V_sQ);
   SVM_loop_control(CUR_FREQ,100.0f,shutdown,t_e_ref,ref_freq_SVM,&open_loop_SVM,&close_loop_SVM); 
@@ -821,75 +829,29 @@ if (center_aligned_state==FIRST_HALF)
   //SVM_pi_control=psi_rotating_angle_SVM;
 
 
-gpio_clear(GPIOD, GPIO9);
-} 
-
-
-
-
-else
-{
- 
-
-  gpio_set(GPIOD, GPIO9);
-
-
-  //V_s                    = vector_magnitude            (V_sQ,V_sD);  
-  //cita_V_s               = fast_vector_angle                (V_sQ,V_sD);
-
-  fast_vector_angle_and_magnitude(V_sQ,V_sD,&V_s,&cita_V_s);
-
-  
-  //initial_rotor_position_ABC_pulses
-  //                            (&Ia_peak__short_pulse,&Ib_peak__short_pulse,&Ic_peak__short_pulse,i_sA,i_sB,&psi_sD,&psi_sQ,&V_sD,&V_sQ,&V_s,&cita_V_s,U_d*0.3f,&initial_rotor_position_start,6,110,shutdown);
- 
-  //initial_rotor_angle=initial_rotor_position_I_VI_quadrants (Ia_peak__short_pulse,Ib_peak__short_pulse,Ic_peak__short_pulse);
-
-  //initial_rotor_zone=initial_rotor_sector_120_degrees_ABC (initial_rotor_angle,Ia_peak__short_pulse,Ib_peak__short_pulse, Ic_peak__short_pulse);
-  //initial_rotor_zone=initial_rotor_sector_120_degrees_ABC (Ia_peak__short_pulse,Ib_peak__short_pulse, Ic_peak__short_pulse);
-  //absolute_initial_rotor_angle=initial_rotor_position_angle_discrimination(initial_rotor_angle,initial_rotor_zone);
-    
-
+ fast_vector_angle_and_magnitude(V_sQ,V_sD,&V_s,&cita_V_s);
 
   SVM_Maximum_allowed_V_s_ref (&V_sD,&V_sQ,&V_s,U_d*0.45f);//0.70f);
   V_s_ref_relative_angle = SVM_V_s_relative_angle      (cita_V_s);
-  
 
   //T1       = SVM_T1       (1.0f,V_s,U_d*2.0f/3.0f, V_s_ref_relative_angle);
   //T2       = SVM_T2       (1.0f,V_s,U_d*2.0f/3.0f, V_s_ref_relative_angle);
   T1       = SVM_T1       (1.0f,V_s,U_d*0.66666666666666666666f, V_s_ref_relative_angle);
   T2       = SVM_T2       (1.0f,V_s,U_d*0.66666666666666666666f, V_s_ref_relative_angle);
 
+
   T_min_on = SVM_T_min_on (1.0f, T1, T2);
   T_med_on = SVM_T_med_on (T_min_on, T1,T2,cita_V_s);
   T_max_on = SVM_T_max_on (T_med_on,T1,T2,cita_V_s);
 
   SVM_phase_duty_cycles           (&duty_a, &duty_b, &duty_c, cita_V_s,T_max_on,T_med_on,T_min_on);
-
   
   //shutdown_SVM_speed (t_e_ref,CUR_FREQ,&shutdown); 
   shutdown_SVM_speed (ref_freq_SVM,w_r,&shutdown);
   //shutdown_SVM_speed (t_e_ref,CUR_FREQ,&shutdown); 
   //shutdown_SVM_torque (t_e_ref,t_e,&shutdown);
 
-  /*
-  if (shutdown==true)
-  {V_sD=0.0f;
-    V_sQ=0.0f;
-    V_s=0.0f;
-    cita_V_s=0.0f;
-    V_s_ref_relative_angle=0.0f;
-    psi_sD=0.0f;
-    psi_sQ=0.0f;
-    psi_s=0.0f;
-    psi_s_alpha_SVM=0.0f;
-  }
-  */
-
-
   SVM_voltage_switch_inverter_VSI ( duty_a,  duty_b,  duty_c,shutdown);
-  gpio_clear(GPIOD, GPIO9);
-
 }
 
 

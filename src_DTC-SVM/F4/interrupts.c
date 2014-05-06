@@ -90,46 +90,46 @@ float data_rotating_angle_SVM;
 
 void tim1_up_tim10_isr(void) 
 {
+  //oscilloscope flag: start of interrupt
 
-
-
-
-  //oscilloscope flag: start of calculations
-  gpio_set(GPIOD, GPIO9);
    
   //Clear the update interrupt flag
   timer_clear_flag(TIM1,  TIM_SR_UIF);
 
   calc_freq();
 
-  //oscilloscope flag: end of calculations
-  gpio_clear(GPIOD, GPIO9);
-
-  //oscilloscope flag: start of ADC current measuring
-  //gpio_set(GPIOB, GPIO15);
-
-
 
 if (center_aligned_state==FIRST_HALF)
 {
+  //oscilloscope flag: start of First HALF
   gpio_set(GPIOB, GPIO15);
-
+  
   voltage_measure (ADC1,ADC_CHANNEL1);
 }
 else 
 {
+  //oscilloscope flag: start of second half
+  gpio_set(GPIOD, GPIO9);
   DTC_SVM();
   collecting_floating_data();
   colllecting_flux_linkage();
 }
 
+  //oscilloscope flag: start of halves
+  //gpio_clear(GPIOB, GPIO15);
+
+  //oscilloscope flag: end of interrupt
+  gpio_clear(GPIOD, GPIO9);
 }
 
 
 
 
 void adc_isr(void)
-{ 
+{
+
+
+ 
   static int adc_counter=0;
   static float V_stm32_A  = 0.0f;
   static float V_stm32_B  = 0.0f;
@@ -140,76 +140,42 @@ void adc_isr(void)
 
   if (adc_counter==0)
   {
-/*
-    V_stm32_A = adc_read_regular(ADC1)*(VREF/ADC_CONVERSION_FACTOR);
-    V_shunt_A = (V_stm32_A-V_DIFFERENTIAL_AMPLIFIER_REFFERENCE)/G_OP_AMP_A;
-    i_sA      = V_shunt_A/R_SHUNT_A;
-*/
     V_stm32_A = adc_read_regular(ADC1);
-
-
-    
-    //oscilloscope flag: start of ADC current measuring 
-    gpio_clear(GPIOB, GPIO15);
-
     voltage_measure (ADC1,ADC_CHANNEL2);
     adc_counter++;
   }
   else if (adc_counter==1)
   {
-/*
-    V_stm32_B = adc_read_regular(ADC1)*(VREF/ADC_CONVERSION_FACTOR);
-    V_shunt_B = (V_stm32_B-V_DIFFERENTIAL_AMPLIFIER_REFFERENCE)/G_OP_AMP_B;
-    i_sB      = V_shunt_B/R_SHUNT_B;
-*/
     V_stm32_B = adc_read_regular(ADC1);
-    
-    //oscilloscope flag: start of ADC Voltage measuring
-    gpio_set(GPIOB, GPIO15);
-
     voltage_measure (ADC1,ADC_CHANNEL3);
     adc_counter++; 
   }
   else
   {
-    //oscilloscope flag: end of ADC current measuring
-    gpio_clear(GPIOB, GPIO15);
-
     V_stm32_Ud = adc_read_regular(ADC1)*(VREF/ADC_CONVERSION_FACTOR);
     U_d        = V_stm32_Ud*BATTERY_VOLTAGE_CONVERTION_FACTOR; 
-
-    /*
-    U_d=40.0f;
-    i_sA=0.0f;
-    i_sB=0.0f;
-    */
 
     V_shunt_A = (V_stm32_A*(VREF/ADC_CONVERSION_FACTOR)-V_DIFFERENTIAL_AMPLIFIER_REFFERENCE)/G_OP_AMP_A;
     i_sA      = V_shunt_A/R_SHUNT_A;
 
     V_shunt_B = (V_stm32_B*(VREF/ADC_CONVERSION_FACTOR)-V_DIFFERENTIAL_AMPLIFIER_REFFERENCE)/G_OP_AMP_B;
     i_sB      = V_shunt_B/R_SHUNT_B;
-
-
 /*
     //filtering currents
     i_sA = isA_moving_average_filter(i_sA);
     i_sB = isB_moving_average_filter(i_sB);
 */       
-
     adc_counter=0;
-
-    //oscilloscope flag: start of DTC
-    gpio_set(GPIOD, GPIO9);
 
     DTC_SVM();
 
     //collecting_data();
 
-    
-    //oscilloscope flag: end of DTC
-    //gpio_clear(GPIOD, GPIO9);
+      //oscilloscope flag: start of halves
+  gpio_clear(GPIOB, GPIO15);
 
+  //oscilloscope flag: end of interrupt
+  gpio_clear(GPIOD, GPIO9);
   }
 
 
