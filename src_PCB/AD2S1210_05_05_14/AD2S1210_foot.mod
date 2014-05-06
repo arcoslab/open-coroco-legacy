@@ -1,0 +1,44 @@
+PCBNEW-LibModule-V1  Wed 30 Apr 2014 10:15:33 PM CDT
+# encoding utf-8
+Units mm
+$INDEX
+SIP-3
+$EndINDEX
+$MODULE SIP-3
+Po 0 0 0 15 5361BC4A 00000000 ~~
+Li SIP-3
+Sc 0
+AR 
+Op 0 0 0
+T0 -0.4953 -3.5941 1 1 0 0.15 N V 21 N "SIP-3"
+T1 -0.635 -5.08 1 1 0 0.15 N V 21 N "REC**"
+T2 2.54 -1.905 1 1 0 0.15 N V 21 N "2"
+T2 5.08 -1.905 1 1 0 0.15 N V 21 N "3"
+T2 0 -1.905 1 1 0 0.15 N V 21 N "1"
+DS 8.39 2 8.39 -6.5 0.15 21
+DS -3.21 2 -3.21 -6.5 0.15 21
+DS -3.21 -6.5 8.39 -6.5 0.15 21
+DS -3.21 2 8.39 2 0.15 21
+$PAD
+Sh "1" C 1.5 1.5 0 0 0
+Dr 1.05 0 0
+At STD N 00E0FFFF
+Ne 0 ""
+Po 0 0
+$EndPAD
+$PAD
+Sh "2" C 1.5 1.5 0 0 0
+Dr 1.05 0 0
+At STD N 00E0FFFF
+Ne 0 ""
+Po 2.54 0
+$EndPAD
+$PAD
+Sh "3" C 1.5 1.5 0 0 0
+Dr 1.05 0 0
+At STD N 00E0FFFF
+Ne 0 ""
+Po 5.08 0
+$EndPAD
+$EndMODULE SIP-3
+$EndLIBRARY
