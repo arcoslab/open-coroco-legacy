@@ -15,6 +15,7 @@
 *.jpg
 *.png
 *.pyc
+*~lock*
 motor.h
 atan_table.h
 sine_table.h
