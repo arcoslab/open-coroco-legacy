@@ -160,11 +160,11 @@ void adc_isr(void)
 
     V_shunt_B = (V_stm32_B*(VREF/ADC_CONVERSION_FACTOR)-V_DIFFERENTIAL_AMPLIFIER_REFFERENCE)/G_OP_AMP_B;
     i_sB      = V_shunt_B/R_SHUNT_B;
-/*
+
     //filtering currents
     i_sA = isA_moving_average_filter(i_sA);
     i_sB = isB_moving_average_filter(i_sB);
-*/       
+       
     adc_counter=0;
 
     DTC_SVM();

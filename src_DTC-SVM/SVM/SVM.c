@@ -524,7 +524,9 @@ void SVM_starting_open_loop(bool open_loop,float* VsD, float*VsQ, float Ud)
                                                         extra_load_angle_increase=0.0f;
                                                      }
                                 //else if (CUR_FREQ<ref_freq_SVM) extra_load_angle_increase=0.000005f;
-                                else if (CUR_FREQ<250.0f) extra_load_angle_increase=0.00005f;
+                                //else if (CUR_FREQ<250.0f) extra_load_angle_increase=0.000001f; //extra_load_angle_increase=0.00005f;
+                                else if (w_r<10.0f) extra_load_angle_increase=0.00001f; //extra_load_angle_increase=0.00005f;
+
                                 else                extra_load_angle_increase=0.0f;
                                 
 
@@ -538,8 +540,11 @@ void SVM_starting_open_loop(bool open_loop,float* VsD, float*VsQ, float Ud)
                                                      *VsQ = 0.0f;
                                                   }
                              else                 {
+                                                     
+                                                     //extra_voltage_angle=240.0f;
                                                      *VsD = Ud*fast_cos(extra_voltage_angle);
                                                      *VsQ = Ud*fast_sine(extra_voltage_angle);
+                                                     
                                                   }
                                 
               
@@ -683,7 +688,7 @@ void SVM_loop_control(float frequency,float maximum_open_loop_frequency,bool shu
                                                                                           //*open_loop=false;
                                                                                           //*close_loop_SVM=true;
                                                                                       }
-
+/*
     else if (SVM_loop_state==OPEN_LOOP_SVM && frequency>=maximum_open_loop_frequency)  {  SVM_loop_state=CLOSE_LOOP_SVM;
                                                                                           *open_loop=false;
                                                                                           *close_loop_SVM=true;
@@ -702,7 +707,7 @@ void SVM_loop_control(float frequency,float maximum_open_loop_frequency,bool shu
                                                                     *close_loop_SVM=false;
                                                                  }
 
-
+*/
 }
 
 #define IS_ANGLE_OFFSET_0 (120.0f)//110.0f
@@ -831,7 +836,7 @@ else
 
  fast_vector_angle_and_magnitude(V_sQ,V_sD,&V_s,&cita_V_s);
 
-  SVM_Maximum_allowed_V_s_ref (&V_sD,&V_sQ,&V_s,U_d*0.45f);//0.70f);
+  SVM_Maximum_allowed_V_s_ref (&V_sD,&V_sQ,&V_s,U_d*1.0f);//0.70f);
   V_s_ref_relative_angle = SVM_V_s_relative_angle      (cita_V_s);
 
   //T1       = SVM_T1       (1.0f,V_s,U_d*2.0f/3.0f, V_s_ref_relative_angle);

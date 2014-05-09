@@ -38,7 +38,18 @@
 	//G=2
 
 //from 3V to the real battery voltage
-#define BATTERY_VOLTAGE_CONVERTION_FACTOR 4.951120f  
+
+
+
+//Baldor------------------------------------------------
+#define BATTERY_VOLTAGE_CONVERTION_FACTOR 19.05416f  
+	//(R_A_Ud+R_B_Ud)/R_A_Ud
+	//R_A_Ud 18k Ohm
+	//R_B_Ud 997  Ohm
+
+
+//Multirotor------------------------------------------------
+//#define BATTERY_VOLTAGE_CONVERTION_FACTOR 4.951120f  
 	//(R_A_Ud+R_B_Ud)/R_A_Ud
 	//R_A_Ud 3880 Ohm
 	//R_B_Ud 982  Ohm
