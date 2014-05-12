@@ -162,9 +162,10 @@ void adc_isr(void)
     i_sB      = V_shunt_B/R_SHUNT_B;
 
     //filtering currents
+/*
     i_sA = isA_moving_average_filter(i_sA);
     i_sB = isB_moving_average_filter(i_sB);
-       
+*/       
     adc_counter=0;
 
     DTC_SVM();

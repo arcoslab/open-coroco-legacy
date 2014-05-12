@@ -21,10 +21,7 @@
 float w_r=0.0f;
 
 
-#define I_MAX_SENSORLESS            45.0f//  0.0005f//(90.0f*frequency/interrupt_frequency) 
-#define P_MAX_SENSORLESS            45.0f//  0.0005f//(90.0f*frequency/interrupt_frequency) 
-#define PI_MAX_SENSORLESS           45.0f//  0.0005f//(90.0f*frequency/interrupt_frequency) 
-#define PI_MIN_SENSORLESS          -45.0f// -0.0005f//-(90.0f*frequency/interrupt_frequency) 
+
 
 float SVM_pi_control=0.0f;
 float psi_rotating_angle_SVM=0.0f;
@@ -50,8 +47,8 @@ void sensorless_speed_pi_controller(
   else                         {  p_sensorless_error  = P_DOWN_SENSORLESS * sensorless_error;
                                   i_sensorless_error += (I_DOWN_SENSORLESS * sensorless_error); }
 
-  if      (i_sensorless_error >  I_MAX) { i_sensorless_error =  I_MAX; }
-  else if (i_sensorless_error < -I_MAX) { i_sensorless_error = -I_MAX; }
+  if      (i_sensorless_error >  I_MAX_SENSORLESS) { i_sensorless_error =  I_MAX_SENSORLESS; }
+  else if (i_sensorless_error < -I_MAX_SENSORLESS   ) { i_sensorless_error = -I_MAX_SENSORLESS; }
 
   if      (p_sensorless_error >  P_MAX_SENSORLESS) { p_sensorless_error =  P_MAX_SENSORLESS; }
   else if (p_sensorless_error < -P_MAX_SENSORLESS) { p_sensorless_error = -P_MAX_SENSORLESS; }
@@ -83,7 +80,7 @@ void sensorless_speed_pi_controller(
   pi_max=P_MAX_SENSORLESS;
 }
 
-
+/*
 void sensorless_open_loop(
      float *reference_frequency, float* sensorless_attenuation,float interrupt_frequency,float max_frequency,float frequency_increment)
 {
@@ -101,7 +98,7 @@ void sensorless_open_loop(
    cicle_counter=cicle_counter+1;
 
 }
-
+*/
 
 float psi_advance_calculator(float reference_frequency, float interrupt_frequency)
 {
@@ -110,10 +107,7 @@ float psi_advance_calculator(float reference_frequency, float interrupt_frequenc
 
 
 
-#define I_MAX_SENSORLESS_TORQUE            90.0f//  0.005f//(90.0f*frequency/interrupt_frequency) 
-#define P_MAX_SENSORLESS_TORQUE            90.0f//  0.005f//(90.0f*frequency/interrupt_frequency) 
-#define PI_MAX_SENSORLESS_TORQUE           90.0f//  0.005f//(90.0f*frequency/interrupt_frequency) 
-#define PI_MIN_SENSORLESS_TORQUE          -90.0f//  -0.005f//-(90.0f*frequency/interrupt_frequency) 
+
 
 
 void sensorless_torque_pi_controller(

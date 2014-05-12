@@ -79,7 +79,7 @@ int     flux_limit_counter_7=0;
 int     flux_limit_counter_8=0;
 int     flux_limit_counter_9=0;
 
-float attenuation=MIN_ATTENUATION;
+float attenuation=1.0f;//MIN_ATTENUATION;
 	
 uint ticks;
 uint period;
@@ -191,7 +191,7 @@ void calc_freq(void)
 }
 
 
-
+/*
 void start_up(void) 
 {
   if (CUR_FREQ < MIN_CLOSE_LOOP_FREQ) 
@@ -212,8 +212,8 @@ void start_up(void)
     ref_freq=FIRST_CLOSE_LOOP_REF_FREQ;
   }
 }
-
-
+*/
+/*  
 void pi_controller(void) {
   error=ref_freq-CUR_FREQ; // ref_freq-cur_freq
   if (error > 0.0f) {
@@ -252,12 +252,12 @@ void pi_controller(void) {
     attenuation=MIN_ATTENUATION-pi_control/(PI_MAX/(MAX_ATTENUATION-MIN_ATTENUATION));
   }
 }
-
+*/
 
 
     char cmd_s[50]="";
     char cmd[10]="";
-    float value=FIRST_CLOSE_LOOP_REF_FREQ;
+    float value=0.0f;//FIRST_CLOSE_LOOP_REF_FREQ;
     int motor_stop=true;
     int counter=0;
     //motor_off=false;
@@ -265,7 +265,7 @@ void pi_controller(void) {
 
 bool first_dtc=true;
 bool dtc_on=true;
-
+#define FREQ_TO_STOP_MOTOR          30.0f
 void frequency_input(void)
 {
 
@@ -467,6 +467,7 @@ void frequency_input(void)
       
 }
 
+/*
 void gen_pwm(void) {
   //calc_attenuation();
 
@@ -481,10 +482,10 @@ void gen_pwm(void) {
   }
 
   cmd_angle=est_angle+HALL_CAL_OFFSET*PI/180.0f;
-/*  while (cmd_angle>=2.0f*PI)
-  {
-    cmd_angle=cmd_angle-2.0f*PI;
-  }*/
+//  while (cmd_angle>=2.0f*PI)
+//  {
+//    cmd_angle=cmd_angle-2.0f*PI;
+//  }
 
 
   if (!close_loop) {
@@ -549,23 +550,23 @@ void gen_pwm(void) {
 
   else 
   { 
-    /*
-    duty_a=0.8f;//1.0f;
-    duty_b=0.8f;//1.0f;
-    duty_c=0.8f;//1.0f;
-    attenuation=1.0f;
-    */
-/*    
-    duty_a=1.0f;
-    duty_b=1.0f;
-    duty_c=1.0f;
-    attenuation=1.0f;
-*/  
-/*  
-    duty_a=0.0f;
-    duty_b=0.0f;
-    duty_c=0.0f;
-*/
+    
+    //duty_a=0.8f;//1.0f;
+    //duty_b=0.8f;//1.0f;
+    //duty_c=0.8f;//1.0f;
+    //attenuation=1.0f;
+    
+    
+    //duty_a=1.0f;
+    //duty_b=1.0f;
+    //duty_c=1.0f;
+    //attenuation=1.0f;
+
+  
+    //duty_a=0.0f;
+    //duty_b=0.0f;
+    //duty_c=0.0f;
+
     //attenuation=1.0f;
 
   }
@@ -573,15 +574,15 @@ void gen_pwm(void) {
      
 
 
-  /* Set the capture compare value for OC1. */
+  // Set the capture compare value for OC1. 
   timer_set_oc_value(TIM1, TIM_OC1, duty_a*attenuation*PWM_PERIOD_ARR);
-  /* Set the capture compare value for OC1. */
+  // Set the capture compare value for OC1. 
   timer_set_oc_value(TIM1, TIM_OC2, duty_b*attenuation*PWM_PERIOD_ARR);
-  /* Set the capture compare value for OC1. */
+  // Set the capture compare value for OC1. 
   timer_set_oc_value(TIM1, TIM_OC3, duty_c*attenuation*PWM_PERIOD_ARR);
   //tim_force_update_event(TIM1);
 }
 
-
+*/
 
 

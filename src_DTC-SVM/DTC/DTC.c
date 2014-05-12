@@ -278,7 +278,7 @@ void flux_linkage_estimator_neglected_currents (float T,float V_sD,float V_sQ,fl
   static float previous_psi_sQ=0.0f;
 
 
-
+/*
   if (K_LPF*electric_frequency<5.0f)
   {
     *psisD = ( previous_psi_sD+T*(V_sD) )/(1.0f+T*( 2.0f*PI_CTE*F_CUTOFF));
@@ -289,7 +289,10 @@ void flux_linkage_estimator_neglected_currents (float T,float V_sD,float V_sQ,fl
     *psisD = ( previous_psi_sD+T*(V_sD) )/(1.0f+T*( K_LPF*2.0f*PI_CTE*electric_frequency));
     *psisQ = ( previous_psi_sQ+T*(V_sQ) )/(1.0f+T*( K_LPF*2.0f*PI_CTE*electric_frequency)); 
   }
-    
+*/    
+    *psisD = ( previous_psi_sD+T*(V_sD) )/(1.0f+T*( 2.0f*PI_CTE*F_CUTOFF));
+    *psisQ = ( previous_psi_sQ+T*(V_sQ) )/(1.0f+T*( 2.0f*PI_CTE*F_CUTOFF));   
+
   //fast_vector_angle_and_magnitude(*psisQ,*psisD,psis,psis_alpha);
 
   previous_psi_sD = *psisD;
