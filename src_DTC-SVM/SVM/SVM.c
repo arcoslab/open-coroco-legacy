@@ -501,7 +501,7 @@ float initial_rotor_angle=0.0f;
 float absolute_initial_rotor_angle=0.0f;
 int   initial_rotor_zone=0;
 
-void SVM_starting_open_loop(bool open_loop,float* VsD, float*VsQ, float Ud)
+void SVM_starting_open_loop(bool open_loop,float* VsD, float*VsQ, float Ud, float max_open_loop_frequency)
 {
     static float extra_voltage_angle=0.0f;
     static float extra_load_angle=0.0f;
@@ -528,9 +528,11 @@ void SVM_starting_open_loop(bool open_loop,float* VsD, float*VsQ, float Ud)
                                 //else if (CUR_FREQ<ref_freq_SVM) extra_load_angle_increase=0.000005f;
                                 //else if (CUR_FREQ<250.0f) extra_load_angle_increase=0.000001f; //extra_load_angle_increase=0.00005f;
                                 //else if (w_r<10.0f) extra_load_angle_increase=0.00001f; //extra_load_angle_increase=0.00005f;
-                                else if (w_r<ref_freq_SVM && increase_permission==true) {   extra_load_angle_increase=0.00005f; //extra_load_angle_increase=0.00005f;
-                                                                                            
-                                                                                        }
+                                //else if (w_r<ref_freq_SVM && increase_permission==true) 
+                                else if (w_r<max_open_loop_frequency && increase_permission==true)
+                                {   
+                                    extra_load_angle_increase=0.00005f; //extra_load_angle_increase=0.00005f;
+                                }
                                 else  
                                      { extra_load_angle_increase=0.0f;
                                        increase_permission=false;
@@ -547,7 +549,7 @@ void SVM_starting_open_loop(bool open_loop,float* VsD, float*VsQ, float Ud)
                                                   }
                              else                 {
                                                      
-                                                     extra_voltage_angle=120.0f;
+                                                     //extra_voltage_angle=120.0f;
                                                      *VsD = Ud*fast_cos(extra_voltage_angle);
                                                      *VsQ = Ud*fast_sine(extra_voltage_angle);
                                                      
@@ -797,26 +799,16 @@ if (center_aligned_state==FIRST_HALF)
  
   if (w_r!=w_r) w_r=0.0f;
 
-  //t_e       = electromagnetic_torque_estimation_t_e   (psi_sD,i_sQ,psi_sQ,i_sD,pole_pairs);
-  t_e       = electromagnetic_torque_estimation_t_e   (psi_sD_i_neglected,i_sQ,psi_sQ_i_neglected,i_sD,pole_pairs);
-  
-
-  
-
-
-
-
-
-
+  t_e       = electromagnetic_torque_estimation_t_e   (psi_sD,i_sQ,psi_sQ,i_sD,pole_pairs);
+  //t_e       = electromagnetic_torque_estimation_t_e   (psi_sD_i_neglected,i_sQ,psi_sQ_i_neglected,i_sD,pole_pairs);
+ 
 } 
-
-
 
 
 else
 {
 
-  //t_e =  te_moving_average_filter(t_e);
+  t_e =  te_moving_average_filter(t_e);
 
 
   //t_e_ref = DTC_torque_reference_PI                 (CUR_FREQ, ref_freq);
@@ -830,19 +822,19 @@ else
   //sensorless_speed_pi_controller  (ref_freq_SVM   ,w_r, PWMFREQ_F         ,&psi_rotating_angle_SVM    );
 
 
-    SVM_starting_open_loop(open_loop_SVM,&V_sD,&V_sQ,U_d);
+    SVM_starting_open_loop(open_loop_SVM,&V_sD,&V_sQ,U_d,MAXIMUM_OPEN_LOOP_SPEED);
 
   //SVM_speed_close_loop(ref_freq_SVM,CUR_FREQ,close_loop_SVM,&V_sD,&V_sQ);
   SVM_speed_close_loop(ref_freq_SVM,w_r,close_loop_SVM,&V_sD,&V_sQ);
   //SVM_torque_close_loop(t_e_ref,t_e,close_loop_SVM,&V_sD,&V_sQ);
-  SVM_loop_control(CUR_FREQ,100.0f,t_e_ref,ref_freq_SVM,&open_loop_SVM,&close_loop_SVM); 
+  SVM_loop_control(CUR_FREQ,MAXIMUM_OPEN_LOOP_SPEED,t_e_ref,ref_freq_SVM,&open_loop_SVM,&close_loop_SVM); 
 
   //SVM_pi_control=psi_rotating_angle_SVM;
 
 
  fast_vector_angle_and_magnitude(V_sQ,V_sD,&V_s,&cita_V_s);
 
-  SVM_Maximum_allowed_V_s_ref (&V_sD,&V_sQ,&V_s,U_d*0.25f);//0.70f);
+  SVM_Maximum_allowed_V_s_ref (&V_sD,&V_sQ,&V_s,U_d*UD_PERCENTAGE);//0.70f);
   V_s_ref_relative_angle = SVM_V_s_relative_angle      (cita_V_s);
 
   //T1       = SVM_T1       (1.0f,V_s,U_d*2.0f/3.0f, V_s_ref_relative_angle);
