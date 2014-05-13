@@ -130,21 +130,29 @@ void collecting_collected_in_buffer (void)
         collected_ref_freq_SVM [collected_pointer] = ref_freq_SVM;
 
         //collected_state_SVM    [collected_pointer] = state;
-        collected_CUR_FREQ     [collected_pointer] = CUR_FREQ;
 
-        collected_psi_sD    [collected_pointer]=psi_sD;
-        collected_psi_sQ    [collected_pointer]=psi_sQ;
-        collected_psi_s     [collected_pointer]=psi_s;
-        collected_psi_alpha [collected_pointer]=psi_alpha;
-        collected_CUR_FREQ  [collected_pointer]=CUR_FREQ;
-        collected_U_d       [collected_pointer]=U_d;
+//-------------------------------------------------------------
+        //collected_CUR_FREQ     [collected_pointer] = CUR_FREQ;
+        collected_CUR_FREQ     [collected_pointer] =  T2;
+
+//------------------------------------------------------------
+        //collected_psi_sD    [collected_pointer]=psi_sD;
+        //collected_psi_sQ    [collected_pointer]=psi_sQ;
+        //collected_psi_s     [collected_pointer]=psi_s;
+        //collected_psi_alpha [collected_pointer]=psi_alpha;
+        //collected_CUR_FREQ  [collected_pointer]=CUR_FREQ;
+        //collected_U_d       [collected_pointer]=U_d;
         //timer          [collected_pointer]=flux_linkage_capture_counter;
         
-	    collected_CUR_FREQ[collected_pointer]=CUR_FREQ;	
+	    //collected_CUR_FREQ[collected_pointer]=CUR_FREQ;	
 
         collected_i_sA [collected_pointer]=i_sA;
         collected_i_sB [collected_pointer]=i_sB;
+
+
         collected_U_d  [collected_pointer]=U_d;
+
+
 
         collected_i_sD[collected_pointer]=i_sD;
         collected_i_sQ[collected_pointer]=i_sQ;
@@ -157,13 +165,22 @@ void collecting_collected_in_buffer (void)
         collected_V_s [collected_pointer]=V_s;
         collected_cita_V_s[collected_pointer]=cita_V_s;
         collected_cita_V_s_relative_angle[collected_pointer]=V_s_ref_relative_angle ;
-
+//------------------------------------------------------------------
+/*
         collected_psi_sD[collected_pointer]=psi_sD;
         collected_psi_sQ[collected_pointer]=psi_sQ;
         collected_psi_s [collected_pointer]=psi_s;
         collected_psi_alpha[collected_pointer]=psi_alpha;
         collected_psi_s_alpha_SVM[collected_pointer]=psi_s_alpha_SVM;
+*/
+        collected_psi_sD[collected_pointer]=duty_a;
+        collected_psi_sQ[collected_pointer]=duty_b;
+        collected_psi_s [collected_pointer]=duty_c;
+        //collected_psi_alpha[collected_pointer]=psi_alpha;
+        //collected_psi_s_alpha_SVM[collected_pointer]=66.0f;//T1;
 
+
+//-----------------------------------------------------------------
         collected_t_e[collected_pointer]=t_e;
 
         collected_psi_s_ref[collected_pointer]=psi_s_ref;
@@ -184,7 +201,15 @@ void collecting_collected_in_buffer (void)
         //collected_T_med_on[collected_pointer]=T_med_on;
         //collected_T_max_on[collected_pointer]=T_max_on;
         //collected_attenuation[collected_pointer]=attenuation;
-            collected_pi_control_SVM[collected_pointer]	=SVM_pi_control;
+        
+
+//-------------------------------------------------------------------
+        //collected_pi_control_SVM[collected_pointer]	=SVM_pi_control;
+        collected_pi_control_SVM[collected_pointer]	=T1;//SVM_pi_control;
+
+
+//--------------------------------------------------------------------
+
         collected_rotating_angle_SVM[collected_pointer] =psi_rotating_angle_SVM;
 
 }
@@ -347,11 +372,12 @@ void collecting_samples(void)
 
         //data_state_SVM     = state;
         data_CUR_FREQ      = CUR_FREQ;
-
+/*
         data_psi_sD    =psi_sD;
         data_psi_sQ    =psi_sQ;
         data_psi_s     =psi_s;
         data_psi_alpha =psi_alpha;
+*/
         data_CUR_FREQ  =CUR_FREQ;
         data_U_d       =U_d;
         //timer          =flux_linkage_capture_counter;
@@ -373,9 +399,20 @@ void collecting_samples(void)
         data_cita_V_s=cita_V_s;
         data_cita_V_s_relative_angle=cita_V_s;
 
+/*
         data_psi_sD=psi_sD;
         data_psi_sQ=psi_sQ;
         data_psi_s =psi_s;
+        data_psi_alpha=psi_alpha;
+        data_psi_s_alpha_SVM=psi_s_alpha_SVM;
+        data_timer=timer;
+*/
+        data_timer=timer;
+
+        //data_timer =T1;
+        data_psi_sD=T1;//duty_b;
+        data_psi_sQ=T2;//duty_c;
+        data_psi_s =0.0f;
         data_psi_alpha=psi_alpha;
         data_psi_s_alpha_SVM=psi_s_alpha_SVM;
 
@@ -396,7 +433,7 @@ void collecting_samples(void)
 
         data_pi_control_SVM	=SVM_pi_control;
         data_rotating_angle_SVM =psi_rotating_angle_SVM;
-        data_timer=timer;
+
         
 }
 

@@ -57,7 +57,7 @@ class Serial_Stm32f4(object):
         self.read_capture_state = 'not_collecting'
         self.tag_comment        = ''
         #self.aditional_comment=', STATOR_RESISTANCE_TEST 240degrees,MULTI_ROTOR OPEN LOOP,wrong motor parameters,one psi,wr filt,te filt,k 0.2, actual i,open 0.00005f,Ud 40%,psi_ref=0.0016,38kpwm'
-        self.aditional_comment=', BALDOR 48V,Ud 50%, Parameters semiok, w_r with neglected i,filtered torque'
+        self.aditional_comment=', DUTY CYCLES,BALDOR 12V,1 battery,Ud 100%, testing spikes, motor disconnected, 10Hz'
         self.driving_counter    = 0
         self.various_counter     = 0
         self.type_of_test       = 0        
@@ -710,6 +710,42 @@ class Serial_Stm32f4(object):
                 self.new_data_line= "t %6.2f "                  %self.time                      + \
                                     " ref_freq %6.2f"           %self.reference_frequency   + \
                                     " electric_frequency %6.2f" %self.electric_frequency    + \
+                                    " T2 %6.2f"          %self.hall_frequency        + \
+                                    " isA %6.2f"                %self.isA                   + \
+                                    " isB %6.2f"                %self.isB                   + \
+                                    " isC %6.2f"                %self.isC                   + \
+                                    " isD %6.2f"                %self.isD                   + \
+                                    " isQ %6.2f"                %self.isQ                   + \
+                                    " is:  %6.2f"               %math.sqrt(self.isQ*self.isQ+self.isD*self.isD) + \
+                                    " is_cita: %6.2f"           %self.vector_angle(self.isQ,self.isD)           + \
+                                    " VsD %6.2f"                %self.VsD                   + \
+                                    " VsQ %6.2f"                %self.VsQ                   + \
+                                    " Vs %6.2f"                 %self.Vs                    + \
+                                    " Vs_cita %6.2f"            %self.Vs_cita               + \
+                                    " Vs_cita_relative %6.2f"   %self.Vs_relative_cita      + \
+                                    " dutyA %10.8f"             %self.psi_sD               + \
+                                    " dutyB %10.8f"             %self.psi_sQ               + \
+                                    " dutyC %6.2f"               %self.psi_s                 + \
+                                    " psi_s_alpha %6.2f"         %self.psi_s_alpha           + \
+                                    " psis_ref %10.8f"          %self.psi_s_reference      + \
+                                    " te %6.2f"                 %self.te                    + \
+                                    " Ud %6.2f"                 %self.Ud                    + \
+                                    " T1 %12.9f"        %self.pi_control           + \
+                                    " pi_max %10.6f"            %self.pi_max               + \
+                                    " load_angle %12.9f"        %self.load_angle            
+                                    #"t: %6.2f "                  %self.time                + \
+                                    #"frequency %6.2f"                 %self.electric_frequency
+                                    #" psis: %10.6f"              %self.psi_s               + \
+                                    #" psis_alpha: %6.2f"         %self.psi_s_alpha         + \
+                                    #" psis_ref: %10.8f"          %self.psi_s_reference
+        
+
+
+        '''
+        elif self.print_selection==11:
+                self.new_data_line= "t %6.2f "                  %self.time                      + \
+                                    " ref_freq %6.2f"           %self.reference_frequency   + \
+                                    " electric_frequency %6.2f" %self.electric_frequency    + \
                                     " hall_freq %6.2f"          %self.hall_frequency        + \
                                     " isA %6.2f"                %self.isA                   + \
                                     " isB %6.2f"                %self.isB                   + \
@@ -738,7 +774,7 @@ class Serial_Stm32f4(object):
                                     #" psis: %10.6f"              %self.psi_s               + \
                                     #" psis_alpha: %6.2f"         %self.psi_s_alpha         + \
                                     #" psis_ref: %10.8f"          %self.psi_s_reference
-
+        
         elif self.print_selection==12:
             self.new_data_line= " Ias: %10.4f:"       %self.Ia_peak__short_pulse  + \
                                 " Ibs: %10.4f:"       %self.Ib_peak__short_pulse  + \
@@ -746,7 +782,7 @@ class Serial_Stm32f4(object):
                                 " zone: %10.4f:"  %self.initial_rotor_zone  + \
                                 " angle: %10.4f:" %self.initial_rotor_angle  + \
                                 " ab_angle: %10.4f:" %self.absolute_initial_rotor_angle   + extra_information
-               
+        '''       
         
 
     def save_data_to_csv_file(self):
