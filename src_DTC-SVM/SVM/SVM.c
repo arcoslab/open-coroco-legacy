@@ -44,18 +44,8 @@ float SVM_V_s_ref_Q(float psi_s_ref, float psi_s, float psi_s_angle, float phase
 
 void SVM_Maximum_allowed_V_s_ref(float* VsD, float* VsQ,float* V_s_ref,float U_d)
 {
-  //if   (*V_s_ref<=U_d/sqrtf(3.0f)) { *V_s_ref = *V_s_ref;       }
-  //else                            { *V_s_ref = U_d/sqrtf(3.0f); }
-
   float voltage_magnitude = *V_s_ref; 
-/*
-  if (initial_rotor_start==true)
-                                              {
-                                                    *V_s_ref = *V_s_ref;
-                                                    *VsD     = *VsD;
-                                                    *VsQ     = *VsQ;  
-                                              }
-  else*/ 
+
   if   (*V_s_ref<=U_d/1.73205080756887729352f) { 
                                                     *V_s_ref = *V_s_ref;
                                                     *VsD     = *VsD;
@@ -93,7 +83,9 @@ float SVM_T1(float T_s,float U_s, float U1, float V_s_ref_relative_angle)
   //return T_s*(U_s/U1)*( sinf( (PI/180.0f)*(60.0f-V_s_ref_relative_angle) )/sinf(60.0f*PI/180.0f) );
   //return T_s*(U_s/U1)*( sinf     ( 0.01745329251994329576f*(60.0f-V_s_ref_relative_angle) )/0.86602540378443864676f );
   //return T_s*(U_s/U1)*( fast_sine( 0.01745329251994329576f*(60.0f-V_s_ref_relative_angle) )/0.86602540378443864676f );
-  return T_s*(U_s/U1)*( fast_sine( (60.0f-V_s_ref_relative_angle) )/0.86602540378443864676f );
+  //return T_s*(U_s/U1)*( fast_sine( (60.0f-V_s_ref_relative_angle) )/0.86602540378443864676f );
+  return T_s*(U_s/U1)*( fast_sine(V_s_ref_relative_angle)/0.86602540378443864676f );
+
 }
 
 float SVM_T2(float T_s,float U_s, float U2, float V_s_ref_relative_angle)
@@ -101,7 +93,8 @@ float SVM_T2(float T_s,float U_s, float U2, float V_s_ref_relative_angle)
   //return T_s*(U_s/U2)*( sinf(V_s_ref_relative_angle*PI/180.0f)/sinf(60.0f*PI/180.0f) );
   //return T_s*(U_s/U2)*( sinf(V_s_ref_relative_angle*0.01745329251994329576f)/0.86602540378443864676f );
   //return T_s*(U_s/U2)*( fast_sine(V_s_ref_relative_angle*0.01745329251994329576f)/0.86602540378443864676f );
-  return T_s*(U_s/U2)*( fast_sine(V_s_ref_relative_angle)/0.86602540378443864676f );
+  //return T_s*(U_s/U2)*( fast_sine(V_s_ref_relative_angle)/0.86602540378443864676f );
+  return T_s*(U_s/U2)* ( fast_sine( (60.0f-V_s_ref_relative_angle) )/0.86602540378443864676f );
 }
 /*
 float SVM_Taon(float T_s, float T1, float T2)
@@ -121,6 +114,7 @@ float SVM_Tbon(float Taon, float T1)
 */
 float SVM_T_med_on(float T_min_on, float T1,float T2,float V_s_ref_angle)//T1)
 {
+/*
   if      ( V_s_ref_angle>=  0.0f && V_s_ref_angle< 60.0f) { return (T_min_on+T2); }  //sector S1
   else if ( V_s_ref_angle>= 60.0f && V_s_ref_angle<120.0f) { return (T_min_on+T1); }  //sector S2
   else if ( V_s_ref_angle>=120.0f && V_s_ref_angle<180.0f) { return (T_min_on+T2); }  //sector S3
@@ -128,6 +122,15 @@ float SVM_T_med_on(float T_min_on, float T1,float T2,float V_s_ref_angle)//T1)
   else if ( V_s_ref_angle>=240.0f && V_s_ref_angle<300.0f) { return (T_min_on+T2); }  //sector S5
   else if ( V_s_ref_angle>=300.0f && V_s_ref_angle<360.0f) { return (T_min_on+T1); }  //sector S6
   else                                                     { return (T_min_on   ); }  //failed sector
+*/
+  if      ( V_s_ref_angle>=  0.0f && V_s_ref_angle< 60.0f) { return (T_min_on+T1); }  //sector S1
+  else if ( V_s_ref_angle>= 60.0f && V_s_ref_angle<120.0f) { return (T_min_on+T2); }  //sector S2
+  else if ( V_s_ref_angle>=120.0f && V_s_ref_angle<180.0f) { return (T_min_on+T1); }  //sector S3
+  else if ( V_s_ref_angle>=180.0f && V_s_ref_angle<240.0f) { return (T_min_on+T2); }  //sector S4
+  else if ( V_s_ref_angle>=240.0f && V_s_ref_angle<300.0f) { return (T_min_on+T1); }  //sector S5
+  else if ( V_s_ref_angle>=300.0f && V_s_ref_angle<360.0f) { return (T_min_on+T2); }  //sector S6
+  else                                                     { return (T_min_on   ); }  //failed sector
+
 }
 /*
 float SVM_Tcon(float Tbon, float T2)
@@ -137,12 +140,21 @@ float SVM_Tcon(float Tbon, float T2)
 */
 float SVM_T_max_on(float T_med_on, float T1,float T2,float V_s_ref_angle)//T2)
 {
+/*
   if      ( V_s_ref_angle>=  0.0f && V_s_ref_angle< 60.0f) { return (T_med_on+T1); }  //sector S1
   else if ( V_s_ref_angle>= 60.0f && V_s_ref_angle<120.0f) { return (T_med_on+T2); }  //sector S2
   else if ( V_s_ref_angle>=120.0f && V_s_ref_angle<180.0f) { return (T_med_on+T1); }  //sector S3
   else if ( V_s_ref_angle>=180.0f && V_s_ref_angle<240.0f) { return (T_med_on+T2); }  //sector S4
   else if ( V_s_ref_angle>=240.0f && V_s_ref_angle<300.0f) { return (T_med_on+T1); }  //sector S5
   else if ( V_s_ref_angle>=300.0f && V_s_ref_angle<360.0f) { return (T_med_on+T2); }  //sector S6
+  else                                                     { return (T_med_on   ); }  //failed sector
+*/
+  if      ( V_s_ref_angle>=  0.0f && V_s_ref_angle< 60.0f) { return (T_med_on+T2); }  //sector S1
+  else if ( V_s_ref_angle>= 60.0f && V_s_ref_angle<120.0f) { return (T_med_on+T1); }  //sector S2
+  else if ( V_s_ref_angle>=120.0f && V_s_ref_angle<180.0f) { return (T_med_on+T2); }  //sector S3
+  else if ( V_s_ref_angle>=180.0f && V_s_ref_angle<240.0f) { return (T_med_on+T1); }  //sector S4
+  else if ( V_s_ref_angle>=240.0f && V_s_ref_angle<300.0f) { return (T_med_on+T2); }  //sector S5
+  else if ( V_s_ref_angle>=300.0f && V_s_ref_angle<360.0f) { return (T_med_on+T1); }  //sector S6
   else                                                     { return (T_med_on   ); }  //failed sector
 }
 
@@ -748,37 +760,11 @@ if (center_aligned_state==FIRST_HALF)
 {
 
 
-
-/*
+  
   i_sD     = direct_stator_current_i_sD     (i_sA);
   i_sQ     = quadrature_stator_current_i_sQ (i_sA,i_sB);
+  //fast_vector_angle_and_magnitude(i_sQ,i_sD,&i_s,&cita_i_s);
 
-  fast_vector_angle_and_magnitude(i_sQ,i_sD,&i_s,&cita_i_s);
-  
-  cita_i_s = cita_i_s+IS_ANGLE_OFFSET;
-  i_sD     = ISD_CORRECTION*i_s*fast_cos (cita_i_s);
-  i_sQ     = ISQ_CORRECTION* i_s*fast_sine(cita_i_s);
-*/
-
-
-  //current double correction
-  i_sD     = direct_stator_current_i_sD     (i_sA);
-  i_sQ     = quadrature_stator_current_i_sQ (i_sA,i_sB);
-
-  fast_vector_angle_and_magnitude(i_sQ,i_sD,&i_s,&cita_i_s);
-/*
-  //float original_i_cita_s=0.0f;
-  //original_i_cita_s=cita_i_s;
-  cita_i_s = cita_i_s+IS_ANGLE_OFFSET_0;
-  i_sD     = ISD_CORRECTION*i_s*fast_cos (cita_i_s);
-  i_sQ     = ISQ_CORRECTION* i_s*fast_sine(cita_i_s);
-   
-  fast_vector_angle_and_magnitude(i_sQ,i_sD,&i_s,&cita_i_s);
-  
-  cita_i_s = cita_i_s-IS_ANGLE_OFFSET_0;
-  i_sD     = i_s*fast_cos (cita_i_s);
-  i_sQ     = i_s*fast_sine(cita_i_s);
-*/
  
 
   //nan erradication
@@ -803,6 +789,8 @@ if (center_aligned_state==FIRST_HALF)
   if (psi_s !=psi_s ) psi_s =0.0f;
   if (t_e!=t_e      ) t_e    =0.0f;
   if (psi_s_alpha_SVM!=psi_s_alpha_SVM) psi_s_alpha_SVM=0.0f;
+
+
 
   //w_r             = (1.0f/(2.0f*PI))     *rotor_speed_w_r                                 (psi_sD,psi_sQ,TICK_PERIOD*2.0f);
   //w_r             = 0.15915494309189533576f*rotor_speed_w_r                                 (psi_sD,psi_sQ,TICK_PERIOD*2.0f);  
@@ -835,36 +823,35 @@ else
 
   //--------------------------------SVM algorithm--------------------------------------------//
 
-  //sensorless_torque_pi_controller (t_e_ref        ,t_e, TICK_PERIOD*2.0f  ,&psi_rotating_angle_SVM    );
-  //sensorless_speed_pi_controller  (ref_freq_SVM   ,w_r, PWMFREQ_F         ,&psi_rotating_angle_SVM    );
-
-
-    SVM_starting_open_loop(open_loop_SVM,&V_sD,&V_sQ,U_d,MAXIMUM_OPEN_LOOP_SPEED);
-
+  SVM_starting_open_loop(open_loop_SVM,&V_sD,&V_sQ,U_d,MAXIMUM_OPEN_LOOP_SPEED);
   //SVM_speed_close_loop(ref_freq_SVM,CUR_FREQ,close_loop_SVM,&V_sD,&V_sQ);
   SVM_speed_close_loop(ref_freq_SVM,w_r,close_loop_SVM,&V_sD,&V_sQ);
   //SVM_torque_close_loop(t_e_ref,t_e,close_loop_SVM,&V_sD,&V_sQ);
   SVM_loop_control(w_r,MAXIMUM_OPEN_LOOP_SPEED,t_e_ref,ref_freq_SVM,&open_loop_SVM,&close_loop_SVM); 
 
-  //SVM_pi_control=psi_rotating_angle_SVM;
 
+  fast_vector_angle_and_magnitude(V_sQ,V_sD,&V_s,&cita_V_s);
 
- fast_vector_angle_and_magnitude(V_sQ,V_sD,&V_s,&cita_V_s);
 
   SVM_Maximum_allowed_V_s_ref (&V_sD,&V_sQ,&V_s,U_d*UD_PERCENTAGE);//0.70f);
   V_s_ref_relative_angle = SVM_V_s_relative_angle      (cita_V_s);
 
+  float V_s_duty_cycle=0.0f;
+  float U_max=0.0f;
+  V_s_duty_cycle=V_s/(0.66666666666666666666f*U_d); //V_s_duty_cycle=V_s/( (2.0f/3.0f) *U_d);
+  U_max=U_d*0.66666666666666666666f;
+
   //T1       = SVM_T1       (1.0f,V_s,U_d*2.0f/3.0f, V_s_ref_relative_angle);
   //T2       = SVM_T2       (1.0f,V_s,U_d*2.0f/3.0f, V_s_ref_relative_angle);
-  T1       = SVM_T1       (1.0f,V_s,U_d*0.66666666666666666666f, V_s_ref_relative_angle);
-  T2       = SVM_T2       (1.0f,V_s,U_d*0.66666666666666666666f, V_s_ref_relative_angle);
+  T1       = SVM_T1       (V_s_duty_cycle,V_s,U_max, V_s_ref_relative_angle);
+  T2       = SVM_T2       (V_s_duty_cycle,V_s,U_max, V_s_ref_relative_angle);
   //T1       = SVM_T1       (1.0f,V_s,U_d                        , V_s_ref_relative_angle);
   //T2       = SVM_T2       (1.0f,V_s,U_d                        , V_s_ref_relative_angle);
 
 
-  T_min_on = SVM_T_min_on (1.0f, T1, T2);
-  T_med_on = SVM_T_med_on (T_min_on, T1,T2,cita_V_s);
-  T_max_on = SVM_T_max_on (T_med_on,T1,T2,cita_V_s);
+  T_min_on =SVM_T_min_on (1.0f, T1, T2); //T_min_on = SVM_T_min_on (1.0f, T1, T2);
+  T_med_on =SVM_T_med_on (T_min_on, T1,T2,cita_V_s);
+  T_max_on =SVM_T_max_on (T_med_on,T1,T2,cita_V_s);
 
   SVM_phase_duty_cycles           (&duty_a, &duty_b, &duty_c, cita_V_s,T_max_on,T_med_on,T_min_on);
   

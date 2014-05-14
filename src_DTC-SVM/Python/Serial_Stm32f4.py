@@ -57,7 +57,7 @@ class Serial_Stm32f4(object):
         self.read_capture_state = 'not_collecting'
         self.tag_comment        = ''
         #self.aditional_comment=', STATOR_RESISTANCE_TEST 240degrees,MULTI_ROTOR OPEN LOOP,wrong motor parameters,one psi,wr filt,te filt,k 0.2, actual i,open 0.00005f,Ud 40%,psi_ref=0.0016,38kpwm'
-        self.aditional_comment=', DUTY CYCLES,BALDOR 12V,1 battery,Ud 100%, testing spikes, motor disconnected, 10Hz'
+        self.aditional_comment=', ,BALDOR 48V,TESTING REF FOR SHUNT,Ud 80%, 1Hz,testing,filtered currents'
         self.driving_counter    = 0
         self.various_counter     = 0
         self.type_of_test       = 0        
@@ -512,7 +512,7 @@ class Serial_Stm32f4(object):
 
                 #------------calculating values from gotten data----------------------------------------
                 #---(they are inside the stm32, but we do not want to waste time sending them)----------        
-                self.psi_s       = math.sqrt(self.psi_sD*self.psi_sD+self.psi_sQ*self. psi_sQ)
+                #self.psi_s       = math.sqrt(self.psi_sD*self.psi_sD+self.psi_sQ*self. psi_sQ)
                 self.psi_s_alpha = self.fast_vector_angle(self.psi_sQ,self.psi_sD)
 
                 if self.print_selection==1:
@@ -710,7 +710,7 @@ class Serial_Stm32f4(object):
                 self.new_data_line= "t %6.2f "                  %self.time                      + \
                                     " ref_freq %6.2f"           %self.reference_frequency   + \
                                     " electric_frequency %6.2f" %self.electric_frequency    + \
-                                    " T2 %6.2f"          %self.hall_frequency        + \
+                                    " T2 %10.8f"          %self.hall_frequency        + \
                                     " isA %6.2f"                %self.isA                   + \
                                     " isB %6.2f"                %self.isB                   + \
                                     " isC %6.2f"                %self.isC                   + \
@@ -725,7 +725,7 @@ class Serial_Stm32f4(object):
                                     " Vs_cita_relative %6.2f"   %self.Vs_relative_cita      + \
                                     " dutyA %10.8f"             %self.psi_sD               + \
                                     " dutyB %10.8f"             %self.psi_sQ               + \
-                                    " dutyC %6.2f"               %self.psi_s                 + \
+                                    " dutyC %10.8f"               %self.psi_s                 + \
                                     " psi_s_alpha %6.2f"         %self.psi_s_alpha           + \
                                     " psis_ref %10.8f"          %self.psi_s_reference      + \
                                     " te %6.2f"                 %self.te                    + \

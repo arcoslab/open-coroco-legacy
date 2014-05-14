@@ -23,5 +23,5 @@
 #define PI_MIN_SENSORLESS_TORQUE          -90.0f//  -0.005f//-(90.0f*frequency/interrupt_frequency) 
 
 //Battey
-#define UD_PERCENTAGE   1.0f
-#define MAXIMUM_OPEN_LOOP_SPEED 10.0f
+#define UD_PERCENTAGE   0.8f
+#define MAXIMUM_OPEN_LOOP_SPEED 1.0f

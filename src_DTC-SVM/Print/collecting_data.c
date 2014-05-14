@@ -492,7 +492,7 @@ void print_captured_data(void)
 void print_captured_collected_char(void)
 {
 
-  printf("t %10d r %6.2f e %6.2f  h %6.2f s %6.2f ",
+  printf("t %10d r %6.2f e %6.2f  h %10.8f s %6.2f ",
           collected_pointer,
           collected_ref_freq_SVM [collected_pointer],
           collected_w_r          [collected_pointer],
