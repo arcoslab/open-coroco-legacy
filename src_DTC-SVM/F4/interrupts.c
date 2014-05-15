@@ -155,16 +155,16 @@ void adc_isr(void)
     V_stm32_Ud = adc_read_regular(ADC1)*(VREF/ADC_CONVERSION_FACTOR);
     U_d        = V_stm32_Ud*BATTERY_VOLTAGE_CONVERTION_FACTOR; 
 
-    V_shunt_A = (V_stm32_A*(VREF/ADC_CONVERSION_FACTOR)-V_DIFFERENTIAL_AMPLIFIER_REFFERENCE)/G_OP_AMP_A;
+    V_shunt_A = (V_stm32_A*(VREF/ADC_CONVERSION_FACTOR)-V_DIFFERENTIAL_AMPLIFIER_REFFERENCE_A)/G_OP_AMP_A;
     i_sA      = V_shunt_A/R_SHUNT_A;
 
-    V_shunt_B = (V_stm32_B*(VREF/ADC_CONVERSION_FACTOR)-V_DIFFERENTIAL_AMPLIFIER_REFFERENCE)/G_OP_AMP_B;
+    V_shunt_B = (V_stm32_B*(VREF/ADC_CONVERSION_FACTOR)-V_DIFFERENTIAL_AMPLIFIER_REFFERENCE_B)/G_OP_AMP_B;
     i_sB      = V_shunt_B/R_SHUNT_B;
 
     //filtering currents
 
-    i_sA = isA_moving_average_filter(i_sA);
-    i_sB = isB_moving_average_filter(i_sB);
+    //i_sA = isA_moving_average_filter(i_sA);
+    //i_sB = isB_moving_average_filter(i_sB);
        
     adc_counter=0;
 

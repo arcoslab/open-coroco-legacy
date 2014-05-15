@@ -57,7 +57,7 @@ class Serial_Stm32f4(object):
         self.read_capture_state = 'not_collecting'
         self.tag_comment        = ''
         #self.aditional_comment=', STATOR_RESISTANCE_TEST 240degrees,MULTI_ROTOR OPEN LOOP,wrong motor parameters,one psi,wr filt,te filt,k 0.2, actual i,open 0.00005f,Ud 40%,psi_ref=0.0016,38kpwm'
-        self.aditional_comment=', ,BALDOR 48V,TESTING REF FOR SHUNT,Ud 80%, 1Hz,testing,filtered currents'
+        self.aditional_comment=', ,BALDOR 48V,A1.52f B1.47f,Ud 80%, 50Hz,'
         self.driving_counter    = 0
         self.various_counter     = 0
         self.type_of_test       = 0        
@@ -616,22 +616,22 @@ class Serial_Stm32f4(object):
                                     " Vs %6.2f"                 %self.Vs                    + \
                                     " Vs_cita %6.2f"            %self.Vs_cita               + \
                                     " Vs_cita_relative %6.2f"   %self.Vs_relative_cita      + \
-                                    " psisD %10.8f"              %self.psi_sD               + \
-                                    " psisQ %10.8f"              %self.psi_sQ               + \
+                                    " psisD %10.8f"             %self.psi_sD                + \
+                                    " psisQ %10.8f"             %self.psi_sQ                + \
                                     " psis %6.2f"               %self.psi_s                 + \
                                     " psis_alpha %6.2f"         %self.psi_s_alpha           + \
-                                    " psis_ref %10.8f"           %self.psi_s_reference      + \
+                                    " psis_ref %10.8f"          %self.psi_s_reference       + \
                                     " te %6.2f"                 %self.te                    + \
                                     " Ud %6.2f"                 %self.Ud                    + \
-                                    " pi_control %12.9f"         %self.pi_control           + \
-                                    " pi_max %10.6f"             %self.pi_max               + \
+                                    " pi_control %12.9f"        %self.pi_control            + \
+                                    " pi_max %10.6f"            %self.pi_max                + \
                                     " load_angle %12.9f"        %self.load_angle            + \
-                                    " psi_rotating_angle %12.9f"         %self.data_1            + \
-                                    " R_s %12.9f"         %self.data_2            + \
-                                    " tick_period %12.9f"         %self.data_3            + \
-                                    " data4 %12.9f"         %self.data_4            + \
-                                    " data5 %12.9f"         %self.data_5            + \
-                                    " data6 %12.9f"         %self.data_6            + extra_information
+                                    " psi_rotating_angle %12.9f"%self.data_1                + \
+                                    " R_s %12.9f"               %self.data_2                + \
+                                    " tick_period %12.9f"       %self.data_3                + \
+                                    " data4 %12.9f"             %self.data_4                + \
+                                    " data5 %12.9f"             %self.data_5                + \
+                                    " data6 %12.9f"             %self.data_6                + extra_information
 
     def print_selection_print_string(self):
 
@@ -710,27 +710,27 @@ class Serial_Stm32f4(object):
                 self.new_data_line= "t %6.2f "                  %self.time                      + \
                                     " ref_freq %6.2f"           %self.reference_frequency   + \
                                     " electric_frequency %6.2f" %self.electric_frequency    + \
-                                    " T2 %10.8f"          %self.hall_frequency        + \
+                                    " hall_freq %10.8f"         %self.hall_frequency        + \
                                     " isA %6.2f"                %self.isA                   + \
                                     " isB %6.2f"                %self.isB                   + \
                                     " isC %6.2f"                %self.isC                   + \
                                     " isD %6.2f"                %self.isD                   + \
                                     " isQ %6.2f"                %self.isQ                   + \
-                                    " is:  %6.2f"               %math.sqrt(self.isQ*self.isQ+self.isD*self.isD) + \
+                                    " is  %6.2f"                %math.sqrt(self.isQ*self.isQ+self.isD*self.isD) + \
                                     " is_cita: %6.2f"           %self.vector_angle(self.isQ,self.isD)           + \
                                     " VsD %6.2f"                %self.VsD                   + \
                                     " VsQ %6.2f"                %self.VsQ                   + \
                                     " Vs %6.2f"                 %self.Vs                    + \
                                     " Vs_cita %6.2f"            %self.Vs_cita               + \
                                     " Vs_cita_relative %6.2f"   %self.Vs_relative_cita      + \
-                                    " dutyA %10.8f"             %self.psi_sD               + \
-                                    " dutyB %10.8f"             %self.psi_sQ               + \
-                                    " dutyC %10.8f"               %self.psi_s                 + \
-                                    " psi_s_alpha %6.2f"         %self.psi_s_alpha           + \
+                                    " psisD %10.8f"             %self.psi_sD               + \
+                                    " psisQ %10.8f"             %self.psi_sQ               + \
+                                    " psis %10.8f"              %self.psi_s                 + \
+                                    " psi_s_alpha %6.2f"        %self.psi_s_alpha           + \
                                     " psis_ref %10.8f"          %self.psi_s_reference      + \
                                     " te %6.2f"                 %self.te                    + \
                                     " Ud %6.2f"                 %self.Ud                    + \
-                                    " T1 %12.9f"        %self.pi_control           + \
+                                    " pi_control %12.9f"        %self.pi_control           + \
                                     " pi_max %10.6f"            %self.pi_max               + \
                                     " load_angle %12.9f"        %self.load_angle            
                                     #"t: %6.2f "                  %self.time                + \
@@ -870,6 +870,41 @@ class Serial_Stm32f4(object):
                         plt.xlabel('time (ticks)')
                         plt.ylabel('three-phase currents (A)')
                         plt.legend()
+
+    def plot_three_phase_currents_A(self,rows,columns,subplot_index):
+
+                        plt.subplot(rows,columns,subplot_index)
+                        plt.plot(self.time_vector, self.isA_vector,self.plotting_character,label='isA')
+                        #plt.plot(self.time_vector, self.isB_vector,self.plotting_character,label='isB')
+                        #plt.plot(self.time_vector, self.isC_vector,self.plotting_character,label='isC')
+                        plt.title('current vs time'+self.title_extra)
+                        plt.xlabel('time (ticks)')
+                        plt.ylabel('Phase A current  (A)')
+                        plt.legend()
+
+    def plot_three_phase_currents_B(self,rows,columns,subplot_index):
+
+                        plt.subplot(rows,columns,subplot_index)
+                        #plt.plot(self.time_vector, self.isA_vector,self.plotting_character,label='isA')
+                        plt.plot(self.time_vector, self.isB_vector,self.plotting_character,label='isB')
+                        #plt.plot(self.time_vector, self.isC_vector,self.plotting_character,label='isC')
+                        plt.title('current vs time'+self.title_extra)
+                        plt.xlabel('time (ticks)')
+                        plt.ylabel('Phase B current (A)')
+                        plt.legend()
+
+    def plot_three_phase_currents_C(self,rows,columns,subplot_index):
+
+                        plt.subplot(rows,columns,subplot_index)
+                        #plt.plot(self.time_vector, self.isA_vector,self.plotting_character,label='isA')
+                        #plt.plot(self.time_vector, self.isB_vector,self.plotting_character,label='isB')
+                        plt.plot(self.time_vector, self.isC_vector,self.plotting_character,label='isC')
+                        plt.title('current vs time'+self.title_extra)
+                        plt.xlabel('time (ticks)')
+                        plt.ylabel('Phase C current (A)')
+                        plt.legend()
+
+
 
     def plot_quadrature_vs_direct_currents(self,rows,columns,subplot_index):
 
@@ -1014,7 +1049,12 @@ class Serial_Stm32f4(object):
                         rows = 1
                         columns = 1 
                         subplot_index = 1
-                                              
+                        plot_figsize=(10, 10)
+                        plot_dpi=300
+                        plot_face_color='w'
+                        plot_edge_color='k'
+                        plot_name=self.path
+                      
                         plt.figure(num=2, figsize=(10, 10), dpi=300, facecolor='w', edgecolor='k') 
                         self.plot_frequencies                   (rows,columns,subplot_index)
                         plt.savefig(self.path+datetime.datetime.now().ctime()+"."+self.tag_comment+"._frequencies" +".jpg")
@@ -1025,42 +1065,58 @@ class Serial_Stm32f4(object):
                         plt.savefig(self.path+ "three-phase_currents" +"." + datetime.datetime.now().ctime() +self.tag_comment+".jpg")
                         plt.close()
 
-                        plt.figure(num=4, figsize=(10, 10), dpi=300, facecolor='w', edgecolor='k') 
+                        plt.figure(num=4, figsize=plot_figsize, dpi=plot_dpi, facecolor=plot_face_color, edgecolor=plot_edge_color) 
+                        self.plot_three_phase_currents_A          (rows,columns,subplot_index)
+                        plt.savefig(plot_name+"three-phase_currents_A"+".jpg")
+                        plt.close()
+
+                        plt.figure(num=5, figsize=plot_figsize, dpi=plot_dpi, facecolor=plot_face_color, edgecolor=plot_edge_color) 
+                        self.plot_three_phase_currents_B          (rows,columns,subplot_index)
+                        plt.savefig(plot_name+"three-phase_currents_B"+".jpg")
+                        plt.close()
+
+                        plt.figure(num=6, figsize=plot_figsize, dpi=plot_dpi, facecolor=plot_face_color, edgecolor=plot_edge_color) 
+                        self.plot_three_phase_currents_C          (rows,columns,subplot_index)
+                        plt.savefig(plot_name+"three-phase_currents_C"+".jpg")
+                        plt.close()
+
+
+                        plt.figure(num=7, figsize=(10, 10), dpi=300, facecolor='w', edgecolor='k') 
                         self.plot_quadrature_vs_direct_currents (rows,columns,subplot_index)
                         plt.savefig(self.path+ "isQ_vs_isD" +"." + datetime.datetime.now().ctime() +self.tag_comment+".jpg")
                         plt.close()
 
-                        plt.figure(num=5, figsize=(10, 10), dpi=300, facecolor='w', edgecolor='k')
+                        plt.figure(num=8, figsize=(10, 10), dpi=300, facecolor='w', edgecolor='k')
                         self.plot_quadrature_vs_direct_voltages (rows,columns,subplot_index)
                         plt.savefig(self.path+ "VsQ_vs_VsD" +"." + datetime.datetime.now().ctime() +self.tag_comment+".jpg")
                         plt.close()
 
-                        plt.figure(num=6, figsize=(10, 10), dpi=300, facecolor='w', edgecolor='k')
+                        plt.figure(num=9, figsize=(10, 10), dpi=300, facecolor='w', edgecolor='k')
                         self.plot_voltage_magnitude             (rows,columns,subplot_index)
                         plt.savefig(self.path+ "voltage_magnitude" +"." + datetime.datetime.now().ctime() +self.tag_comment+".jpg")
                         plt.close()
                
-                        plt.figure(num=7, figsize=(10, 10), dpi=300, facecolor='w', edgecolor='k')
+                        plt.figure(num=10, figsize=(10, 10), dpi=300, facecolor='w', edgecolor='k')
                         self.plot_flux_linkage                       (rows,columns,subplot_index)
                         plt.savefig(self.path+ "flux-linkage" +"." + datetime.datetime.now().ctime() +self.tag_comment+".jpg")
                         plt.close()
 
-                        plt.figure(num=8, figsize=(10, 10), dpi=300, facecolor='w', edgecolor='k')
+                        plt.figure(num=11, figsize=(10, 10), dpi=300, facecolor='w', edgecolor='k')
                         self.plot_electromagnetic_torque             (rows,columns,subplot_index)
                         plt.savefig(self.path+ "electromagnetic_torque" +"." + datetime.datetime.now().ctime() +self.tag_comment+".jpg")
                         plt.close()
 
-                        plt.figure(num=9, figsize=(10, 10), dpi=300, facecolor='w', edgecolor='k')
+                        plt.figure(num=12, figsize=(10, 10), dpi=300, facecolor='w', edgecolor='k')
                         self.plot_phase_advance                      (rows,columns,subplot_index)
                         plt.savefig(self.path+ "phase_advance_pi" +"." + datetime.datetime.now().ctime() +self.tag_comment+".jpg")
                         plt.close()
 
-                        plt.figure(num=10, figsize=(10, 10), dpi=300, facecolor='w', edgecolor='k')
+                        plt.figure(num=13, figsize=(10, 10), dpi=300, facecolor='w', edgecolor='k')
                         self.plot_load_angle_vs_frequency            (rows,columns,subplot_index)
                         plt.savefig(self.path+ "frequency vs load angle" +"." + datetime.datetime.now().ctime() +self.tag_comment+".jpg")
                         plt.close()
 
-                        plt.figure(num=11, figsize=(10, 10), dpi=300, facecolor='w', edgecolor='k')
+                        plt.figure(num=14, figsize=(10, 10), dpi=300, facecolor='w', edgecolor='k')
                         self.plot_load_angle_and_frequency           (rows,columns,subplot_index)
                         plt.savefig(self.path+ "frequency and load angle vs time" +"." + datetime.datetime.now().ctime() +self.tag_comment+".jpg")
                         plt.close()
@@ -1076,6 +1132,7 @@ class Serial_Stm32f4(object):
         plot_dpi=300
         plot_face_color='w'
         plot_edge_color='k'  
+        
 
         if   self.print_selection==0:
            if len(self.time_vector)==0 or len(self.electric_frequency_vector)==0 or len(self.hall_frequency_vector)==0: #or len(self.reference_frequency_vector)==0:
@@ -1098,6 +1155,22 @@ class Serial_Stm32f4(object):
                 plt.close()
 
                 plt.figure(num=4, figsize=plot_figsize, dpi=plot_dpi, facecolor=plot_face_color, edgecolor=plot_edge_color) 
+                self.plot_three_phase_currents_A          (rows,columns,subplot_index)
+                plt.savefig(plot_name+"three-phase_currents_A"+".jpg")
+                plt.close()
+
+                plt.figure(num=5, figsize=plot_figsize, dpi=plot_dpi, facecolor=plot_face_color, edgecolor=plot_edge_color) 
+                self.plot_three_phase_currents_B          (rows,columns,subplot_index)
+                plt.savefig(plot_name+"three-phase_currents_B"+".jpg")
+                plt.close()
+
+                plt.figure(num=6, figsize=plot_figsize, dpi=plot_dpi, facecolor=plot_face_color, edgecolor=plot_edge_color) 
+                self.plot_three_phase_currents_C          (rows,columns,subplot_index)
+                plt.savefig(plot_name+"three-phase_currents_C"+".jpg")
+                plt.close()
+
+
+                plt.figure(num=7, figsize=plot_figsize, dpi=plot_dpi, facecolor=plot_face_color, edgecolor=plot_edge_color) 
                 self.plot_quadrature_vs_direct_currents (rows,columns,subplot_index)
                 plt.savefig(plot_name+"isQ_vs_isD"+".jpg")
                 plt.close()
@@ -1107,7 +1180,7 @@ class Serial_Stm32f4(object):
                 self.empty_vectors=True
 
             else:
-                plt.figure(num=5, figsize=plot_figsize, dpi=plot_dpi, facecolor=plot_face_color, edgecolor=plot_edge_color) 
+                plt.figure(num=8, figsize=plot_figsize, dpi=plot_dpi, facecolor=plot_face_color, edgecolor=plot_edge_color) 
                 self.plot_quadrature_vs_direct_currents (rows,columns,subplot_index)
                 plt.savefig(plot_name+"isQ_vs_isD"+".jpg")
                 plt.close()
@@ -1117,7 +1190,7 @@ class Serial_Stm32f4(object):
                 self.empty_vectors=True
 
             else:
-                plt.figure(num=6, figsize=plot_figsize, dpi=plot_dpi, facecolor=plot_face_color, edgecolor=plot_edge_color)
+                plt.figure(num=9, figsize=plot_figsize, dpi=plot_dpi, facecolor=plot_face_color, edgecolor=plot_edge_color)
                 self.plot_quadrature_vs_direct_voltages (rows,columns,subplot_index)
                 plt.savefig(plot_name+"VsQ_vs_VsD"+".jpg")
                 plt.close()
@@ -1128,7 +1201,7 @@ class Serial_Stm32f4(object):
 
             else:
 
-                plt.figure(num=7, figsize=plot_figsize, dpi=plot_dpi, facecolor=plot_face_color, edgecolor=plot_edge_color)
+                plt.figure(num=10, figsize=plot_figsize, dpi=plot_dpi, facecolor=plot_face_color, edgecolor=plot_edge_color)
                 self.plot_voltage_magnitude             (rows,columns,subplot_index)
                 plt.savefig(plot_name+"voltage_magnitude"+".jpg")
                 plt.close()
@@ -1138,12 +1211,12 @@ class Serial_Stm32f4(object):
                 self.empty_vectors=True
 
             else: 
-                plt.figure(num=8, figsize=plot_figsize, dpi=plot_dpi, facecolor=plot_face_color, edgecolor=plot_edge_color)
+                plt.figure(num=11, figsize=plot_figsize, dpi=plot_dpi, facecolor=plot_face_color, edgecolor=plot_edge_color)
                 self.plot_flux_linkage                       (rows,columns,subplot_index)
                 plt.savefig(plot_name+"flux-linkage"+".jpg")
                 plt.close()
 
-                plt.figure(num=9, figsize=plot_figsize, dpi=plot_dpi, facecolor=plot_face_color, edgecolor=plot_edge_color)
+                plt.figure(num=12, figsize=plot_figsize, dpi=plot_dpi, facecolor=plot_face_color, edgecolor=plot_edge_color)
                 self.plot_flux_linkage_angle                 (rows,columns,subplot_index)
                 plt.savefig(plot_name+"flux-linkage angle vs time"+".jpg")
                 plt.close()
@@ -1153,7 +1226,7 @@ class Serial_Stm32f4(object):
                 self.empty_vectors=True
 
             else: 
-                plt.figure(num=10, figsize=plot_figsize, dpi=plot_dpi, facecolor=plot_face_color, edgecolor=plot_edge_color)
+                plt.figure(num=13, figsize=plot_figsize, dpi=plot_dpi, facecolor=plot_face_color, edgecolor=plot_edge_color)
                 self.plot_electromagnetic_torque             (rows,columns,subplot_index)
                 plt.savefig(plot_name+"electromagnetic_torque" +".jpg")
                 plt.close()
@@ -1163,7 +1236,7 @@ class Serial_Stm32f4(object):
                 self.empty_vectors=True
 
             else: 
-                plt.figure(num=11, figsize=plot_figsize, dpi=plot_dpi, facecolor=plot_face_color, edgecolor=plot_edge_color)
+                plt.figure(num=14, figsize=plot_figsize, dpi=plot_dpi, facecolor=plot_face_color, edgecolor=plot_edge_color)
                 self.plot_phase_advance                      (rows,columns,subplot_index)
                 plt.savefig(plot_name+"phase_advance_pi"+".jpg")
                 plt.close()  

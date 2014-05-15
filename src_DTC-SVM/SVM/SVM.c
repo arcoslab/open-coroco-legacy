@@ -841,13 +841,9 @@ else
   V_s_duty_cycle=V_s/(0.66666666666666666666f*U_d); //V_s_duty_cycle=V_s/( (2.0f/3.0f) *U_d);
   U_max=U_d*0.66666666666666666666f;
 
-  //T1       = SVM_T1       (1.0f,V_s,U_d*2.0f/3.0f, V_s_ref_relative_angle);
-  //T2       = SVM_T2       (1.0f,V_s,U_d*2.0f/3.0f, V_s_ref_relative_angle);
   T1       = SVM_T1       (V_s_duty_cycle,V_s,U_max, V_s_ref_relative_angle);
   T2       = SVM_T2       (V_s_duty_cycle,V_s,U_max, V_s_ref_relative_angle);
-  //T1       = SVM_T1       (1.0f,V_s,U_d                        , V_s_ref_relative_angle);
-  //T2       = SVM_T2       (1.0f,V_s,U_d                        , V_s_ref_relative_angle);
-
+  
 
   T_min_on =SVM_T_min_on (1.0f, T1, T2); //T_min_on = SVM_T_min_on (1.0f, T1, T2);
   T_med_on =SVM_T_med_on (T_min_on, T1,T2,cita_V_s);

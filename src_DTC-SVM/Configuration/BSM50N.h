@@ -24,4 +24,4 @@
 
 //Battey
 #define UD_PERCENTAGE   0.8f
-#define MAXIMUM_OPEN_LOOP_SPEED 1.0f
+#define MAXIMUM_OPEN_LOOP_SPEED 50.0f

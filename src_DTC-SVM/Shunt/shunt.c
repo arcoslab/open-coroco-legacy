@@ -23,7 +23,9 @@
 //from 3V to the real current
 #define R_SHUNT_A 0.05f//0.05527f
 #define R_SHUNT_B 0.05f//(0.05f/1.04f)//0.0555149f
-#define V_DIFFERENTIAL_AMPLIFIER_REFFERENCE 1.500//1.487f //1.5015306f
+#define V_DIFFERENTIAL_AMPLIFIER_REFFERENCE_A 1.4825f//1.48f//1.3622f//1.51458f//1.4911f//1.487f //1.5015306f
+#define V_DIFFERENTIAL_AMPLIFIER_REFFERENCE_B 1.503f//1.493f//1.3256f//1.47285f//1.496176f//1.487f //1.5015306f
+
 	//Ra=979Ohm
 	//Rb=981Ohm
 	//Rb/(Ra+Rb)=0.5005102
@@ -32,7 +34,7 @@
 	//Rf=981Ohm
 	//Ri=978Ohm
 	//G=1+Rf/Ri=2.0030675
-#define G_OP_AMP_B  2.0f
+#define G_OP_AMP_B  2.0f   
 	//Rf=979Ohm
 	//Ri=979Ohm
 	//G=2

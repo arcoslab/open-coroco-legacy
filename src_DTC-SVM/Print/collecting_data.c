@@ -132,8 +132,8 @@ void collecting_collected_in_buffer (void)
         //collected_state_SVM    [collected_pointer] = state;
 
 //-------------------------------------------------------------
-        //collected_CUR_FREQ     [collected_pointer] = CUR_FREQ;
-        collected_CUR_FREQ     [collected_pointer] =  T2;
+        collected_CUR_FREQ     [collected_pointer] = CUR_FREQ;
+        //collected_CUR_FREQ     [collected_pointer] =  T2;
 
 //------------------------------------------------------------
         //collected_psi_sD    [collected_pointer]=psi_sD;
@@ -166,19 +166,19 @@ void collecting_collected_in_buffer (void)
         collected_cita_V_s[collected_pointer]=cita_V_s;
         collected_cita_V_s_relative_angle[collected_pointer]=V_s_ref_relative_angle ;
 //------------------------------------------------------------------
-/*
+
         collected_psi_sD[collected_pointer]=psi_sD;
         collected_psi_sQ[collected_pointer]=psi_sQ;
         collected_psi_s [collected_pointer]=psi_s;
         collected_psi_alpha[collected_pointer]=psi_alpha;
         collected_psi_s_alpha_SVM[collected_pointer]=psi_s_alpha_SVM;
-*/
+/*
         collected_psi_sD[collected_pointer]=duty_a;
         collected_psi_sQ[collected_pointer]=duty_b;
         collected_psi_s [collected_pointer]=duty_c;
         //collected_psi_alpha[collected_pointer]=psi_alpha;
         //collected_psi_s_alpha_SVM[collected_pointer]=66.0f;//T1;
-
+*/
 
 //-----------------------------------------------------------------
         collected_t_e[collected_pointer]=t_e;
@@ -204,8 +204,8 @@ void collecting_collected_in_buffer (void)
         
 
 //-------------------------------------------------------------------
-        //collected_pi_control_SVM[collected_pointer]	=SVM_pi_control;
-        collected_pi_control_SVM[collected_pointer]	=T1;//SVM_pi_control;
+        collected_pi_control_SVM[collected_pointer]	=SVM_pi_control;
+        //collected_pi_control_SVM[collected_pointer]	=T1;//SVM_pi_control;
 
 
 //--------------------------------------------------------------------
@@ -399,22 +399,22 @@ void collecting_samples(void)
         data_cita_V_s=cita_V_s;
         data_cita_V_s_relative_angle=cita_V_s;
 
-/*
+
         data_psi_sD=psi_sD;
         data_psi_sQ=psi_sQ;
         data_psi_s =psi_s;
         data_psi_alpha=psi_alpha;
         data_psi_s_alpha_SVM=psi_s_alpha_SVM;
         data_timer=timer;
-*/
+
         data_timer=timer;
 
         //data_timer =T1;
-        data_psi_sD=T1;//duty_b;
-        data_psi_sQ=T2;//duty_c;
-        data_psi_s =0.0f;
-        data_psi_alpha=psi_alpha;
-        data_psi_s_alpha_SVM=psi_s_alpha_SVM;
+        //data_psi_sD=duty_b;
+        //data_psi_sQ=duty_c;
+        //data_psi_s =0.0f;
+        //data_psi_alpha=psi_alpha;
+        //data_psi_s_alpha_SVM=psi_s_alpha_SVM;
 
         data_t_e=t_e;
 
