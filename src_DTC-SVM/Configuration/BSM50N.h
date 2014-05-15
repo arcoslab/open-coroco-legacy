@@ -6,7 +6,7 @@
 #define R_s_0          2.25f    //Ohms
 #define L_s_d_0        0.0001f  //H
 #define L_s_q_0	       0.0001f  //H
-#define psi_F_0        0.085f   //Wb-t (weber-turn) (kg m2 s-2 A-1)
+#define psi_F_0        0.08f   //Wb-t (weber-turn) (kg m2 s-2 A-1)
 #define pole_pairs_0   2.0f	    //two pole pairs (two d-axis)
 
 
@@ -24,4 +24,7 @@
 
 //Battey
 #define UD_PERCENTAGE   0.8f
-#define MAXIMUM_OPEN_LOOP_SPEED 50.0f
+#define MAXIMUM_OPEN_LOOP_SPEED 30.0f
+
+//Hall sensor parameters
+#define HALL_FACTOR pole_pairs_0

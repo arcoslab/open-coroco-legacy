@@ -33,6 +33,6 @@
 
 
 #define TIME_CITA ticks*TICK_PERIOD
-#define CUR_FREQ 1.0f/(period*TICK_PERIOD)//1.0f/(period/TICK_PERIOD)   //**********:S*******//
+#define CUR_FREQ  (HALL_FACTOR*1.0f/(period*TICK_PERIOD))//1.0f/(period/TICK_PERIOD)   //**********:S*******//
 #define CRAZY_FREQUENCY period/TICK_PERIOD
 #define HALL_A() gpio_get(GPIOE, GPIO15);
