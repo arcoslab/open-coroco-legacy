@@ -24,7 +24,7 @@
 
 //Battey
 #define UD_PERCENTAGE   0.8f
-#define MAXIMUM_OPEN_LOOP_SPEED 30.0f
+#define MAXIMUM_OPEN_LOOP_SPEED 20.0f
 
 //Hall sensor parameters
 #define HALL_FACTOR pole_pairs_0
