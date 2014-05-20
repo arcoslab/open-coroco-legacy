@@ -434,7 +434,7 @@ void collecting_samples(void)
         data_pi_control_SVM	=SVM_pi_control;
         data_rotating_angle_SVM =psi_rotating_angle_SVM;
 
-        
+        data_strain_gauge=strain_gauge;
 }
 
 void print_captured_data(void)
@@ -785,13 +785,18 @@ void print_regular_data(void)
     else if (print_selection==12)
     {
         printf ("7")  ;  checksum=           print_float_as_bytes(Ia_peak__short_pulse                  );
-        printf ("8")  ;  checksum=          +print_float_as_bytes(Ib_peak__short_pulse                  );
+        printf ("8")  ;  checksum=checksum  +print_float_as_bytes(Ib_peak__short_pulse                  );
         printf ("9")  ;  checksum=checksum  +print_float_as_bytes(Ic_peak__short_pulse                  );
         printf ("0")  ;  checksum=checksum  +print_float_as_bytes(initial_rotor_angle                   );
         printf ("-")  ;  checksum=checksum  +print_float_as_bytes(initial_rotor_zone                    );
         printf ("_")  ;  checksum=checksum  +print_float_as_bytes(absolute_initial_rotor_angle          );
     }
 
+    else if (print_selection==13)
+    {
+        printf ("t")  ;  checksum=           print_float_as_bytes(data_timer       );
+        printf ("G")  ;  checksum=checksum  +print_float_as_bytes(data_strain_gauge);
+    }
 
 
 

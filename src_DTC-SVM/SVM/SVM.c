@@ -277,6 +277,7 @@ float S_C_f=0;
 float i_sA = 0.0f;
 float i_sB = 0.0f;
 float U_d  = 0.0f;
+float strain_gauge =0.0f;
 
 float i_sD=0.0f;
 float i_sQ=0.0f;

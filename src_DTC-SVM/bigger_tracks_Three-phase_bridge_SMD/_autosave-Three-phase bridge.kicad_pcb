@@ -15,7 +15,7 @@
   (page A3)
   (layers
     (15 F.Cu signal)
-    (0 B.Cu signal hide)
+    (0 B.Cu signal)
     (16 B.Adhes user)
     (17 F.Adhes user)
     (18 B.Paste user)
@@ -32,7 +32,7 @@
   )
 
   (setup
-    (last_trace_width 7.62)
+    (last_trace_width 2.4638)
     (user_trace_width 1.143)
     (user_trace_width 1.2192)
     (user_trace_width 1.524)
@@ -5612,16 +5612,6 @@
     (polygon
       (pts
         (xy 219.837 209.804) (xy 156.972 209.804) (xy 156.972 64.516) (xy 219.837 64.516)
-      )
-    )
-  )
-  (zone (net 2) (net_name +48V) (layer B.Cu) (tstamp 537553E8) (hatch edge 0.508)
-    (connect_pads (clearance 0.0762))
-    (min_thickness 0.0254)
-    (fill (arc_segments 16) (thermal_gap 0.0762) (thermal_bridge_width 12.7))
-    (polygon
-      (pts
-        (xy 46.482 28.2448) (xy 52.324 79.0448) (xy 112.776 83.6168) (xy 101.6 29.2608) (xy 47.244 28.7528)
       )
     )
   )

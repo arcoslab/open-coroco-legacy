@@ -73,7 +73,7 @@ float data_ref_freq_SVM;
 int data_state_SVM;
 float data_rotating_angle_SVM;
 
-
+float data_strain_gauge;
 
 
 
@@ -133,6 +133,7 @@ void adc_isr(void)
   static int adc_counter=0;
   static float V_stm32_A  = 0.0f;
   static float V_stm32_B  = 0.0f;
+  static float V_stm32_strain_gauge = 0.0f;
   float V_stm32_Ud = 0.0f;
   float V_shunt_A  = 0.0f;
   float V_shunt_B  = 0.0f;
@@ -147,9 +148,18 @@ void adc_isr(void)
   else if (adc_counter==1)
   {
     V_stm32_B = adc_read_regular(ADC1);
+    voltage_measure (ADC1,ADC_CHANNEL15);
+    adc_counter++; 
+  }
+
+  else if (adc_counter==2)
+  {
+    V_stm32_strain_gauge = adc_read_regular(ADC1);
     voltage_measure (ADC1,ADC_CHANNEL3);
     adc_counter++; 
   }
+
+
   else
   {
     V_stm32_Ud = adc_read_regular(ADC1)*(VREF/ADC_CONVERSION_FACTOR);
@@ -160,6 +170,8 @@ void adc_isr(void)
 
     V_shunt_B = (V_stm32_B*(VREF/ADC_CONVERSION_FACTOR)-V_DIFFERENTIAL_AMPLIFIER_REFFERENCE_B)/G_OP_AMP_B;
     i_sB      = V_shunt_B/R_SHUNT_B;
+
+    strain_gauge=V_stm32_strain_gauge;
 
     //filtering currents
 

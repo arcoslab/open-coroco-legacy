@@ -492,7 +492,7 @@ void adc_init (void)
   gpio_mode_setup(GPIOA, GPIO_MODE_ANALOG, GPIO_PUPD_NONE, GPIO3);	//PA3   Ud  (voltage divider)
   gpio_mode_setup(GPIOC, GPIO_MODE_ANALOG, GPIO_PUPD_NONE, GPIO1);	//PC1   isA (hall current sensor)
   gpio_mode_setup(GPIOC, GPIO_MODE_ANALOG, GPIO_PUPD_NONE, GPIO2);	//PC2   isB (hall current sensor)
-
+  gpio_mode_setup(GPIOC, GPIO_MODE_ANALOG, GPIO_PUPD_NONE, GPIO5);	//PC5       (strain_gauge torque sensor)
 
   adc_set_clk_prescale(ADC_CCR_ADCPRE_BY2);
   adc_disable_scan_mode(ADC1);
@@ -503,7 +503,7 @@ void adc_init (void)
   adc_set_sample_time(ADC1, ADC_CHANNEL3, ADC_SMPR_SMP_3CYC);   //Ud
   adc_set_sample_time(ADC1, ADC_CHANNEL11, ADC_SMPR_SMP_3CYC);  //isA hall current
   adc_set_sample_time(ADC1, ADC_CHANNEL12, ADC_SMPR_SMP_3CYC);  //isB hall current
-
+  adc_set_sample_time(ADC1, ADC_CHANNEL15, ADC_SMPR_SMP_3CYC);  //strain_gauge torque sensor
 
   adc_set_multi_mode(ADC_CCR_MULTI_INDEPENDENT);
   adc_power_on(ADC1);

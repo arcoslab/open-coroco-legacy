@@ -194,6 +194,9 @@ class Serial_Stm32f4(object):
         self.pi_max                 = 0.0
         self.load_angle             = 0.0   
 
+        self.strain_gauge           = 0.0
+
+
         self.checksum_stm32         = 0.0
         self.checksum_python        = 0.0
 
@@ -235,6 +238,8 @@ class Serial_Stm32f4(object):
         self.pi_max_vector      = []
         self.load_angle_vector  = []
 
+        self.strain_gauge_vector= []
+
         self.data_1_vector          = []
         self.data_2_vector          = []
         self.data_3_vector          = []
@@ -272,16 +277,17 @@ class Serial_Stm32f4(object):
         if not os.path.exists(self.path):
             os.makedirs(self.path)#+"data" +"." + datetime.datetime.now().ctime() +"."+self.tag_comment)
 
-        if   self.print_selection==0: tag='frequencies'
-        elif self.print_selection==1: tag='three-phase_currents'
-        elif self.print_selection==2: tag='isQ_vs_isD'
-        elif self.print_selection==3: tag='VsQ_vs_VsD'
-        elif self.print_selection==4: tag='voltage_magnitude'
-        elif self.print_selection==5: tag='flux-linkage'
-        elif self.print_selection==6: tag='electromagnetic_torque'
-        elif self.print_selection==7: tag='phase_advance_pi'
-        elif self.print_selection==8: tag=''
-        elif self.print_selection==9: tag=''
+        if   self.print_selection==0 : tag='frequencies'
+        elif self.print_selection==1 : tag='three-phase_currents'
+        elif self.print_selection==2 : tag='isQ_vs_isD'
+        elif self.print_selection==3 : tag='VsQ_vs_VsD'
+        elif self.print_selection==4 : tag='voltage_magnitude'
+        elif self.print_selection==5 : tag='flux-linkage'
+        elif self.print_selection==6 : tag='electromagnetic_torque'
+        elif self.print_selection==7 : tag='phase_advance_pi'
+        elif self.print_selection==8 : tag=''
+        elif self.print_selection==9 : tag=''
+        elif self.print_selection==13: tag='strain_gauge'
         else                        : tag=''
 
 
@@ -401,6 +407,11 @@ class Serial_Stm32f4(object):
                 elif (split_string[split_counter]=='l'):   self.pi_control        =float(split_string[split_counter+1])
                 elif (split_string[split_counter]=='x'):   self.pi_max            =float(split_string[split_counter+1])
                 elif (split_string[split_counter]=='<'):   self.load_angle        =float(split_string[split_counter+1])
+
+                elif (split_string[split_counter]=='G'):   self.strain_gauge      =float(split_string[split_counter+1])
+
+
+
                 '''
                 elif (split_string[split_counter]=='1'):   self.data_1            =float(split_string[split_counter+1])
                 elif (split_string[split_counter]=='2'):   self.data_2            =float(split_string[split_counter+1])
@@ -471,6 +482,7 @@ class Serial_Stm32f4(object):
                 elif (single_character=='j'):   self.torque_P_speed     =self.get_data_and_checksum()
                 elif (single_character=='i'):   self.torque_I_speed     =self.get_data_and_checksum()    
 
+                elif (single_character=='G'):   self.strain_gauge       =self.get_data_and_checksum() 
 
                 elif (single_character=='7'):   self.Ia_peak__short_pulse =self.get_data_and_checksum()
                 elif (single_character=='8'):   self.Ib_peak__short_pulse =self.get_data_and_checksum()
@@ -551,6 +563,8 @@ class Serial_Stm32f4(object):
                 self.pi_max_vector.append(self.pi_max)
                         
                 self.load_angle_vector.append(self.load_angle)
+
+                self.strain_gauge_vector.append(self.strain_gauge)
                 
 
     def fast_vector_angle(self,y,x):
@@ -626,6 +640,9 @@ class Serial_Stm32f4(object):
                                     " pi_control %12.9f"        %self.pi_control            + \
                                     " pi_max %10.6f"            %self.pi_max                + \
                                     " load_angle %12.9f"        %self.load_angle            + \
+
+                                    " strain_gauge %12.9f"      %self.strain_gauge          + \
+
                                     " psi_rotating_angle %12.9f"%self.data_1                + \
                                     " R_s %12.9f"               %self.data_2                + \
                                     " tick_period %12.9f"       %self.data_3                + \
@@ -706,6 +723,13 @@ class Serial_Stm32f4(object):
             self.new_data_line= " P: %12.8f:"               %self.torque_P_speed              + \
                                 " I: %12.8f:"               %self.torque_I_speed              + extra_information
         
+        elif self.print_selection==13:
+            self.new_data_line= " t: %12.8f:"               %self.torque_P_speed              + \
+                                " strain_gauge: %12.8f:"    %self.strain_gauge                + extra_information
+        
+
+
+
         elif self.print_selection==11:
                 self.new_data_line= "t %6.2f "                  %self.time                      + \
                                     " ref_freq %6.2f"           %self.reference_frequency   + \
@@ -966,6 +990,17 @@ class Serial_Stm32f4(object):
                         plt.ylabel('torque (Nm)')
                         plt.legend() 
 
+    def plot_strain_gauge_torque(self,rows,columns,subplot_index): 
+
+                        plt.subplot(rows,columns,subplot_index)
+                        plt.plot(self.time_vector, self.strain_gauge_vector,self.plotting_character,label='sg')
+                        #plt.plot(self.time_vector, self.te_vector,'o',label='te')
+                        $plt.plot(self.time_vector, self.te_ref_vector,self.plotting_character,label='te_ref')
+                        plt.title('torque vs time (strain gauge)'+self.title_extra)
+                        plt.xlabel('time (ticks)')
+                        plt.ylabel('torque (Nm)')
+                        plt.legend() 
+
     def plot_phase_advance(self,rows,columns,subplot_index): 
    
                         plt.subplot(rows,columns,subplot_index)
@@ -1106,6 +1141,7 @@ class Serial_Stm32f4(object):
                         plt.savefig(self.path+ "electromagnetic_torque" +"." + datetime.datetime.now().ctime() +self.tag_comment+".jpg")
                         plt.close()
 
+
                         plt.figure(num=12, figsize=(10, 10), dpi=300, facecolor='w', edgecolor='k')
                         self.plot_phase_advance                      (rows,columns,subplot_index)
                         plt.savefig(self.path+ "phase_advance_pi" +"." + datetime.datetime.now().ctime() +self.tag_comment+".jpg")
@@ -1119,6 +1155,12 @@ class Serial_Stm32f4(object):
                         plt.figure(num=14, figsize=(10, 10), dpi=300, facecolor='w', edgecolor='k')
                         self.plot_load_angle_and_frequency           (rows,columns,subplot_index)
                         plt.savefig(self.path+ "frequency and load angle vs time" +"." + datetime.datetime.now().ctime() +self.tag_comment+".jpg")
+                        plt.close()
+
+
+                        plt.figure(num=15, figsize=(10, 10), dpi=300, facecolor='w', edgecolor='k')
+                        self.plot_strain_gauge_torque             (rows,columns,subplot_index)
+                        plt.savefig(self.path+ "electromagnetic_torque_strain_gauge" +"." + datetime.datetime.now().ctime() +self.tag_comment+".jpg")
                         plt.close()
 
     
@@ -1244,6 +1286,16 @@ class Serial_Stm32f4(object):
         elif self.print_selection==11:
             self.plot_all_in_one()
             self.plot_one_by_one()  
+
+        elif self.print_selection==13:
+            if len(self.time_vector)==0 or len(self.strain_gauge_vector)==0: #or  len(self.te_ref_vector)==0:
+                self.empty_vectors=True
+
+            else: 
+                plt.figure(num=13, figsize=plot_figsize, dpi=plot_dpi, facecolor=plot_face_color, edgecolor=plot_edge_color)
+                self.plot_strain_gauge_torque             (rows,columns,subplot_index)
+                plt.savefig(plot_name+"electromagnetic_torque" +".jpg")
+                plt.close()
 
 
     def __init__(self):
