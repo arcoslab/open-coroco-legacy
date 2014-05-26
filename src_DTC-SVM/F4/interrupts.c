@@ -1,6 +1,7 @@
 /*
  * Copyright (C) 2013 ARCOS-Lab Universidad de Costa Rica
  * Author: Federico Ruiz Ugalde <memeruiz@gmail.com>
+ * Modified by: Sebastian Chinchilla Gutierrez <tumacher@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -171,7 +172,7 @@ void adc_isr(void)
     V_shunt_B = (V_stm32_B*(VREF/ADC_CONVERSION_FACTOR)-V_DIFFERENTIAL_AMPLIFIER_REFFERENCE_B)/G_OP_AMP_B;
     i_sB      = V_shunt_B/R_SHUNT_B;
 
-    strain_gauge=V_stm32_strain_gauge;
+    strain_gauge=V_stm32_strain_gauge*(VREF/ADC_CONVERSION_FACTOR);
 
     //filtering currents
 

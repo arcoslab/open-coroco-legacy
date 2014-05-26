@@ -308,6 +308,7 @@ class Serial_Stm32f4(object):
         elif self.print_selection== 6: header_csv ="t t te te Ud Ud pi_control pi_control pi_max pi_max" 
         elif self.print_selection== 7: header_csv ="t t pi_control pi_control pi_max pi_max" 
         elif self.print_selection==11: header_csv ="t t psis psis alpha alpha ref ref"
+        else :                         header_csv =""
 
         split_header = header_csv.split()                  
         self.writer.writerow(split_header)        
@@ -640,9 +641,7 @@ class Serial_Stm32f4(object):
                                     " pi_control %12.9f"        %self.pi_control            + \
                                     " pi_max %10.6f"            %self.pi_max                + \
                                     " load_angle %12.9f"        %self.load_angle            + \
-
                                     " strain_gauge %12.9f"      %self.strain_gauge          + \
-
                                     " psi_rotating_angle %12.9f"%self.data_1                + \
                                     " R_s %12.9f"               %self.data_2                + \
                                     " tick_period %12.9f"       %self.data_3                + \
@@ -724,7 +723,7 @@ class Serial_Stm32f4(object):
                                 " I: %12.8f:"               %self.torque_I_speed              + extra_information
         
         elif self.print_selection==13:
-            self.new_data_line= " t: %12.8f:"               %self.torque_P_speed              + \
+            self.new_data_line= " t: %12.8f:"               %self.time              + \
                                 " strain_gauge: %12.8f:"    %self.strain_gauge                + extra_information
         
 
@@ -995,7 +994,7 @@ class Serial_Stm32f4(object):
                         plt.subplot(rows,columns,subplot_index)
                         plt.plot(self.time_vector, self.strain_gauge_vector,self.plotting_character,label='sg')
                         #plt.plot(self.time_vector, self.te_vector,'o',label='te')
-                        $plt.plot(self.time_vector, self.te_ref_vector,self.plotting_character,label='te_ref')
+                        plt.plot(self.time_vector, self.te_ref_vector,self.plotting_character,label='te_ref')
                         plt.title('torque vs time (strain gauge)'+self.title_extra)
                         plt.xlabel('time (ticks)')
                         plt.ylabel('torque (Nm)')
