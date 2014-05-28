@@ -12,6 +12,21 @@
 
 
 //PID parameters
+
+float P_SENSORLESS      = 0.0f; 
+float P_DOWN_SENSORLESS = 0.0f; 
+float fake_P_SENSORLESS = 0.0f;
+float I_SENSORLESS      = 0.0f;
+float I_DOWN_SENSORLESS = 0.0f;
+float fake_I_SENSORLESS = 0.0f;
+
+float P_SENSORLESS_TORQUE      = 0.0f;
+float P_DOWN_SENSORLESS_TORQUE = 0.0f;
+float fake_P_SENSORLESS_TORQUE = 0.0f;
+float I_SENSORLESS_TORQUE      = 0.0f;
+float I_DOWN_SENSORLESS_TORQUE = 0.0f;
+float fake_I_SENSORLESS_TORQUE = 0.0f;
+
 #define I_MAX_SENSORLESS            45.0f//  0.0005f//(90.0f*frequency/interrupt_frequency) 
 #define P_MAX_SENSORLESS            45.0f//  0.0005f//(90.0f*frequency/interrupt_frequency) 
 #define PI_MAX_SENSORLESS           45.0f//  0.0005f//(90.0f*frequency/interrupt_frequency) 
@@ -25,6 +40,7 @@
 //Battey
 #define UD_PERCENTAGE   0.8f
 #define MAXIMUM_OPEN_LOOP_SPEED 20.0f
+#define MAXIMUM_OPEN_LOOP_ANGLE_INCREASE 0.00005f
 
 //Hall sensor parameters
 #define HALL_FACTOR pole_pairs_0

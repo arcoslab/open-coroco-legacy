@@ -87,7 +87,7 @@ void  floating_switching_states (float* S_A, float* S_B, float* S_C)
 
 }
 
-
+/*
 float direct_stator_voltage_V_sD     (int S_A, int S_B, int S_C,float U_d)
 {
   return (2.0f/3.0f)*U_d*(S_A-0.5f*S_B-0.5f*S_C);
@@ -108,7 +108,7 @@ float floating_switches_quadrature_stator_voltage_V_SQ (float S_B, float S_C,flo
 { 
   return (1.0f/sqrtf(3.0f))*U_d*(S_B-S_C);
 }
-
+*/
 //---------------------stator flux-linkage space vector estimation-------------------------------
 #define W_CUTOFF 2000.0f
 #define F_CUTOFF 5.0f//5.0f
@@ -278,7 +278,7 @@ void flux_linkage_estimator (float T,float V_sD,float V_sQ,float i_sD,float i_sQ
 }
 
 
-void flux_linkage_estimator_neglected_currents (float T,float V_sD,float V_sQ,float electric_frequency, float* psisD, float* psisQ)//, float*psis,float* psis_alpha)
+void flux_linkage_estimator_neglected_currents (float T,float V_sD,float V_sQ, float* psisD, float* psisQ)//, float*psis,float* psis_alpha)
 {
   static float previous_psi_sD=0.0f;
   static float previous_psi_sQ=0.0f;
@@ -307,14 +307,14 @@ void flux_linkage_estimator_neglected_currents (float T,float V_sD,float V_sQ,fl
 
 
 
-
+/*
 float stator_flux_linkage_magnite_psi_s               (float psi_sD,float psi_sQ)
 {
   return sqrtf( (psi_sQ*psi_sQ+psi_sD*psi_sD) );
   //return sqrtf( ( powf(psi_sQ,2.0f)+powf(psi_sD,2.0f) ) );
 }
-
-
+*/
+/*
 float flux_linkage_angle_psi_s_angle(float cmd_angle_PID)//float psi_sD, float psi_sQ)
 {
   float psi_angle=0.0f;
@@ -339,19 +339,23 @@ float flux_linkage_angle_psi_s_angle(float cmd_angle_PID)//float psi_sD, float p
         
         return psi_angle=actual_hall_angle;
 }
-
+*/
+/*
 int stator_flux_linkage_sector_alpha                (float psi_sD, float psi_sQ)
 {
   float psi_angle=0.0f;
   int psi_alpha=0;
   psi_angle=vector_angle(psi_sQ,psi_sD);//+178.23f;
   //psi_angle=flux_linkage_angle_psi_s_angle(cmd_angle);
-/*
-  if(psi_angle>=360.0f)
-    psi_angle=psi_angle-360.0f;
-  if (psi_angle<0.0f)
-    psi_angle=psi_angle+360.0f;
-*/   
+
+
+
+
+//  if(psi_angle>=360.0f)
+//    psi_angle=psi_angle-360.0f;
+//  if (psi_angle<0.0f)
+//    psi_angle=psi_angle+360.0f;
+   
 
 
   //sector selection
@@ -388,7 +392,7 @@ int stator_flux_linkage_sector_alpha                (float psi_sD, float psi_sQ)
   return psi_alpha;
   
 }
-
+*/
 float rotor_speed_w_r(float psi_sD, float psi_sQ, float T)
 {
   static float previous_psi_sD=0.0f;
@@ -430,19 +434,21 @@ float electromagnetic_torque_estimation_t_e(float psi_sD,float i_sQ, float psi_s
 
 
 //stator flux-linkage reference
+/*
 float stator_flux_linkage_reference_psi_s_ref(float psi_F,float te_ref,float L_sq,float pole_pairs)
 {
   return sqrtf ( psi_F*psi_F+L_sq*L_sq*(2.0f*te_ref/(3.0f*pole_pairs*psi_F))*(2.0f*te_ref/(3.0f*pole_pairs*psi_F))            );
 }
-
+*/
 
 
 //quadrature rotor inductance
+/*
 float quadrature_rotor_inductance_L_sq (float psi_s,float psi_F,float t_e,float pole_pairs)
 {
   return sqrtf(psi_s*psi_s-psi_F*psi_F)/(2.0f*t_e/(3.0f*pole_pairs*psi_F));
 }
-
+*/
 //hysteresis windows
 int stator_flux_linkage_hysteresis_controller_d_psi(float psi_s_ref, float psi_s,float psi_delta_percentage)
 {
@@ -799,7 +805,7 @@ float quadrature_clark_transformation(float i_sA,float i_sB,float i_sC)
 	return i_sQ;
 }
 */
-
+/*
 float vector_magnitude(float quadrature_component, float direct_component)
 {
 	float magnitude;
@@ -829,7 +835,7 @@ float vector_angle(float quadrature_component, float direct_component)
 
 	return angle;
 }
-
+*/
 float fast_vector_angle(float y, float x)
 {
   float angle;

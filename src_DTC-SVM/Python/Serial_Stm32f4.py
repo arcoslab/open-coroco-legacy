@@ -57,7 +57,7 @@ class Serial_Stm32f4(object):
         self.read_capture_state = 'not_collecting'
         self.tag_comment        = ''
         #self.aditional_comment=', STATOR_RESISTANCE_TEST 240degrees,MULTI_ROTOR OPEN LOOP,wrong motor parameters,one psi,wr filt,te filt,k 0.2, actual i,open 0.00005f,Ud 40%,psi_ref=0.0016,38kpwm'
-        self.aditional_comment=', ,BALDOR 48V, RIPPLES EVERYWHERE,Ud 80%, 5Hz open loop SVM, 315 (-45)degrees open DTC-SVM,ref A B 1.487V, nothing neglected'
+        self.aditional_comment=', Multi,12V,Ud 80%,openSVM 50Hz,psiF 0.01,70degrees,40k pwm,Ud=actual,te wr actual'
         self.driving_counter    = 0
         self.various_counter     = 0
         self.type_of_test       = 0        
@@ -181,6 +181,12 @@ class Serial_Stm32f4(object):
         self.Vs_cita                = 0.0
         self.Vs_relative_cita       = 0.0
 
+        self.required_VsD                    = 0.0
+        self.required_VsQ                    = 0.0
+        self.required_Vs                     = 0.0
+        self.required_Vs_cita                = 0.0
+
+
         self.psi_sD                 = 0.0
         self.psi_sQ                 = 0.0
         self.psi_s                  = 0.0
@@ -224,6 +230,11 @@ class Serial_Stm32f4(object):
         self.Vs_vector               = []
         self.Vs_cita_vector          = []
         self.Vs_relative_cita_vector = []
+
+        self.required_VsD_vector              = []
+        self.required_VsQ_vector              = []
+        self.required_Vs_vector               = []
+        self.required_Vs_cita_vector          = []
 
         self.psi_sD_vector          = []
         self.psi_sQ_vector          = []
@@ -471,12 +482,12 @@ class Serial_Stm32f4(object):
                 elif (single_character=='l'):   self.pi_control        =self.get_data_and_checksum()
                 elif (single_character=='x'):   self.pi_max            =self.get_data_and_checksum()
 
-                elif (single_character=='1'):   self.data_1            =self.get_data_and_checksum()
-                elif (single_character=='2'):   self.data_2            =self.get_data_and_checksum()
-                elif (single_character=='3'):   self.data_3            =self.get_data_and_checksum()
-                elif (single_character=='4'):   self.data_4            =self.get_data_and_checksum()
-                elif (single_character=='5'):   self.data_5            =self.get_data_and_checksum()
-                elif (single_character=='6'):   self.data_6            =self.get_data_and_checksum()
+                elif (single_character=='1'):   self.required_VsD            =self.get_data_and_checksum()
+                elif (single_character=='2'):   self.required_VsQ            =self.get_data_and_checksum()
+                elif (single_character=='3'):   self.required_Vs             =self.get_data_and_checksum()
+                #elif (single_character=='4'):   self.data_4            =self.get_data_and_checksum()
+                #elif (single_character=='5'):   self.data_5            =self.get_data_and_checksum()
+                #elif (single_character=='6'):   self.data_6            =self.get_data_and_checksum()
 
                 elif (single_character=='K'):   self.P_speed            =self.get_data_and_checksum()
                 elif (single_character=='I'):   self.I_speed            =self.get_data_and_checksum()
@@ -549,7 +560,12 @@ class Serial_Stm32f4(object):
                 self.VsQ_vector.append(self.VsQ)
                 self.Vs_vector.append(self.Vs)
                 self.Vs_cita_vector.append(self.Vs_cita_vector)
-                self.Vs_relative_cita_vector.append(self.Vs_relative_cita_vector)
+                self.Vs_relative_cita_vector.append(self.Vs_relative_cita)
+
+                self.required_VsD_vector.append(self.required_VsD)
+                self.required_VsQ_vector.append(self.required_VsQ)
+                self.required_Vs_vector.append(self.required_Vs)
+                self.required_Vs_cita_vector.append(self.requierd_Vs_cita)
 
                 self.psi_sD_vector.append(self.psi_sD)
                 self.psi_sQ_vector.append(self.psi_sQ)
@@ -726,7 +742,12 @@ class Serial_Stm32f4(object):
             self.new_data_line= " t: %12.8f:"               %self.time              + \
                                 " strain_gauge: %12.8f:"    %self.strain_gauge                + extra_information
         
-
+        elif self.print_selection==14:
+            self.new_data_line= "t: %6.2f "   %self.time                                                                          + \
+                                " VsD: %6.2f" %self.required_VsD                                                                  + \
+                                " VsQ: %6.2f" %self.required_VsQ                                                                  + \
+                                " Vs:  %6.2f" %math.sqrt(self.required_VsQ*self.required_VsQ+self.required_VsD*self.required_VsD) + \
+                                " Vs_cita: %6.2f"            %self.vector_angle(self.required_VsQ,self.required_VsD)     + extra_information
 
 
         elif self.print_selection==11:
@@ -947,9 +968,19 @@ class Serial_Stm32f4(object):
                         plt.ylabel('VsQ (V)')
                         plt.legend() 
 
+    def plot_required_quadrature_vs_direct_voltages(self,rows,columns,subplot_index):
+
+                        plt.subplot(rows,columns,subplot_index)
+                        plt.plot(self.required_VsD_vector,self.required_VsQ_vector,self.plotting_character_0)
+                        plt.title('required VsQ vs requried VsD'+self.title_extra)
+                        plt.xlabel('required_VsD (V)')
+                        plt.ylabel('required_VsQ (V)')
+                        plt.legend() 
+
     def plot_voltage_magnitude(self,rows,columns,subplot_index):  
   
                         plt.subplot(rows,columns,subplot_index)
+                        plt.plot(self.time_vector, self.required_Vs_vector,self.plotting_character,label='required_Vs')
                         plt.plot(self.time_vector, self.Vs_vector,self.plotting_character,label='Vs')
                         plt.plot(self.time_vector, self.Ud_vector,self.plotting_character,label='Ud')
                         plt.title('voltage vs time'+self.title_extra)
@@ -1296,6 +1327,15 @@ class Serial_Stm32f4(object):
                 plt.savefig(plot_name+"electromagnetic_torque" +".jpg")
                 plt.close()
 
+        elif self.print_selection==14:
+            if  len(self.required_VsD_vector)==0 or len(self.required_VsQ_vector)==0 :
+                self.empty_vectors=True
+
+            else:
+                plt.figure(num=9, figsize=plot_figsize, dpi=plot_dpi, facecolor=plot_face_color, edgecolor=plot_edge_color)
+                self.plot_required_quadrature_vs_direct_voltages (rows,columns,subplot_index)
+                plt.savefig(plot_name+"required_VsQ_vs_required_VsD"+".jpg")
+                plt.close()
 
     def __init__(self):
         self.initializing_values()        

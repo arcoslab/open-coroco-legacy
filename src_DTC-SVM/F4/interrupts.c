@@ -46,6 +46,12 @@ float data_V_s;
 float data_cita_V_s;
 float data_cita_V_s_relative_angle;
 
+float data_required_V_sD;
+float data_required_V_sQ;
+float data_required_V_s;
+float data_required_cita_V_s;
+
+
 float data_psi_sD;
 float data_psi_sQ;
 float data_psi_s;
@@ -92,7 +98,7 @@ float data_strain_gauge;
 void tim1_up_tim10_isr(void) 
 {
   //oscilloscope flag: start of interrupt
-
+  gpio_set(GPIOD, GPIO11);
    
   //Clear the update interrupt flag
   timer_clear_flag(TIM1,  TIM_SR_UIF);
@@ -114,6 +120,7 @@ else
   DTC_SVM();
   collecting_floating_data();
   colllecting_flux_linkage();
+  gpio_clear(GPIOD, GPIO11);
 }
 
   //oscilloscope flag: start of halves
@@ -121,6 +128,7 @@ else
 
   //oscilloscope flag: end of interrupt
   gpio_clear(GPIOD, GPIO9);
+  
 }
 
 
@@ -164,7 +172,7 @@ void adc_isr(void)
   else
   {
     V_stm32_Ud = adc_read_regular(ADC1)*(VREF/ADC_CONVERSION_FACTOR);
-    U_d        = V_stm32_Ud*BATTERY_VOLTAGE_CONVERTION_FACTOR; 
+    U_d        =    V_stm32_Ud*BATTERY_VOLTAGE_CONVERTION_FACTOR; 
 
     V_shunt_A = (V_stm32_A*(VREF/ADC_CONVERSION_FACTOR)-V_DIFFERENTIAL_AMPLIFIER_REFFERENCE_A)/G_OP_AMP_A;
     i_sA      = V_shunt_A/R_SHUNT_A;
@@ -190,6 +198,7 @@ void adc_isr(void)
 
   //oscilloscope flag: end of interrupt
   gpio_clear(GPIOD, GPIO9);
+  gpio_clear(GPIOD, GPIO11);
   }
 
 

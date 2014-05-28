@@ -19,8 +19,8 @@
 
 
 
-float vector_magnitude              (float quadrature_component, float direct_component);
-float vector_angle                  (float quadrature_component, float direct_component);
+//float vector_magnitude              (float quadrature_component, float direct_component);
+//float vector_angle                  (float quadrature_component, float direct_component);
 float fast_vector_angle                  (float quadrature_component, float direct_component);
 void  fast_vector_angle_and_magnitude(float y,float x, float* magnitude, float* angle);
 float extended_fast_atan(float tan_value);
@@ -39,10 +39,10 @@ float quadrature_stator_current_i_sQ (float i_sA,float i_sB);
 
 void  switching_states               (int* S_A, int* S_B, int* S_C);
 void  floating_switching_states      (float* S_A, float* S_B, float* S_C);
-float direct_stator_voltage_V_sD     (int S_A, int S_B, int S_C,float U_d);
-float quadrature_stator_voltage_V_SQ (int S_B, int S_C,float U_d);
-float floating_switches_direct_stator_voltage_V_sD     (float S_A, float S_B, float S_C,float U_d);
-float floating_switches_quadrature_stator_voltage_V_SQ (float S_B, float S_C,float U_d);
+//float direct_stator_voltage_V_sD     (int S_A, int S_B, int S_C,float U_d);
+//float quadrature_stator_voltage_V_SQ (int S_B, int S_C,float U_d);
+//float floating_switches_direct_stator_voltage_V_sD     (float S_A, float S_B, float S_C,float U_d);
+//float floating_switches_quadrature_stator_voltage_V_SQ (float S_B, float S_C,float U_d);
 
 //stator flux-linkage space vector estimation
 #define w_cutoff 0.0f
@@ -53,11 +53,11 @@ float quadrature_stator_flux_linkage_estimator_psi_sQ (float T,float V_sQ,float 
 float direct_stator_flux_linkage_estimator_psi_sD     (float T,float V_sD,float i_sD,float R_s,float electric_frequency);
 float quadrature_stator_flux_linkage_estimator_psi_sQ (float T,float V_sQ,float i_sQ,float R_s,float electric_frequency);
 
-float stator_flux_linkage_magnite_psi_s               (float psi_sD,float psi_sQ);
-float flux_linkage_angle_psi_s_angle(float cmd_angle_PID);//float psi_sD, float psi_sQ)
+//float stator_flux_linkage_magnite_psi_s               (float psi_sD,float psi_sQ);
+//float flux_linkage_angle_psi_s_angle(float cmd_angle_PID);//float psi_sD, float psi_sQ)
 void  flux_linkage_estimator                    (float T,float V_sD,float V_sQ,float i_sD,float i_sQ,float R_s,float electric_frequency, float* psisD, float* psisQ,float*psis,float* psi_s_alpha);
-void  flux_linkage_estimator_neglected_currents (float T,float V_sD,float V_sQ,                                float electric_frequency, float* psisD, float* psisQ);//, float*psis,float* psis_alpha);
-int   stator_flux_linkage_sector_alpha                (float psi_sD, float psi_sQ);
+void  flux_linkage_estimator_neglected_currents (float T,float V_sD,float V_sQ, float* psisD, float* psisQ);//, float*psis,float* psis_alpha
+//int   stator_flux_linkage_sector_alpha                (float psi_sD, float psi_sQ);
 
 
 //electromagnetic torque estimation
@@ -65,8 +65,8 @@ float electromagnetic_torque_estimation_t_e(float psi_sD,float i_sQ, float psi_s
 float DTC_torque_reference_PI(float w_r, float w_r_ref);
 
 //stator flux-linkage reference
-float stator_flux_linkage_reference_psi_s_ref(float psi_F,float te_ref,float L_sq,float pole_pairs);
-float quadrature_rotor_inductance_L_sq (float psi_s,float psi_F,float t_e,float pole_pairs);
+//float stator_flux_linkage_reference_psi_s_ref(float psi_F,float te_ref,float L_sq,float pole_pairs);
+//float quadrature_rotor_inductance_L_sq (float psi_s,float psi_F,float t_e,float pole_pairs);
 float rotor_speed_w_r(float psi_sD, float psi_sQ, float T);
 
 //hysteresis windows

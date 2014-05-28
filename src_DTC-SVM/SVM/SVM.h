@@ -18,7 +18,7 @@
  */
 
 
-void SVM_starting_open_loop(bool open_loop,float* VsD, float*VsQ, float U_d,float maximum_open_loop_speed);
+void SVM_starting_open_loop(bool open_loop,float* VsD, float*VsQ, float U_d,float maximum_open_loop_speed,float frequency,float reference_frequency);
 void SVM_speed_close_loop(float reference_frequency, float frequency,bool close_loop_active, float* VsD, float*     VsQ);
 void SVM_torque_close_loop(float reference_torque, float torque,bool close_loop_active, float* VsD, float* VsQ);    
 void SVM_loop_control(float frequency,float maximum_open_loop_frequency,float te_ref, float freq_ref, bool* open_loop, bool* close_loop);
@@ -28,7 +28,7 @@ void SVM_loop_control(float frequency,float maximum_open_loop_frequency,float te
 float SVM_V_s_ref_D               (float psi_s_ref, float psi_s, float psi_s_angle, float phase_advance,float i_sD, float R_s,float T_s);
 float SVM_V_s_ref_Q               (float psi_s_ref, float psi_s, float psi_s_angle, float phase_advance,float i_sQ, float R_s,float T_s);
 
-void  SVM_Maximum_allowed_V_s_ref (float* V_sD,float* V_sQ  ,float* V_s_ref,float U_d);
+void  SVM_Maximum_allowed_V_s_ref (float* V_sD,float* V_sQ  ,float* V_s_ref,float U_d,bool* increase);
 float SVM_V_s_relative_angle      (float V_s_angle);
 float SVM_T1                      (float T_s,float U_s, float U1, float V_s_ref_relative_angle);
 float SVM_T2                      (float T_s,float U_s, float U2, float V_s_ref_relative_angle);

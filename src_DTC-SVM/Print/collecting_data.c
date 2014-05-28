@@ -400,6 +400,11 @@ void collecting_samples(void)
         data_cita_V_s_relative_angle=cita_V_s;
 
 
+        data_required_V_sD      =required_V_sD;
+        data_required_V_sQ      =required_V_sQ;
+        data_required_V_s       =required_V_s;
+        data_required_cita_V_s  =required_cita_V_s;
+
         data_psi_sD=psi_sD;
         data_psi_sQ=psi_sQ;
         data_psi_s =psi_s;
@@ -687,6 +692,7 @@ void print_regular_data(void)
     {
         printf ("t")  ;  checksum=           print_float_as_bytes(data_timer                   );
         printf ("s")  ;  checksum=checksum  +print_float_as_bytes(data_V_s                     );
+        printf ("3")  ;  checksum=checksum  +print_float_as_bytes(data_required_V_s                     );
         printf ("U")  ;  checksum=checksum  +print_float_as_bytes(data_U_d                     );
 
         //////////////
@@ -797,7 +803,12 @@ void print_regular_data(void)
         printf ("t")  ;  checksum=           print_float_as_bytes(data_timer       );
         printf ("G")  ;  checksum=checksum  +print_float_as_bytes(data_strain_gauge);
     }
-
+    else if (print_selection==14)
+    {
+        printf ("t")  ;  checksum=           print_float_as_bytes(data_timer                   );
+        printf ("1")  ;  checksum=checksum  +print_float_as_bytes(data_required_V_sD                    );
+        printf ("2")  ;  checksum=checksum  +print_float_as_bytes(data_V_sQ                    );
+    }
 
 
 

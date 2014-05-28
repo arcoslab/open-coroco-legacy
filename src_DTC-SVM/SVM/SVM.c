@@ -42,7 +42,7 @@ float SVM_V_s_ref_Q(float psi_s_ref, float psi_s, float psi_s_angle, float phase
   return ( psi_s_ref*fast_sine((psi_s_angle+phase_advance)) - psi_s*fast_sine(psi_s_angle) )/T_s  +  i_sQ*R_s;
 }
 
-void SVM_Maximum_allowed_V_s_ref(float* VsD, float* VsQ,float* V_s_ref,float U_d)
+void SVM_Maximum_allowed_V_s_ref(float* VsD, float* VsQ,float* V_s_ref,float U_d,bool* increase)
 {
   float voltage_magnitude = *V_s_ref; 
 
@@ -50,6 +50,7 @@ void SVM_Maximum_allowed_V_s_ref(float* VsD, float* VsQ,float* V_s_ref,float U_d
                                                     *V_s_ref = *V_s_ref;
                                                     *VsD     = *VsD;
                                                     *VsQ     = *VsQ;
+                                                    *increase = false;
                                                }
 
   else                                         { 
@@ -58,6 +59,7 @@ void SVM_Maximum_allowed_V_s_ref(float* VsD, float* VsQ,float* V_s_ref,float U_d
                                                     *VsQ     = *VsQ * (U_d/1.73205080756887729352f) / voltage_magnitude;//(*V_s_ref);
                                                   //adjusting the voltage magnitude to the value of the radious of the circule
                                                      *V_s_ref = U_d/1.73205080756887729352f;  
+                                                     *increase=true;
                                                }
 
 
@@ -289,6 +291,12 @@ float V_sQ=0.0f;
 float V_s =0.0f;
 float cita_V_s=0.0f;
 
+float required_V_sD=0.0f;
+float required_V_sQ=0.0f;
+float required_V_s =0.0f;
+float required_cita_V_s=0.0f;
+
+
 float psi_sD=0.0f;
 float psi_sQ=0.0f;
 float psi_s =0.0f;
@@ -359,154 +367,6 @@ void shutdown_SVM_torque (float torque_reference,float actual_torque,bool* shutd
 #define SECOND_HALF 1
 float center_aligned_state=FIRST_HALF;
 
-
-char catched_wr         = '0';
-char catched_VsD        = '0';
-char catched_VsQ        = '0';
-char catched_psisD      = '0';
-char catched_psisQ      = '0';
-char catched_te         = '0';
-char catched_pi_control = '0';
-bool first_catch        = true;
-bool something_catched  = false;
-
-char catched_psi_s_ref              ='o';
-char catched_psi_s                  ='o';
-char catched_psi_s_alpha_SVM        ='o';
-char catched_psi_rotating_angle_SVM ='o';
-char catched_i_sD                   ='o';
-char catched_i_sQ                   ='o';
-char catched_R_s                    ='o';
-char catched_tick_period            ='o';
-
-float catched_value_wr         = 0.0f;
-float catched_value_VsD        = 0.0f;
-float catched_value_VsQ        = 0.0f;
-float catched_value_psisD      = 0.0f;
-float catched_value_psisQ      = 0.0f;
-float catched_value_te         = 0.0f;
-float catched_value_pi_control = 0.0f;
-
-
-float catched_value_psi_s_ref              =0.0f;
-float catched_value_psi_s                  =0.0f;
-float catched_value_psi_s_alpha_SVM        =0.0f;
-float catched_value_psi_rotating_angle_SVM =0.0f;
-float catched_value_i_sD                   =0.0f;
-float catched_value_i_sQ                   =0.0f;
-float catched_value_R_s                    =0.0f;
-float catched_value_tick_period            =0.0f;
-
-float catched_data_4                       =0.0f;
-float catched_data_5                       =0.0f;
-float catched_data_6                       =0.0f;
-
-//
-
-void catched_values (void)
-{
-    catched_value_wr         = w_r;
-    catched_value_VsD        = V_sD;
-    catched_value_VsQ        = V_sQ;
-    catched_value_psisD      = psi_sD;
-    catched_value_psisQ      = psi_sQ;
-    catched_value_te         = t_e;
-    catched_value_pi_control = pi_control;
-
-
-    catched_value_psi_s_ref              =psi_s_ref;
-    catched_value_psi_s                  =psi_s;
-    catched_value_psi_s_alpha_SVM        =psi_s_alpha_SVM;
-    catched_value_psi_rotating_angle_SVM =psi_rotating_angle_SVM;
-    catched_value_i_sD                   =i_sD;
-    catched_value_i_sQ                   =i_sQ;
-    catched_value_R_s                    =R_s;
-    catched_value_tick_period            =TICK_PERIOD*2.0f;
-}
-
-void catched_values_data (float data_4, float data_5, float data_6)
-{
-    catched_value_wr         = w_r;
-    catched_value_VsD        = V_sD;
-    catched_value_VsQ        = V_sQ;
-    catched_value_psisD      = psi_sD;
-    catched_value_psisQ      = psi_sQ;
-    catched_value_te         = t_e;
-    catched_value_pi_control = pi_control;
-
-
-    catched_value_psi_s_ref              =psi_s_ref;
-    catched_value_psi_s                  =psi_s;
-    catched_value_psi_s_alpha_SVM        =psi_s_alpha_SVM;
-    catched_value_psi_rotating_angle_SVM =psi_rotating_angle_SVM;
-    catched_value_i_sD                   =i_sD;
-    catched_value_i_sQ                   =i_sQ;
-    catched_value_R_s                    =R_s;
-    catched_value_tick_period            =TICK_PERIOD*2.0f;
-    
-    catched_data_4  = data_4;
-    catched_data_5  = data_5;
-    catched_data_6  = data_6;
-    
-}
-
-void catching_NaNs (void)
-{
-
-    if (w_r            !=w_r           && first_catch==true)  { catched_wr         ='f'; something_catched=true;}
-    if (V_sD           !=V_sD          && first_catch==true)  { catched_VsD        ='D'; something_catched=true;}
-    if (V_sQ           !=V_sQ          && first_catch==true)  { catched_VsQ        ='Q'; something_catched=true;}
-    if (psi_sD         !=psi_sD        && first_catch==true)  { catched_psisD      ='d'; something_catched=true;}
-    if (psi_sQ         !=psi_sQ        && first_catch==true)  { catched_psisQ      ='q'; something_catched=true;}
-    if (t_e            !=t_e           && first_catch==true)  { catched_te         ='t'; something_catched=true;}
-    if (SVM_pi_control !=SVM_pi_control&& first_catch==true)  { catched_pi_control ='i'; something_catched=true;}
-
-    if(psi_s_ref             !=psi_s_ref             &&first_catch==true){catched_psi_s_ref              ='r'; something_catched=true;}
-    if(psi_s                 !=psi_s                 &&first_catch==true){catched_psi_s                  ='s'; something_catched=true;}
-    if(psi_s_alpha_SVM       !=psi_s_alpha_SVM       &&first_catch==true){catched_psi_s_alpha_SVM        ='a'; something_catched=true;}
-    if(psi_rotating_angle_SVM!=psi_rotating_angle_SVM&&first_catch==true){catched_psi_rotating_angle_SVM ='R'; something_catched=true;}
-    if (i_sD                 !=i_sD                  &&first_catch==true){catched_i_sD                   ='D'; something_catched=true;}
-    if (i_sQ                 !=i_sQ                  &&first_catch==true){catched_i_sQ                   ='Q'; something_catched=true;}
-    if (R_s                  !=R_s                   &&first_catch==true){catched_R_s                    ='r'; something_catched=true;}
-    if (TICK_PERIOD          !=TICK_PERIOD           &&first_catch==true){catched_tick_period            ='T'; something_catched=true;}
- 
-    if (something_catched==true && first_catch==true)    { catched_values ();}
-   
-    if (something_catched==true)    {first_catch=false; }
-
-}
-
-void catching_NaNs_data (float data_4, float data_5, float data_6)
-{
-
-    if (w_r            !=w_r           && first_catch==true)  { catched_wr         ='f'; something_catched=true;}
-    if (V_sD           !=V_sD          && first_catch==true)  { catched_VsD        ='D'; something_catched=true;}
-    if (V_sQ           !=V_sQ          && first_catch==true)  { catched_VsQ        ='Q'; something_catched=true;}
-    if (psi_sD         !=psi_sD        && first_catch==true)  { catched_psisD      ='d'; something_catched=true;}
-    if (psi_sQ         !=psi_sQ        && first_catch==true)  { catched_psisQ      ='q'; something_catched=true;}
-    if (t_e            !=t_e           && first_catch==true)  { catched_te         ='t'; something_catched=true;}
-    if (SVM_pi_control !=SVM_pi_control&& first_catch==true)  { catched_pi_control ='i'; something_catched=true;}
-
-    if(psi_s_ref             !=psi_s_ref             &&first_catch==true){catched_psi_s_ref              ='r'; something_catched=true;}
-    if(psi_s                 !=psi_s                 &&first_catch==true){catched_psi_s                  ='s'; something_catched=true;}
-    if(psi_s_alpha_SVM       !=psi_s_alpha_SVM       &&first_catch==true){catched_psi_s_alpha_SVM        ='a'; something_catched=true;}
-    if(psi_rotating_angle_SVM!=psi_rotating_angle_SVM&&first_catch==true){catched_psi_rotating_angle_SVM ='R'; something_catched=true;}
-    if (i_sD                 !=i_sD                  &&first_catch==true){catched_i_sD                   ='D'; something_catched=true;}
-    if (i_sQ                 !=i_sQ                  &&first_catch==true){catched_i_sQ                   ='Q'; something_catched=true;}
-    if (R_s                  !=R_s                   &&first_catch==true){catched_R_s                    ='r'; something_catched=true;}
-    if (TICK_PERIOD          !=TICK_PERIOD           &&first_catch==true){catched_tick_period            ='T'; something_catched=true;}
- 
-    if (data_4  !=data_4    &&first_catch==true){catched_data_4 ='1'; something_catched=true;}
-    if (data_5  !=data_5    &&first_catch==true){catched_data_5 ='2'; something_catched=true;}
-    if (data_6  !=data_6    &&first_catch==true){catched_data_6 ='3'; something_catched=true;}
- 
-
-    if (something_catched==true && first_catch==true)    { catched_values_data (data_4,data_5,data_6);}
-   
-    if (something_catched==true)    {first_catch=false; }
-
-}
-
 float Ia_peak__short_pulse=0.0f;
 float Ib_peak__short_pulse=0.0f;
 float Ic_peak__short_pulse=0.0f;
@@ -514,7 +374,9 @@ float initial_rotor_angle=0.0f;
 float absolute_initial_rotor_angle=0.0f;
 int   initial_rotor_zone=0;
 
-void SVM_starting_open_loop(bool open_loop,float* VsD, float*VsQ, float Ud, float max_open_loop_frequency)
+
+
+void SVM_starting_open_loop(bool open_loop,float* VsD, float*VsQ, float Ud, float max_open_loop_frequency,float frequency,float reference_frequency)
 {
     static float extra_voltage_angle=0.0f;
     static float extra_load_angle=0.0f;
@@ -522,55 +384,55 @@ void SVM_starting_open_loop(bool open_loop,float* VsD, float*VsQ, float Ud, floa
     static bool increase_permission=true;
 
 
-    if (open_loop==false) { extra_voltage_angle=0.0f;
-                            extra_load_angle=0.0f;
-                            //extra_load_angle_increase=0.0f;
-                            *VsD=*VsD;
-                            *VsQ=*VsQ;
+    if (open_loop==false) 
+    { 
+        extra_voltage_angle=0.0f;
+        extra_load_angle=0.0f;
+        //extra_load_angle_increase=0.0f;
+        *VsD=*VsD;
+        *VsQ=*VsQ;
+    } 
+    else if (open_loop==true) 
+    { 
+        if (reference_frequency==0.0f) 
+        {    
+        //if (t_e_ref==0.0f) {  
+            extra_voltage_angle=0.0f;
+            extra_load_angle=0.0f;
+            extra_load_angle_increase=0.0f;
+            increase_permission=true;
+         }
+        //else if (CUR_FREQ<ref_freq_SVM) extra_load_angle_increase=0.000005f;
+        //else if (CUR_FREQ<250.0f) extra_load_angle_increase=0.000001f; //extra_load_angle_increase=0.00005f;
+        //else if (w_r<10.0f) extra_load_angle_increase=0.00001f; //extra_load_angle_increase=0.00005f;
+        //else if (w_r<ref_freq_SVM && increase_permission==true) 
+        else if (frequency<max_open_loop_frequency && increase_permission==true)
+        {   
+            extra_load_angle_increase=MAXIMUM_OPEN_LOOP_ANGLE_INCREASE; //extra_load_angle_increase=0.00005f;
+        }
+        else  
+        { 
+            extra_load_angle_increase=0.0f;
+            increase_permission=false;
+        }
 
-                            //psi_rotating_angle_SVM=1.0f;
+        extra_load_angle=extra_load_angle+extra_load_angle_increase;
+        extra_voltage_angle=extra_voltage_angle+extra_load_angle;
+        if (extra_voltage_angle>=360.0f) {extra_voltage_angle=extra_voltage_angle-360.0f;}
 
-                          } 
-    else if (open_loop==true) { if (ref_freq_SVM==0.0f) {    
-                                //if (t_e_ref==0.0f) {  
-                                                        extra_voltage_angle=0.0f;
-                                                        extra_load_angle=0.0f;
-                                                        extra_load_angle_increase=0.0f;
-                                                        increase_permission=true;
-                                                     }
-                                //else if (CUR_FREQ<ref_freq_SVM) extra_load_angle_increase=0.000005f;
-                                //else if (CUR_FREQ<250.0f) extra_load_angle_increase=0.000001f; //extra_load_angle_increase=0.00005f;
-                                //else if (w_r<10.0f) extra_load_angle_increase=0.00001f; //extra_load_angle_increase=0.00005f;
-                                //else if (w_r<ref_freq_SVM && increase_permission==true) 
-                                else if (w_r<max_open_loop_frequency && increase_permission==true)
-                                {   
-                                    extra_load_angle_increase=0.00005f; //extra_load_angle_increase=0.00005f;
-                                }
-                                else  
-                                     { extra_load_angle_increase=0.0f;
-                                       increase_permission=false;
-                                     }
-
-                                extra_load_angle=extra_load_angle+extra_load_angle_increase;
-                                extra_voltage_angle=extra_voltage_angle+extra_load_angle;
-                                if (extra_voltage_angle>=360.0f) {extra_voltage_angle=extra_voltage_angle-360.0f;}
-
-                             if (ref_freq_SVM==0.0f) {
-                             //if (t_e_ref==0.0f) {  
-                                                     *VsD = 0.0f;
-                                                     *VsQ = 0.0f;
-                                                  }
-                             else                 {
-                                                     
-                                                     //extra_voltage_angle=45.0f;
-                                                     *VsD = 20.0f*Ud*fast_cos(extra_voltage_angle);
-                                                     *VsQ = 20.0f*Ud*fast_sine(extra_voltage_angle);
-                                                     
-                                                  }
-                                
-              
-
-                           } 
+        if (reference_frequency==0.0f) 
+        //if (t_e_ref==0.0f)
+        {
+            *VsD = 0.0f;
+            *VsQ = 0.0f;
+        }
+        else                 
+        {                                 
+             //extra_voltage_angle=45.0f;
+             *VsD = 20.0f*Ud*fast_cos(extra_voltage_angle);
+             *VsQ = 20.0f*Ud*fast_sine(extra_voltage_angle);
+         }
+     } 
 }
 
 
@@ -627,27 +489,29 @@ void SVM_speed_close_loop(float reference_frequency, float frequency,bool close_
     //float psi_rotating_angle;
     
 
-    if (close_loop_active==false) { *VsD=*VsD;
-                                    *VsQ=*VsQ;
-                                    //psi_rotating_angle_SVM=3.0f;
-                                  } 
-
+    if (close_loop_active==false) 
+    { 
+        *VsD=*VsD;
+        *VsQ=*VsQ;
+        //psi_rotating_angle_SVM=3.0f;
+    } 
     else if (reference_frequency==0.0f)
-                                        { *VsD=0.0f;
-                                    *VsQ=0.0f; }
-
+    { 
+        *VsD=0.0f;
+        *VsQ=0.0f; 
+    }
     else if (close_loop_active==true )//&& CUR_FREQ<500.0f) 
     {  
-       psi_rotating_angle_SVM=315.0f;
-       //sensorless_speed_pi_controller(reference_frequency,frequency, &psi_rotating_angle_SVM); 
+       //psi_rotating_angle_SVM=reference_frequency;//FIXED_LOAD_ANGLE;//15.0f;
+       sensorless_speed_pi_controller(reference_frequency,frequency, &psi_rotating_angle_SVM); 
 
        *VsD = SVM_V_s_ref_D (psi_s_ref,psi_s,psi_s_alpha_SVM,psi_rotating_angle_SVM,i_sD,R_s,2.0f*TICK_PERIOD);
        *VsQ = SVM_V_s_ref_Q (psi_s_ref,psi_s,psi_s_alpha_SVM,psi_rotating_angle_SVM,i_sQ,R_s,2.0f*TICK_PERIOD);
                                                          }
     else 
     {
-      psi_rotating_angle_SVM=315.0f;
-      //sensorless_speed_pi_controller(reference_frequency,frequency, &psi_rotating_angle_SVM); 
+      //psi_rotating_angle_SVM=reference_frequency;//FIXED_LOAD_ANGLE;//15.0f;
+      sensorless_speed_pi_controller(reference_frequency,frequency, &psi_rotating_angle_SVM); 
 
       *VsD = SVM_V_s_ref_D (psi_s_ref,psi_s,psi_s_alpha_SVM,psi_rotating_angle_SVM,i_sD,R_s,2.0f*TICK_PERIOD);
       *VsQ = SVM_V_s_ref_Q (psi_s_ref,psi_s,psi_s_alpha_SVM,psi_rotating_angle_SVM,i_sQ,R_s,2.0f*TICK_PERIOD);
@@ -710,7 +574,7 @@ void SVM_loop_control(float frequency,float maximum_open_loop_frequency,float te
                                                                                           //*open_loop=false;
                                                                                           //*close_loop_SVM=true;
                                                                                       }
-//--
+
 
     else if (SVM_loop_state==OPEN_LOOP_SVM && frequency>=maximum_open_loop_frequency)  {  SVM_loop_state=CLOSE_LOOP_SVM;
                                                                                           *open_loop=false;
@@ -720,7 +584,7 @@ void SVM_loop_control(float frequency,float maximum_open_loop_frequency,float te
                                                                                           // *close_loop_SVM=false;
                                                                                      }
 
-    /*
+    /*  
     else if (SVM_loop_state==CLOSE_LOOP_SVM && shutdown==false)  {  SVM_loop_state=CLOSE_LOOP_SVM;
                                                                     *open_loop=false;
                                                                     *close_loop_SVM=true;
@@ -757,6 +621,8 @@ void  DTC_SVM(void)
 static bool shutdown=true;
   static bool open_loop_SVM  = false;
   static bool close_loop_SVM = false;
+  static bool increase_flux  = false;
+
 if (center_aligned_state==FIRST_HALF)
 {
 
@@ -779,8 +645,8 @@ if (center_aligned_state==FIRST_HALF)
   static float psi_sD_i_neglected=0.0f;
   static float psi_sQ_i_neglected=0.0f;
 
-  flux_linkage_estimator(2.0f*TICK_PERIOD,V_sD,V_sQ,i_sD,i_sQ,R_s,w_r,&psi_sD,&psi_sQ,&psi_s,&psi_s_alpha_SVM);
-  flux_linkage_estimator_neglected_currents (2.0f*TICK_PERIOD,V_sD,V_sQ,w_r,&psi_sD_i_neglected,&psi_sQ_i_neglected);
+  flux_linkage_estimator(2.0f*TICK_PERIOD,V_sD,V_sQ,i_sD,i_sQ,R_s,CUR_FREQ,&psi_sD,&psi_sQ,&psi_s,&psi_s_alpha_SVM);
+  //flux_linkage_estimator_neglected_currents (2.0f*TICK_PERIOD,V_sD,V_sQ,&psi_sD_i_neglected,&psi_sQ_i_neglected);
 
   
 
@@ -809,33 +675,39 @@ if (center_aligned_state==FIRST_HALF)
   t_e       = electromagnetic_torque_estimation_t_e   (psi_sD,i_sQ,psi_sQ,i_sD,pole_pairs);
   //t_e       = electromagnetic_torque_estimation_t_e   (psi_sD_i_neglected,i_sQ,psi_sQ_i_neglected,i_sD,pole_pairs);
  
-} 
-
-
-else
-{
 
   //t_e =  te_moving_average_filter(t_e);
 
 
   //t_e_ref = DTC_torque_reference_PI                 (CUR_FREQ, ref_freq);
   //psi_s_ref = stator_flux_linkage_reference_psi_s_ref (psi_F,t_e_ref,L_sq,pole_pairs);
-  psi_s_ref = psi_F;
 
+
+  psi_s_ref=psi_F;
 
   //--------------------------------SVM algorithm--------------------------------------------//
 
-  SVM_starting_open_loop(open_loop_SVM,&V_sD,&V_sQ,U_d,MAXIMUM_OPEN_LOOP_SPEED);
-  //SVM_speed_close_loop(ref_freq_SVM,CUR_FREQ,close_loop_SVM,&V_sD,&V_sQ);
-  SVM_speed_close_loop(ref_freq_SVM,w_r,close_loop_SVM,&V_sD,&V_sQ);
-  //SVM_torque_close_loop(t_e_ref,t_e,close_loop_SVM,&V_sD,&V_sQ);
-  SVM_loop_control(w_r,MAXIMUM_OPEN_LOOP_SPEED,t_e_ref,ref_freq_SVM,&open_loop_SVM,&close_loop_SVM); 
+  SVM_starting_open_loop(open_loop_SVM,&V_sD,&V_sQ,U_d,MAXIMUM_OPEN_LOOP_SPEED,CUR_FREQ,ref_freq_SVM);
 
+} 
+
+
+else
+{
+  //SVM_speed_close_loop(ref_freq_SVM,CUR_FREQ,close_loop_SVM,&V_sD,&V_sQ);
+  SVM_speed_close_loop(ref_freq_SVM,CUR_FREQ,close_loop_SVM,&V_sD,&V_sQ);
+
+  //SVM_torque_close_loop(t_e_ref,t_e,close_loop_SVM,&V_sD,&V_sQ);
+  SVM_loop_control(CUR_FREQ,MAXIMUM_OPEN_LOOP_SPEED,t_e_ref,ref_freq_SVM,&open_loop_SVM,&close_loop_SVM); 
 
   fast_vector_angle_and_magnitude(V_sQ,V_sD,&V_s,&cita_V_s);
 
+  required_V_sD     =   V_sD;
+  required_V_sQ     =   V_sQ;
+  required_V_s      =   V_s;
+  required_cita_V_s =   cita_V_s;
 
-  SVM_Maximum_allowed_V_s_ref (&V_sD,&V_sQ,&V_s,U_d*UD_PERCENTAGE);//0.70f);
+  SVM_Maximum_allowed_V_s_ref (&V_sD,&V_sQ,&V_s,U_d*UD_PERCENTAGE,&increase_flux);//0.70f);
   V_s_ref_relative_angle = SVM_V_s_relative_angle      (cita_V_s);
 
   float V_s_duty_cycle=0.0f;
