@@ -71,9 +71,17 @@ void sensorless_speed_pi_controller(
   if (reference_frequency!=0.0f)
     *rotating_angle=pi_control_sensorless;
   else 
-    *rotating_angle=0.0f;  
+    *rotating_angle=0.0f;
 
 
+/*
+  if ( (frequency<reference_frequency*1.05f) && (frequency>reference_frequency*0.95f) )
+    *rotating_angle=1.0f;
+  else if (frequency>reference_frequency)
+    *rotating_angle=1.0f;
+  else
+    *rotating_angle=60.0f;
+*/
   SVM_pi_control=*rotating_angle;           //pi_control_sensorless
   phase_advance_SVM=pi_control_sensorless;  //*rotating_angle;//pi_control_sensorless;
   //pi_max=*rotating_angle;                 //P_MAX_SENSORLESS;//*interrupt_frequency;

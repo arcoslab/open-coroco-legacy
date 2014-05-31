@@ -57,7 +57,7 @@ class Serial_Stm32f4(object):
         self.read_capture_state = 'not_collecting'
         self.tag_comment        = ''
         #self.aditional_comment=', STATOR_RESISTANCE_TEST 240degrees,MULTI_ROTOR OPEN LOOP,wrong motor parameters,one psi,wr filt,te filt,k 0.2, actual i,open 0.00005f,Ud 40%,psi_ref=0.0016,38kpwm'
-        self.aditional_comment=', Multi,12V,Ud 80%,openSVM 50Hz,psiF 0.01,70degrees,40k pwm,Ud=actual,te wr actual'
+        self.aditional_comment=', Vexta,24V,Ud 60%,openSVM 0.0005 inc,40k pwm,te wr ignoring currents'
         self.driving_counter    = 0
         self.various_counter     = 0
         self.type_of_test       = 0        
@@ -565,7 +565,7 @@ class Serial_Stm32f4(object):
                 self.required_VsD_vector.append(self.required_VsD)
                 self.required_VsQ_vector.append(self.required_VsQ)
                 self.required_Vs_vector.append(self.required_Vs)
-                self.required_Vs_cita_vector.append(self.requierd_Vs_cita)
+                self.required_Vs_cita_vector.append(self.required_Vs_cita)
 
                 self.psi_sD_vector.append(self.psi_sD)
                 self.psi_sQ_vector.append(self.psi_sQ)
@@ -704,6 +704,7 @@ class Serial_Stm32f4(object):
 
         elif self.print_selection==4:
             self.new_data_line= "t: %6.2f "                  %self.time                + \
+                                " req_Vs: %6.2f"             %self.required_Vs         + \
                                 " Vs: %6.2f"                 %self.Vs                  + \
                                 " Ud: %6.2f"                 %self.Ud                  + extra_information
                                 #" Vs_cita: %6.2f"            %self.Vs_cita             + \
@@ -980,7 +981,7 @@ class Serial_Stm32f4(object):
     def plot_voltage_magnitude(self,rows,columns,subplot_index):  
   
                         plt.subplot(rows,columns,subplot_index)
-                        plt.plot(self.time_vector, self.required_Vs_vector,self.plotting_character,label='required_Vs')
+                        #plt.plot(self.time_vector, self.required_Vs_vector,self.plotting_character,label='required_Vs')
                         plt.plot(self.time_vector, self.Vs_vector,self.plotting_character,label='Vs')
                         plt.plot(self.time_vector, self.Ud_vector,self.plotting_character,label='Ud')
                         plt.title('voltage vs time'+self.title_extra)
@@ -2069,6 +2070,13 @@ class Serial_Stm32f4(object):
 
                     #updating reference frequency
                     if     split_command[0]=='d':
+                        self.write_a_line(line)
+
+                    #load angle
+                    elif     split_command[0]=='L':
+                        self.write_a_line(line)
+                    #psi_ref
+                    elif     split_command[0]=='F':
                         self.write_a_line(line)
 
                     #updating reference torque

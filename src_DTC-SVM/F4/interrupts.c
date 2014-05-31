@@ -146,6 +146,7 @@ void adc_isr(void)
   float V_stm32_Ud = 0.0f;
   float V_shunt_A  = 0.0f;
   float V_shunt_B  = 0.0f;
+  float V_strain_gauge =0.0f;
   
 
   if (adc_counter==0)
@@ -180,8 +181,8 @@ void adc_isr(void)
     V_shunt_B = (V_stm32_B*(VREF/ADC_CONVERSION_FACTOR)-V_DIFFERENTIAL_AMPLIFIER_REFFERENCE_B)/G_OP_AMP_B;
     i_sB      = V_shunt_B/R_SHUNT_B;
 
-    strain_gauge=V_stm32_strain_gauge*(VREF/ADC_CONVERSION_FACTOR);
-
+    V_strain_gauge=V_stm32_strain_gauge*(VREF/ADC_CONVERSION_FACTOR);
+    strain_gauge = V_strain_gauge-STRAIN_GAUGE_REFERENCE_VOLTAGE;
     //filtering currents
 
     //i_sA = isA_moving_average_filter(i_sA);

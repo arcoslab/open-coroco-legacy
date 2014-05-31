@@ -37,8 +37,9 @@ bool collected_permission=false;
 bool initial_rotor_position_start=false;
 
 
-
-
+float  psi_ref_user=0.0f;
+bool   user_input  =false;
+float  load_angle=0.0f;
 
 
 float timer=0.0f;
@@ -300,7 +301,18 @@ void frequency_input(void)
 
         pi_mode=0;  //speed pi controller
 
-      }	 
+      }	
+
+      if (strcmp(cmd, "L") == 0)
+      {
+        load_angle=value;
+      }
+      if (strcmp(cmd, "F") == 0)
+      {
+        psi_ref_user=value;
+        user_input  =true;
+      }
+ 
 
       if (strcmp(cmd, "Q") == 0)
       {

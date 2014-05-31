@@ -204,11 +204,11 @@ void flux_linkage_estimator (float T,float V_sD,float V_sQ,float i_sD,float i_sQ
 
 
 
-//fixed wcutoff, lag compensation
-  //LPF_psi_sD = ( previous_psi_sD+T*(V_sD-i_sD*R_s) )/(1.0f+T*( 2.0f*PI_CTE*F_CUTOFF));
-  //LPF_psi_sQ = ( previous_psi_sQ+T*(V_sQ-i_sQ*R_s) )/(1.0f+T*( 2.0f*PI_CTE*F_CUTOFF));
+  //fixed cutoff frequency
+    //LPF_psi_sD = ( previous_psi_sD+T*(V_sD-i_sD*R_s) )/(1.0f+T*( 2.0f*PI_CTE*F_CUTOFF));
+    //LPF_psi_sQ = ( previous_psi_sQ+T*(V_sQ-i_sQ*R_s) )/(1.0f+T*( 2.0f*PI_CTE*F_CUTOFF));   
 
-  
+
   if (K_LPF*electric_frequency<5.0f)
   {
     LPF_psi_sD = ( previous_psi_sD+T*(V_sD-i_sD*R_s) )/(1.0f+T*( 2.0f*PI_CTE*F_CUTOFF));
@@ -223,6 +223,9 @@ void flux_linkage_estimator (float T,float V_sD,float V_sQ,float i_sD,float i_sQ
     //LPF_psi_sD = ( previous_psi_sD+T*(V_sD) )/(1.0f+T*( K_LPF*2.0f*PI_CTE*electric_frequency));
     //LPF_psi_sQ = ( previous_psi_sQ+T*(V_sQ) )/(1.0f+T*( K_LPF*2.0f*PI_CTE*electric_frequency)); 
   }
+/**/
+
+
   //LPF_psi_sD = ( previous_psi_sD+T*(V_sD) )/(1.0f+T*( 2.0f*PI_CTE*F_CUTOFF));
   //LPF_psi_sQ = ( previous_psi_sQ+T*(V_sQ) )/(1.0f+T*( 2.0f*PI_CTE*F_CUTOFF));
 
