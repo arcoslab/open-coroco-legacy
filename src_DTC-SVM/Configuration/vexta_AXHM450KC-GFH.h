@@ -35,9 +35,9 @@
 
 //PID parameters
 
-float P_SENSORLESS_SVM      = 0.000001f; 
-float P_DOWN_SENSORLESS_SVM = 0.000001f; 
-float fake_P_SENSORLESS_SVM = 0.000001f;
+float P_SENSORLESS_SVM      = 0.00001f; 
+float P_DOWN_SENSORLESS_SVM = 0.00001; 
+float fake_P_SENSORLESS_SVM = 0.00001f;
 float I_SENSORLESS_SVM      = 0.0f;
 float I_DOWN_SENSORLESS_SVM = 0.0f;
 float fake_I_SENSORLESS_SVM = 0.0f;
@@ -79,7 +79,7 @@ float fake_I_SENSORLESS_TORQUE = 0.0f;
 
 
 //Battey
-#define UD_PERCENTAGE   0.8f    //0.8f
+#define UD_PERCENTAGE   0.7f    //0.8f
 #define MAXIMUM_OPEN_LOOP_SPEED 1.0f
 #define MAXIMUM_OPEN_LOOP_ANGLE_INCREASE 0.0005f//0.0005f
 
