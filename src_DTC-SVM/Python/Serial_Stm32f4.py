@@ -57,7 +57,7 @@ class Serial_Stm32f4(object):
         self.read_capture_state = 'not_collecting'
         self.tag_comment        = ''
         #self.aditional_comment=', STATOR_RESISTANCE_TEST 240degrees,MULTI_ROTOR OPEN LOOP,wrong motor parameters,one psi,wr filt,te filt,k 0.2, actual i,open 0.00005f,Ud 40%,psi_ref=0.0016,38kpwm'
-        self.aditional_comment=', Vexta,24V,Ud 60%,openSVM 0.0005 inc,40k pwm,te wr ignoring currents'
+        self.aditional_comment=', Vexta,24V,Ud 80%,openSVM 0.0005max,P 0.000001,40k pwm,te wr ignoring currents'
         self.driving_counter    = 0
         self.various_counter     = 0
         self.type_of_test       = 0        

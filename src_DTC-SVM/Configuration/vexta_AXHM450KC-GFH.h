@@ -35,6 +35,13 @@
 
 //PID parameters
 
+float P_SENSORLESS_SVM      = 0.000001f; 
+float P_DOWN_SENSORLESS_SVM = 0.000001f; 
+float fake_P_SENSORLESS_SVM = 0.000001f;
+float I_SENSORLESS_SVM      = 0.0f;
+float I_DOWN_SENSORLESS_SVM = 0.0f;
+float fake_I_SENSORLESS_SVM = 0.0f;
+
 float P_SENSORLESS      = 0.8f; 
 float P_DOWN_SENSORLESS = 0.8f; 
 float fake_P_SENSORLESS = 0.8f;
@@ -52,6 +59,12 @@ float fake_I_SENSORLESS_TORQUE = 0.0f;
 
 
 //maximum load angle 70
+
+#define I_MAX_SENSORLESS_SVM            0.0005f//  0.0005f//(90.0f*frequency/interrupt_frequency) 
+#define P_MAX_SENSORLESS_SVM            0.0005f//  0.0005f//(90.0f*frequency/interrupt_frequency) 
+#define PI_MAX_SENSORLESS_SVM           0.0005f//  0.0005f//(90.0f*frequency/interrupt_frequency) 
+#define PI_MIN_SENSORLESS_SVM          -0.0005f// -0.0005f//-(90.0f*frequency/interrupt_frequency) 
+
 #define I_MAX_SENSORLESS            60.0f//  0.0005f//(90.0f*frequency/interrupt_frequency) 
 #define P_MAX_SENSORLESS            60.0f//  0.0005f//(90.0f*frequency/interrupt_frequency) 
 #define PI_MAX_SENSORLESS           60.0f//  0.0005f//(90.0f*frequency/interrupt_frequency) 
@@ -66,8 +79,8 @@ float fake_I_SENSORLESS_TORQUE = 0.0f;
 
 
 //Battey
-#define UD_PERCENTAGE   0.6f    //0.8f
-#define MAXIMUM_OPEN_LOOP_SPEED 20.0f
+#define UD_PERCENTAGE   0.8f    //0.8f
+#define MAXIMUM_OPEN_LOOP_SPEED 1.0f
 #define MAXIMUM_OPEN_LOOP_ANGLE_INCREASE 0.0005f//0.0005f
 
 //Hall sensor parameters
