@@ -36,7 +36,7 @@
 //PID parameters
 
 float P_SENSORLESS_SVM      = 0.00001f; 
-float P_DOWN_SENSORLESS_SVM = 0.00001; 
+float P_DOWN_SENSORLESS_SVM = 0.00001f; 
 float fake_P_SENSORLESS_SVM = 0.00001f;
 float I_SENSORLESS_SVM      = 0.0f;
 float I_DOWN_SENSORLESS_SVM = 0.0f;
