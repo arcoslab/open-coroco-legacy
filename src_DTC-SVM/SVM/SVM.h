@@ -18,8 +18,26 @@
  */
 
 
-void SVM_starting_open_loop(bool open_loop,float* VsD, float*VsQ, float U_d,float maximum_open_loop_speed,float frequency,float reference_frequency);
-void SVM_speed_close_loop_of_voltage_frequency(float reference_frequency, float frequency,bool close_loop_active, float* VsD, float* VsQ,float Ud,bool shutdown);
+void SVM_starting_open_loop(
+                            bool  open_loop,
+                            float * VsD, 
+                            float *VsQ, 
+                            float U_d,
+                            float maximum_open_loop_speed,
+                            float frequency,
+                            float reference_frequency
+                           );
+
+float SVM_speed_close_loop_of_voltage_frequency(
+                                                float reference_frequency, 
+                                                float frequency,
+                                                bool close_loop_active, 
+                                                float* VsD, 
+                                                float* VsQ,
+                                                float Ud,
+                                                bool shutdown
+                                               );
+
 void SVM_speed_close_loop(float reference_frequency, float frequency,bool close_loop_active, float* VsD, float*     VsQ);
 void SVM_torque_close_loop(float reference_torque, float torque,bool close_loop_active, float* VsD, float* VsQ);    
 void SVM_loop_control(float frequency,float maximum_open_loop_frequency,float te_ref, float freq_ref, bool* open_loop, bool* close_loop);

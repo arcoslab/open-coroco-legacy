@@ -35,11 +35,10 @@ float gear_frequency                = 0.0f;
 
 
 
-float admittance_controller(    float stiffness,
-                                float damping,
+float admittance_controller(    float K,
+                                float D,
                                 float reference_angle,
                                 float angle,
-                                float frequency,
                                 float torque );
 
 float mechanic_motor_to_electric(float value);

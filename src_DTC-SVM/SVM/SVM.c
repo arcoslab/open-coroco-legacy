@@ -486,7 +486,7 @@ void SVM_starting_open_loop(bool open_loop,float* VsD, float*VsQ, float Ud)
 
 
 
-void SVM_speed_close_loop_of_voltage_frequency(float reference_frequency, float frequency,bool close_loop_active, float* VsD, float* VsQ,float Ud,bool shutdown)
+float SVM_speed_close_loop_of_voltage_frequency(float reference_frequency, float frequency,bool close_loop_active, float* VsD, float* VsQ,float Ud,bool shutdown)
 {
 
     static float extra_voltage_angle=0.0f;
@@ -498,12 +498,20 @@ void SVM_speed_close_loop_of_voltage_frequency(float reference_frequency, float 
     {
         *VsD=0.0f;
         *VsQ=0.0f;
+
+        //extra_voltage_angle=0.0f;
+        extra_load_angle=0.0f;
+        extra_load_angle_increase=0.0f;
+        
     }
 
     else if (close_loop_active==false) 
     { 
         *VsD=*VsD;
         *VsQ=*VsQ;
+        //extra_voltage_angle=0.0f;
+        extra_load_angle=0.0f;
+        extra_load_angle_increase=0.0f;
     } 
 
     else if (close_loop_active==true )
@@ -518,6 +526,7 @@ void SVM_speed_close_loop_of_voltage_frequency(float reference_frequency, float 
        *VsQ = 20.0f*Ud*fast_sine(extra_voltage_angle);
    } 
 
+   return extra_load_angle;
 }
 
 
@@ -596,7 +605,11 @@ void SVM_torque_close_loop(float reference_torque, float torque,bool close_loop_
 void SVM_loop_control(float frequency,float maximum_open_loop_frequency,float te_ref, float freq_ref, bool* open_loop, bool* close_loop_SVM)
 {
     static int SVM_loop_state=INITIAL_SVM;
+    
+    *open_loop=false;
+    *close_loop_SVM=true;
 
+/*
     if      (SVM_loop_state==INITIAL_SVM && te_ref==0.0f && freq_ref==0.0f)  {   SVM_loop_state=INITIAL_SVM;
                                                                                  *open_loop=false;
                                                                                  *close_loop_SVM=false;
@@ -604,24 +617,20 @@ void SVM_loop_control(float frequency,float maximum_open_loop_frequency,float te
     else if (SVM_loop_state==INITIAL_SVM && (te_ref!=0.0f || freq_ref!=0.0f) )  {   SVM_loop_state=OPEN_LOOP_SVM;
                                                                                     *open_loop=true;
                                                                                     *close_loop_SVM=false;
-                                                                                    //*open_loop=false;
-                                                                                    //*close_loop_SVM=true;
+                                                                          
                                                                                 }
     else if (SVM_loop_state==OPEN_LOOP_SVM && frequency<maximum_open_loop_frequency)  {   SVM_loop_state=OPEN_LOOP_SVM;
                                                                                           *open_loop=true;
                                                                                           *close_loop_SVM=false;
-                                                                                          //*open_loop=false;
-                                                                                          //*close_loop_SVM=true;
+                                                                              
                                                                                       }
 
 
     else if (SVM_loop_state==OPEN_LOOP_SVM && frequency>=maximum_open_loop_frequency)  {  SVM_loop_state=CLOSE_LOOP_SVM;
                                                                                           *open_loop=false;
                                                                                           *close_loop_SVM=true;
-                                                                                          // SVM_loop_state=OPEN_LOOP_SVM;
-                                                                                          // *open_loop=true;
-                                                                                          // *close_loop_SVM=false;
-                                                                                     }
+                                                                                       }
+*/
 
 /*    
     else if (SVM_loop_state==CLOSE_LOOP_SVM && shutdown==false)  {  SVM_loop_state=CLOSE_LOOP_SVM;
@@ -729,7 +738,7 @@ if (center_aligned_state==FIRST_HALF)
   //--------------------------------SVM algorithm--------------------------------------------//
 
   //SVM_starting_open_loop(open_loop_SVM,&V_sD,&V_sQ,U_d,MAXIMUM_OPEN_LOOP_SPEED,CUR_FREQ,ref_freq_SVM);
-  SVM_starting_open_loop(open_loop_SVM,&V_sD,&V_sQ,U_d,ref_freq_SVM,CUR_FREQ,ref_freq_SVM);
+  //SVM_starting_open_loop(open_loop_SVM,&V_sD,&V_sQ,U_d,ref_freq_SVM,CUR_FREQ,ref_freq_SVM);
   //SVM_starting_open_loop(open_loop_SVM,&V_sD,&V_sQ,U_d,ref_freq_SVM,w_r,ref_freq_SVM);
 } 
 
@@ -739,7 +748,25 @@ else
   //SVM_speed_close_loop(ref_freq_SVM,CUR_FREQ,close_loop_SVM,&V_sD,&V_sQ);
   //SVM_speed_close_loop(ref_freq_SVM,w_r,close_loop_SVM,&V_sD,&V_sQ);
   //SVM_speed_close_loop_of_voltage_frequency(ref_freq_SVM,CUR_FREQ,close_loop_SVM,&V_sD,&V_sQ,U_d,shutdown);   
-    SVM_speed_close_loop_of_voltage_frequency(ref_freq_SVM,w_r,close_loop_SVM,&V_sD,&V_sQ,U_d,shutdown); 
+
+  
+/*
+  ref_freq_SVM = admittance_controller    (
+                                            stiffness,
+                                            damping,
+                                            reference_electric_angle,
+                                            electric_angle,
+                                            strain_gauge
+                                            );
+*/
+  electric_angle= electric_angle+SVM_speed_close_loop_of_voltage_frequency(ref_freq_SVM,w_r,close_loop_SVM,&V_sD,&V_sQ,U_d,shutdown); 
+
+  if (electric_angle>=360.0f*pole_pairs*gear_ratio)
+    electric_angle=electric_angle-360.0f*pole_pairs*gear_ratio;
+  if (electric_angle<0.0f)
+    electric_angle=electric_angle+360.0f*pole_pairs*gear_ratio;
+
+
   //SVM_torque_close_loop(t_e_ref,t_e,close_loop_SVM,&V_sD,&V_sQ);
   SVM_loop_control(CUR_FREQ,MAXIMUM_OPEN_LOOP_SPEED,t_e_ref,ref_freq_SVM,&open_loop_SVM,&close_loop_SVM); 
 

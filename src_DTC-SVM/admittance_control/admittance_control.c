@@ -16,3 +16,21 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+float admittance_controller(    float K,
+                                float D,
+                                float reference_angle,
+                                float angle,
+                                float torque )
+{
+    if (angle<1.05f*reference_angle && angle>0.95f*reference_angle)
+        return 0.0f;
+
+    else if (angle<reference_angle)
+        return 100.0f;
+    else if (angle>reference_angle)
+        return -100.0f;
+    else 
+        return 0.0f;
+    //return (K/D) * (reference_angle-angle) -torque;
+}

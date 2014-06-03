@@ -321,7 +321,11 @@ void frequency_input(void)
         collected_permission=true;
         regular_print=true;
         dtc_on=true;
-        reference_electric_angle=value;
+
+        reference_electric_angle    =   value;
+        reference_mechanical_angle  =   reference_electric_angle/pole_pairs_0;
+        reference_gear_angle        =   reference_mechanical_angle/gear_ratio;
+
         motor_off=false;
 
         if (reference_electric_angle==0.0f) 
@@ -340,7 +344,11 @@ void frequency_input(void)
         collected_permission=true;
         regular_print=true;
         dtc_on=true;
+
         reference_mechanical_angle=value;
+        reference_electric_angle=reference_mechanical_angle*pole_pairs_0;
+        reference_gear_angle=reference_mechanical_angle/gear_ratio;
+
         motor_off=false;
 
         if (reference_mechanical_angle==0.0f) 
@@ -359,7 +367,11 @@ void frequency_input(void)
         collected_permission=true;
         regular_print=true;
         dtc_on=true;
+
         reference_gear_angle=value;
+        reference_mechanical_angle=reference_gear_angle*gear_ratio;
+        reference_electric_angle=reference_mechanical_angle*pole_pairs_0;
+
         motor_off=false;
 
         if (reference_electric_angle==0.0f) 
