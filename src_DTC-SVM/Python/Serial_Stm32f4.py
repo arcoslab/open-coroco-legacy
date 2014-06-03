@@ -213,6 +213,23 @@ class Serial_Stm32f4(object):
         self.data_5                 = 0.0
         self.data_6                 = 0.0
 
+        #admittance controller
+        self.stiffness = 0.0
+        self.damping   = 0.0
+        self.reference_electric_angle = 0.0
+        self.reference_mechanic_angle = 0.0
+        self.reference_gear_angle     = 0.0
+        self.electric_angle           = 0.0
+        self.mechanic_angle           = 0.0
+        self.gear_angle               = 0.0
+        self.electric_frequency       = 0.0
+        self.mechanic_frequency       = 0.0
+        self.gear_frequency           = 0.0
+
+        self.pole_pairs               = 5.0
+        self.gear_ratio               = 200.0
+
+
     def creating_data_vectors(self):
         self.time_vector = []
         self.reference_frequency_vector = []
@@ -256,6 +273,19 @@ class Serial_Stm32f4(object):
         self.data_3_vector          = []
         self.data_4_vector          = []
         self.data_5_vector          = []
+
+        self.stiffness_vector                = []
+        self.damping_vector                  = []
+        self.reference_electric_angle_vector = []
+        self.reference_mechanic_angle_vector = []
+        self.reference_gear_angle_vector     = []
+        self.electric_angle_vector           = []
+        self.mechanic_angle_vector           = []
+        self.gear_angle_vector               = []
+        self.electric_frequency_vector       = []
+        self.mechanic_frequency_vector       = []
+        self.gear_frequency_vector           = []
+
 
 
     def connecting_to_stm32F4(self):
@@ -365,6 +395,7 @@ class Serial_Stm32f4(object):
 
 
 
+
     def read_data_from_stm32_strings(self):
         bytes = 1
         string=''
@@ -391,7 +422,10 @@ class Serial_Stm32f4(object):
                 if   (split_string[split_counter]=='t'):   self.time                =float(split_string[split_counter+1])
                 elif (split_string[split_counter]=='r'):   self.reference_frequency =float(split_string[split_counter+1])
                 elif (split_string[split_counter]=='h'):   self.hall_frequency      =float(split_string[split_counter+1])
-                elif (split_string[split_counter]=='e'):   self.electric_frequency  =float(split_string[split_counter+1])
+                elif (split_string[split_counter]=='e'):   
+                    self.electric_frequency  =float(split_string[split_counter+1])
+                    self.mechanic_frequency  =self.electric_frequency/self.pole_pairs
+                    self.gear_frequency      =self.mechanic_frequency/self.gear_ratio
 
  
                 elif (split_string[split_counter]=='A'):   self.isA =float(split_string[split_counter+1])
@@ -421,6 +455,49 @@ class Serial_Stm32f4(object):
                 elif (split_string[split_counter]=='<'):   self.load_angle        =float(split_string[split_counter+1])
 
                 elif (split_string[split_counter]=='G'):   self.strain_gauge      =float(split_string[split_counter+1])
+
+                elif (split_string[split_counter]=='f'):   self.stiffness               =float(split_string[split_counter+1])
+                elif (split_string[split_counter]=='M'):   self.damping                 =float(split_string[split_counter+1])
+ 
+                elif (split_string[split_counter]=='E'):   
+                    self.reference_electric_angle   =float(split_string[split_counter+1])
+                    self.reference_mechanic_angle   =self.reference_electric_angle/self.pole_pairs
+                    self.reference_gear_angle       =self.reference_mechanic_angle/self.gear_ratio
+
+                elif (split_string[split_counter]=='J'):   
+                    self.reference_mechanic_angle   =float(split_string[split_counter+1])
+                    self.reference_gear_angle       =self.reference_mechanical_angle/self.gear_ratio
+                    self.reference_electric_angle   =self.reference_mechanical_angle*self.pole_pairs
+
+                elif (split_string[split_counter]=='o'):   
+                    self.reference_gear_angle       =float(split_string[split_counter+1])
+                    self.reference_mechanic_angle   =self.reference_gear_angle*self.gear_ratio
+                    self.reference_electric_angle   =self.reference_mechanic_angle*self.pole_pairs
+
+                elif (split_string[split_counter]=='g'):   
+                    self.electric_angle             =float(split_string[split_counter+1])   
+                    self.mechanic_angle             =self.electric_angle/self.pole_pairs
+                    self.gear_angle                 =self.mechanic_angle/self.gear_ratio
+      
+                elif (split_string[split_counter]=='b'):   
+                    self.mechanic_angle             =float(split_string[split_counter+1])
+                    self.electric_angle             =self.mechanic_angle*self.pole_pairs
+                    self.gear_angle                 =self.mechanic_angle/self.gear_ratio
+
+                elif (split_string[split_counter]=='a'):   
+                    self.gear_angle                 =float(split_string[split_counter+1]) 
+                    self.mechanic_angle             =self.gear_angle*self.gear_ratio
+                    self.electric_angle             =self.mechanic_angle*self.pole_pairs
+
+                elif (split_string[split_counter]=='F'):   
+                    self.mechanic_frequency         =float(split_string[split_counter+1]) 
+                    self.gear_frequency             =self.mechanic_frequency/self.gear_ratio
+                    self.electric_frequency         =self.mechanic_frequency/self.pole_pairs            
+
+                elif (split_string[split_counter]=='H'):   
+                    self.gear_frequency             =float(split_string[split_counter+1]) 
+                    self.mechanic_frequency         =self.gear_frequency*self.gear_ratio
+                    self.electric_frequency         =self.mechanic_frequency*self_pole_pairs
 
 
 
@@ -454,8 +531,10 @@ class Serial_Stm32f4(object):
                 if   (single_character=='t'):   self.time                =self.get_data_and_checksum()
                 elif (single_character=='r'):   self.reference_frequency =self.get_data_and_checksum()
                 elif (single_character=='h'):   self.hall_frequency      =self.get_data_and_checksum()
-                elif (single_character=='e'):   self.electric_frequency  =self.get_data_and_checksum()
-
+                elif (single_character=='e'):   
+                    self.electric_frequency  =self.get_data_and_checksum()
+                    self.mechanic_frequency  =self.electric_frequency/self.pole_pairs
+                    self.gear_frequency      =self.mechanic_frequency/self.gear_ratio
  
                 elif (single_character=='A'):   self.isA =self.get_data_and_checksum()
                 elif (single_character=='B'):   self.isB =self.get_data_and_checksum()
@@ -501,8 +580,61 @@ class Serial_Stm32f4(object):
                 elif (single_character=='9'):   self.Ic_peak__short_pulse =self.get_data_and_checksum()
                 elif (single_character=='0'):   self.initial_rotor_angle  =self.get_data_and_checksum()         
                 elif (single_character=='_'):   self.absolute_initial_rotor_angle  =self.get_data_and_checksum()
-                elif (single_character=='-'):   self.initial_rotor_zone   =self.get_data_and_checksum()    
+                elif (single_character=='-'):   self.initial_rotor_zone   =self.get_data_and_checksum() 
 
+                #admitance control
+                elif (single_character=='f'):   self.stiffness                  =self.get_data_and_checksum()
+                elif (single_character=='M'):   self.damping                    =self.get_data_and_checksum()
+
+                elif (single_character=='E'):   
+                    self.reference_electric_angle   =self.get_data_and_checksum()
+                    self.reference_mechanic_angle   =self.reference_electric_angle/self.pole_pairs
+                    self.reference_gear_angle       =self.reference_mechanic_angle/self.gear_ratio
+
+                elif (single_character=='J'):   
+                    self.reference_mechanic_angle   =self.get_data_and_checksum()
+                    self.reference_gear_angle       =self.reference_mechanic_angle/self.gear_ratio
+                    self.reference_electric_angle   =self.reference_mechanic_angle*self.pole_pairs
+
+                elif (single_character=='o'):   
+                    self.reference_gear_angle       =self.get_data_and_checksum()
+                    self.reference_mechanic_angle   =self.reference_gear_angle*self.gear_ratio
+                    self.reference_electric_angle   =self.reference_mechanic_angle*self.pole_pairs
+
+                elif (single_character=='g'):   
+                    self.electric_angle             =self.get_data_and_checksum()   
+                    self.mechanic_angle             =self.electric_angle/self.pole_pairs
+                    self.gear_angle                 =self.mechanic_angle/self.gear_ratio
+      
+                elif (single_character=='b'):   
+                    self.mechanic_angle             =self.get_data_and_checksum()
+                    self.electric_angle             =self.mechanic_angle*self.pole_pairs
+                    self.gear_angle                 =self.mechanic_angle/self.gear_ratio
+
+                elif (single_character=='a'):   
+                    self.gear_angle                 =self.get_data_and_checksum() 
+                    self.mechanic_angle             =self.gear_angle*self.gear_ratio
+                    self.electric_angle             =self.mechanic_angle*self.pole_pairs
+
+                elif (single_character=='F'):   
+                    self.mechanic_frequency         =self.get_data_and_checksum() 
+                    self.gear_frequency             =self.mechanic_frequency/self.gear_ratio
+                    self.electric_frequency         =self.mechanic_frequency/self.pole_pairs            
+
+                elif (single_character=='H'):   
+                    self.gear_frequency             =self.get_data_and_checksum() 
+                    self.mechanic_frequency         =self.gear_frequency*self.gear_ratio
+                    self.electric_frequency         =self.mechanic_frequency*self.pole_pairs
+                    '''
+                    S
+                    T
+                    u
+                    V
+                    w
+                    Y
+                    z
+                    Z
+                    '''
                 elif (single_character=='N'):   
                     self.exception  = self.ser.read(bytes)
                     self.exception += self.ser.read(bytes)
@@ -750,6 +882,24 @@ class Serial_Stm32f4(object):
                                 " Vs:  %6.2f" %math.sqrt(self.required_VsQ*self.required_VsQ+self.required_VsD*self.required_VsD) + \
                                 " Vs_cita: %6.2f"            %self.vector_angle(self.required_VsQ,self.required_VsD)     + extra_information
 
+        elif self.print_selection==15:
+            self.new_data_line= "t: %6.2f "             %self.time                          + \
+                                " K: %6.2f"              %self.stiffness                     + \
+                                " D: %6.2f"              %self.damping                       + \
+                                " r_e: %6.2f"  %self.reference_electric_angle      + \
+                                " r_m: %6.2f"    %self.reference_mechanic_angle      + \
+                                " r_g: %6.2f"   %self.reference_gear_angle          + \
+                                " e: %6.2f"      %self.electric_angle                + \
+                                " m: %6.2f"        %self.mechanic_angle                + \
+                                " g: %6.2f"       %self.gear_angle                    + \
+                                " e_f: %6.2f"     %self.electric_frequency            + \
+                                " m_f: %6.2f"     %self.mechanic_frequency         + \
+                                " g_f: %6.2f"     %self.gear_frequency                 + extra_information
+
+
+
+
+
 
         elif self.print_selection==11:
                 self.new_data_line= "t %6.2f "                  %self.time                      + \
@@ -894,6 +1044,43 @@ class Serial_Stm32f4(object):
 
 
     #adding a '*' or 'o'after the two vectors allows to plot points instead of a continuos line 
+
+
+
+
+
+    def plot_electric_angles(self,rows,columns,subplot_index):
+
+        plt.subplot(rows,columns,subplot_index)
+        plt.plot(self.time_vector,self.electric_angle_vector ,self.plotting_character,label='electric angle')
+        plt.plot(self.time_vector,self.reference_electric_angle_vector,self.plotting_character,label='reference angle')                     
+        plt.title('Electric angle vs time'+self.title_extra)
+        plt.xlabel('time (ticks)')
+        plt.ylabel('electric angle (degrees)')
+        plt.legend()
+
+    def plot_mechanical_angles(self,rows,columns,subplot_index):
+
+        plt.subplot(rows,columns,subplot_index)
+        plt.plot(self.time_vector,self.mechanic_angle_vector ,self.plotting_character,label='mechanic angle')
+        plt.plot(self.time_vector,self.reference_mechanic_angle_vector,self.plotting_character,label='reference angle')                     
+        plt.title('Mechanic angle vs time'+self.title_extra)
+        plt.xlabel('time (ticks)')
+        plt.ylabel('mechanic angle (degrees)')
+        plt.legend()
+
+    def plot_gear_angles(self,rows,columns,subplot_index):
+
+        plt.subplot(rows,columns,subplot_index)
+        plt.plot(self.time_vector,self.gear_angle_vector ,self.plotting_character,label='gear angle')
+        plt.plot(self.time_vector,self.reference_gear_angle_vector,self.plotting_character,label='reference angle')                     
+        plt.title('Gear angle vs time'+self.title_extra)
+        plt.xlabel('time (ticks)')
+        plt.ylabel('gear angle (degrees)')
+        plt.legend()
+
+
+
     def plot_frequencies(self,rows,columns,subplot_index):
 
                         plt.subplot(rows,columns,subplot_index)
@@ -2071,6 +2258,28 @@ class Serial_Stm32f4(object):
                     #updating reference frequency
                     if     split_command[0]=='d':
                         self.write_a_line(line)
+
+                    elif   split_command[0]=='D':
+                        #self.damping=float (split_command[1])
+                        self.write_a_line(line)
+
+                    elif   split_command[0]=='K':
+                        #self.stiffness=float (split_command[1])
+                        self.write_a_line(line)
+
+                    elif   split_command[0]=='E':
+                        #self.reference_electric_angle=float (split_command[1])
+                        self.write_a_line(line)
+
+                    elif   split_command[0]=='M':
+                        #self.reference_mechanic_angle=float (split_command[1])
+                        self.write_a_line(line)
+
+                    elif   split_command[0]=='G':
+                        #self.reference_gear_angle=float (split_command[1])
+                        self.write_a_line(line)
+
+
 
                     #load angle
                     elif     split_command[0]=='L':

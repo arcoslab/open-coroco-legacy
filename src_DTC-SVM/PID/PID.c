@@ -303,6 +303,81 @@ void frequency_input(void)
 
       }	
 
+      //----------------------------------
+      //admittance control
+      if (strcmp(cmd, "D") == 0)
+      {
+        damping=value;
+      }	
+      if (strcmp(cmd, "K") == 0)
+      {
+        stiffness=value;
+      }	
+
+
+      if (strcmp(cmd, "E") == 0)
+      {        
+        initial_rotor_position_start=true;
+        collected_permission=true;
+        regular_print=true;
+        dtc_on=true;
+        reference_electric_angle=value;
+        motor_off=false;
+
+        if (reference_electric_angle==0.0f) 
+        { 
+          dtc_on=true;
+        }
+        
+        collecting_speed=true;
+        timer=0;
+        pi_mode=0;  //speed pi controller
+      }	
+
+      if (strcmp(cmd, "M") == 0)
+      {        
+        initial_rotor_position_start=true;
+        collected_permission=true;
+        regular_print=true;
+        dtc_on=true;
+        reference_mechanical_angle=value;
+        motor_off=false;
+
+        if (reference_mechanical_angle==0.0f) 
+        { 
+          dtc_on=true;
+        }
+        
+        collecting_speed=true;
+        timer=0;
+        pi_mode=0;  //speed pi controller
+      }	
+
+      if (strcmp(cmd, "G") == 0)
+      {        
+        initial_rotor_position_start=true;
+        collected_permission=true;
+        regular_print=true;
+        dtc_on=true;
+        reference_gear_angle=value;
+        motor_off=false;
+
+        if (reference_electric_angle==0.0f) 
+        { 
+          dtc_on=true;
+        }
+        
+        collecting_speed=true;
+        timer=0;
+        pi_mode=0;  //speed pi controller
+      }	
+
+
+
+
+      //--------------------------------
+
+
       if (strcmp(cmd, "L") == 0)
       {
         load_angle=value;

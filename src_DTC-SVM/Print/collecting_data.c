@@ -440,6 +440,16 @@ void collecting_samples(void)
         data_rotating_angle_SVM =psi_rotating_angle_SVM;
 
         data_strain_gauge=strain_gauge;
+
+        if (print_selection==15)
+        {
+            data_electric_angle          = electric_angle;
+            data_mechanical_angle        = mechanical_angle;
+            data_gear_angle              = gear_angle;
+            data_mechanical_frequency    = mechanical_frequency;
+            data_gear_frequency          = gear_frequency;
+        }
+
 }
 
 void print_captured_data(void)
@@ -810,6 +820,23 @@ void print_regular_data(void)
         printf ("2")  ;  checksum=checksum  +print_float_as_bytes(data_V_sQ                    );
     }
 
+    else if (print_selection==15)
+    {
+        printf ("t")  ;  checksum=           print_float_as_bytes(data_timer                   );
+        printf ("f")  ;  checksum=checksum  +print_float_as_bytes(stiffness                    );
+        printf ("M")  ;  checksum=checksum  +print_float_as_bytes(damping                      );
+        //printf ("E")  ;  checksum=checksum  +print_float_as_bytes(reference_electric_angle     );
+        //printf ("J")  ;  checksum=checksum  +print_float_as_bytes(reference_mechanical_angle     );
+        printf ("o")  ;  checksum=checksum  +print_float_as_bytes(reference_gear_angle         );
+/*
+        printf ("g")  ;  checksum=checksum  +print_float_as_bytes(data_electric_angle          );
+        printf ("b")  ;  checksum=checksum  +print_float_as_bytes(data_mechanical_angle          );
+        printf ("a")  ;  checksum=checksum  +print_float_as_bytes(data_gear_angle              );
+        printf ("e")  ;  checksum=checksum  +print_float_as_bytes(data_w_r                     );
+        printf ("F")  ;  checksum=checksum  +print_float_as_bytes(data_mechanical_frequency);
+        printf ("H")  ;  checksum=checksum  +print_float_as_bytes(data_gear_frequency          );
+*/
+    }
 
 
     printf ("k");

@@ -82,6 +82,17 @@ float data_rotating_angle_SVM;
 
 float data_strain_gauge;
 
+//admittance controller
+float data_reference_electric_angle      = 0.0f;
+float data_reference_mechanical_angle    = 0.0f;
+float data_reference_gear_angle          = 0.0f;
+
+float data_electric_angle                = 0.0f;
+float data_mechanical_angle        = 0.0f;
+float data_gear_angle                    = 0.0f;
+
+float data_mechanical_frequency          = 0.0f;
+float data_gear_frequency                = 0.0f;
 
 
 

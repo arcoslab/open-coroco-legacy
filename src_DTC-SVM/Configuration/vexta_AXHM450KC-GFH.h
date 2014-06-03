@@ -27,13 +27,18 @@
 #define psi_F_0        0.0075f//0.0016f//0.005f    //0.0016f  //Wb-t (weber-turn) (kg m2 s-2 A-1)
 #define pole_pairs_0   5.0f	//five pole pairs (five d-axis)
 
-
 //40-> 0.005
 //60->0.01
 //70->0.03
 //80->0.04
 
 //PID parameters
+
+//voltage-frequency-based speed controller
+#define I_MAX_SENSORLESS_SVM            0.0005f//  0.0005f//(90.0f*frequency/interrupt_frequency) 
+#define P_MAX_SENSORLESS_SVM            0.0005f//  0.0005f//(90.0f*frequency/interrupt_frequency) 
+#define PI_MAX_SENSORLESS_SVM           0.0005f//  0.0005f//(90.0f*frequency/interrupt_frequency) 
+#define PI_MIN_SENSORLESS_SVM          -0.0005f// -0.0005f//-(90.0f*frequency/interrupt_frequency) 
 
 float P_SENSORLESS_SVM      = 0.00001f; 
 float P_DOWN_SENSORLESS_SVM = 0.00001f; 
@@ -42,12 +47,25 @@ float I_SENSORLESS_SVM      = 0.0f;
 float I_DOWN_SENSORLESS_SVM = 0.0f;
 float fake_I_SENSORLESS_SVM = 0.0f;
 
+//DTC-SVM speed controller
+#define I_MAX_SENSORLESS            60.0f//  0.0005f//(90.0f*frequency/interrupt_frequency) 
+#define P_MAX_SENSORLESS            60.0f//  0.0005f//(90.0f*frequency/interrupt_frequency) 
+#define PI_MAX_SENSORLESS           60.0f//  0.0005f//(90.0f*frequency/interrupt_frequency) 
+#define PI_MIN_SENSORLESS          -60.0f// -0.0005f//-(90.0f*frequency/interrupt_frequency) 
+
 float P_SENSORLESS      = 0.8f; 
 float P_DOWN_SENSORLESS = 0.8f; 
 float fake_P_SENSORLESS = 0.8f;
 float I_SENSORLESS      = 0.0f;
 float I_DOWN_SENSORLESS = 0.0f;
 float fake_I_SENSORLESS = 0.0f;
+
+
+//DTC-SVM torque controller
+#define I_MAX_SENSORLESS_TORQUE            90.0f//  0.005f//(90.0f*frequency/interrupt_frequency) 
+#define P_MAX_SENSORLESS_TORQUE            90.0f//  0.005f//(90.0f*frequency/interrupt_frequency) 
+#define PI_MAX_SENSORLESS_TORQUE           90.0f//  0.005f//(90.0f*frequency/interrupt_frequency) 
+#define PI_MIN_SENSORLESS_TORQUE          -90.0f//  -0.005f//-(90.0f*frequency/interrupt_frequency) 
 
 float P_SENSORLESS_TORQUE      = 0.0f;
 float P_DOWN_SENSORLESS_TORQUE = 0.0f;
@@ -57,25 +75,12 @@ float I_DOWN_SENSORLESS_TORQUE = 0.0f;
 float fake_I_SENSORLESS_TORQUE = 0.0f;
 
 
-
-//maximum load angle 70
-
-#define I_MAX_SENSORLESS_SVM            0.0005f//  0.0005f//(90.0f*frequency/interrupt_frequency) 
-#define P_MAX_SENSORLESS_SVM            0.0005f//  0.0005f//(90.0f*frequency/interrupt_frequency) 
-#define PI_MAX_SENSORLESS_SVM           0.0005f//  0.0005f//(90.0f*frequency/interrupt_frequency) 
-#define PI_MIN_SENSORLESS_SVM          -0.0005f// -0.0005f//-(90.0f*frequency/interrupt_frequency) 
-
-#define I_MAX_SENSORLESS            60.0f//  0.0005f//(90.0f*frequency/interrupt_frequency) 
-#define P_MAX_SENSORLESS            60.0f//  0.0005f//(90.0f*frequency/interrupt_frequency) 
-#define PI_MAX_SENSORLESS           60.0f//  0.0005f//(90.0f*frequency/interrupt_frequency) 
-#define PI_MIN_SENSORLESS          -60.0f// -0.0005f//-(90.0f*frequency/interrupt_frequency) 
-
-#define I_MAX_SENSORLESS_TORQUE            90.0f//  0.005f//(90.0f*frequency/interrupt_frequency) 
-#define P_MAX_SENSORLESS_TORQUE            90.0f//  0.005f//(90.0f*frequency/interrupt_frequency) 
-#define PI_MAX_SENSORLESS_TORQUE           90.0f//  0.005f//(90.0f*frequency/interrupt_frequency) 
-#define PI_MIN_SENSORLESS_TORQUE          -90.0f//  -0.005f//-(90.0f*frequency/interrupt_frequency) 
-
 #define FIXED_LOAD_ANGLE 80.0f
+
+
+//Admittance controller
+#define STIFFNESS 0.0f
+#define DAMPING   0.0f
 
 
 //Battey

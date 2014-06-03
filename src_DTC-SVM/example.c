@@ -45,8 +45,13 @@
 #include "Trigonometric_Functions/Trigonometric_Functions.h"
 #include "Print/Print.h"
 #include "Print/Print.c"
+
+#include "admittance_control/admittance_control.h"
+#include "admittance_control/admittance_control.c"
+
 #include "PID/PID.h"
 #include "PID/PID.c"
+
 #include "Filtering/filters.h"
 #include "Filtering/filters.c"
 #include "F4/initial_setup.h"
