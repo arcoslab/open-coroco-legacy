@@ -806,9 +806,11 @@ class Serial_Stm32f4(object):
 
     def print_selection_print_string(self):
 
-        extra_information=  " "+self.test_routine_state + " "+self.driving_test_state+" "+str(self.driving_counter) + \
-                            " "+self.P_speed_state+" "+self.I_speed_state+" "+self.various_test_state+" "+self.torque_test_routine_state+" "+self.torque_P_speed_state#+" N: "+self.exception
-       
+        #extra_information=  " "+self.test_routine_state + " "+self.driving_test_state+" "+str(self.driving_counter) + \
+        #                    " "+self.P_speed_state+" "+self.I_speed_state+" "+self.various_test_state+" "+self.torque_test_routine_state+" "+self.torque_P_speed_state#+" N: "+self.exception
+        extra_information=  " "+self.test_routine_state + " "+self.driving_test_state+" "+str(self.driving_counter)# + " "+self.P_speed_state+" "+self.I_speed_state+" "+self.various_test_state+"       
+
+
         if   self.print_selection==0:
             self.new_data_line= "t: %6.2f "                   %self.time                + \
                                 " ref_freq: %6.2f"            %self.reference_frequency + \
@@ -891,18 +893,18 @@ class Serial_Stm32f4(object):
 
 
         elif self.print_selection==15:
-            self.new_data_line= "t: %6.2f "             %self.time                          + \
-                                " K: %6.2f"              %self.stiffness                     + \
-                                " D: %6.2f"              %self.damping                       + \
-                                " r_e: %6.2f"  %self.reference_electric_angle      + \
-                                " r_m: %6.2f"    %self.reference_mechanic_angle      + \
-                                " r_g: %6.2f"   %self.reference_gear_angle          + \
-                                " e: %6.2f"      %self.electric_angle                + \
-                                " m: %6.2f"        %self.mechanic_angle                + \
-                                " g: %6.2f"       %self.gear_angle                    + \
-                                " e_f: %6.2f"     %self.electric_frequency            + \
-                                " m_f: %6.2f"     %self.mechanic_frequency         + \
-                                " g_f: %6.2f"     %self.gear_frequency                 + extra_information
+            self.new_data_line= "t: %6.2f "       %self.time                        + \
+                                " K: %6.2f"       %self.stiffness                   + \
+                                " D: %6.2f"       %self.damping                     + \
+                                " r_e: %12.2f"    %self.reference_electric_angle    + \
+                                " r_m: %12.2f"    %self.reference_mechanic_angle    + \
+                                " r_g: %6.2f"     %self.reference_gear_angle        + \
+                                " e: %6.2f"       %self.electric_angle              + \
+                                " m: %6.2f"       %self.mechanic_angle              + \
+                                " g: %6.2f"       %self.gear_angle                  + \
+                                " e_f: %6.2f"     %self.electric_frequency          + \
+                                " m_f: %6.2f"     %self.mechanic_frequency          + \
+                                " g_f: %6.4f"     %self.gear_frequency              + extra_information
 
         elif self.print_selection==16:
             
@@ -915,19 +917,19 @@ class Serial_Stm32f4(object):
             if self.prev_hallb>0: self.prev_hallb=1.0
             else                : self.prev_hallb=0.0
             
-            self.new_data_line= "t: %6.2f "   %self.time    + \
-                                " hall_f: %6.2f"     %self.hall_frequency            + \
-                                " prev_HA: %6.2f" %self.prev_halla   + \
-                                " prev_HB: %6.2f" %self.prev_hallb   + \
-                                " HA: %6.2f" %self.halla   + \
-                                " HB: %6.2f" %self.hallb   + extra_information
+            self.new_data_line= "t: %6.2f "          %self.time            + \
+                                " hall_f: %6.2f"     %self.hall_frequency  + \
+                                " prev_HA: %6.2f"    %self.prev_halla      + \
+                                " prev_HB: %6.2f"    %self.prev_hallb      + \
+                                " HA: %6.2f"         %self.halla           + \
+                                " HB: %6.2f"         %self.hallb           + extra_information
 
 
 
 
 
         elif self.print_selection==11:
-                self.new_data_line= "t %6.2f "                  %self.time                      + \
+                self.new_data_line= "t %6.2f "                  %self.time                  + \
                                     " ref_freq %6.2f"           %self.reference_frequency   + \
                                     " electric_frequency %6.2f" %self.electric_frequency    + \
                                     " hall_freq %10.8f"         %self.hall_frequency        + \
@@ -943,15 +945,15 @@ class Serial_Stm32f4(object):
                                     " Vs %6.2f"                 %self.Vs                    + \
                                     " Vs_cita %6.2f"            %self.Vs_cita               + \
                                     " Vs_cita_relative %6.2f"   %self.Vs_relative_cita      + \
-                                    " psisD %10.8f"             %self.psi_sD               + \
-                                    " psisQ %10.8f"             %self.psi_sQ               + \
+                                    " psisD %10.8f"             %self.psi_sD                + \
+                                    " psisQ %10.8f"             %self.psi_sQ                + \
                                     " psis %10.8f"              %self.psi_s                 + \
                                     " psi_s_alpha %6.2f"        %self.psi_s_alpha           + \
-                                    " psis_ref %10.8f"          %self.psi_s_reference      + \
+                                    " psis_ref %10.8f"          %self.psi_s_reference       + \
                                     " te %6.2f"                 %self.te                    + \
                                     " Ud %6.2f"                 %self.Ud                    + \
-                                    " pi_control %12.9f"        %self.pi_control           + \
-                                    " pi_max %10.6f"            %self.pi_max               + \
+                                    " pi_control %12.9f"        %self.pi_control            + \
+                                    " pi_max %10.6f"            %self.pi_max                + \
                                     " load_angle %12.9f"        %self.load_angle            
                                     #"t: %6.2f "                  %self.time                + \
                                     #"frequency %6.2f"                 %self.electric_frequency

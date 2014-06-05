@@ -411,33 +411,72 @@ void SVM_starting_open_loop(bool open_loop,float* VsD, float*VsQ, float Ud, floa
         //else if (CUR_FREQ<250.0f) extra_load_angle_increase=0.000001f; //extra_load_angle_increase=0.00005f;
         //else if (w_r<10.0f) extra_load_angle_increase=0.00001f; //extra_load_angle_increase=0.00005f;
         //else if (w_r<ref_freq_SVM && increase_permission==true) 
-        else if (frequency<max_open_loop_frequency && increase_permission==true)
-        {   
-            extra_load_angle_increase=MAXIMUM_OPEN_LOOP_ANGLE_INCREASE; //extra_load_angle_increase=0.00005f;
-        }
-        else  
-        { 
-            extra_load_angle_increase=0.0f;
-            increase_permission=false;
-        }
 
-        extra_load_angle=extra_load_angle+extra_load_angle_increase;
-        extra_voltage_angle=extra_voltage_angle+extra_load_angle;
-        if (extra_voltage_angle>=360.0f) {extra_voltage_angle=extra_voltage_angle-360.0f;}
 
-        if (reference_frequency==0.0f) 
-        //if (t_e_ref==0.0f)
+        if (reference_frequency>0.0f)
         {
-            *VsD = 0.0f;
-            *VsQ = 0.0f;
+            if (frequency<max_open_loop_frequency && increase_permission==true)
+            {   
+                extra_load_angle_increase=MAXIMUM_OPEN_LOOP_ANGLE_INCREASE; //extra_load_angle_increase=0.00005f;
+            }
+            else  
+            { 
+                extra_load_angle_increase=0.0f;
+                increase_permission=false;
+            }
+
+            extra_load_angle=extra_load_angle+extra_load_angle_increase;
+            extra_voltage_angle=extra_voltage_angle+extra_load_angle;
+            if (extra_voltage_angle>=360.0f) {extra_voltage_angle=extra_voltage_angle-360.0f;}
+
+            if (reference_frequency==0.0f) 
+            //if (t_e_ref==0.0f)
+            {
+                *VsD = 0.0f;
+                *VsQ = 0.0f;
+            }
+            else                 
+            {                                 
+                 //extra_voltage_angle=45.0f;
+                 *VsD = 20.0f*Ud*fast_cos(extra_voltage_angle);
+                 *VsQ = 20.0f*Ud*fast_sine(extra_voltage_angle);
+            }
         }
-        else                 
-        {                                 
-             //extra_voltage_angle=45.0f;
-             *VsD = 20.0f*Ud*fast_cos(extra_voltage_angle);
-             *VsQ = 20.0f*Ud*fast_sine(extra_voltage_angle);
-         }
+
+        else 
+        {
+            if (frequency>max_open_loop_frequency && increase_permission==true)
+            {   
+                extra_load_angle_increase=MAXIMUM_OPEN_LOOP_ANGLE_INCREASE; //extra_load_angle_increase=0.00005f;
+            }
+            else  
+            { 
+                extra_load_angle_increase=0.0f;
+                increase_permission=false;
+            }
+
+            extra_load_angle=extra_load_angle-extra_load_angle_increase;
+            extra_voltage_angle=extra_voltage_angle+extra_load_angle;
+            if (extra_voltage_angle>=360.0f) {extra_voltage_angle=extra_voltage_angle-360.0f;}
+            if (extra_voltage_angle<0.0f)    {extra_voltage_angle=extra_voltage_angle+360.0f;}
+
+            if (reference_frequency==0.0f) 
+            //if (t_e_ref==0.0f)
+            {
+                *VsD = 0.0f;
+                *VsQ = 0.0f;
+            }
+            else                 
+            {                                 
+                 //extra_voltage_angle=45.0f;
+                 *VsD = 20.0f*Ud*fast_cos(extra_voltage_angle);
+                 *VsQ = 20.0f*Ud*fast_sine(extra_voltage_angle);
+            }
+        }
+
      } 
+  //SVM_pi_control=extra_voltage_angle;
+  //pi_max=extra_load_angle;
 }
 
 
@@ -611,11 +650,11 @@ void SVM_torque_close_loop(float reference_torque, float torque,bool close_loop_
 void SVM_loop_control(float frequency,float maximum_open_loop_frequency,float te_ref, float freq_ref, bool* open_loop, bool* close_loop_SVM)
 {
     static int SVM_loop_state=INITIAL_SVM;
-    *open_loop=true;
-    *close_loop_SVM=false;
+    //*open_loop=true;
+    //*close_loop_SVM=false;
 
-    //*open_loop=false;
-    //*close_loop_SVM=true;
+    *open_loop=false;
+    *close_loop_SVM=true;
 
 /*
     if      (SVM_loop_state==INITIAL_SVM && te_ref==0.0f && freq_ref==0.0f)  {   SVM_loop_state=INITIAL_SVM;
@@ -764,7 +803,7 @@ else
   //SVM_speed_close_loop_of_voltage_frequency(ref_freq_SVM,CUR_FREQ,close_loop_SVM,&V_sD,&V_sQ,U_d,shutdown);   
 
   
-/*
+
   ref_freq_SVM = admittance_controller    (
                                             stiffness,
                                             damping,
@@ -772,9 +811,9 @@ else
                                             electric_angle,
                                             strain_gauge
                                             );
-*/
+
   electric_angle= electric_angle+
-                  SVM_speed_close_loop_of_voltage_frequency(ref_freq_SVM,hall_freq,close_loop_SVM,&V_sD,&V_sQ,U_d,shutdown); 
+                  SVM_speed_close_loop_of_voltage_frequency(ref_freq_SVM,w_r,close_loop_SVM,&V_sD,&V_sQ,U_d,shutdown); 
 
   if (electric_angle>=360.0f*pole_pairs*gear_ratio)
     electric_angle=electric_angle-360.0f*pole_pairs*gear_ratio;
