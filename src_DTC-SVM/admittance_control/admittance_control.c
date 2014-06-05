@@ -32,5 +32,5 @@ float admittance_controller(    float K,
         return -100.0f;
     else 
         return 0.0f;
-    //return (K/D) * (reference_angle-angle) -torque;
+    //return (K/D) * (reference_angle-angle) -torque/D;
 }

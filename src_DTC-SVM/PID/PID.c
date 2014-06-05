@@ -88,14 +88,80 @@ bool collecting_current=false;
 bool collecting_speed  =false;
 bool regular_print=true;
 
+
+int hall_a = 0;
+int hall_b = 0;
+float hall_freq;
+int previous_hall_a=0;
+int previous_hall_b=0;
+int  old_hall_a;
+static int  old_hall_b;
+
+float frequency_direction_two_hall_sensors_AB(float frequency)
+{
+    static bool first_spin=true;
+ 
+    //float actual_frequency=0.0;
+    static float sign=1.0f;
+
+    if (first_spin==true)
+    {
+        previous_hall_a=hall_a;
+        previous_hall_b=hall_b;       
+        old_hall_a=hall_a;
+        old_hall_b=hall_b;
+        first_spin=false; 
+    }
+
+    if (old_hall_a!=hall_a || old_hall_b!=hall_b)
+    {  
+        previous_hall_a=old_hall_a;
+        previous_hall_b=old_hall_b;
+    }
+
+    if (previous_hall_a!=hall_a || previous_hall_b!=hall_b)
+    {
+    if      (hall_a==0 && hall_b==0 && previous_hall_a >0 && previous_hall_b==0)    sign =-1.0f;
+    else if (hall_a==0 && hall_b >0 && previous_hall_a==0 && previous_hall_b==0)    sign =-1.0f;
+    else if (hall_a >0 && hall_b >0 && previous_hall_a==0 && previous_hall_b >0)    sign =-1.0f;
+    else if (hall_a >0 && hall_b==0 && previous_hall_a >0 && previous_hall_b >0)    sign =-1.0f;
+    else                                                                            sign = 1.0;
+    }
+    
+
+
+    old_hall_a=hall_a;
+    old_hall_b=hall_b;
+
+/*
+if (previous_hall_a!=hall_a || previous_hall_b!=hall_b)
+{
+    if      (hall_a==0 && hall_b==0 && previous_hall_a >0 && previous_hall_b==0)    sign =-1.0f;
+    else if (hall_a==0 && hall_b >0 && previous_hall_a==0 && previous_hall_b==0)    sign =-1.0f;
+    else if (hall_a >0 && hall_b >0 && previous_hall_a==0 && previous_hall_b >0)    sign =-1.0f;
+    else if (hall_a >0 && hall_b==0 && previous_hall_a >0 && previous_hall_b >0)    sign =-1.0f;
+    else                                                                            sign = 1.0;
+
+
+    }
+
+    previous_hall_a=hall_a;
+    previous_hall_b=hall_b;
+
+*/
+    return frequency*sign;    
+}
+
 void calc_freq(void) 
 {
   static bool first=true;
-  static int  hall_a = 0;
+  //static int  hall_a = 0;
   static int  hall_a_last=0;
   static uint last_fall_hall_a_ticks=0;
 
   hall_a=HALL_A();
+  hall_b=HALL_B();
+  
 
   if (first) 
   {

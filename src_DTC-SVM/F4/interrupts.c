@@ -94,8 +94,10 @@ float data_gear_angle                    = 0.0f;
 float data_mechanical_frequency          = 0.0f;
 float data_gear_frequency                = 0.0f;
 
-
-
+float data_hall_a=0.0f;
+float data_hall_b=0.0f;
+float data_previous_hall_a=0.0f;
+float data_previous_hall_b=0.0f;
 
 
 //--------------------------------------------------------------------------------------------

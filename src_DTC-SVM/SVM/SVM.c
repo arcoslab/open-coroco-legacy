@@ -28,6 +28,8 @@ float SVM_V_s_ref_D(float psi_s_ref, float psi_s, float psi_s_angle, float phase
   //catching_NaNs();
   //####catching_NaNs_data (psi_s_angle+phase_advance, fast_cos((psi_s_angle+phase_advance)), fast_cos(psi_s_angle));
   return ( psi_s_ref*fast_cos((psi_s_angle+phase_advance)) - psi_s*fast_cos(psi_s_angle) )/T_s  +  i_sD*R_s;
+  //return ( psi_s_ref*cosf((psi_s_angle+phase_advance)) - psi_s*cosf(psi_s_angle) )/T_s  +  i_sD*R_s;
+
 }
 
 float SVM_V_s_ref_Q(float psi_s_ref, float psi_s, float psi_s_angle, float phase_advance,float i_sQ, float R_s,float T_s)
@@ -40,7 +42,10 @@ float SVM_V_s_ref_Q(float psi_s_ref, float psi_s, float psi_s_angle, float phase
   //##catching_NaNs_data (psi_s_angle+phase_advance, fast_sine((psi_s_angle+phase_advance)), fast_sine(psi_s_angle));
 
   return ( psi_s_ref*fast_sine((psi_s_angle+phase_advance)) - psi_s*fast_sine(psi_s_angle) )/T_s  +  i_sQ*R_s;
+  //return ( psi_s_ref*sinf((psi_s_angle+phase_advance)) - psi_s*(psi_s_angle) )/T_s  +  i_sQ*R_s;
+
 }
+
 
 void SVM_Maximum_allowed_V_s_ref(float* VsD, float* VsQ,float* V_s_ref,float U_d,bool* increase)
 {
@@ -521,6 +526,7 @@ float SVM_speed_close_loop_of_voltage_frequency(float reference_frequency, float
         extra_load_angle=extra_load_angle+extra_load_angle_increase;
         extra_voltage_angle=extra_voltage_angle+extra_load_angle;
         if (extra_voltage_angle>=360.0f) {extra_voltage_angle=extra_voltage_angle-360.0f;}
+        if (extra_voltage_angle<0.0f)    {extra_voltage_angle=extra_voltage_angle+360.0f;}
 
        *VsD = 20.0f*Ud*fast_cos(extra_voltage_angle);
        *VsQ = 20.0f*Ud*fast_sine(extra_voltage_angle);
@@ -605,9 +611,11 @@ void SVM_torque_close_loop(float reference_torque, float torque,bool close_loop_
 void SVM_loop_control(float frequency,float maximum_open_loop_frequency,float te_ref, float freq_ref, bool* open_loop, bool* close_loop_SVM)
 {
     static int SVM_loop_state=INITIAL_SVM;
-    
-    *open_loop=false;
-    *close_loop_SVM=true;
+    *open_loop=true;
+    *close_loop_SVM=false;
+
+    //*open_loop=false;
+    //*close_loop_SVM=true;
 
 /*
     if      (SVM_loop_state==INITIAL_SVM && te_ref==0.0f && freq_ref==0.0f)  {   SVM_loop_state=INITIAL_SVM;
@@ -681,30 +689,35 @@ if (center_aligned_state==FIRST_HALF)
   //fast_vector_angle_and_magnitude(i_sQ,i_sD,&i_s,&cita_i_s);
 
  
-
+/*
   //nan erradication
   if (psi_sD!=psi_sD) psi_sD=0.0f;
   if (psi_sQ!=psi_sQ) psi_sQ=0.0f;
   if (psi_s !=psi_s ) psi_s =0.0f;
   if (t_e!=t_e      ) t_e    =0.0f;
   if (psi_s_alpha_SVM!=psi_s_alpha_SVM) psi_s_alpha_SVM=0.0f;
-
+*/
 
   static float psi_sD_i_neglected=0.0f;
   static float psi_sQ_i_neglected=0.0f;
 
-  flux_linkage_estimator(2.0f*TICK_PERIOD,V_sD,V_sQ,i_sD,i_sQ,R_s,CUR_FREQ,&psi_sD,&psi_sQ,&psi_s,&psi_s_alpha_SVM);
+  //flux_linkage_estimator(2.0f*TICK_PERIOD,V_sD,V_sQ,i_sD,i_sQ,R_s,CUR_FREQ,&psi_sD,&psi_sQ,&psi_s,&psi_s_alpha_SVM);
   flux_linkage_estimator_neglected_currents (2.0f*TICK_PERIOD,V_sD,V_sQ,&psi_sD_i_neglected,&psi_sQ_i_neglected);
 
-  
+//psi_sD_i_neglected=direct_stator_flux_linkage_estimator_psi_sD     (2.0f*TICK_PERIOD,V_sD,i_sD,R_s,w_r);
+//psi_sQ_i_neglected=quadrature_stator_flux_linkage_estimator_psi_sQ (2.0f*TICK_PERIOD,V_sQ,i_sQ,R_s,w_r);
 
+//psi_sD_i_neglected=direct_stator_flux_linkage_estimator_psi_sD     (2.0f*TICK_PERIOD,V_sD,0.0f,R_s,w_r);
+//psi_sQ_i_neglected=quadrature_stator_flux_linkage_estimator_psi_sQ (2.0f*TICK_PERIOD,V_sQ,0.0f,R_s,w_r);
+  
+/*
   //nan erradication
   if (psi_sD!=psi_sD) psi_sD=0.0f;
   if (psi_sQ!=psi_sQ) psi_sQ=0.0f;
   if (psi_s !=psi_s ) psi_s =0.0f;
   if (t_e!=t_e      ) t_e    =0.0f;
   if (psi_s_alpha_SVM!=psi_s_alpha_SVM) psi_s_alpha_SVM=0.0f;
-
+*/
 
 
   //w_r             = (1.0f/(2.0f*PI))     *rotor_speed_w_r                                 (psi_sD,psi_sQ,TICK_PERIOD*2.0f);
@@ -717,6 +730,7 @@ if (center_aligned_state==FIRST_HALF)
   //using neglected-currents flux-linkage estimator
   w_r = 0.15915494309189533576f*rotor_speed_w_r (psi_sD_i_neglected,psi_sQ_i_neglected,TICK_PERIOD*2.0f);  
   //w_r = wr_moving_average_filter(w_r); 
+  hall_freq=frequency_direction_two_hall_sensors_AB(CUR_FREQ);
 
   if (w_r!=w_r) w_r=0.0f;
 
@@ -739,7 +753,7 @@ if (center_aligned_state==FIRST_HALF)
 
   //SVM_starting_open_loop(open_loop_SVM,&V_sD,&V_sQ,U_d,MAXIMUM_OPEN_LOOP_SPEED,CUR_FREQ,ref_freq_SVM);
   //SVM_starting_open_loop(open_loop_SVM,&V_sD,&V_sQ,U_d,ref_freq_SVM,CUR_FREQ,ref_freq_SVM);
-  //SVM_starting_open_loop(open_loop_SVM,&V_sD,&V_sQ,U_d,ref_freq_SVM,w_r,ref_freq_SVM);
+  SVM_starting_open_loop(open_loop_SVM,&V_sD,&V_sQ,U_d,ref_freq_SVM,hall_freq,ref_freq_SVM);
 } 
 
 
@@ -759,7 +773,8 @@ else
                                             strain_gauge
                                             );
 */
-  electric_angle= electric_angle+SVM_speed_close_loop_of_voltage_frequency(ref_freq_SVM,w_r,close_loop_SVM,&V_sD,&V_sQ,U_d,shutdown); 
+  electric_angle= electric_angle+
+                  SVM_speed_close_loop_of_voltage_frequency(ref_freq_SVM,hall_freq,close_loop_SVM,&V_sD,&V_sQ,U_d,shutdown); 
 
   if (electric_angle>=360.0f*pole_pairs*gear_ratio)
     electric_angle=electric_angle-360.0f*pole_pairs*gear_ratio;
@@ -768,7 +783,7 @@ else
 
 
   //SVM_torque_close_loop(t_e_ref,t_e,close_loop_SVM,&V_sD,&V_sQ);
-  SVM_loop_control(CUR_FREQ,MAXIMUM_OPEN_LOOP_SPEED,t_e_ref,ref_freq_SVM,&open_loop_SVM,&close_loop_SVM); 
+  SVM_loop_control(hall_freq,MAXIMUM_OPEN_LOOP_SPEED,t_e_ref,ref_freq_SVM,&open_loop_SVM,&close_loop_SVM); 
 
   fast_vector_angle_and_magnitude(V_sQ,V_sD,&V_s,&cita_V_s);
 

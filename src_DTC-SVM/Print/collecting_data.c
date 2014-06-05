@@ -21,7 +21,7 @@
 bool collecting_sensorless_data = true;
 bool transmitting_to_python = false;
 
-#define SAMPLES 500
+#define SAMPLES 1
 
 #define COLLECTING_SPEED_DELAY 0
 
@@ -33,6 +33,8 @@ float hall_angle=0.0f;
 float PID_angle[SAMPLES];
 
 bool  inductance_measure=true;
+
+
 
 //int current_counter=0;  
 //bool print_current=false;
@@ -132,7 +134,7 @@ void collecting_collected_in_buffer (void)
         //collected_state_SVM    [collected_pointer] = state;
 
 //-------------------------------------------------------------
-        collected_CUR_FREQ     [collected_pointer] = CUR_FREQ;
+        collected_CUR_FREQ     [collected_pointer] = hall_freq;//CUR_FREQ;
         //collected_CUR_FREQ     [collected_pointer] =  T2;
 
 //------------------------------------------------------------
@@ -371,18 +373,18 @@ void collecting_samples(void)
         data_ref_freq_SVM  = ref_freq_SVM;
 
         //data_state_SVM     = state;
-        data_CUR_FREQ      = CUR_FREQ;
+
 /*
         data_psi_sD    =psi_sD;
         data_psi_sQ    =psi_sQ;
         data_psi_s     =psi_s;
         data_psi_alpha =psi_alpha;
 */
-        data_CUR_FREQ  =CUR_FREQ;
+        data_CUR_FREQ  =hall_freq;//CUR_FREQ;
         data_U_d       =U_d;
         //timer          =flux_linkage_capture_counter;
         
-	    data_CUR_FREQ=CUR_FREQ;	
+	
 
         data_i_sA =i_sA;
         data_i_sB =i_sB;
@@ -448,6 +450,15 @@ void collecting_samples(void)
             data_gear_angle              = gear_angle;
             data_mechanical_frequency    = mechanical_frequency;
             data_gear_frequency          = gear_frequency;
+        }
+        if (print_selection==16)
+        {
+            data_hall_a = hall_a;
+            data_hall_b = hall_b;
+            //data_previous_hall_a = old_hall_a;//previous_hall_a;
+            //data_previous_hall_b = old_hall_b;//previous_hall_b;
+            data_previous_hall_a = previous_hall_a;
+            data_previous_hall_b = previous_hall_b;
         }
 
 }
@@ -837,6 +848,15 @@ void print_regular_data(void)
 
     }
 
+    else if (print_selection==16)
+    {
+        printf ("t")  ;  checksum=           print_float_as_bytes(data_timer                   );
+        printf ("S")  ;  checksum=checksum  +print_float_as_bytes(data_hall_a                  );
+        printf ("T")  ;  checksum=checksum  +print_float_as_bytes(data_hall_b                  );
+        printf ("u")  ;  checksum=checksum  +print_float_as_bytes(data_previous_hall_a                  );
+        printf ("V")  ;  checksum=checksum  +print_float_as_bytes(data_previous_hall_b                  );
+        printf ("h")  ;  checksum=checksum  +print_float_as_bytes(data_CUR_FREQ                );
+    }
 
     printf ("k");
     printf ("%c", checksum);

@@ -36,6 +36,9 @@ void hall_init(void)
   //Hall sensor 1
   gpio_mode_setup(GPIOE, GPIO_MODE_INPUT, GPIO_PUPD_NONE, GPIO15);
   gpio_set_af(GPIOE, GPIO_AF0, GPIO15);
+  //Hall sensor 2  
+  gpio_mode_setup(GPIOB, GPIO_MODE_INPUT, GPIO_PUPD_NONE, GPIO11);
+  gpio_set_af(GPIOE, GPIO_AF0, GPIO15);
 }
 
 void test_ports_init(void) 

@@ -229,6 +229,11 @@ class Serial_Stm32f4(object):
         self.pole_pairs               = 5.0
         self.gear_ratio               = 200.0
 
+        #hall sensors
+        self.halla= 0.0
+        self.hallb= 0.0
+        self.prev_halla= 0.0
+        self.prev_hallb= 0.0
 
     def creating_data_vectors(self):
         self.time_vector = []
@@ -626,15 +631,17 @@ class Serial_Stm32f4(object):
                     self.mechanic_frequency         =self.gear_frequency*self.gear_ratio
                     self.electric_frequency         =self.mechanic_frequency*self.pole_pairs
                     '''
-                    S
-                    T
-                    u
-                    V
                     w
                     Y
                     z
                     Z
                     '''
+                elif (single_character=='S'):  self.halla= self.get_data_and_checksum() 
+                elif (single_character=='T'):  self.hallb= self.get_data_and_checksum() 
+                elif (single_character=='u'):  self.prev_halla= self.get_data_and_checksum() 
+                elif (single_character=='V'):  self.prev_hallb= self.get_data_and_checksum() 
+
+
                 elif (single_character=='N'):   
                     self.exception  = self.ser.read(bytes)
                     self.exception += self.ser.read(bytes)
@@ -882,6 +889,7 @@ class Serial_Stm32f4(object):
                                 " Vs:  %6.2f" %math.sqrt(self.required_VsQ*self.required_VsQ+self.required_VsD*self.required_VsD) + \
                                 " Vs_cita: %6.2f"            %self.vector_angle(self.required_VsQ,self.required_VsD)     + extra_information
 
+
         elif self.print_selection==15:
             self.new_data_line= "t: %6.2f "             %self.time                          + \
                                 " K: %6.2f"              %self.stiffness                     + \
@@ -896,6 +904,23 @@ class Serial_Stm32f4(object):
                                 " m_f: %6.2f"     %self.mechanic_frequency         + \
                                 " g_f: %6.2f"     %self.gear_frequency                 + extra_information
 
+        elif self.print_selection==16:
+            
+            if self.halla>0     : self.halla=1.0
+            else                : self.halla=0.0
+            if self.hallb>0     : self.hallb=1.0
+            else                : self.hallb=0.0
+            if self.prev_halla>0: self.prev_halla=1.0
+            else                : self.prev_halla=0.0
+            if self.prev_hallb>0: self.prev_hallb=1.0
+            else                : self.prev_hallb=0.0
+            
+            self.new_data_line= "t: %6.2f "   %self.time    + \
+                                " hall_f: %6.2f"     %self.hall_frequency            + \
+                                " prev_HA: %6.2f" %self.prev_halla   + \
+                                " prev_HB: %6.2f" %self.prev_hallb   + \
+                                " HA: %6.2f" %self.halla   + \
+                                " HB: %6.2f" %self.hallb   + extra_information
 
 
 

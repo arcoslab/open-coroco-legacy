@@ -18,7 +18,7 @@
 
 //pwm-related timer configuration
 #define SYSFREQ                              168000000 //168MHz
-#define PWMFREQ                                  40000//58000 //32000
+#define PWMFREQ                                  30000//58000 //32000
 #define PWMFREQ_F                  ((float )(PWMFREQ)) //32000.0f
 #define PWMFREQ_CENTER_ALIGNED_F   (PWMFREQ_F/2.0f)            
 
@@ -36,3 +36,4 @@
 #define CUR_FREQ  (HALL_FACTOR*1.0f/(period*TICK_PERIOD))//1.0f/(period/TICK_PERIOD)   //**********:S*******//
 #define CRAZY_FREQUENCY period/TICK_PERIOD
 #define HALL_A() gpio_get(GPIOE, GPIO15);
+#define HALL_B() gpio_get(GPIOB, GPIO11);

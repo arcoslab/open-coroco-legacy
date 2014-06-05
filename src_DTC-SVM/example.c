@@ -90,6 +90,7 @@ int main(void)
 
   while (1)
   {
+
     if (transmitting_to_python==true)
     {
         if (print_selection==9) { full_print_regular_data();  }

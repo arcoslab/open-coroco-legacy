@@ -44,9 +44,9 @@
 #define PI_MAX_SENSORLESS_SVM           0.0005f//  0.0005f//(90.0f*frequency/interrupt_frequency) 
 #define PI_MIN_SENSORLESS_SVM          -0.0005f// -0.0005f//-(90.0f*frequency/interrupt_frequency) 
 
-float P_SENSORLESS_SVM      = 0.00001f; 
-float P_DOWN_SENSORLESS_SVM = 0.00001f; 
-float fake_P_SENSORLESS_SVM = 0.00001f;
+float P_SENSORLESS_SVM      = 0.000001f;//0.00001f; 
+float P_DOWN_SENSORLESS_SVM = 0.000001f;//0.00001f; 
+float fake_P_SENSORLESS_SVM = 0.000001f;//0.00001f;
 float I_SENSORLESS_SVM      = 0.0f;
 float I_DOWN_SENSORLESS_SVM = 0.0f;
 float fake_I_SENSORLESS_SVM = 0.0f;
@@ -89,8 +89,8 @@ float fake_I_SENSORLESS_TORQUE = 0.0f;
 
 //Battey
 #define UD_PERCENTAGE   0.7f    //0.8f
-#define MAXIMUM_OPEN_LOOP_SPEED 1.0f
-#define MAXIMUM_OPEN_LOOP_ANGLE_INCREASE 0.0005f//0.0005f
+#define MAXIMUM_OPEN_LOOP_SPEED -100.0f
+#define MAXIMUM_OPEN_LOOP_ANGLE_INCREASE -0.0005f//0.0005f
 
 //Hall sensor parameters
 #define HALL_FACTOR 1.0f
