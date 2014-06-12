@@ -50,8 +50,7 @@
 	//R_B_Ud 997  Ohm
 
 
-//strain gauge
-# define STRAIN_GAUGE_REFERENCE_VOLTAGE   1.7f
+
 
 //Multirotor------------------------------------------------
 //#define BATTERY_VOLTAGE_CONVERTION_FACTOR 4.951120f  

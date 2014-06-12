@@ -104,3 +104,6 @@ float fake_I_SENSORLESS_TORQUE = 0.0f;
 
 //Hall sensor parameters
 #define HALL_FACTOR 1.0f
+
+//strain gauge
+# define STRAIN_GAUGE_REFERENCE_VOLTAGE   0.0f

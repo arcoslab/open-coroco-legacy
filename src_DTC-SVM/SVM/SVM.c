@@ -815,6 +815,7 @@ else
   electric_angle= electric_angle+
                   SVM_speed_close_loop_of_voltage_frequency(ref_freq_SVM,w_r,close_loop_SVM,&V_sD,&V_sQ,U_d,shutdown); 
 
+
   if (electric_angle>=360.0f*pole_pairs*gear_ratio)
     electric_angle=electric_angle-360.0f*pole_pairs*gear_ratio;
   if (electric_angle<0.0f)
