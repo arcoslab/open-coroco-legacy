@@ -76,7 +76,7 @@ void sensorless_pure_speed_SVM_pi_controller(float reference_frequency, float fr
 
   SVM_pi_control=*rotating_angle;           //pi_control_sensorless
   phase_advance_SVM=pi_control_sensorless;  //*rotating_angle;//pi_control_sensorless;
-    pi_max=P_MAX_SENSORLESS_SVM;
+  pi_max=P_MAX_SENSORLESS_SVM;
 }
 
 

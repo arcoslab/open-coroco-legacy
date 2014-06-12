@@ -39,19 +39,42 @@
 //PID parameters
 
 //voltage-frequency-based speed controller
+#define I_MAX_SENSORLESS_SVM            90.0f//  0.0005f//(90.0f*frequency/interrupt_frequency) 
+#define P_MAX_SENSORLESS_SVM            90.0f//  0.0005f//(90.0f*frequency/interrupt_frequency) 
+#define PI_MAX_SENSORLESS_SVM           90.0f//  0.0005f//(90.0f*frequency/interrupt_frequency) 
+#define PI_MIN_SENSORLESS_SVM          -90.0f// -0.0005f//-(90.0f*frequency/interrupt_frequency) 
+
+/*
 #define I_MAX_SENSORLESS_SVM            0.0005f//  0.0005f//(90.0f*frequency/interrupt_frequency) 
 #define P_MAX_SENSORLESS_SVM            0.0005f//  0.0005f//(90.0f*frequency/interrupt_frequency) 
 #define PI_MAX_SENSORLESS_SVM           0.0005f//  0.0005f//(90.0f*frequency/interrupt_frequency) 
 #define PI_MIN_SENSORLESS_SVM          -0.0005f// -0.0005f//-(90.0f*frequency/interrupt_frequency) 
+*/
+/*
+float P_SENSORLESS_SVM      = 0.0001f; 
+float P_DOWN_SENSORLESS_SVM = 0.0001f; 
+float fake_P_SENSORLESS_SVM = 0.0001f;
+float I_SENSORLESS_SVM      = 0.000000002f;
+float I_DOWN_SENSORLESS_SVM = 0.000000002f;
+float fake_I_SENSORLESS_SVM = 0.000000002f;
+*/
+float P_SENSORLESS_SVM      = 0.000001f; 
+float P_DOWN_SENSORLESS_SVM = 0.000001f; 
+float fake_P_SENSORLESS_SVM = 0.000001f;
+float I_SENSORLESS_SVM      = 0.0000000005f;
+float I_DOWN_SENSORLESS_SVM = 0.0000000005f;
+float fake_I_SENSORLESS_SVM = 0.0000000005f;
 
 
 //fast
+/*
 float P_SENSORLESS_SVM      = 0.00001f; 
 float P_DOWN_SENSORLESS_SVM = 0.00001f; 
 float fake_P_SENSORLESS_SVM = 0.00001f;
 float I_SENSORLESS_SVM      = 0.0f;
 float I_DOWN_SENSORLESS_SVM = 0.0f;
 float fake_I_SENSORLESS_SVM = 0.0f;
+*/
 //slow
 /*
 float P_SENSORLESS_SVM      = 0.000001f;//0.00001f; 

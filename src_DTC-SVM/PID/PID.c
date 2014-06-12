@@ -434,9 +434,7 @@ void frequency_input(void)
         regular_print=true;
         dtc_on=true;
 
-        reference_gear_angle=value;
-        reference_mechanical_angle=reference_gear_angle*gear_ratio;
-        reference_electric_angle=reference_mechanical_angle*pole_pairs_0;
+
 
         motor_off=false;
 
@@ -448,6 +446,14 @@ void frequency_input(void)
         collecting_speed=true;
         timer=0;
         pi_mode=0;  //speed pi controller
+
+
+        reference_gear_angle=value;
+        reference_mechanical_angle=reference_gear_angle*gear_ratio;
+        reference_electric_angle=reference_mechanical_angle*pole_pairs_0;
+
+        reference_electric_angle+=electric_angle;
+
       }	
 
 
