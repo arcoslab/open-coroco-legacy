@@ -75,7 +75,7 @@ class Serial_Stm32f4(object):
         self.title_extra            = ''
 
         #test routine
-        self.max_test_time      = 10000#50000#298#100000#100000#50000#100000
+        self.max_test_time      = 100000#50000#298#100000#100000#50000#100000
         self.min_test_time      = 300
         self.test_routine_state = 'initial'
         self.driving_test_state = 'initial'
@@ -896,6 +896,14 @@ class Serial_Stm32f4(object):
             self.new_data_line= "t: %6.2f "       %self.time                        + \
                                 " K: %6.2f"       %self.stiffness                   + \
                                 " D: %6.2f"       %self.damping                     + \
+                                " r_g: %6.2f"     %self.reference_gear_angle        + \
+                               " g: %6.2f"       %self.gear_angle                   + \
+                                " e_f: %6.2f"     %self.electric_frequency          + extra_information
+
+            '''
+            self.new_data_line= "t: %6.2f "       %self.time                        + \
+                                " K: %6.2f"       %self.stiffness                   + \
+                                " D: %6.2f"       %self.damping                     + \
                                 " r_e: %12.2f"    %self.reference_electric_angle    + \
                                 " r_m: %12.2f"    %self.reference_mechanic_angle    + \
                                 " r_g: %6.2f"     %self.reference_gear_angle        + \
@@ -905,6 +913,9 @@ class Serial_Stm32f4(object):
                                 " e_f: %6.2f"     %self.electric_frequency          + \
                                 " m_f: %6.2f"     %self.mechanic_frequency          + \
                                 " g_f: %6.4f"     %self.gear_frequency              + extra_information
+            '''
+
+
 
         elif self.print_selection==16:
             
@@ -1110,14 +1121,32 @@ class Serial_Stm32f4(object):
 
     def plot_frequencies(self,rows,columns,subplot_index):
 
-                        plt.subplot(rows,columns,subplot_index)
-                        plt.plot(self.time_vector,self.electric_frequency_vector ,self.plotting_character,label='electric')
-                        plt.plot(self.time_vector,self.hall_frequency_vector     ,self.plotting_character,label='hall'     )
-                        plt.plot(self.time_vector,self.reference_frequency_vector,self.plotting_character,label='reference')                     
-                        plt.title('frequency vs time'+self.title_extra)
-                        plt.xlabel('time (ticks)')
-                        plt.ylabel('frequency (Hz)')
-                        plt.legend()
+        plt.subplot(rows,columns,subplot_index)
+        plt.plot(self.time_vector,self.electric_frequency_vector ,self.plotting_character,label='electric')
+        plt.plot(self.time_vector,self.hall_frequency_vector     ,self.plotting_character,label='hall'     )
+        plt.plot(self.time_vector,self.reference_frequency_vector,self.plotting_character,label='reference')                     
+        plt.title('frequency vs time'+self.title_extra)
+        plt.xlabel('time (ticks)')
+        plt.ylabel('frequency (Hz)')
+        plt.legend()
+
+    def plot_load_angle_and_frequency(self,rows,columns,subplot_index): 
+
+        plt.subplot(rows,columns,subplot_index)
+        plt.plot(self.time_vector, self.gear_angle_vector,self.plotting_character,label='gear angle')
+        plt.plot(self.time_vector, self.reference_gear_angle_vector,self.plotting_character,label='reference angle')
+        plt.ylabel('gear angle (degrees)')
+        plt.twinx() # to activate a second axis
+        plt.plot(self.time_vector,self.electric_frequency_vector ,self.plotting_character,label='electric frequency',color='r')
+        plt.plot(self.time_vector,self.hall_frequency_vector     ,self.plotting_character,label='hall'     )
+        plt.plot(self.time_vector,self.reference_frequency_vector,self.plotting_character,label='reference')  
+        plt.title('frequency vs load angle'+self.title_extra)
+        plt.xlabel('time (ticks)')
+        plt.ylabel('frequency(Hz)')
+        plt.legend()
+        #self.reference_gear_angle 
+        #self.gear_angle 
+
 
     def plot_three_phase_currents(self,rows,columns,subplot_index):
 
@@ -1612,7 +1641,8 @@ class Serial_Stm32f4(object):
         self.write_a_line(line)
 
     def change_frequency (self, frequency):
-        line='d '+ frequency
+        #line='d '+ frequency
+        line=self.test_command+' '+frequency
         #print "change_frequency :::: new frequency to test: " + frequency
         #print line
         self.write_a_line(line)
@@ -2391,7 +2421,7 @@ class Serial_Stm32f4(object):
 
 
                     elif split_command[0]=='one':
-                        
+                        self.test_command='G';
                         self.start_test=True;
                         self.print_selection_setup(int(split_command[2]))
                         self.test_frequency    =split_command[1]

@@ -429,6 +429,8 @@ void frequency_input(void)
 
       if (strcmp(cmd, "G") == 0)
       {        
+        reset_strain_gauge_reference=true;        
+
         initial_rotor_position_start=true;
         collected_permission=true;
         regular_print=true;

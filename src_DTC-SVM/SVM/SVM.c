@@ -562,8 +562,8 @@ float SVM_speed_close_loop_of_voltage_frequency(float reference_frequency, float
     {  
         sensorless_pure_speed_SVM_pi_controller(reference_frequency,frequency,&extra_load_angle_increase); 
 
-        //extra_load_angle=extra_load_angle+extra_load_angle_increase;
-        extra_load_angle=frequency*360.0f*(2.0f*TICK_PERIOD)+extra_load_angle_increase;
+        extra_load_angle=extra_load_angle+extra_load_angle_increase;
+        //extra_load_angle=frequency*360.0f*(2.0f*TICK_PERIOD)+extra_load_angle_increase;
         extra_voltage_angle=extra_voltage_angle+extra_load_angle;
         if (extra_voltage_angle>=360.0f) {extra_voltage_angle=extra_voltage_angle-360.0f;}
         if (extra_voltage_angle<0.0f)    {extra_voltage_angle=extra_voltage_angle+360.0f;}
@@ -807,6 +807,7 @@ else
     reference_electric_angle=reference_electric_angle-360.0f*pole_pairs*gear_ratio;
   if (electric_angle<0.0f)
     reference_electric_angle=reference_electric_angle+360.0f*pole_pairs*gear_ratio;
+
 /*
   ref_freq_SVM = admittance_controller    (
                                             stiffness,
@@ -816,9 +817,17 @@ else
                                             strain_gauge
                                             );
 */
+  ref_freq_SVM = admittance_controller    (
+                                            stiffness,
+                                            damping,
+                                            reference_electric_angle,
+                                            electric_angle,
+                                            0.0f
+                                            );
+
   electric_angle= electric_angle+
-                  SVM_speed_close_loop_of_voltage_frequency(ref_freq_SVM,w_r,close_loop_SVM,&V_sD,&V_sQ,U_d,shutdown); 
-                  //SVM_speed_close_loop_of_voltage_frequency(ref_freq_SVM,hall_freq,close_loop_SVM,&V_sD,&V_sQ,U_d,shutdown); 
+                            SVM_speed_close_loop_of_voltage_frequency(ref_freq_SVM,w_r,close_loop_SVM,&V_sD,&V_sQ,U_d,shutdown); 
+                          //SVM_speed_close_loop_of_voltage_frequency(ref_freq_SVM,hall_freq,close_loop_SVM,&V_sD,&V_sQ,U_d,shutdown); 
                     
 
   if (electric_angle>=360.0f*pole_pairs*gear_ratio)

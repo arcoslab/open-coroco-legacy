@@ -58,23 +58,26 @@ float I_SENSORLESS_SVM      = 0.000000002f;
 float I_DOWN_SENSORLESS_SVM = 0.000000002f;
 float fake_I_SENSORLESS_SVM = 0.000000002f;
 */
+
+/*
+//extra_load_angle=frequency*360.0f*(2.0f*TICK_PERIOD)+extra_load_angle_increase;
 float P_SENSORLESS_SVM      = 0.000001f; 
 float P_DOWN_SENSORLESS_SVM = 0.000001f; 
 float fake_P_SENSORLESS_SVM = 0.000001f;
 float I_SENSORLESS_SVM      = 0.0000000005f;
 float I_DOWN_SENSORLESS_SVM = 0.0000000005f;
 float fake_I_SENSORLESS_SVM = 0.0000000005f;
-
+*/
 
 //fast
-/*
+//extra_voltage_angle=extra_voltage_angle+extra_load_angle;
 float P_SENSORLESS_SVM      = 0.00001f; 
 float P_DOWN_SENSORLESS_SVM = 0.00001f; 
 float fake_P_SENSORLESS_SVM = 0.00001f;
 float I_SENSORLESS_SVM      = 0.0f;
 float I_DOWN_SENSORLESS_SVM = 0.0f;
 float fake_I_SENSORLESS_SVM = 0.0f;
-*/
+
 //slow
 /*
 float P_SENSORLESS_SVM      = 0.000001f;//0.00001f; 
@@ -116,9 +119,9 @@ float fake_I_SENSORLESS_TORQUE = 0.0f;
 
 
 //Admittance controller
-#define STIFFNESS 0.0f
-#define DAMPING   0.0f
-
+#define STIFFNESS 5.0f
+#define DAMPING   1.0f
+#define MAX_SPEED 120.0f
 
 //Battey
 #define UD_PERCENTAGE   0.7f    //0.8f
@@ -129,4 +132,7 @@ float fake_I_SENSORLESS_TORQUE = 0.0f;
 #define HALL_FACTOR 1.0f
 
 //strain gauge
-# define STRAIN_GAUGE_REFERENCE_VOLTAGE   0.0f
+# define STRAIN_GAUGE_REFERENCE_VOLTAGE   1.57f
+float strain_gauge_reference=0.0f;//STRAIN_GAUGE_REFERENCE_VOLTAGE;
+bool reset_strain_gauge_reference   =true;
+

@@ -24,7 +24,7 @@ float admittance_controller(    float K,
                                 float torque )
 {
 
-
+/*
     if (angle<1.05f*reference_angle && angle>0.95f*reference_angle)
         return 0.0f;
 
@@ -34,7 +34,11 @@ float admittance_controller(    float K,
         return -100.0f;
     else 
         return 0.0f;
+*/
 
-
-    //return (K/D) * (reference_angle-angle) -torque/D;
+    float w;
+    w=(1.0/360.0f)*(  (K/D)*(reference_angle-angle) -torque/D  );
+    if (w> MAX_SPEED) w=MAX_SPEED;
+    if (w<-MAX_SPEED) w=-MAX_SPEED;
+    return  w;
 }
