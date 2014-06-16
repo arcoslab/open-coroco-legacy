@@ -219,7 +219,7 @@ void adc_isr(void)
 
   //oscilloscope flag: end of interrupt
   gpio_clear(GPIOD, GPIO9);
-  gpio_clear(GPIOD, GPIO11);
+  //gpio_clear(GPIOD, GPIO11);
   }
 
 

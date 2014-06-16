@@ -37,7 +37,8 @@ float admittance_controller(    float K,
 */
 
     float w;
-    w=(1.0/360.0f)*(  (K/D)*(reference_angle-angle) -torque/D  );
+    //w=(1.0f/360.0f)*(  (K/D)*(reference_angle-angle) -torque/D  );
+    w=(1.0f/360.0f)*(  (K/D)*(reference_angle-angle) );//-torque/D  );
     if (w> MAX_SPEED) w=MAX_SPEED;
     if (w<-MAX_SPEED) w=-MAX_SPEED;
     return  w;

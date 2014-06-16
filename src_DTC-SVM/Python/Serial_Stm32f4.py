@@ -57,7 +57,7 @@ class Serial_Stm32f4(object):
         self.read_capture_state = 'not_collecting'
         self.tag_comment        = ''
         #self.aditional_comment=', STATOR_RESISTANCE_TEST 240degrees,MULTI_ROTOR OPEN LOOP,wrong motor parameters,one psi,wr filt,te filt,k 0.2, actual i,open 0.00005f,Ud 40%,psi_ref=0.0016,38kpwm'
-        self.aditional_comment=', Vexta,24V,Ud 70%,openSVM 0.0005max,P 0.00001,40k pwm,te wr ignoring currents'
+        self.aditional_comment=', Admitance no gauge,Vexta,24V,Ud 70%,openSVM 0.0005max,P 0.00001,40k pwm,te wr ignoring currents'
         self.driving_counter    = 0
         self.various_counter     = 0
         self.type_of_test       = 0        
@@ -75,7 +75,7 @@ class Serial_Stm32f4(object):
         self.title_extra            = ''
 
         #test routine
-        self.max_test_time      = 100000#50000#298#100000#100000#50000#100000
+        self.max_test_time      = 500000#50000#298#100000#100000#50000#100000
         self.min_test_time      = 300
         self.test_routine_state = 'initial'
         self.driving_test_state = 'initial'
@@ -721,6 +721,18 @@ class Serial_Stm32f4(object):
                 self.load_angle_vector.append(self.load_angle)
 
                 self.strain_gauge_vector.append(self.strain_gauge)
+
+                self.stiffness_vector.append(self.stiffness)
+                self.damping_vector.append(self.damping)
+                self.reference_electric_angle_vector.append(self.reference_electric_angle)
+                self.reference_mechanic_angle_vector.append(self.reference_mechanic_angle)
+                self.reference_gear_angle_vector.append(self.reference_gear_angle)
+                self.electric_angle_vector.append(self.electric_angle)
+                self.mechanic_angle_vector.append(self.mechanic_angle)
+                self.gear_angle_vector.append(self.gear_angle)
+                #self.electric_frequency_vector.append(self.electric_frequency)
+                self.mechanic_frequency_vector.append(self.mechanic_frequency)
+                self.gear_frequency_vector.append(  self.gear_frequency)    
                 
 
     def fast_vector_angle(self,y,x):
@@ -817,6 +829,7 @@ class Serial_Stm32f4(object):
                                 " electric_frequency: %10.2f" %self.electric_frequency  + \
                                 " hall_freq: %6.2f"           %self.hall_frequency      + extra_information
 
+
         elif self.print_selection==1:
             self.isD=self.isA;
             self.isQ=(self.isA+2.0*self.isB)/math.sqrt(3.0)
@@ -897,8 +910,11 @@ class Serial_Stm32f4(object):
                                 " K: %6.2f"       %self.stiffness                   + \
                                 " D: %6.2f"       %self.damping                     + \
                                 " r_g: %6.2f"     %self.reference_gear_angle        + \
-                               " g: %6.2f"       %self.gear_angle                   + \
-                                " e_f: %6.2f"     %self.electric_frequency          + extra_information
+                                " g: %6.2f"       %self.gear_angle                  + \
+                                " ref_freq: %6.2f"%self.reference_frequency         + \
+                                " e_f: %6.2f"     %self.electric_frequency          + \
+                                " hall_freq: %6.2f"           %self.hall_frequency  + \
+                                " strain_gauge: %12.8f:"    %self.strain_gauge      + extra_information
 
             '''
             self.new_data_line= "t: %6.2f "       %self.time                        + \
@@ -1130,22 +1146,50 @@ class Serial_Stm32f4(object):
         plt.ylabel('frequency (Hz)')
         plt.legend()
 
-    def plot_load_angle_and_frequency(self,rows,columns,subplot_index): 
+    def plot_gear_angle_and_frequency(self,rows,columns,subplot_index): 
 
         plt.subplot(rows,columns,subplot_index)
-        plt.plot(self.time_vector, self.gear_angle_vector,self.plotting_character,label='gear angle')
-        plt.plot(self.time_vector, self.reference_gear_angle_vector,self.plotting_character,label='reference angle')
+        plt.plot(self.time_vector, self.gear_angle_vector,self.plotting_character,label='gear angle',color='m')
+        plt.plot(self.time_vector, self.reference_gear_angle_vector,self.plotting_character,label='reference angle',color='y')
         plt.ylabel('gear angle (degrees)')
         plt.twinx() # to activate a second axis
         plt.plot(self.time_vector,self.electric_frequency_vector ,self.plotting_character,label='electric frequency',color='r')
-        plt.plot(self.time_vector,self.hall_frequency_vector     ,self.plotting_character,label='hall'     )
-        plt.plot(self.time_vector,self.reference_frequency_vector,self.plotting_character,label='reference')  
-        plt.title('frequency vs load angle'+self.title_extra)
+        plt.plot(self.time_vector,self.hall_frequency_vector     ,self.plotting_character,label='hall' ,color='g'    )
+        plt.plot(self.time_vector,self.reference_frequency_vector,self.plotting_character,label='reference',color='b')  
+        plt.title('frequency and gear angle vs time'+self.title_extra)
         plt.xlabel('time (ticks)')
         plt.ylabel('frequency(Hz)')
         plt.legend()
-        #self.reference_gear_angle 
-        #self.gear_angle 
+
+
+
+    def plot_strain_gauge_and_gear_angle(self,rows,columns,subplot_index): 
+
+        plt.subplot(rows,columns,subplot_index)
+        plt.plot(self.time_vector, self.gear_angle_vector,self.plotting_character,label='gear angle',color='m')
+        plt.plot(self.time_vector, self.reference_gear_angle_vector,self.plotting_character,label='reference angle',color='y')
+        plt.ylabel('gear angle (degrees)')
+        plt.twinx() # to activate a second axis
+        plt.plot(self.time_vector, self.strain_gauge_vector,self.plotting_character,label='strain_gauge')
+        plt.plot(self.time_vector, self.te_ref_vector,self.plotting_character,label='te_ref')
+        plt.title('strain gauge and gear angle vs time'+self.title_extra)
+        plt.xlabel('time (ticks)')
+        plt.ylabel('strain gauge(Nm)')
+        plt.legend()
+
+    def plot_strain_gauge_and_electric_frequency(self,rows,columns,subplot_index): 
+
+        plt.subplot(rows,columns,subplot_index)
+        plt.plot(self.time_vector, self.strain_gauge_vector,self.plotting_character,label='strain_gauge')
+        plt.ylabel('strain gauge (Nm)')
+        plt.twinx() # to activate a second axis
+        plt.plot(self.time_vector,self.electric_frequency_vector ,self.plotting_character,label='electric frequency',color='r')
+        plt.plot(self.time_vector,self.hall_frequency_vector     ,self.plotting_character,label='hall' ,color='g'    )
+        plt.plot(self.time_vector,self.reference_frequency_vector,self.plotting_character,label='reference',color='b')  
+        plt.title('electric frequency and strain gauge vs time'+self.title_extra)
+        plt.xlabel('time (ticks)')
+        plt.ylabel('frequency(Hz)')
+        plt.legend()
 
 
     def plot_three_phase_currents(self,rows,columns,subplot_index):
@@ -1580,6 +1624,46 @@ class Serial_Stm32f4(object):
                 self.plot_required_quadrature_vs_direct_voltages (rows,columns,subplot_index)
                 plt.savefig(plot_name+"required_VsQ_vs_required_VsD"+".jpg")
                 plt.close()
+
+        if   self.print_selection==15:
+           if len(self.time_vector)==0 or len(self.electric_frequency_vector)==0 or len(self.hall_frequency_vector)==0: #or len(self.reference_frequency_vector)==0:
+                self.empty_vectors=True;
+            
+           else:
+                plt.figure(num=16, figsize=plot_figsize, dpi=plot_dpi, facecolor=plot_face_color, edgecolor=plot_edge_color) 
+                self.plot_frequencies                   (rows,columns,subplot_index)
+                plt.savefig( plot_name+"frequencies" +self.title_extra+".jpg")
+                plt.close()
+
+                plt.figure(num=17, figsize=plot_figsize, dpi=plot_dpi, facecolor=plot_face_color, edgecolor=plot_edge_color) 
+                self.plot_gear_angle_and_frequency(rows,columns,subplot_index)
+                plt.savefig( plot_name+"gear angle and frequencies vs time" +self.title_extra+".jpg")
+                plt.close()
+
+                plt.figure(num=18, figsize=plot_figsize, dpi=plot_dpi, facecolor=plot_face_color, edgecolor=plot_edge_color) 
+                self.plot_gear_angles(rows,columns,subplot_index)
+                plt.savefig( plot_name+"gear angle vs time" +self.title_extra+".jpg")
+                plt.close()
+
+                plt.figure(num=19, figsize=plot_figsize, dpi=plot_dpi, facecolor=plot_face_color, edgecolor=plot_edge_color)
+                self.plot_strain_gauge_torque             (rows,columns,subplot_index)
+                plt.savefig(plot_name+"strain_gauge_torque" +".jpg")
+                plt.close()
+
+                plt.figure(num=20, figsize=plot_figsize, dpi=plot_dpi, facecolor=plot_face_color, edgecolor=plot_edge_color)
+                self.plot_strain_gauge_and_electric_frequency             (rows,columns,subplot_index)
+                plt.savefig(plot_name+"strain_gauge_and_frequency" +".jpg")
+                plt.close()
+
+                plt.figure(num=21, figsize=plot_figsize, dpi=plot_dpi, facecolor=plot_face_color, edgecolor=plot_edge_color)
+                self.plot_strain_gauge_and_gear_angle             (rows,columns,subplot_index)
+                plt.savefig(plot_name+"strain_gauge_and_gear_angle" +".jpg")
+                plt.close()
+
+
+
+
+
 
     def __init__(self):
         self.initializing_values()        

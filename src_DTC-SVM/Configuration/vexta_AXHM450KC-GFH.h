@@ -119,7 +119,7 @@ float fake_I_SENSORLESS_TORQUE = 0.0f;
 
 
 //Admittance controller
-#define STIFFNESS 5.0f
+#define STIFFNESS 1.0f
 #define DAMPING   1.0f
 #define MAX_SPEED 120.0f
 
