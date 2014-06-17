@@ -119,7 +119,7 @@ float fake_I_SENSORLESS_TORQUE = 0.0f;
 
 
 //Admittance controller
-#define STIFFNESS 1.0f
+#define STIFFNESS 25.0f
 #define DAMPING   1.0f
 #define MAX_SPEED 120.0f
 
@@ -132,7 +132,8 @@ float fake_I_SENSORLESS_TORQUE = 0.0f;
 #define HALL_FACTOR 1.0f
 
 //strain gauge
-# define STRAIN_GAUGE_REFERENCE_VOLTAGE   1.57f
-float strain_gauge_reference=0.0f;//STRAIN_GAUGE_REFERENCE_VOLTAGE;
+#define STRAIN_GAUGE_REFERENCE_VOLTAGE   1.002f//1.02f
+#define STRAIN_GAUGE_CONVERSION_FACTOR   1.303f
+float strain_gauge_reference=STRAIN_GAUGE_REFERENCE_VOLTAGE;
 bool reset_strain_gauge_reference   =true;
 

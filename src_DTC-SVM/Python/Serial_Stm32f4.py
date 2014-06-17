@@ -57,7 +57,7 @@ class Serial_Stm32f4(object):
         self.read_capture_state = 'not_collecting'
         self.tag_comment        = ''
         #self.aditional_comment=', STATOR_RESISTANCE_TEST 240degrees,MULTI_ROTOR OPEN LOOP,wrong motor parameters,one psi,wr filt,te filt,k 0.2, actual i,open 0.00005f,Ud 40%,psi_ref=0.0016,38kpwm'
-        self.aditional_comment=', Admitance no gauge,Vexta,24V,Ud 70%,openSVM 0.0005max,P 0.00001,40k pwm,te wr ignoring currents'
+        self.aditional_comment=', Admitance no gauge,K=25 D=1,Vexta,Ud 70%,openSVM 0.0005max,P 0.00001,40k pwm,te wr ignoring i'
         self.driving_counter    = 0
         self.various_counter     = 0
         self.type_of_test       = 0        
@@ -75,7 +75,7 @@ class Serial_Stm32f4(object):
         self.title_extra            = ''
 
         #test routine
-        self.max_test_time      = 500000#50000#298#100000#100000#50000#100000
+        self.max_test_time      = 70000#50000#298#100000#100000#50000#100000
         self.min_test_time      = 300
         self.test_routine_state = 'initial'
         self.driving_test_state = 'initial'
@@ -909,12 +909,12 @@ class Serial_Stm32f4(object):
             self.new_data_line= "t: %6.2f "       %self.time                        + \
                                 " K: %6.2f"       %self.stiffness                   + \
                                 " D: %6.2f"       %self.damping                     + \
-                                " r_g: %6.2f"     %self.reference_gear_angle        + \
-                                " g: %6.2f"       %self.gear_angle                  + \
-                                " ref_freq: %6.2f"%self.reference_frequency         + \
-                                " e_f: %6.2f"     %self.electric_frequency          + \
-                                " hall_freq: %6.2f"           %self.hall_frequency  + \
-                                " strain_gauge: %12.8f:"    %self.strain_gauge      + extra_information
+                                " rg: %6.2f"     %self.reference_gear_angle        + \
+                                " g: %12.7f"       %self.gear_angle                  + \
+                                " rf: %9.4f"%self.reference_frequency         + \
+                                " ef: %6.2f"     %self.electric_frequency          + \
+                                " hf: %9.4f"           %self.hall_frequency  + \
+                                " sg: %12.8f:"    %self.strain_gauge      + extra_information
 
             '''
             self.new_data_line= "t: %6.2f "       %self.time                        + \

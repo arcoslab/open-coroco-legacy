@@ -194,13 +194,24 @@ void adc_isr(void)
     V_shunt_B = (V_stm32_B*(VREF/ADC_CONVERSION_FACTOR)-V_DIFFERENTIAL_AMPLIFIER_REFFERENCE_B)/G_OP_AMP_B;
     i_sB      = V_shunt_B/R_SHUNT_B;
 
-    V_strain_gauge=V_stm32_strain_gauge*(VREF/ADC_CONVERSION_FACTOR);
-    strain_gauge = V_strain_gauge-strain_gauge_reference;
-    strain_gauge =te_moving_average_filter(strain_gauge);
+    //V_strain_gauge=V_stm32_strain_gauge*(VREF/ADC_CONVERSION_FACTOR);
+    //strain_gauge = V_strain_gauge-strain_gauge_reference;
+
+    V_strain_gauge=V_stm32_strain_gauge*(VREF/ADC_CONVERSION_FACTOR)-strain_gauge_reference;
+    V_strain_gauge=te_moving_average_filter(V_strain_gauge);
+
+    strain_gauge = V_strain_gauge*STRAIN_GAUGE_CONVERSION_FACTOR;
+    //strain_gauge =te_moving_average_filter(strain_gauge);
     if (reset_strain_gauge_reference==true)
     {
+/*
       strain_gauge_reference=strain_gauge_reference+strain_gauge;
       strain_gauge=0.0f;
+      reset_strain_gauge_reference=false;
+*/
+
+      //strain_gauge_reference=strain_gauge_reference+V_strain_gauge;
+      //V_strain_gauge=0.0f;
       reset_strain_gauge_reference=false;
     }
     //filtering currents
