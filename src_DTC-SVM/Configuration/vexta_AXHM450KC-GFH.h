@@ -132,8 +132,8 @@ float fake_I_SENSORLESS_TORQUE = 0.0f;
 #define HALL_FACTOR 1.0f
 
 //strain gauge
-#define STRAIN_GAUGE_REFERENCE_VOLTAGE   1.002f//1.02f
-#define STRAIN_GAUGE_CONVERSION_FACTOR   1.303f
+#define STRAIN_GAUGE_REFERENCE_VOLTAGE   0.0f//1.002f//1.02f
+#define STRAIN_GAUGE_CONVERSION_FACTOR   1.0f//1.303f
 float strain_gauge_reference=STRAIN_GAUGE_REFERENCE_VOLTAGE;
 bool reset_strain_gauge_reference   =true;
 
