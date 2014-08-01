@@ -52,7 +52,7 @@ class Serial_Stm32f4(object):
         self.counter            = 0
         self.capture_data       = False
         self.capture_counter    = 0
-        self.print_selection    = 0
+        self.print_selection    = 15
         self.new_data_line      = ''
         self.read_capture_state = 'not_collecting'
         self.tag_comment        = ''
@@ -303,7 +303,7 @@ class Serial_Stm32f4(object):
                 
                 self.ser.write('p')
                 self.ser.write(' ')
-                self.ser.write('0')
+                self.ser.write(str(self.print_selection))
                 self.ser.write('\n')
                 self.ser.write('\r')
                 
@@ -907,14 +907,14 @@ class Serial_Stm32f4(object):
 
         elif self.print_selection==15:
             self.new_data_line= "t: %6.2f "       %self.time                        + \
-                                " K: %6.2f"       %self.stiffness                   + \
-                                " D: %6.2f"       %self.damping                     + \
-                                " rg: %6.2f"     %self.reference_gear_angle        + \
-                                " g: %12.7f"       %self.gear_angle                  + \
-                                " rf: %9.4f"%self.reference_frequency         + \
-                                " ef: %6.2f"     %self.electric_frequency          + \
-                                " hf: %9.4f"           %self.hall_frequency  + \
-                                " sg: %12.8f:"    %self.strain_gauge      + extra_information
+                                " K: %10.6f"       %self.stiffness                   + \
+                                " D: %10.6f"       %self.damping                     + \
+                                " rg: %6.2f"     %self.reference_gear_angle         + \
+                                " g: %12.7f"       %self.gear_angle                 + \
+                                " rf: %9.4f"%self.reference_frequency               + \
+                                " ef: %6.2f"     %self.electric_frequency           + \
+                                " hf: %9.4f"           %self.hall_frequency         + \
+                                " sg: %12.8f:"    %self.strain_gauge                + extra_information
 
             '''
             self.new_data_line= "t: %6.2f "       %self.time                        + \

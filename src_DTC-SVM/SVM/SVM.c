@@ -350,6 +350,109 @@ void shutdown_SVM_speed (float reference_frequency,float actual_frequency,bool* 
     else                                                                                                                         
     { *shutdown = false;}
 }
+
+#define MINIMUM_admittance_FREQUENCY 0.5f
+#define MINIMUM_admittance_REF_FREQUENCY 0.5f
+void shutdown_admittance_speed (float reference_frequency,float actual_frequency,bool* shutdown)
+{
+
+
+    if      ( *shutdown           == false && 
+              actual_frequency>-MINIMUM_admittance_FREQUENCY && 
+              actual_frequency<MINIMUM_admittance_FREQUENCY  &&
+              reference_frequency>-MINIMUM_admittance_REF_FREQUENCY && 
+              reference_frequency<MINIMUM_admittance_REF_FREQUENCY  
+              ) 
+    { *shutdown = true ;}
+ 
+    else if      ( *shutdown           == true && 
+              actual_frequency>-MINIMUM_SVM_FREQUENCY && 
+              actual_frequency<MINIMUM_SVM_FREQUENCY  &&
+              reference_frequency>-MINIMUM_admittance_REF_FREQUENCY && 
+              reference_frequency<MINIMUM_admittance_REF_FREQUENCY ) 
+    { *shutdown = true ;}
+
+    else                                                                                                                         
+    { *shutdown = false;}
+}
+
+
+#define MINIMUM_GEAR_POSITION 10.0f
+#define MAX_SHUTDOWN_TIME     5.0f //s
+#define MINIMUM_REF_FREQ      5.0f
+void shutdown_SVM_position (float reference_frequency,float reference_position_change,float reference_position,float actual_position,bool* shutdown)
+{
+    static float shutdown_time=0;
+    static float shutdown_error=0.0f;
+    static bool start_shutdown_counter=false;
+
+    shutdown_error=reference_position-actual_position;
+
+    if      ( reference_frequency>-MINIMUM_REF_FREQ  &&
+              reference_frequency< MINIMUM_REF_FREQ  && 
+               *shutdown           == false      && 
+              reference_position_change == 0.0f && 
+              shutdown_error < MINIMUM_GEAR_POSITION     && 
+              shutdown_error >-MINIMUM_GEAR_POSITION         ) 
+    {
+         *shutdown = true ;
+         shutdown_time=0;
+    }
+
+
+    else if (reference_frequency>-MINIMUM_REF_FREQ  &&
+              reference_frequency< MINIMUM_REF_FREQ  && shutdown_time>=MAX_SHUTDOWN_TIME &&
+             shutdown_error < MINIMUM_GEAR_POSITION     && 
+                shutdown_error >-MINIMUM_GEAR_POSITION     && *shutdown==false)
+    {
+        *shutdown=true;
+        //shutdown_time=0;
+        start_shutdown_counter=false;
+    }
+
+    else if ( reference_frequency>-MINIMUM_REF_FREQ  &&
+              reference_frequency< MINIMUM_REF_FREQ  && 
+              *shutdown           == false      && 
+              shutdown_error < MINIMUM_GEAR_POSITION     && 
+              shutdown_error >-MINIMUM_GEAR_POSITION         ) 
+    { 
+        *shutdown = false ;
+        start_shutdown_counter=true;
+     
+    }
+    
+    else if ( *shutdown           == true  &&  
+              reference_position_change == 0.0f
+            )                                                                                      
+    { *shutdown = true ;
+       shutdown_time=0;
+    }
+
+
+ 
+    else                                                                                                                         
+    { *shutdown = false;}
+
+
+    if (start_shutdown_counter==true)
+    { shutdown_time+=TICK_PERIOD*2.0f;}
+
+    //else 
+    //{shutdown_time=0.0f;}
+
+
+    //if (*shutdown==true)
+      //  shutdown_time=0.0f;
+}
+
+void simple_shutdown(float control_signal,bool* shutdown)
+{
+    if (control_signal==0.0f)
+        *shutdown=true;
+    else
+        *shutdown=false;
+}
+
 #define MINIMUM_SVM_TORQUE 0.01f
 void shutdown_SVM_torque (float torque_reference,float actual_torque,bool* shutdown)
 {
@@ -648,15 +751,15 @@ void SVM_torque_close_loop(float reference_torque, float torque,bool close_loop_
 #define OPEN_LOOP_SVM  1
 #define CLOSE_LOOP_SVM 2
 
-void SVM_loop_control(float frequency,float maximum_open_loop_frequency,float te_ref, float freq_ref, bool* open_loop, bool* close_loop_SVM)
-{
-    static int SVM_loop_state=INITIAL_SVM;
+//void SVM_loop_control(float frequency,float maximum_open_loop_frequency,float te_ref, float freq_ref, bool* open_loop, bool* close_loop_SVM)
+//{
+    //static int SVM_loop_state=INITIAL_SVM;
     //*open_loop=true;
     //*close_loop_SVM=false;
-
+/*
     *open_loop=false;
     *close_loop_SVM=true;
-
+*/
 /*
     if      (SVM_loop_state==INITIAL_SVM && te_ref==0.0f && freq_ref==0.0f)  {   SVM_loop_state=INITIAL_SVM;
                                                                                  *open_loop=false;
@@ -706,7 +809,7 @@ void SVM_loop_control(float frequency,float maximum_open_loop_frequency,float te
     }
 */
 //--
-}
+//}
 
 #define IS_ANGLE_OFFSET_0 (120.0f)//110.0f
 #define IS_ANGLE_OFFSET_1 (0.0f)  //
@@ -716,7 +819,7 @@ void  DTC_SVM(void)
 {
 static bool shutdown=true;
   static bool open_loop_SVM  = false;
-  static bool close_loop_SVM = false;
+  //static bool close_loop_SVM = false;
   static bool increase_flux  = false;
 
 if (center_aligned_state==FIRST_HALF)
@@ -803,10 +906,7 @@ else
   //SVM_speed_close_loop(ref_freq_SVM,w_r,close_loop_SVM,&V_sD,&V_sQ);
   //SVM_speed_close_loop_of_voltage_frequency(ref_freq_SVM,CUR_FREQ,close_loop_SVM,&V_sD,&V_sQ,U_d,shutdown);   
 
-  if (reference_electric_angle>=360.0f*pole_pairs*gear_ratio)
-    reference_electric_angle=reference_electric_angle-360.0f*pole_pairs*gear_ratio;
-  if (electric_angle<0.0f)
-    reference_electric_angle=reference_electric_angle+360.0f*pole_pairs*gear_ratio;
+
 
 /*
   ref_freq_SVM = admittance_controller    (
@@ -826,14 +926,21 @@ else
                                             );
 
   electric_angle= electric_angle+
-                            SVM_speed_close_loop_of_voltage_frequency(ref_freq_SVM,w_r,close_loop_SVM,&V_sD,&V_sQ,U_d,shutdown); 
+                            SVM_speed_close_loop_of_voltage_frequency(ref_freq_SVM,w_r,true,&V_sD,&V_sQ,U_d,shutdown); 
                           //SVM_speed_close_loop_of_voltage_frequency(ref_freq_SVM,hall_freq,close_loop_SVM,&V_sD,&V_sQ,U_d,shutdown); 
-                    
 
-  if (electric_angle>=360.0f*pole_pairs*gear_ratio)
-    electric_angle=electric_angle-360.0f*pole_pairs*gear_ratio;
-  if (electric_angle<0.0f)
-    electric_angle=electric_angle+360.0f*pole_pairs*gear_ratio;
+
+#define MAX_GEAR_CYCLES 100.0f
+
+  if (reference_electric_angle>=360.0f*pole_pairs*gear_ratio*MAX_GEAR_CYCLES)
+    reference_electric_angle=reference_electric_angle-360.0f*pole_pairs*gear_ratio*MAX_GEAR_CYCLES;
+  if (electric_angle<-  360.0f*pole_pairs*gear_ratio*MAX_GEAR_CYCLES)
+    reference_electric_angle=reference_electric_angle+360.0f*pole_pairs*gear_ratio*MAX_GEAR_CYCLES;              
+
+  if (electric_angle>=360.0f*pole_pairs*gear_ratio*MAX_GEAR_CYCLES)
+    electric_angle=electric_angle-360.0f*pole_pairs*gear_ratio*MAX_GEAR_CYCLES;
+  if (electric_angle<-360.0f*pole_pairs*gear_ratio*MAX_GEAR_CYCLES)
+    electric_angle=electric_angle+360.0f*pole_pairs*gear_ratio*MAX_GEAR_CYCLES;
 
 
 
@@ -842,7 +949,7 @@ else
     electric_angle=0.0f;
 */
   //SVM_torque_close_loop(t_e_ref,t_e,close_loop_SVM,&V_sD,&V_sQ);
-  SVM_loop_control(hall_freq,MAXIMUM_OPEN_LOOP_SPEED,t_e_ref,ref_freq_SVM,&open_loop_SVM,&close_loop_SVM); 
+  //SVM_loop_control(hall_freq,MAXIMUM_OPEN_LOOP_SPEED,t_e_ref,ref_freq_SVM,&open_loop_SVM,&close_loop_SVM); 
 
   fast_vector_angle_and_magnitude(V_sQ,V_sD,&V_s,&cita_V_s);
 
@@ -874,11 +981,15 @@ else
 
   SVM_phase_duty_cycles           (&duty_a, &duty_b, &duty_c, cita_V_s,T_max_on,T_med_on,T_min_on);
   
-  //shutdown_SVM_speed (t_e_ref,CUR_FREQ,&shutdown); 
-  shutdown_SVM_speed (ref_freq_SVM,w_r,&shutdown);
-  //shutdown_SVM_speed (t_e_ref,CUR_FREQ,&shutdown); 
-  //shutdown_SVM_torque (t_e_ref,t_e,&shutdown);
 
+  //shutdown_SVM_speed (ref_freq_SVM,w_r,&shutdown);
+  /*shutdown_SVM_position (   ref_freq_SVM,
+                            reference_change_electric_angle/(pole_pairs*gear_ratio) ,
+                            reference_electric_angle/(pole_pairs*gear_ratio)        ,
+                            electric_angle/(pole_pairs*gear_ratio),
+                            &shutdown);*/
+  //shutdown_admittance_speed (ref_freq_SVM,hall_freq,&shutdown);
+  simple_shutdown(reference_change_electric_angle/(pole_pairs*gear_ratio),&shutdown);
   SVM_voltage_switch_inverter_VSI ( duty_a,  duty_b,  duty_c,shutdown);
 }
 

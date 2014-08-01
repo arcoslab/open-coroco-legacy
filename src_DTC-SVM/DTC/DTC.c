@@ -141,7 +141,7 @@ float quadrature_stator_flux_linkage_estimator_psi_sQ (float T,float V_sQ,float 
 }
 */
 
-float direct_stator_flux_linkage_estimator_psi_sD     (float T,float V_sD,float i_sD,float R_s,float electric_frequency)
+float direct_stator_flux_linkage_estimator_psi_sD     (float T,float V_sD,float i_sD,float R_s)//,float electric_frequency)
 {
   static float previous_psi_sD=0.0f;
 
@@ -164,7 +164,7 @@ float direct_stator_flux_linkage_estimator_psi_sD     (float T,float V_sD,float 
   return previous_psi_sD;
 }
 
-float quadrature_stator_flux_linkage_estimator_psi_sQ (float T,float V_sQ,float i_sQ,float R_s,float electric_frequency)
+float quadrature_stator_flux_linkage_estimator_psi_sQ (float T,float V_sQ,float i_sQ,float R_s)//,float electric_frequency)
 {
   static float previous_psi_sQ=0.0f;
 
