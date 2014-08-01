@@ -57,7 +57,7 @@ class Serial_Stm32f4(object):
         self.read_capture_state = 'not_collecting'
         self.tag_comment        = ''
         #self.aditional_comment=', STATOR_RESISTANCE_TEST 240degrees,MULTI_ROTOR OPEN LOOP,wrong motor parameters,one psi,wr filt,te filt,k 0.2, actual i,open 0.00005f,Ud 40%,psi_ref=0.0016,38kpwm'
-        self.aditional_comment=', Admitance no gauge,K=25 D=1,Vexta,Ud 70%,openSVM 0.0005max,P 0.00001,40k pwm,te wr ignoring i'
+        self.aditional_comment=', Admitance ,K=5 D=0.00001,Vexta,Ud 70%,openSVM 0.0005max P=0.00001,40k pwm,te wr ignoring i'
         self.driving_counter    = 0
         self.various_counter     = 0
         self.type_of_test       = 0        
@@ -1180,7 +1180,7 @@ class Serial_Stm32f4(object):
     def plot_strain_gauge_and_electric_frequency(self,rows,columns,subplot_index): 
 
         plt.subplot(rows,columns,subplot_index)
-        plt.plot(self.time_vector, self.strain_gauge_vector,self.plotting_character,label='strain_gauge')
+        plt.plot(self.time_vector, self.strain_gauge_vector,self.plotting_character,label='strain_gauge',color='m')
         plt.ylabel('strain gauge (Nm)')
         plt.twinx() # to activate a second axis
         plt.plot(self.time_vector,self.electric_frequency_vector ,self.plotting_character,label='electric frequency',color='r')
@@ -2470,7 +2470,7 @@ class Serial_Stm32f4(object):
                         #self.print_selection=int(split_command[1])     
                         #self.write_a_line(line)
                         self.print_selection_setup(int(split_command[1]))
-
+                        
                     elif split_command[0]=='t':
                         
                         self.start_driving_test=True;

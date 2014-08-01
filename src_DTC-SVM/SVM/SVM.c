@@ -822,7 +822,7 @@ else
                                             damping,
                                             reference_electric_angle,
                                             electric_angle,
-                                            0.0f
+                                            strain_gauge
                                             );
 
   electric_angle= electric_angle+

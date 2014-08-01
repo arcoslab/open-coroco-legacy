@@ -210,8 +210,8 @@ void adc_isr(void)
       reset_strain_gauge_reference=false;
 */
 
-      //strain_gauge_reference=strain_gauge_reference+V_strain_gauge;
-      //V_strain_gauge=0.0f;
+      strain_gauge_reference=strain_gauge_reference+V_strain_gauge;
+      V_strain_gauge=0.0f;
       reset_strain_gauge_reference=false;
     }
     //filtering currents

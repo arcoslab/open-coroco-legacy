@@ -73,7 +73,7 @@ float fake_I_SENSORLESS_SVM = 0.0000000005f;
 //extra_voltage_angle=extra_voltage_angle+extra_load_angle;
 float P_SENSORLESS_SVM      = 0.00001f; 
 float P_DOWN_SENSORLESS_SVM = 0.00001f; 
-float fake_P_SENSORLESS_SVM = 0.00001f;
+float fake_P_SENSORLESS_SVM = 0.000002f;
 float I_SENSORLESS_SVM      = 0.0f;
 float I_DOWN_SENSORLESS_SVM = 0.0f;
 float fake_I_SENSORLESS_SVM = 0.0f;
@@ -119,8 +119,8 @@ float fake_I_SENSORLESS_TORQUE = 0.0f;
 
 
 //Admittance controller
-#define STIFFNESS 25.0f
-#define DAMPING   1.0f
+#define STIFFNESS 0.00001f
+#define DAMPING   0.00001f
 #define MAX_SPEED 120.0f
 
 //Battey
@@ -133,7 +133,7 @@ float fake_I_SENSORLESS_TORQUE = 0.0f;
 
 //strain gauge
 #define STRAIN_GAUGE_REFERENCE_VOLTAGE   0.0f//1.002f//1.02f
-#define STRAIN_GAUGE_CONVERSION_FACTOR   1.0f//1.303f
+#define STRAIN_GAUGE_CONVERSION_FACTOR   2.0f//1.303f
 float strain_gauge_reference=STRAIN_GAUGE_REFERENCE_VOLTAGE;
 bool reset_strain_gauge_reference   =true;
 
