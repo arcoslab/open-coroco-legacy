@@ -1,0 +1,1 @@
+siempre recuerde que para desconectar el stm32 de la placa que controla el motor, se debe primero desconectar las baterias y hasta el final sacar el stm32 de la placa. de lo contrario se puede quemar o danar.

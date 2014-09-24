@@ -1,0 +1,23 @@
+Para utilizar el dispositivo en la computadora, se debe instalar y flasear el STM32, para lo cual se debe ingresar a la pagina:
+
+https://wiki.arcoslab.eie.ucr.ac.cr/doku.php/stm32f4
+
+y segir las instrucciones.
+
+En este caso, como mi computadora tiene la distribucion instalada de 32 bits, no es necesario hacer lo del dpkg i386.
+
+Si aparece un error acerca de que el opencd no encuentra el stlink.cfg
+es porque la version del sistema operativo en muy vieja y el opencd instalado es menor a la version 7.
+
+debe hacer un :
+ /usr/bin/openocd --version
+y si la version es menor de la 7, se debe hacer un upgrade al sistema en general.
+
+http://gnuarmeclipse.livius.net/blog/openocd-install/
+
+
+
+
+
+El archivo donde esta declarada la funcion del low pass filter es donde dice DTC.c
+

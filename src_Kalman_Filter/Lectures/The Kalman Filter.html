@@ -1,0 +1,475 @@
+<html><head>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<meta name="generator" content="Adobe GoLive 4">
+		<title>The Kalman Filter</title>
+		<meta name="description" content="Some tutorials, references, and research on the Kalman filter.">
+		<meta name="keywords" content="stochastic estimation, Kalman filter, filter, optimal estimation">
+		</head><body bgcolor="white"><x-claris-window top="42" bottom="694" left="4" right="539"><x-claris-remotesave server="angel" user="welch" dir="/afs/cs.unc.edu/home/welch/public_html/" file=""><x-claris-tagview mode="minimal">
+		<link href="The%20Kalman%20Filter_archivos/agl-styles.html" rel="stylesheet" type="text/css" media="all">
+		<style type="text/css" media="all"><!--
+.ds2 /*agl rulekind: base;*/ { color: rgb(0%,0%,0%); font-size: 12pt; font-style: normal; font-variant: normal; font-weight: normal; text-decoration: none; letter-spacing: 0; vertical-align: baseline; }
+.ds3 /*agl rulekind: base;*/ { font-weight: normal; }
+.dsR1 /*agl rulekind: base;*/ { width: 100%; height: auto; }
+.dsR4 /*agl rulekind: base;*/ { width: 30%; }
+.dsR6 /*agl rulekind: base;*/ { width: 33%; }
+#clustrMapsImg { }
+.dsR7 /*agl rulekind: base;*/ { width: 223px; height: 153px; }
+.dsR15 /*agl rulekind: base;*/ { text-align: center; width: 160px; }
+.dsR17 /*agl rulekind: base;*/ { width: 160px; height: 106px; }
+--></style>
+	
+
+	
+		<h1>
+			<table border="0" cellpadding="0" cellspacing="3">
+				<tbody><tr>
+					<td rowspan="2" align="center" valign="top" width="55"><img src="The%20Kalman%20Filter_archivos/kf_predict-correct.gif" border="0" height="108" width="168"></td>
+					<td valign="bottom" width="70%">
+						<h1>The Kalman Filter</h1>
+					</td>
+				</tr>
+				<tr>
+					<td valign="top" width="70%">
+						<p>Some tutorials, references, and research related to the Kalman filter.</p>
+					</td>
+				</tr>
+			</tbody></table>
+		</h1>
+		<table border="0" cellpadding="0" cellspacing="3">
+			<tbody><tr>
+				<td align="right" valign="top" width="55"><a href="http://www.unc.edu/"><img src="The%20Kalman%20Filter_archivos/oldwell1-tiny.jpg" naturalsizeflag="3" border="0"></a></td>
+				<td colspan="2" align="left" valign="middle">
+					<div align="left">
+						<p>This site is maintained by <a href="http://www.cs.unc.edu/%7Ewelch">Greg Welch</a> and <a href="http://www.cs.unc.edu/%7Egb">Gary Bishop</a>, faculty members of the <a href="http://www.cs.unc.edu/">Department of Computer Science</a> at the <a href="http://www.unc.edu/">University of North Carolina at Chapel Hill</a>. <a href="mailto:welch@cs.unc.edu">Please send</a> additions or comments.</p>
+					</div>
+				</td>
+				<td align="right" valign="top" width="116"><a href="http://www.adobe.com/products/acrobat/readstep2.html"><img src="The%20Kalman%20Filter_archivos/getacro.gif" usemap="#getacroMap10" naturalsizeflag="3" ismap="ismap" align="top" border="0"></a>
+					<p><a href="http://www.adobe.com/products/acrobat/readstep2.html">For PDF file viewing</a>.</p>
+				</td>
+			</tr>
+		</tbody></table>
+		<h2>
+			<table class="dsR1" border="0" cellpadding="0" cellspacing="2">
+				<tbody><tr>
+					<td class="dsR6">
+						<hr>
+					</td>
+					<td class="dsR4" align="center">
+						<h2>News&nbsp;&amp;&nbsp;Events</h2>
+					</td>
+					<td class="dsR6">
+						<hr>
+					</td>
+				</tr>
+				<tr>
+					<td class="dsR6" colspan="3">
+						<ul>
+							<li><span class="ds3">[24 August, 2014] The next offering of the short course "</span><a href="http://kalmanfilteringgpsins.com/"><span class="ds3">Application of Kalman Filtering to GPS, INS, &amp; Navigation</span></a><span class="ds3">" by </span><a href="http://www.ecs.fullerton.edu/%7Emgrewal/"><span class="ds3">Dr. M. S. Grewal</span></a><span class="ds3"> will be 12–16 January 2015 at the <a href="http://www.holidayinn.com/hotels/us/en/fullerton/laxfu/hoteldetail">Holiday Inn &amp; Suites Fullerton</a> (California).</span>
+							</li><li><span class="ds3">[4 February, 2013] The third edition of </span><a href="http://www.ecs.fullerton.edu/%7Emgrewal/"><span class="ds3">Dr. M. S. Grewal</span></a><span class="ds3">'s GPS book is now/shortly available, with a new title: <a href="http://www.wiley.com/WileyCDA/WileyTitle/productCd-111844700X.html">Global Navigation Satellite Systems, Inertial Navigation, and Integration</a>. </span><a href="http://www.addall.com/New/submitNew.cgi?query=978-1-1184-4700-0&amp;type=ISBN&amp;location=10000&amp;state=AK&amp;dispCurr=USD"><span class="ds3">AddAll</span></a><span class="ds3"> is one source for finding it.</span>
+						</li></ul>
+						<ul>
+							<li><span class="ds3">[STICKY] On 2 January, 2008, The U.S. <a href="http://www.nae.edu/">National Academy of Engineering</a> announced that Rudolf Kalman would receive the 2008 <a href="http://www.nae.edu/nae/awardscom.nsf/weblinks/NAEW-4NHML8?OpenDocument">Charles Stark Draper Prize</a>
+ for "for the development and dissemination of the optimal digital 
+technique (known as the Kalman Filter) that is pervasively used to 
+control a vast array of consumer, health, commercial and defense 
+products." The $500,000 prize was presented in Washington, DC, on 19 
+February, 2008. More information is <a href="http://www.nae.edu/nae/awardscom.nsf/weblinks/JMAN-7A4HZV?OpenDocument">available here</a>. See also <a href="http://www8.nationalacademies.org/onpinews/newsitem.aspx?RecordID=01022008">the NAE press release</a>. We have also made available <a href="http://www.cs.unc.edu/%7Ewelch/kalman/media/draper2008.html">some photos of the event</a>, taken by Greg Welch.</span>
+						</li></ul>
+					</td>
+				</tr>
+			</tbody></table>
+		</h2>
+		<table border="0" cellpadding="0" cellspacing="2" width="100%">
+			<tbody><tr valign="middle">
+				<td colspan="3" align="center">
+					<div align="left">
+						<hr>
+					</div>
+				</td>
+				<td colspan="2" align="center">
+					<h2>Quick Links</h2>
+				</td>
+				<td colspan="3">
+					<hr>
+				</td>
+			</tr>
+			<tr>
+				<td align="center" width="12%"><a href="#Anchor-Rudolph-6296"><img src="The%20Kalman%20Filter_archivos/kalman_nae_2008-small.jpg" border="0" height="48" width="74"></a></td>
+				<td align="center" width="12%"><a href="http://www.cs.unc.edu/%7Ewelch/kalman/kalmanIntro.html"><img src="The%20Kalman%20Filter_archivos/kf_predict-correct_small.gif" border="0" height="54" width="85"></a></td>
+				<td align="center" width="12%"><a href="http://www.cs.unc.edu/%7Ewelch/kalman/kftool/index.html"><img src="The%20Kalman%20Filter_archivos/kf_tool.gif" border="0" height="80" width="84"></a></td>
+				<td align="center" width="12%"><a href="#Anchor-48213"><img src="The%20Kalman%20Filter_archivos/kf_book.gif" align="top" border="0" height="68" width="84"></a></td>
+				<td align="center" width="12%"><a href="#Anchor-49575"><img src="The%20Kalman%20Filter_archivos/kf_class.gif" border="0" height="80" width="84"></a></td>
+				<td align="center" width="12%"><a href="#Anchor-37516"><img src="The%20Kalman%20Filter_archivos/kf_www.gif" border="0" height="84" width="84"></a></td>
+				<td align="center" width="12%"><a href="#Anchor-23522"><img src="The%20Kalman%20Filter_archivos/kf_drive.gif" border="0" height="84" width="84"></a></td>
+				<td align="center" width="12%"><a href="#Anchor-21683"><img src="The%20Kalman%20Filter_archivos/paper.gif" border="0" height="85" width="84"></a></td>
+			</tr>
+			<tr>
+				<td align="center" width="12%"><a href="http://www.cs.unc.edu/%7Ewelch/kalman/index.html#Anchor-Rudolph-6296">R.E. Kalman</a></td>
+				<td align="center" width="12%"><a href="http://www.cs.unc.edu/%7Ewelch/kalman/kalmanIntro.html">Introductory Paper</a></td>
+				<td align="center" width="12%"><a href="http://www.cs.unc.edu/%7Ewelch/kalman/kftool/index.html">Java-Based Learning Tool</a></td>
+				<td align="center" width="12%"><a href="http://www.cs.unc.edu/%7Ewelch/kalman/index.html#Anchor-48213">Printed Material</a></td>
+				<td align="center" width="12%"><a href="#Anchor-49575">Courses</a></td>
+				<td align="center" width="12%"><a href="http://www.cs.unc.edu/%7Ewelch/kalman/index.html#Anchor-37516">Other Sites</a></td>
+				<td align="center" width="12%"><a href="http://www.cs.unc.edu/%7Ewelch/kalman/index.html#Anchor-23522">Software</a></td>
+				<td align="center" width="12%"><a href="http://www.cs.unc.edu/%7Ewelch/kalman/index.html#Anchor-21683">Research &amp; Applications</a></td>
+			</tr>
+		</tbody></table>
+		<table border="0" cellpadding="0" cellspacing="2" width="100%">
+			<tbody><tr>
+				<td width="36%">
+					<hr>
+				</td>
+				<td align="center">
+					<h2>Non-English Material</h2>
+				</td>
+				<td width="36%">
+					<hr>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="3">
+					<p>Thank you to the people who made the following possible:</p>
+					<ul>
+						<li><a href="mailto:salman412412@gmail.com">Salman Masoumi</a> has created a <a href="http://www.cs.unc.edu/%7Ewelch/kalman/media/pdf/Kalman_bio_Fa.pdf">Farsi translation of Kalman's biographical information</a>.
+						
+						
+						</li><li><a href="http://www.cs.jhu.edu/%7Exuchen/">Xuchen Yao</a>, a Ph.D. student at <a href="http://www.jhu.edu/">Johns Hopkins University</a> has taken our article "<a href="http://www.cs.unc.edu/%7Ewelch/kalman/kalmanIntro.html">An Introduction to the Kalman Filter</a>" and <a href="http://www.cs.unc.edu/%7Ewelch/kalman/media/misc/kalman_intro_chinese.zip">translated it into Chinese</a>.
+						</li><li><a href="mailto:rrrb@sureste.com">Ruben R. Raygosa</a> has contributed a <a href="http://www.cs.unc.edu/%7Ewelch/kalman/media/misc/RAYGOSA_KF_tutorial.zip">Spanish tutorial for the Kalman filter</a>.
+					
+					
+					</li></ul>
+				</td>
+			</tr>
+		</tbody></table>
+		<h2>
+			<table border="0" cellpadding="0" cellspacing="2" width="100%">
+				<tbody><tr>
+					<td width="36%">
+						<hr>
+					</td>
+					<td align="center">
+						<h2>Reference</h2>
+					</td>
+					<td width="36%">
+						<hr>
+					</td>
+				</tr>
+			</tbody></table>
+		</h2>
+		<a name="Anchor-Rudolph-6296"></a>
+		<table border="0" cellpadding="0" cellspacing="2">
+			<tbody><tr>
+				<td width="84"><a href="http://www.cs.unc.edu/%7Ewelch/kalman/media/images.html"><img src="The%20Kalman%20Filter_archivos/kalman_nae_2008-small.jpg" border="0" height="48" width="74"></a></td>
+				<td valign="middle">
+					<h2></h2>
+					<h2>Rudolph E. Kalman</h2>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2">
+					<ul>
+						<li>Biographical information
+						
+							<ul>
+								<li>A little <a href="http://www.cs.unc.edu/%7Ewelch/kalman/kalmanBio.html">biographical information</a>. The information is <a href="http://www.cs.unc.edu/%7Ewelch/kalman/media/pdf/Kalman_bio_Fa.pdf">also available in Farsi</a>, thanks to <a href="mailto:salman412412@gmail.com">Salman Masoumi</a>.							
+								</li><li><a href="http://www.cs.unc.edu/%7Ewelch/kalman/siam_sontag.html">More information</a>, thanks to <a href="http://www.math.rutgers.edu/%7Esontag">Eduardo Sontag</a>, a former student of R.E. Kalman's.
+							
+								</li><li>Yet <a href="http://en.wikipedia.org/wiki/Rudolf_E._Kalman">more information in Wikipedia.</a>
+								</li><li>There is a <a href="http://www.ieee.org/web/aboutus/history_center/biography/kalman.html">nice article on Kalman</a> in the <a href="http://www.ieee.org/organizations/history_center/">IEEE History Center</a>.
+
+							
+								</li><li>On 16 November, 2005, Kalman was awarded Columbia Engineering School Alumni Association’s <b>Egleston Medal</b> for <i>Distinguished Engineering Achievement</i>. See <a href="http://www.columbia.edu/cu/news/05/11/elgeston_medal.html">online article</a> or <a href="http://www.cs.unc.edu/%7Ewelch/kalman/media/pdf/Egelston_Medal_20051116.pdf">local copy</a>.
+
+						
+								
+								</li><li>On 19 February, 2008, Kalman was awared the <a href="http://www.nae.edu/nae/awardscom.nsf/weblinks/NAEW-4NHML8?OpenDocument">Charles Stark Draper Prize</a>
+ for "the development and dissemination of the optimal digital technique
+ (known as the Kalman Filter) that is pervasively used to control a vast
+ array of consumer, health, commercial and defense products." More 
+information is <a href="http://www8.nationalacademies.org/onpinews/newsitem.aspx?RecordID=01022008">available here</a>. (See also this <a href="http://www.cs.unc.edu/%7Ewelch/kalman/media/pdf/Kalman_Draper_2008.pdf">archived copy of the press release</a>.)
+							
+							
+								</li><li>Vladimir Tislenko <a href="http://www.cs.unc.edu/%7Ewelch/kalman/tislenko.html">wrote to tell us about two Kalman rivers connected to the Irtysh river in Siberia</a>.
+					
+							</li></ul>
+						
+						</li><li><a href="http://www.cs.unc.edu/%7Ewelch/kalman/kalmanPaper.html">R. E. Kalman's seminal (1960) paper</a>.
+
+					
+					</li></ul>
+				</td>
+			</tr>
+		</tbody></table>
+		<a name="Anchor-48213"></a>
+		<table border="0" cellpadding="0" cellspacing="4">
+			<tbody><tr>
+				<td valign="top" width="84"><img src="The%20Kalman%20Filter_archivos/kf_book.gif" align="top" border="0" height="68" width="84"></td>
+				<td valign="middle">
+					<h2>Printed Reference Material</h2>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2" valign="top">
+					<ul>
+						<li>For beginners, we highly recommend reading <a href="http://www.cs.unc.edu/%7Ewelch/kalman/maybeck.html">Chapter 1 of this book</a> by <a href="http://en.afit.edu/maybeck/">Peter S. Maybeck</a>
+ on the subjects of stochastic models, estimation, and control. Although
+ the remaining chapters may appear daunting, the book is thorough and 
+complete.						</li><li>For a somewhat more advanced presentation, we have written "<a href="http://www.cs.unc.edu/%7Ewelch/kalman/kalmanIntro.html">An Introduction to the Kalman Filter</a>" (also <a href="http://yaoxuchen.googlepages.com/kalman">available in Chinese</a>) and a more substantial <a href="http://www.cs.unc.edu/%7Etracker/media/pdf/SIGGRAPH2001_CoursePack_08.pdf">course pack (booklet)</a> for our <a href="http://www.cs.unc.edu/%7Etracker/ref/s2001/kalman/index.html">tutorial on the Kalman filter</a> presented at <a href="http://www.siggraph.org/s2001/">ACM SIGGRAPH 2001</a>. (Please read the <a href="http://info.acm.org/pubs/toc/CRnotice.html">ACM Copyright Notice</a> for the latter.)
+						</li><li>In addition, here are several other <a href="http://www.cs.unc.edu/%7Ewelch/kalman/kalmanBooks.html">Kalman filter books</a>, and several of the sites below provide reading lists.
+						</li><li>Kalman's <a href="http://www.cs.unc.edu/%7Ewelch/kalman/kalmanPaper.html">seminal paper (1960)</a>.
+
+						</li><li>Sorenson's <a href="http://www.cs.unc.edu/%7Ewelch/kalman/sorensonPaper.html">"Gauss to Kalman" article (1970)</a>.
+					</li></ul>
+				</td>
+			</tr>
+		</tbody></table>
+		<a name="Anchor-49575"></a>
+		<table border="0" cellpadding="0" cellspacing="4">
+			<tbody><tr>
+				<td valign="top" width="84"><a href="http://www.cs.unc.edu/%7Etracker/ref/s2001/kalman/index.html"><img src="The%20Kalman%20Filter_archivos/kf_class.gif" border="0" height="80" width="84"></a></td>
+				<td valign="middle">
+					<h2><a name="Anchor-Courses-49575"></a>Courses</h2>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2" valign="top">
+					<ul>
+						<li>12–16 January 2015, Fullerton, California, USA<ul>
+								<li>"<a href="http://www.kalmanfilteringgpsins.com/">Application of Kalman Filtering to GPS, INS, &amp; Navigation</a>"<br>
+									<a href="http://www.ecs.fullerton.edu/%7Emgrewal/">Dr. M. S. Grewal</a>, California State University, Fullerton, California, USA
+							
+							</li></ul>
+						
+						
+						</li><li><a href="http://www.uclaextension.edu/">UCLA Extension</a> (Los Angeles, CA, USA) offers a recurring <a href="http://www.seminarinformation.com/qqawsp/kalman-filtering">short course on Kalman filtering</a>.
+						
+						</li><li>At <a href="http://www.siggraph.org/s2001/">ACM SIGGRAPH 2001</a> we presented a <a href="http://www.cs.unc.edu/%7Etracker/ref/s2001/kalman/index.html">tutorial on the Kalman filter</a>. (Please read the <a href="http://info.acm.org/pubs/toc/CRnotice.html">ACM Copyright Notice</a>.)
+					</li></ul>
+				</td>
+			</tr>
+			<tr>
+				<td valign="top"></td>
+				<td valign="top"></td>
+			</tr>
+		</tbody></table>
+		<a name="Anchor-37516"></a>
+		<table border="0" cellpadding="0" cellspacing="4">
+			<tbody><tr>
+				<td valign="top" width="84"><img src="The%20Kalman%20Filter_archivos/kf_www.gif" border="0" height="84" width="84"></td>
+				<td valign="middle">
+					<h2>Other Sites and Electronic Reference</h2>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2" valign="top">
+					<h4>Local Material</h4>
+					<ul>
+						<li>"<a href="http://www.cs.unc.edu/%7Ewelch/kalman/kalmanIntro.html">An Introduction to the Kalman Filter</a>" by <a href="http://www.cs.unc.edu/%7Ewelch">Greg Welch</a> and <a href="http://www.cs.unc.edu/%7Egb">Gary Bishop</a>. The article has also been <a href="http://yaoxuchen.googlepages.com/kalman">translated into Chinese</a> by Xuchen Yao, a student at Institute of Acoustics, the <a href="http://english.cas.ac.cn/Eng2003/page/home.asp">Chinese Academy of Sciences</a> (January, 2007. See also the <a href="http://www.cs.unc.edu/%7Ewelch/kalman/media/pdf/kalman_intro_chinese.pdf">local  archived copy</a>.).
+						
+						</li><li>Course notes from our <a href="http://www.cs.unc.edu/%7Etracker/ref/s2001/kalman/index.html">tutorial on the Kalman filter</a> presented at <a href="http://www.siggraph.org/s2001/">ACM SIGGRAPH 2001</a>. (Please read the <a href="http://info.acm.org/pubs/toc/CRnotice.html">ACM Copyright Notice</a>.)
+
+						</li><li><a href="http://www.cs.unc.edu/%7Ewelch/media/pdf/kalmanIntroSlides.pdf">Slides</a> from an older introductory talk by <a href="http://www.cs.unc.edu/%7Ewelch">Greg Welch</a> and <a href="http://www.cs.unc.edu/%7Egb">Gary Bishop</a>.
+
+						</li><li>Our very own Java-based <a href="http://www.cs.unc.edu/%7Ewelch/kalman/kftool/index.html">Kalman Filter Learning Tool</a>.
+
+					</li></ul>
+					<h4>External Material</h4>
+					<ul>
+						<li><a href="http://www.wikipedia.org/">Wikipedia</a> has an <a href="http://en.wikipedia.org/wiki/Kalman_filter">excellent article on the Kalman filter</a> and <a href="http://en.wikipedia.org/wiki/Particle_filter">particle filters</a>.</li><li>In a 1997 Innovation column of <a href="http://www.gpsworld.com/">GPS World</a>, Larry J. Levy wrote a very nice introduction to the Kalman filter titled "<a href="http://www.cs.unc.edu/%7Ewelch/kalman/Levy1997/index.html">The Kalman Filter: Navigation's Integration Workhorse</a>." (Also available as <a href="http://www.cs.unc.edu/%7Ewelch/kalman/Levy1997/Levy1997_KFWorkhorse.pdf">PDF file</a>.)
+ Levy provides some historical perspective, a non-mathematical 
+explanation, and of course a mathematical explanation with examples.	
+						
+						</li><li><a href="http://www.ai.mit.edu/%7Emurphyk/">Kevin Murphy</a>, a postdoc in the <a href="http://www.ai.mit.edu/">MIT AI Lab</a>, has a nice <a href="http://www.ai.mit.edu/%7Emurphyk/Software/Kalman/kalman.html">Kalman filter web page</a>. There he provides <a href="http://www.ai.mit.edu/%7Emurphyk/Software/Kalman/kalman_download.html">several MatLab toolboxes</a>, including a Kalman filter toolbox. (<a href="http://www.mathworks.com/products/prodoverview.shtml">MatLab</a> is a product of <a href="http://www.mathworks.com/">The MathWorks</a>.)
+
+						
+						</li><li><a href="http://www.cse.ogi.edu/%7Erudmerwe/">Rudolph van der Merwe</a> maintains a very nice web site on signal processing research including work on <a href="http://www.cslu.ogi.edu/nsel/ukf/">Unscented Kalman Filters</a>. (The idea for the UKF was originally introduced by Simon Julier and Jeff Uhlmann.) Their site contains papers and a <a href="http://choosh.csee.ogi.edu/rebel/">MatLab toolkit called ReBEL</a> which contains functions and scripts for the Kalman filter, particle filters (in general), and the Unscented Kalman Filter. (<a href="http://www.mathworks.com/products/prodoverview.shtml">MatLab</a> is a product of <a href="http://www.mathworks.com/">The MathWorks</a>.) <a href="http://cslu.cse.ogi.edu/publications/ps/UPF_CSLU_talk.pdf">Here are the slides</a> from a June 2002 talk Rudolph gave at a <a href="http://cslu.cse.ogi.edu/">CSLU</a> weekly seminar.
+
+						
+						</li><li>"<a href="http://www.cs.unc.edu/%7Ewelch/kalman/siam_cipra.html">Engineers Look to Kalman Filtering for Guidance</a>," an article by Barry Cipra, SIAM News, Vol. 26, No. 5, August 1993.
+
+						
+						</li><li><a href="http://www.innovatia.com/software/papers/kalman.htm">Innovatia Software's Kalman Filtering Page</a>, provided by <a href="mailto:dansimon@innovatia.com">Dr. Dan Simon</a>.
+
+						
+						</li><li>"<a href="http://home.earthlink.net/%7Epdjoseph/id11.html">The one dimensional Kalman filter</a>" by <a href="http://home.earthlink.net/%7Epdjoseph/">Peter Joseph</a>.</li><li><a href="http://r.w.r.darling.googlepages.com/">R. W. R. Darling</a> has a very nice online survey of nonlinear filtering. (The <a href="http://www.nonlinearfiltering.webhop.net/">original site</a> does not seem to work any more, but the survey <a href="http://web.archive.org/web/20080214024542/http://www.nonlinearfiltering.webhop.net/">is accessible via "The Wayback Machine"</a>.)
+						</li><li><a href="http://www.omatrix.com/">O-Matrix</a> (<a href="http://www.omatrix.com/contact.html">Harmonic Software</a>) includes a <a href="http://www.omatrix.com/kbf.html">Kalman Filter Design Studio</a>,
+ a GUI-based environment for graphically designing, building, and 
+analyzing Kalman filters using the Kalman filter functions available in 
+O-Matrix.
+						</li><li>Jean-Philippe Drecourt, a PhD student working on the <a href="http://projects.dhi.dk/daihm/">DHI Data Assimilation in Hydrological and Hydrodynamic Models site</a> project, wrote a <a href="http://projects.dhi.dk/daihm/Files/KFlitreview.pdf">literature review on Kalman filtering</a>
+ with references to hydrological modelling. He reviews the Kalman filter
+ itself, and some of the most important&nbsp;suboptimal schemes.
+
+						
+						</li><li>Andre Adrian, a Senior Engineer at <a href="http://www.dfs.de/dfs/internet/english/index.html">DFS in Germany</a>, used the Kalman filter (and variations) to create a central tracker for the german air traffic control. He has provided <a href="http://www.andreadrian.de/kalman_filter/">a few articles here</a>.
+
+						
+						
+						</li><li><a href="mailto:rrrb@sureste.com">Ruben R. Raygosa</a> has contributed a <a href="http://www.cs.unc.edu/%7Ewelch/kalman/media/misc/RAYGOSA_KF_tutorial.zip">Spanish tutorial for the Kalman filter</a>.
+					
+						
+						</li><li><a href="http://www.dsprelated.com/">DSPRelated.com,</a> an online resource for DSP engineers, students and researchers, includes <a href="http://www.dsprelated.com/search.php?searchfor=kalman">many resources related to the Kalman filter</a>. 
+					</li></ul>
+				</td>
+			</tr>
+		</tbody></table>
+		<a name="Anchor-23522"></a>
+		<table border="0" cellpadding="0" cellspacing="4">
+			<tbody><tr>
+				<td valign="top" width="84"><img src="The%20Kalman%20Filter_archivos/kf_drive.gif" border="0" height="84" width="84"></td>
+				<td valign="middle">
+					<h2>Software</h2>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2" valign="top">
+					<ul>
+						<li>A <a href="http://www.cs.unc.edu/%7Ewelch/kalman/media/misc/kftool_matlab.zip">zip file</a> of some MatLab source code for a prototype of our Java-based <a href="http://www.cs.unc.edu/%7Ewelch/kalman/kftool/index.html">Kalman Filter Learning Tool.</a>
+						</li><li><a href="http://sourceforge.net/projects/opencvlibrary/">OpenCV</a>
+ includes some Kalman Filter functions, and the Reference Manual 
+includes some introductory prose. (The prose is  quite similar to our <a href="http://www.cs.unc.edu/%7Ewelch/kalman/kalmanIntro.html">introductory paper</a>.) The entire library can be <a href="http://sourceforge.net/projects/opencvlibrary/">downloaded</a> after agreeing to their <a href="http://www.intel.com/research/mrl/research/opencv/license.htm">license</a>. The Reference Manual is in the opencv-doc package.						</li><li><a href="http://www.acfr.usyd.edu.au/people/technical/mstevens/">Michael Stevens</a> (a Senior Research Engineer at the <a href="http://www.acfr.usyd.edu.au/">Australian Centre for Field Robotics</a>) has developed a nice <a href="http://bayesclasses.sourceforge.net/Bayes++.html">library of C++ Bayesian Filtering Classes</a>.
+ The classes represent and implement a wide variety of numerical 
+estimation algorithms for Bayesian/Kalman Filtering. The classes provide
+ tested and consistent numerical methods and the class hierarchy 
+explicitly represents the variety of filtering algorithms and model 
+types.
+						</li><li><a href="http://www.cs.berkeley.edu/%7Emurphyk/">Kevin Murphy</a> (see above) provides <a href="http://www.cs.berkeley.edu/%7Emurphyk/Bayes/request.html">several MatLab toolboxes</a>, including a Kalman filter toolbox. (<a href="http://www.mathworks.com/products/prodoverview.shtml">MatLab</a> is a product of <a href="http://www.mathworks.com/">The MathWorks</a>.)
+
+						
+						</li><li><span class="ds2"><a href="http://www.awblocker.com/">Alex Blocker</a> at Boston University has developed and made available some Matlab tools for Kalman filtering, smoothing, and estimation. (See <a href="http://www.awblocker.com/">his web site</a> for notes, instructions, and a link to the tools.) The tools are licensed under <a href="http://www.gnu.org/licenses/lgpl.html">LGPL</a>
+ 3.0. He says that the learning algorithm he uses is similar to Kevin 
+Murphy's, but is extended to the case of a controlled system. He </span><span class="ds2">includes a technical note on this algorithm and its use.</span>
+						</li><li><a href="http://www.lce.hut.fi/%7Essarkka/">Simo Särkkä</a> and <a href="http://www.lce.hut.fi/%7Ejmjharti/">Jouni Hartikainen</a> of the <a href="http://www.tkk.fi/English/">Helsinki University of Technology</a> <a href="http://www.lce.hut.fi/research/mm/">Models and Methods group</a> maintain an open source <a href="http://www.lce.hut.fi/research/mm/ekfukf/">EKF/UKF Matlab toolbox</a>. 
+						
+						</li><li><a href="http://www.iau.dtu.dk/%7Epmn/">Magnus Norgaard</a> provides a <a href="http://www.iau.dtu.dk/research/control/kalmtool.html">MATLAB toolbox for design of Kalman filters for nonlinear systems</a>.
+ There you will find implementations of a new (and clever!) filter that 
+performs very well and is easy to use compared to, e.g., the extended 
+Kalman filter. (<a href="http://www.mathworks.com/products/prodoverview.shtml">MatLab</a> is a product of <a href="http://www.mathworks.com/">The MathWorks</a>.)
+
+						</li><li>The <a href="http://projects.dhi.dk/daihm/">DHI Data Assimilation in Hydrological and Hydrodynamic Models site</a> includes their DAIHM <a href="http://www.mathworks.com/products/matlab/">Matlab</a>
+ toolbox. The toolbox is designed for data assimilation and ensemble 
+modelling. Even though the toolbox has been developped for hydrological 
+models, they believe it is very general and can be used in other 
+domains/applications.
+						</li><li>Got an <a href="http://www.hp.com/cposupport/prodhome/hp48gcalcu20676.html">HP 48G graphing calculator</a>? <a href="http://riccati.isu.edu/">Martin Murillo</a> of <a href="http://www.isu.edu/">Idaho State University</a> has written some <a href="http://riccati.isu.edu/kalman/kalman.html">Kalman filter code</a> for you.
+
+						</li><li><a href="http://www.navtechgps.com/">Navtech</a> sells some <a href="http://www.navtechgps.com/supply/kftool.asp">Kalman filtering software tools</a> developed by Lupash Consulting.
+
+						</li><li><a href="http://www.cse.ogi.edu/%7Erudmerwe/">Rudolph van der Merwe</a> maintains a <a href="http://choosh.csee.ogi.edu/rebel/">MatLab toolkit called ReBEL</a> which contains functions and scripts for the Kalman filter, particle filters (in general), and the Unscented Kalman Filter. (<a href="http://www.mathworks.com/products/prodoverview.shtml">MatLab</a> is a product of <a href="http://www.mathworks.com/">The MathWorks</a>.)
+
+						
+						</li><li><a href="http://people.mech.kuleuven.ac.be/%7Ekgadeyne/">Klaas Gadeyne</a>, a Ph.D. student in the <a href="http://www.mech.kuleuven.ac.be/default_en.phtml">Mechanical Engineering</a> Robotics Research Group at <a href="http://www.kuleuven.ac.be/">K.U.Leuven</a>, has developed a C++ <a href="http://people.mech.kuleuven.ac.be/%7Ekgadeyne/bfl.html">Bayesian Filtering Library</a> that includes software for Sequential Monte Carlo methods, Kalman filters, particle filters, etc.
+
+						
+						
+						</li><li><a href="http://users.fmg.uva.nl/cdolan/">Conor Dolan</a> has made available an executable, limited source, and documentation for a program to carry out state-space modeling based on <a href="http://uk.cambridge.org/catalogue/catalogue.asp?isbn=0521405734">Harvey's text</a>. It includes facilities to model multi-subject data and multi-group data. You can get a zip file <a href="http://users.fmg.uva.nl/cdolan/">from his web site</a>
+ (see mkfm6 program). Note that Conor says "The source is limited to 
+parts I wrote (in fortran). Optimization of the normal theory ML 
+function is carried out by the NPSOL routine, which I am not at liberty 
+to disseminate."
+						
+					</li></ul>
+				</td>
+			</tr>
+		</tbody></table>
+		<a name="Anchor-21683"></a>
+		<table border="0" cellpadding="0" cellspacing="4">
+			<tbody><tr>
+				<td valign="middle">
+					<h2>Research&nbsp;&amp;&nbsp;Applications</h2>
+				</td>
+			</tr>
+			<tr>
+				<td valign="top">
+					<ul>
+						<li>Here at UNC we are using an Kalman filters and related estimators to <a href="http://www.cs.unc.edu/%7Etracker/">track users' heads and limbs in virtual environments</a>. See for example our <a href="http://www.cs.unc.edu/%7Ewelch/media/pdf/scaat.pdf">1997 ACM SIGGRAPH paper</a> and our <a href="http://www.cs.unc.edu/%7Ewelch/media/pdf/PRES101_Welch_etal.pdf">2001 Presence journal article</a>.
+
+						</li><li>Simon Julier and Jeff Uhlmann have done some great work on nonlinear filtering. In particular check out “<a href="http://www.cs.unc.edu/%7Ewelch/kalman/media/pdf/Julier1997_SPIE_KF.pdf">A New Extension of the Kalman Filter to Nonlinear Systems</a>,” SPIE AeroSense Symposium, 21–24 April, 1997. Orlando, FL, SPIE. In addition here are some <a href="http://www.cs.unc.edu/%7Ewelch/kalman/julier.html">other papers on non-linear filtering work by Simon and Jeff</a>.	
+						</li><li>The kalman filter has been used extensively for data fusion in navigation, but <a href="http://www.lawick.nl/">Joost van Lawick</a> shows an <a href="http://www.lawick.nl/publications/papersf.pdf">example of scene modeling with an extended Kalman filter</a>.
+
+						</li><li><a href="http://www.acfr.usyd.edu.au/people/academic/hdurrant-whyte/">Hugh Durrant-Whyte</a> and researchers at the <a href="http://www.acfr.usyd.edu.au/">Australian Centre for Field Robotics</a> do all sorts of interesting and impressive <a href="http://www.acfr.usyd.edu.au/projects/">research</a> in data fusion, sensors, and navigation. <a href="http://www.acfr.usyd.edu.au/publications/">Browse their publications</a> for related articles.
+						
+						</li><li>From Zhengyou Zhang's Image and Vision Computing Journal paper (1996) "<a href="http://research.microsoft.com/%7Ezhang/INRIA/Publis/Tutorial-Estim/Main.html">Parameter Estimation Techniques: A Tutorial with Application to Conic Fitting</a>" (<a href="http://research.microsoft.com/%7Ezhang/Papers/ZhangIVC-97-01.pdf">PDF version</a>) some information about the Kalman filter <a href="http://www.inria.fr/robotvis/personnel/zzhang/Publis/Tutorial-Estim/node14.html#SECTION00090000000000000000">as applied to image processing</a>.
+
+						</li><li>The <a href="http://www.dhi.dk/">Danish organization DHI</a>, maintains a <a href="http://projects.dhi.dk/daihm/">relevant site on their Data Assimilation in Hydrological and Hydrodynamic Models</a> project. There you will find results of their work, publications, and their DAIHM <a href="http://www.mathworks.com/products/matlab/">Matlab</a> toolbox. (See above in "Software" for more information.)
+
+						</li><li><a href="http://www.econ.qmul.ac.uk/staff/pollock/">Dr. Stephen Pollock</a> (<a href="http://www.econ.qmul.ac.uk/">Department of Economics</a>, <a href="http://www.qmul.ac.uk/">Queen Mary, University of London</a>)
+ is investigating the use of signal processing and stochastic estimation
+ in economics. For example, he is investigating the use of filters 
+(including the Kalman filter) on short non-stationary econometric data 
+sequences to extract such components as the trends and seasonal 
+fluctuations.
+
+						</li><li>For another example of the Kalman filter used in Economics, check out the Johnson and Sakoulis article "<a href="http://www.cs.unc.edu/%7Ewelch/kalman/media/pdf/Johnson2003.pdf">Maximizing Equity Market Sector Predictability in a Bayesian Time Varying Parameter Model</a>." (See <a href="http://ssrn.com/abstract=396642">http://ssrn.com/abstract=396642</a>.)
+						</li><li><a href="http://www.cs.dal.ca/%7Ebjarne/">Bjarne Hansen</a> and colleagues at the <a href="http://www.msc-smc.ec.gc.ca/cmc/index_e.html">Meteorological Service of Canada</a> (<a href="http://www.msc-smc.ec.gc.ca/cmc/index_f.html">Français</a>) are working on an "<a href="http://www.cmc.ec.gc.ca/rpn/enkf/index_e.html">Ensemble Kalman Filter</a>"  (<a href="http://www.cmc.ec.gc.ca/rpn/enkf/index_f.html">Français</a>) for assimilation of observations in atmospheric models.
+
+						</li><li>Jan Kybic's 1998 research report “<a href="http://cmp.felk.cvut.cz/%7Ekybic/dipl/">Kalman Filtering and Speech Enhancement</a>”
+ details his work aimed at suppression of noise in a running car 
+environment for hands-free mobile telephony. (Thanks to Richard Kilgour 
+at <a href="http://www.navman.com/">Navman</a> for suggesting this.)
+
+						</li><li><a name="Anchor-NASA-49575"></a><a href="http://www.nasa.gov/" target="_blank">NASA</a> is hosting a technical report of historical interest: McGee and Schmidt, <a href="http://ntrs.nasa.gov/archive/nasa/casi.ntrs.nasa.gov/19860003843_1986003843.pdf" target="_blank">Discovery of the Kalman Filter as a Practical Tool for Aerospace and Industry</a>,
+ November 1985, NASA-TM-86847. This says it is an expanded version of 
+Schmidt's 1981 invited paper in the AIAA Journal of Guidance: <a href="http://www.aiaa.org/content.cfm?pageid=406&amp;gTable=japaperimportPre97&amp;gID=19713" target="_blank">The Kalman filter---Its recognition and development for aerospace applications</a>,
+ SCHMIDT, S. F. (Analytical Mechanics Associates, Inc., Mountain View, 
+Calif.) Journal of Guidance, Control, and Dynamics, Vol. 4, No. 1, pp. 
+4-7, 1981. Thanks to Ed Mirmak for pointing this out.
+						
+						
+						
+						
+						
+						
+						
+						
+					
+						</li><li><a href="mailto:michael.r.munroe@intel.com">Michael Munroe</a>
+ (Intel Corporation), Ted Hench (Arizone State University) and Matthew 
+Timmons (ASU), have made available un unpublished article on "<a href="http://www.cs.unc.edu/%7Ewelch/kalman/media/pdf/Munroe2009.pdf">Sales Rate and Cumulative Sales Forecasting Using Kalman Filtering Techniques</a>."</li></ul>
+				</td>
+			</tr>
+		</tbody></table>
+		<hr>
+		<p></p><p></p>
+		<p><!--WEBBOT bot="HTMLMarkup" startspan ALT="Site Meter" -->
+			<script type="text/javascript" language="JavaScript"><!--
+var site="sm4kalmanfilter"
+// -->
+		</script>
+			<script type="text/javascript" language="JavaScript1.2" src="The%20Kalman%20Filter_archivos/counter.js"></script>
+		</p>
+		<noscript>
+			<a href="http://sm4.sitemeter.com/stats.asp?site=sm4kalmanfilter" target="_top"><img src="http://sm4.sitemeter.com/meter.asp?site=sm4kalmanfilter" alt="Site Meter" border="0"></a>
+		</noscript>
+		<!-- Copyright (c)2000 Site Meter --><!--WEBBOT bot="HTMLMarkup" Endspan -->The
+ above represents the number of accesses since March 24, 1997. Click the
+ left ClustrMap thumbnail to view more detailed statistics. (The right 
+ClustrMap thumbnail is a static version from July 28, 2008—the maps are 
+archived and reset periodically.)
+		
+		<p></p>
+		<table class="dsR7" border="1" cellpadding="0" cellspacing="2">
+			<tbody><tr>
+				<td class="dsR17"><a href="http://www2.clustrmaps.com/" id="clustrMapsLink"><img class="wqartxcqnzedaldvbrud" src="The%20Kalman%20Filter_archivos/clustrmaps-back-soon.jpg" style="border:0px;" alt="Locations of visitors to this page" title="Locations of visitors to this page" id="clustrMapsImg" onerror="this.onError=null; this.src='http://www2.clustrmaps.com/images/clustrmaps-back-soon.jpg'; document.getElementById('clustrMapsLink').href='http://www2.clustrmaps.com'"></a></td>
+			</tr>
+			<tr>
+				<td class="dsR15">Current Map (29 JUL 2010-29 JUL 2011)</td>
+			</tr>
+		</tbody></table>
+		<p><a href="http://www.cs.unc.edu/%7Ewelch/">Return to Greg Welch's home page.</a></p>
+		<p><cite>Last modified: <csobj w="119" h="12" t="DateTime" format="LongDate" region="0">Sunday, August 24, 2014</csobj></cite></p>
+		
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script><script src="The%20Kalman%20Filter_archivos/ga.js" type="text/javascript"></script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-15086091-2");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+
+	
+
+
+</x-claris-tagview></x-claris-remotesave></x-claris-window></body></html>
