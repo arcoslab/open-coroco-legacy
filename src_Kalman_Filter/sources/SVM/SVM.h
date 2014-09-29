@@ -62,10 +62,7 @@ float SVM_T_max_on (float T_med_on, float T1,float T2,float V_s_ref_angle);
 
 void  SVM_phase_duty_cycles           (float *duty_A, float *duty_B, float *duty_C,float V_s_ref_angle,float Taon, float Tbon,float Tcon);
 void  shutdown_SVM_speed (float reference_frequency,float actual_frequency,bool* shutdown);
-void shutdown_SVM_position (float reference_frequency,float reference_position_change,float reference_position,float actual_position,bool* shutdown);
 void shutdown_SVM_torque (float torque_reference,float actual_torque,bool* shutdown);
-void shutdown_admittance_speed (float reference_frequency,float actual_frequency,bool* shutdown);
-void simple_shutdown(float control_signal,bool* shutdown);
 void  SVM_voltage_switch_inverter_VSI (float duty_A,float duty_B,float duty_C,bool shutdown);
 void  DTC_SVM                         (void);
 

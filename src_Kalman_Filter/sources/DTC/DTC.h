@@ -50,8 +50,8 @@ void  floating_switching_states      (float* S_A, float* S_B, float* S_C);
 float direct_stator_flux_linkage_estimator_psi_sD     (float T,float V_sD,float i_sD,float R_s);
 float quadrature_stator_flux_linkage_estimator_psi_sQ (float T,float V_sQ,float i_sQ,float R_s);
 */
-float direct_stator_flux_linkage_estimator_psi_sD     (float T,float V_sD,float i_sD,float R_s);//,float electric_frequency);
-float quadrature_stator_flux_linkage_estimator_psi_sQ (float T,float V_sQ,float i_sQ,float R_s);//,float electric_frequency);
+float direct_stator_flux_linkage_estimator_psi_sD     (float T,float V_sD,float i_sD,float R_s,float electric_frequency);
+float quadrature_stator_flux_linkage_estimator_psi_sQ (float T,float V_sQ,float i_sQ,float R_s,float electric_frequency);
 
 //float stator_flux_linkage_magnite_psi_s               (float psi_sD,float psi_sQ);
 //float flux_linkage_angle_psi_s_angle(float cmd_angle_PID);//float psi_sD, float psi_sQ)

@@ -48,7 +48,7 @@ float   ref_freq_SVM=0.0f;
 
 float   angle_hall1=0.0f;
 float   t_e_ref=0.0f;//-1.5;//-0.9f;//-0.15;//-1.6f;
-int     print_selection              = 0;
+int     print_selection              = 15;
 bool    flux_linkage_capture         = false;
 int     flux_linkage_capture_counter = 0;
 int     flux_linkage_capture_timer   = 0;
@@ -371,13 +371,14 @@ void frequency_input(void)
 
       //----------------------------------
       //admittance control
+      #define ADMITTANCE_SCALE 1000000.0f
       if (strcmp(cmd, "D") == 0)
       {
-        damping=value;
+        damping=value/ADMITTANCE_SCALE;
       }	
       if (strcmp(cmd, "K") == 0)
       {
-        stiffness=value;
+        stiffness=value/ADMITTANCE_SCALE;
       }	
 
 
@@ -452,9 +453,9 @@ void frequency_input(void)
 
         reference_gear_angle=value;
         reference_mechanical_angle=reference_gear_angle*gear_ratio;
-        reference_electric_angle=reference_mechanical_angle*pole_pairs_0;
+        reference_change_electric_angle=reference_mechanical_angle*pole_pairs_0;
 
-        reference_electric_angle+=electric_angle;
+        reference_electric_angle=reference_change_electric_angle+electric_angle;
 
       }	
 

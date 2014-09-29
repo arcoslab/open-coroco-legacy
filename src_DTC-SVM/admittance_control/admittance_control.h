@@ -22,6 +22,7 @@
 float stiffness = STIFFNESS;
 float damping   = DAMPING;
 
+float reference_change_electric_angle = 0.0f;
 float reference_electric_angle      = 0.0f;
 float reference_mechanical_angle    = 0.0f;
 float reference_gear_angle          = 0.0f;
