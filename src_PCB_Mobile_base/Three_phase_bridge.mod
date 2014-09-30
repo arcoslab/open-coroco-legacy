@@ -1,7 +1,8 @@
-PCBNEW-LibModule-V1  Tue 18 Feb 2014 02:30:44 PM CST
+PCBNEW-LibModule-V1  mar 30 sep 2014 10:16:26 CST
 # encoding utf-8
 Units mm
 $INDEX
+0.606_in_diametro_C_1000uF_100V
 10mm_C
 1pin_little
 4mm_C
@@ -32,6 +33,42 @@ fuse_holder_SMD
 pin_2
 regular_C
 $EndINDEX
+$MODULE 0.606_in_diametro_C_1000uF_100V
+Po 0 0 0 15 542AD654 00000000 ~~
+Li 0.606_in_diametro_C_1000uF_100V
+Cd Condensateur e = 1 pas
+Kw C
+Sc 0
+AR /529AD663
+Op 0 0 0
+T0 -0.02032 3.4544 1.016 1.016 0 0.2032 N V 21 N "C13"
+T1 -0.09144 -3.23088 1.016 1.016 0 0.2032 N I 21 N "1000uF"
+DS -4.41198 -1.71958 -4.41198 1.6764 0.15 21
+DS -4.41198 1.6764 4.63804 1.69418 0.15 21
+DS 4.63804 1.69418 4.62026 -1.68402 0.15 21
+DS 4.62026 -1.68402 -4.3942 -1.7018 0.15 21
+DC 0 0 7.6962 0.508 0.15 21
+$PAD
+Sh "1" C 2.54 2.54 0 0 0
+Dr 2.1844 0 0
+At STD N 00E0FFFF
+Ne 1 "+48V"
+Po -2.7178 0
+$EndPAD
+$PAD
+Sh "2" C 2.54 2.54 0 0 0
+Dr 2.1844 0 0
+At STD N 00E0FFFF
+Ne 2 "GND"
+Po 2.7178 0
+$EndPAD
+$SHAPE3D
+Na "discret/capa_1_pas.wrl"
+Sc 1 1 1
+Of 0 0 0
+Ro 0 0 0
+$EndSHAPE3D
+$EndMODULE 0.606_in_diametro_C_1000uF_100V
 $MODULE 10mm_C
 Po 0 0 0 15 529AD23E 00000000 ~~
 Li 10mm_C
