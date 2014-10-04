@@ -1,4 +1,4 @@
-Cmp-Mod V01 Created by PcbNew date = mar 30 sep 2014 10:53:37 CST
+Cmp-Mod V01 Created by PcbNew date = vie 03 oct 2014 10:35:51 CST
 
 BeginCmp
 TimeStamp = /528E7FD9;
@@ -39,14 +39,14 @@ BeginCmp
 TimeStamp = /528E79DD;
 Reference = BT1;
 ValeurCmp = BATTERY_12V;
-IdModule  = Battery_2x1;
+IdModule  = Battery_2x1_n;
 EndCmp
 
 BeginCmp
 TimeStamp = /529393B9;
 Reference = BT2;
 ValeurCmp = BATTERY_48;
-IdModule  = Battery_2x1;
+IdModule  = Battery_2x1_N;
 EndCmp
 
 BeginCmp
