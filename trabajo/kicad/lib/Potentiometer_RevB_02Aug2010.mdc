@@ -1,0 +1,165 @@
+PCBNEW-LibDoc----V1  02.08.2010 14:41:25
+#
+$MODULE Potentiometer_Bourns_3296W_3-8Zoll_Inline_ScrewUp
+Li Potentiometer_Bourns_3296W_3-8Zoll_Inline_ScrewUp
+Cd Potentiometer, Trimmer, Bourns 3296W, 3/8 Inch, Inline, Screw up,
+Kw Potentiometer, Trimmer, Bourns 3296W, 3/8 Inch, Inline, Screw up
+$EndMODULE
+#
+$MODULE Potentiometer_Bourns_3296X_3-8Zoll_Inline_ScrewFront
+Li Potentiometer_Bourns_3296X_3-8Zoll_Inline_ScrewFront
+Cd Potentiometer, Trimmer, Bourns 3296X, 3/8 Inch, Inline, Screw Front,
+Kw Potentiometer, Trimmer, Bourns 3296X, 3/8 Inch, Inline, Screw Front,
+$EndMODULE
+#
+$MODULE Potentiometer_Bourns_3296Y_3-8Zoll_Angular_ScrewUp
+Li Potentiometer_Bourns_3296Y_3-8Zoll_Angular_ScrewUp
+Cd Potentiometer, Trimmer, Bourns 3296Y, 3/8 Inch, Angular, Screw up,
+Kw Potentiometer, Trimmer, Bourns 3296Y, 3/8 Inch, Angular, Screw up
+$EndMODULE
+#
+$MODULE Potentiometer_Bourns_3296Z_3-8Zoll_Angular_ScrewFront
+Li Potentiometer_Bourns_3296Z_3-8Zoll_Angular_ScrewFront
+Cd Potentiometer, Trimmer, Bourns 3296Z, 3/8 Inch, Angular, Screw Front,
+Kw Potentiometer, Trimmer, Bourns 3296Z, 3/8 Inch, Angular, Screw Front,
+$EndMODULE
+#
+$MODULE Potentiometer_Spectrol-Type43
+Li Potentiometer_Spectrol-Type43
+Cd Potentiometer, Spindeltrimmer, Spectrol Type 43,
+Kw Potentiometer, Spindeltrimmer, Spectrol Type 43,
+$EndMODULE
+#
+$MODULE Potentiometer_WirePads_RevA_30July2010
+Li Potentiometer_WirePads_RevA_30July2010
+Cd Potentiometer, Wire Pads only, RevA, 30 July 2010,
+Kw Potentiometer, Wire Pads only, RevA, 30 July 2010,
+$EndMODULE
+#
+$MODULE Potentiometer_Alps-RK16-single_largePads_RevA_30July2010
+Li Potentiometer_Alps-RK16-single_largePads_RevA_30July2010
+Cd Potentiometer, Alps, RK16, single, large Pads, RevA, 30 July 2010,
+Kw Potentiometer, Alps, RK16, single, large Pads, RevA, 30 July 2010,
+$EndMODULE
+#
+$MODULE Potentiometer_Alps-RK16-single_RevA_30July2010
+Li Potentiometer_Alps-RK16-single_RevA_30July2010
+Cd Potentiometer, Alps, RK16, single, RevA, 30 July 2010,
+Kw Potentiometer, Alps, RK16, single, RevA, 30 July 2010,
+$EndMODULE
+#
+$MODULE Potentiometer_WirePads_large Pads_RevA_30July2010
+Li Potentiometer_WirePads_large Pads_RevA_30July2010
+Cd Potentiometer, Wire Pads only, RevA, 30 July 2010,
+Kw Potentiometer, Wire Pads only, RevA, 30 July 2010,
+$EndMODULE
+#
+$MODULE Potentiometer_WirePads_largePads_RevA_30July2010
+Li Potentiometer_WirePads_largePads_RevA_30July2010
+Cd Potentiometer, Wire Pads only, large Pads, RevA, 30 July 2010,
+Kw Potentiometer, Wire Pads only, large Pads, RevA, 30 July 2010,
+$EndMODULE
+#
+$MODULE Potentiometer_Alps-RK16-double_RevA_30July2010
+Li Potentiometer_Alps-RK16-double_RevA_30July2010
+Cd Potentiometer, double, dual,  Alps, RK16, single, RevA, 30 July 2010,
+Kw Potentiometer, double, dual, Alps, RK16, single, RevA, 30 July 2010,
+$EndMODULE
+#
+$MODULE Potentiometer_Spectrol-Type148-Type149_Dual_RevA_02Aug2010
+Li Potentiometer_Spectrol-Type148-Type149_Dual_RevA_02Aug2010
+Cd Potentiometer,  Spectro,l Type 149, Type 148, Dual, Rev A, 02 Aug 2010,
+Kw Potentiometer, Spectrol, Type 149, Type 148, Dual, Rev A, 02 Aug 2010,
+$EndMODULE
+#
+$MODULE Potentiometer_Spectrol-Type148-Type149_Single_RevA_02Aug2010
+Li Potentiometer_Spectrol-Type148-Type149_Single_RevA_02Aug2010
+Cd Potentiometer,  Spectro,l Type 149, Type 148, single, Rev A, 02 Aug 2010,
+Kw Potentiometer, Spectrol, Type 149, Type 148,  single, Rev A, 02 Aug 2010,
+$EndMODULE
+#
+$MODULE Potentiometer_VishaySpectrol-Econtrim-Type36k_RevA_02Aug2010
+Li Potentiometer_VishaySpectrol-Econtrim-Type36k_RevA_02Aug2010
+Cd Potentiometer, Trimmer, Spectrol Type 36k, Econtrim, Rev A, 02 Aug 2010,
+Kw Potentiometer, Trimmer, Spectrol Type 36k, Econtrim, Rev A, 02 Aug 2010,
+$EndMODULE
+#
+$MODULE Potentiometer_VishaySpectrol-Econtrim-Type36M_RevA_02Aug2010
+Li Potentiometer_VishaySpectrol-Econtrim-Type36M_RevA_02Aug2010
+Cd Potentiometer, Trimmer, Spectrol Type 36M, Econtrim, Rev A, 02 Aug 2010,
+Kw Potentiometer, Trimmer, Spectrol Type 36M, Econtrim, Rev A, 02 Aug 2010,
+$EndMODULE
+#
+$MODULE Potentiometer_VishaySpectrol-Econtrim-Type36P_RevA_02Aug2010
+Li Potentiometer_VishaySpectrol-Econtrim-Type36P_RevA_02Aug2010
+Cd Potentiometer, Trimmer, Spectrol Type 36P, Econtrim, Rev A, 02 Aug 2010,
+Kw Potentiometer, Trimmer, Spectrol Type 36P, Econtrim, Rev A, 02 Aug 2010,
+$EndMODULE
+#
+$MODULE Potentiometer_VishaySpectrol-Econtrim-Type36T_RevA_02Aug2010
+Li Potentiometer_VishaySpectrol-Econtrim-Type36T_RevA_02Aug2010
+Cd Potentiometer, Trimmer, Spectrol Type 36T, Econtrim, Rev A, 02 Aug 2010,
+Kw Potentiometer, Trimmer, Spectrol Type 36T, Econtrim, Rev A, 02 Aug 2010,
+$EndMODULE
+#
+$MODULE Potentiometer_VishaySpectrol-Econtrim-Type36X_RevA_02Aug2010
+Li Potentiometer_VishaySpectrol-Econtrim-Type36X_RevA_02Aug2010
+Cd Potentiometer, Trimmer, Spectrol Type 36X, Econtrim, Rev A, 02 Aug 2010,
+Kw Potentiometer, Trimmer, Spectrol Type 36X, Econtrim, Rev A, 02 Aug 2010,
+$EndMODULE
+#
+$MODULE Potentiometer_Trimmer-Piher-PT15-h2-5_vertical_RevA_02Aug2010
+Li Potentiometer_Trimmer-Piher-PT15-h2-5_vertical_RevA_02Aug2010
+Cd Potentiometer, Trimmer, Piher, PT15, Type h 2.5, vertical, Rev A, 02 Aug 2010,
+Kw Potentiometer, Trimmer, Piher, PT15, Type h 2.5, vertical, Rev A, 02 Aug 2010,
+$EndMODULE
+#
+$MODULE Potentiometer_Trimmer-Piher-PT15-h5_vertical_RevA_02Aug2010
+Li Potentiometer_Trimmer-Piher-PT15-h5_vertical_RevA_02Aug2010
+Cd Potentiometer, Trimmer, Piher, PT15, Type h5, vertical, Rev A, 02 Aug 2010,
+Kw Potentiometer, Trimmer, Piher, PT15, Type h5, vertical, Rev A, 02 Aug 2010,
+$EndMODULE
+#
+$MODULE Potentiometer_Trimmer-Piher_PT15-B_vertical_RevA_02Aug2010
+Li Potentiometer_Trimmer-Piher_PT15-B_vertical_RevA_02Aug2010
+Cd Potentiometer, Trimmer, Piher, PT15, Type B, vertical, Rev A, 02 Aug 2010,
+Kw Potentiometer, Trimmer, Piher, PT15, Type B, vertical, Rev A, 02 Aug 2010,
+$EndMODULE
+#
+$MODULE Potentiometer_Trimmer-Piher_PT15-V12-5_horizontal_RevA_02Aug2010
+Li Potentiometer_Trimmer-Piher_PT15-V12-5_horizontal_RevA_02Aug2010
+Cd Potentiometer, Trimmer, Piher, PT15, Type V12.5, horizontal, Rev A, 02 Aug 2010,
+Kw Potentiometer, Trimmer, Piher, PT15, Type V12.5, horizontal, Rev A, 02 Aug 2010,
+$EndMODULE
+#
+$MODULE Potentiometer_Trimmer-Piher_PT15-V15_horizontal_RevA_02Aug2010
+Li Potentiometer_Trimmer-Piher_PT15-V15_horizontal_RevA_02Aug2010
+Cd Potentiometer, Trimmer, Piher, PT15, Type V15, horizontal, Rev A, 02 Aug 2010,
+Kw Potentiometer, Trimmer, Piher, PT15, Type V15, horizontal, Rev A, 02 Aug 2010,
+$EndMODULE
+#
+$MODULE Potentiometer_Trimmer-Piher_PT15-V12-5_horizontal_revers_RevA_02Aug2010
+Li Potentiometer_Trimmer-Piher_PT15-V12-5_horizontal_revers_RevA_02Aug2010
+Cd Potentiometer, Trimmer, Piher, PT15, Type V12.5, horizontal, Rev A, 02 Aug 2010,
+Kw Potentiometer, Trimmer, Piher, PT15, Type V12.5, horizontal, Rev A, 02 Aug 2010,
+$EndMODULE
+#
+$MODULE Potentiometer_Trimmer-Piher_PT15-V17-5_horizontal_RevA_02Aug2010
+Li Potentiometer_Trimmer-Piher_PT15-V17-5_horizontal_RevA_02Aug2010
+Cd Potentiometer, Trimmer, Piher, PT15, Type V17.5, horizontal, Rev A, 02 Aug 2010,
+Kw Potentiometer, Trimmer, Piher, PT15, Type V17.5, horizontal, Rev A, 02 Aug 2010,
+$EndMODULE
+#
+$MODULE Potentiometer_Trimmer-Piher_PT15-V17-5_horizontal_revers_RevA_02Aug2010
+Li Potentiometer_Trimmer-Piher_PT15-V17-5_horizontal_revers_RevA_02Aug2010
+Cd Potentiometer, Trimmer, Piher, PT15, Type V17.5, horizontal, Rev A, 02 Aug 2010,
+Kw Potentiometer, Trimmer, Piher, PT15, Type V17.5, horizontal, Rev A, 02 Aug 2010,
+$EndMODULE
+#
+$MODULE Potentiometer_WirePads_Small_RevA_02Aug2010
+Li Potentiometer_WirePads_Small_RevA_02Aug2010
+Cd Potentiometer, Wire Pads only, small, RevA, 02 Aug 2010,
+Kw Potentiometer, Wire Pads only, small, RevA, 02 Aug 2010,
+$EndMODULE
+#
+$EndLIBDOC

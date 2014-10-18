@@ -1,0 +1,69 @@
+PCBNEW-LibDoc----V1  21.06.2010 23:56:33
+#
+$MODULE MountingHole_6mm_RevA_Date21Jun2010
+Li MountingHole_6mm_RevA_Date21Jun2010
+Cd Mounting hole, Befestigungsbohrung, 6mm, No Annular, Kein Restring,
+Kw Mounting hole, Befestigungsbohrung, 6mm, No Annular, Kein Restring,
+$EndMODULE
+#
+$MODULE MountingHole_5mm_RevA_Date21Jun2010
+Li MountingHole_5mm_RevA_Date21Jun2010
+Cd Mounting hole, Befestigungsbohrung, 5mm, No Annular, Kein Restring,
+Kw Mounting hole, Befestigungsbohrung, 5mm, No Annular, Kein Restring,
+$EndMODULE
+#
+$MODULE MountingHole_6-5mm_RevA_Date21Jun2010
+Li MountingHole_6-5mm_RevA_Date21Jun2010
+Cd Mounting hole, Befestigungsbohrung, 6,5mm, No Annular, Kein Restring,
+Kw Mounting hole, Befestigungsbohrung, 6,5mm, No Annular, Kein Restring,
+$EndMODULE
+#
+$MODULE MountingHole_2-5mm_RevA_Date21Jun2010
+Li MountingHole_2-5mm_RevA_Date21Jun2010
+Cd Mounting hole, Befestigungsbohrung, 2,5mm, No Annular, Kein Restring,
+Kw Mounting hole, Befestigungsbohrung, 2,5mm, No Annular, Kein Restring,
+$EndMODULE
+#
+$MODULE MountingHole_2-7mm_RevA_Date21Jun2010
+Li MountingHole_2-7mm_RevA_Date21Jun2010
+Cd Mounting hole, Befestigungsbohrung, 2,7mm, No Annular, Kein Restring,
+Kw Mounting hole, Befestigungsbohrung, 2,7mm, No Annular, Kein Restring,
+$EndMODULE
+#
+$MODULE MountingHole_3-5mm_RevA_Date21Jun2010
+Li MountingHole_3-5mm_RevA_Date21Jun2010
+Cd Mounting hole, Befestigungsbohrung, 3,5mm, No Annular, Kein Restring,
+Kw Mounting hole, Befestigungsbohrung, 3,5mm, No Annular, Kein Restring,
+$EndMODULE
+#
+$MODULE MountingHole_3-7mm_RevA_Date21Jun2010
+Li MountingHole_3-7mm_RevA_Date21Jun2010
+Cd Mounting hole, Befestigungsbohrung, 3,7mm, No Annular, Kein Restring,
+Kw Mounting hole, Befestigungsbohrung, 3,7mm, No Annular, Kein Restring,
+$EndMODULE
+#
+$MODULE MountingHole_3mm_RevA_Date21Jun2010
+Li MountingHole_3mm_RevA_Date21Jun2010
+Cd Mounting hole, Befestigungsbohrung, 3mm, No Annular, Kein Restring,
+Kw Mounting hole, Befestigungsbohrung, 3mm, No Annular, Kein Restring,
+$EndMODULE
+#
+$MODULE MountingHole_4-5mm_RevA_Date21Jun2010
+Li MountingHole_4-5mm_RevA_Date21Jun2010
+Cd Mounting hole, Befestigungsbohrung, 4,5mm, No Annular, Kein Restring,
+Kw Mounting hole, Befestigungsbohrung, 4,5mm, No Annular, Kein Restring,
+$EndMODULE
+#
+$MODULE MountingHole_4mm_RevA_Date21Jun2010
+Li MountingHole_4mm_RevA_Date21Jun2010
+Cd Mounting hole, Befestigungsbohrung, 4mm, No Annular, Kein Restring,
+Kw Mounting hole, Befestigungsbohrung, 4mm, No Annular, Kein Restring,
+$EndMODULE
+#
+$MODULE MountingHole_5-5mm_RevA_Date21Jun2010
+Li MountingHole_5-5mm_RevA_Date21Jun2010
+Cd Mounting hole, Befestigungsbohrung, 5,5mm, No Annular, Kein Restring,
+Kw Mounting hole, Befestigungsbohrung, 5,5mm, No Annular, Kein Restring,
+$EndMODULE
+#
+$EndLIBDOC

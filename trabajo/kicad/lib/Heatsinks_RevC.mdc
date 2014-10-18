@@ -1,0 +1,39 @@
+PCBNEW-LibDoc----V1  Di 26 Okt 2010 22:37:34 CEST
+#
+$MODULE Heatsink_62x40mm_2xFixation3mm
+Li Heatsink_62x40mm_2xFixation3mm
+Cd Heatsink, 62 x 40mm, 2x 3mm Drills,
+Kw Heatsink, 62 x 40mm, 2x 3mm Drills,
+$EndMODULE
+#
+$MODULE Heatsink_38x38mm_SpringFixation
+Li Heatsink_38x38mm_SpringFixation
+Cd Heatsink, 38x38mm, Spring Fixation, diagonal,
+Kw Heatsink, 38x38mm, Spring Fixation, diagonal, Kuehlkoerper, Federbefestigung,
+$EndMODULE
+#
+$MODULE Heatsink_SheetType_50x7mm_2Fixations
+Li Heatsink_SheetType_50x7mm_2Fixations
+Cd Heatsink, Sheet type, 50x7mm, 2 fixations (solder),
+Kw Heatsink, Sheet type, 50x7mm, 2 fixations (solder), Kuehlkoerper, From ATX-SMPS Scrap,
+$EndMODULE
+#
+$MODULE Heatsink_35x26mm_1xFixation3mm_Fischer-SK486-35
+Li Heatsink_35x26mm_1xFixation3mm_Fischer-SK486-35
+Cd Heatsink, 35mm x 26mm, 1x Fixation 3mm, Fischer SK486-35
+Kw Heatsink, 35mm x 26mm, 1x Fixation 3mm, Kuehlkoerper, Fischer SK486-35, Strangkuehlkoerper
+$EndMODULE
+#
+$MODULE Heatsink_Fischer_SK104-STC-STIC_35x13mm_2xDrill2.5mm
+Li Heatsink_Fischer_SK104-STC-STIC_35x13mm_2xDrill2.5mm
+Cd Heatsink, 35mm x 13mm, 2x Fixation 2,5mm Drill, Soldering, Fischer SK104-STC-STIC,
+Kw Heatsink, 35mm x 13mm, 2x Fixation 2,5mm Drill, Soldering, Fischer SK104-STC-STIC, Kuehlkoerper,  Strangkuehlkoerper, Loetbefestigung, for TO-220
+$EndMODULE
+#
+$MODULE Heatsink_Fischer_SK104-STCB_35x13mm__2xDrill3.5mm_ScrewM3
+Li Heatsink_Fischer_SK104-STCB_35x13mm__2xDrill3.5mm_ScrewM3
+Cd Heatsink, 35mm x 13mm, 2x Fixation Screw M3, Fischer SK104-STCB,
+Kw Heatsink, 35mm x 13mm, 2x Fixation Screw M3, Fischer SK104-STCB, Kuehlkoerper,  Strangkuehlkoerper, Schraubbefestigung, Screwed, for TO-220
+$EndMODULE
+#
+$EndLIBDOC

@@ -1,0 +1,243 @@
+PCBNEW-LibDoc----V1  Mo 07 Mär 2011 22:09:39 CET
+#
+$MODULE Symbol_CC-Attribution_SilkscreenTop_Small
+Li Symbol_CC-Attribution_SilkscreenTop_Small
+Cd Symbol, CC-Attribution, Silkscreen Top, Small,
+Kw Symbol, CC-Attribution, Silkscreen Top, Small,
+$EndMODULE
+#
+$MODULE Symbol_Attention_Silkscreen_Small
+Li Symbol_Attention_Silkscreen_Small
+Cd Symbol, Attention, Silkscreen Top, Small,
+Kw Symbol, Attention, Silkscreen Top, Small,
+$EndMODULE
+#
+$MODULE Symbol_Danger_Silkscreen_Small
+Li Symbol_Danger_Silkscreen_Small
+Cd Symbol, Danger, Silkscreen Top, Small,
+Kw Symbol, Danger, Silkscreen Top, Small,
+$EndMODULE
+#
+$MODULE Symbol_Danger_CopperTop_Small
+Li Symbol_Danger_CopperTop_Small
+Cd Symbol, Danger, Copper Top, Small,
+Kw Symbol, Danger, Copper Top, Small,
+$EndMODULE
+#
+$MODULE Symbol_Attention_CopperTop_Big
+Li Symbol_Attention_CopperTop_Big
+Cd Symbol, Attention, Copper Top, Big,
+Kw Symbol, Attention, Copper Top, Big,
+$EndMODULE
+#
+$MODULE Symbol_Attention_Silkscreen_Big
+Li Symbol_Attention_Silkscreen_Big
+Cd Symbol, Attention, Silkscreen, Big,
+Kw Symbol, Attention, Silkscreen, Big,
+$EndMODULE
+#
+$MODULE Symbol_Danger_Silkscreen_Big
+Li Symbol_Danger_Silkscreen_Big
+Cd Symbol, Danger, Silkscreen, Big,
+Kw Symbol, Danger, Silkscreen, Big,
+$EndMODULE
+#
+$MODULE Symbol_Danger_CopperTop_Big
+Li Symbol_Danger_CopperTop_Big
+Cd Symbol, Danger, CopperTop, Big,
+Kw Symbol, Danger, CopperTop, Big,
+$EndMODULE
+#
+$MODULE Symbol_Attention_CopperTop_Small
+Li Symbol_Attention_CopperTop_Small
+Cd Symbol, Attention, Copper Top, Small,
+Kw Symbol, Attention, Copper Top, Small,
+$EndMODULE
+#
+$MODULE Symbol_CC-Attribution_CopperTop_Big
+Li Symbol_CC-Attribution_CopperTop_Big
+Cd Symbol, CC-Attribution, Copper Top, Big,
+Kw Symbol, CC-Attribution, Copper Top, Big,
+$EndMODULE
+#
+$MODULE Symbol_CC-Attribution_CopperTop_Small
+Li Symbol_CC-Attribution_CopperTop_Small
+Cd Symbol, CC-Share Alike, Copper Top, Small,
+Kw Symbol, CC-Share Alike, Copper Top, Small,
+$EndMODULE
+#
+$MODULE Symbol_CC-Attribution_SilkscreenTop_Big
+Li Symbol_CC-Attribution_SilkscreenTop_Big
+Cd Symbol, CC-Attribution, Silkscreen Top, Big
+Kw Symbol, CC-Attribution, Silkscreen Top, Big
+$EndMODULE
+#
+$MODULE Symbol_CC-Noncommercial_CopperTop_Big
+Li Symbol_CC-Noncommercial_CopperTop_Big
+Cd Symbol, CC-Noncommercial, Copper Top, Big,
+Kw Symbol, CC-Noncommercial, Copper Top, Big,
+$EndMODULE
+#
+$MODULE Symbol_CC-Noncommercial_CopperTop_Small
+Li Symbol_CC-Noncommercial_CopperTop_Small
+Cd Symbol, CC-Noncommercial Alike, Copper Top, Small,
+Kw Symbol, CC-Noncommercial Alike, Copper Top, Small,
+$EndMODULE
+#
+$MODULE Symbol_CC-Noncommercial_SilkscreenTop_Big
+Li Symbol_CC-Noncommercial_SilkscreenTop_Big
+Cd Symbol, CC-Noncommercial, Silkscreen Top, Big,
+Kw Symbol, CC-Noncommercial, Silkscreen Top, Big,
+$EndMODULE
+#
+$MODULE Symbol_CC-Noncommercial_SilkscreenTop_Small
+Li Symbol_CC-Noncommercial_SilkscreenTop_Small
+Cd Symbol, CC-Noncommercial Alike, Silkscreen Top, Small,
+Kw Symbol, CC-Noncommercial Alike, Silkscreen Top, Small,
+$EndMODULE
+#
+$MODULE Symbol_CC-ShareAlike_CopperTop_Big
+Li Symbol_CC-ShareAlike_CopperTop_Big
+Cd Symbol, CC-Share Alike, Copper Top, Big,
+Kw Symbol, CC-Share Alike, Copper Top, Big,
+$EndMODULE
+#
+$MODULE Symbol_CC-ShareAlike_CopperTop_Small
+Li Symbol_CC-ShareAlike_CopperTop_Small
+Cd Symbol, CC-Share Alike, Copper Top, Small,
+Kw Symbol, CC-Share Alike, Copper Top, Small,
+$EndMODULE
+#
+$MODULE Symbol_CC-ShareAlike_SilkscreenTop_Big
+Li Symbol_CC-ShareAlike_SilkscreenTop_Big
+Cd Symbol, CC-Share Alike, Silkscreen Top, Big,
+Kw Symbol, CC-Share Alike, Silkscreen Top, Big,
+$EndMODULE
+#
+$MODULE Symbol_CC-ShareAlike_SilkscreenTop_Small
+Li Symbol_CC-ShareAlike_SilkscreenTop_Small
+Cd Symbol, CC-Share Alike, SilkscreenTop, Small,
+Kw Symbol, CC-Share Alike, SilkscreenTop, Small,
+$EndMODULE
+#
+$MODULE Symbol_CreativeCommons_CopperTop_Type1_Big
+Li Symbol_CreativeCommons_CopperTop_Type1_Big
+Cd Symbol, Creative Commons, CopperTop, Type 1, Big,
+Kw Symbol, Creative Commons, CopperTop, Type 1, Big,
+$EndMODULE
+#
+$MODULE Symbol_CreativeCommons_CopperTop_Type2_Big
+Li Symbol_CreativeCommons_CopperTop_Type2_Big
+Cd Symbol, Creative Commons, CopperTop, Type 2, Big,
+Kw Symbol, Creative Commons, CopperTop, Type 2, Big,
+$EndMODULE
+#
+$MODULE Symbol_CreativeCommons_CopperTop_Type2_Small
+Li Symbol_CreativeCommons_CopperTop_Type2_Small
+Cd Symbol, Creative Commons, CopperTop, Type 2, Small,
+Kw Symbol, Creative Commons, CopperTop, Type 2, Small,
+$EndMODULE
+#
+$MODULE Symbol_CreativeCommons_SilkscreenTop_Type1_Big
+Li Symbol_CreativeCommons_SilkscreenTop_Type1_Big
+Cd Symbol, Creative Commons, Silkscreen Top, Type 1, Big,
+Kw Symbol, Creative Commons, Silkscreen Top, Type 1, Big,
+$EndMODULE
+#
+$MODULE Symbol_CreativeCommons_SilkscreenTop_Type2_Big
+Li Symbol_CreativeCommons_SilkscreenTop_Type2_Big
+Cd Symbol, Creative Commons, Silkscreen Top, Type 2, Big,
+Kw Symbol, Creative Commons, Silkscreen Top, Type 2, Big,
+$EndMODULE
+#
+$MODULE Symbol_CreativeCommons_SilkscreenTop_Type2_Small
+Li Symbol_CreativeCommons_SilkscreenTop_Type2_Small
+Cd Symbol, Creative Commons, SilkscreenTop, Type 2, Small,
+Kw Symbol, Creative Commons, SilkscreenTop, Type 2, Small,
+$EndMODULE
+#
+$MODULE Symbol_HighVoltage_Type2_CopperTop_Big
+Li Symbol_HighVoltage_Type2_CopperTop_Big
+Cd Symbol, HighVoltage, Type2, Copper Top, Big,
+Kw Symbol, HighVoltage, Type2, Copper Top, Big,
+$EndMODULE
+#
+$MODULE Symbol_HighVoltage_Type1_Silkscreen_Big
+Li Symbol_HighVoltage_Type1_Silkscreen_Big
+Cd Symbol, HighVoltage. Type 1, Silkscreen, Big,
+Kw Symbol, HighVoltage, Type 1, Silkscreen, Big,
+$EndMODULE
+#
+$MODULE Symbol_HighVoltage_Type1_CopperTop_Big
+Li Symbol_HighVoltage_Type1_CopperTop_Big
+Cd Symbol, HighVoltage, Type1, Copper Top, Big,
+Kw Symbol, HighVoltage, Type1, Copper Top, Big,
+$EndMODULE
+#
+$MODULE Symbol_HighVoltage_Type2_Silkscreen_Big
+Li Symbol_HighVoltage_Type2_Silkscreen_Big
+Cd Symbol, HighVoltage, Type2, Silkscreen, Big,
+Kw Symbol, HighVoltage, Type2, Silkscreen, Big,
+$EndMODULE
+#
+$MODULE Symbol_Highvoltage_Type1_CopperTop_Small
+Li Symbol_Highvoltage_Type1_CopperTop_Small
+Cd Symbol, Highvoltage, Type 1, Copper Top, Small,
+Kw Symbol, Highvoltage, Type 1, Copper Top, Small,
+$EndMODULE
+#
+$MODULE Symbol_Highvoltage_Type1_Silkscreen_Small
+Li Symbol_Highvoltage_Type1_Silkscreen_Small
+Cd Symbol, Highvoltage, Type 1, Silkscreen Top, Small,
+Kw Symbol, Highvoltage, Type 1, Silkscreen Top, Small,
+$EndMODULE
+#
+$MODULE Symbol_Highvoltage_Type2_CopperTop_Small
+Li Symbol_Highvoltage_Type2_CopperTop_Small
+Cd Symbol, Highvoltage, Type 2, Copper Top, Small,
+Kw Symbol, Highvoltage, Type 2, Copper Top, Small,
+$EndMODULE
+#
+$MODULE Symbol_Highvoltage_Type2_Silkscreen_Small
+Li Symbol_Highvoltage_Type2_Silkscreen_Small
+Cd Symbol, Highvoltage, Type 2, Silkscreen, Small,
+Kw Symbol, Highvoltage, Type 2, Silkscreen, Small,
+$EndMODULE
+#
+$MODULE Symbol_HighVoltage_Type2_CopperTop_VerySmall
+Li Symbol_HighVoltage_Type2_CopperTop_VerySmall
+Cd Symbol, High Voltage, Type 2, Copper Top, Very Small,
+Kw Symbol, High Voltage, Type 2, Copper Top, Very Small,
+$EndMODULE
+#
+$MODULE Symbol_HighVoltage_Type2_SilkscreenTop_VerySmall
+Li Symbol_HighVoltage_Type2_SilkscreenTop_VerySmall
+Cd Symbol, High Voltage, Type 2, Silkscreen Top, Very Small,
+Kw Symbol, High Voltage, Type 2, Silkscreen Top, Very Small,
+$EndMODULE
+#
+$MODULE Symbol_GNU-GPL_CopperTop_Big
+Li Symbol_GNU-GPL_CopperTop_Big
+Cd Symbol, GNU-GPL, Copper Top, Big,
+Kw Symbol, GNU-GPL, Copper Top, Big,
+$EndMODULE
+#
+$MODULE Symbol_GNU-GPL_CopperTop_Small
+Li Symbol_GNU-GPL_CopperTop_Small
+Cd Symbol, GNU-GPL, Copper Top, Small,
+Kw Symbol, GNU-GPL, Copper Top, Small,
+$EndMODULE
+#
+$MODULE Symbol_GNU-GPL_SilkscreenTop_Big
+Li Symbol_GNU-GPL_SilkscreenTop_Big
+Cd Symbol, GNU-GPL, Silkscreen Top, Big,
+Kw Symbol, GNU-GPL, Silkscreen Top, Big,
+$EndMODULE
+#
+$MODULE Symbol_GNU-GPL_SilkscreenTop_Small
+Li Symbol_GNU-GPL_SilkscreenTop_Small
+Cd Symbol, GNU-GPL, Silkscreen Top, Small,
+Kw Symbol, GNU-GPL, Silkscreen Top, Small,
+$EndMODULE
+#
+$EndLIBDOC

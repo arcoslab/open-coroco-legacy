@@ -1,0 +1,39 @@
+PCBNEW-LibDoc----V1  So 24 Okt 2010 14:06:31 CEST
+#
+$MODULE CommonModeChoke_WuerthType-WE-CMB_Size-XL_RevA_25Oct2010
+Li CommonModeChoke_WuerthType-WE-CMB_Size-XL_RevA_25Oct2010
+Cd Wuerth, WE-CMB, Bauform XL,
+Kw Common Mode Choke, Gleichtaktdrossel,
+$EndMODULE
+#
+$MODULE CommonModeChoke_WuerthType-WE-CMB_Size-L_RevA_25Oct2010
+Li CommonModeChoke_WuerthType-WE-CMB_Size-L_RevA_25Oct2010
+Cd Wuerth, WE-CMB, Bauform L,
+Kw Common Mode Choke, Gleichtaktdrossel,
+$EndMODULE
+#
+$MODULE CommonModeChoke_WuerthType-WE-CMB_Size-M_RevA_25Oct2010
+Li CommonModeChoke_WuerthType-WE-CMB_Size-M_RevA_25Oct2010
+Cd Wuerth, WE-CMB, Bauform M,
+Kw Common Mode Choke, Gleichtaktdrossel,
+$EndMODULE
+#
+$MODULE CommonModeChoke_WuerthType-WE-CMB_Size-XS_RevA_25Oct2010
+Li CommonModeChoke_WuerthType-WE-CMB_Size-XS_RevA_25Oct2010
+Cd Wuerth, WE-CMB, Bauform XS,
+Kw Common Mode Choke, Gleichtaktdrossel,
+$EndMODULE
+#
+$MODULE CommonModeChoke_WuerthType-WE-CMB_Size-S_RevA_25Oct2010
+Li CommonModeChoke_WuerthType-WE-CMB_Size-S_RevA_25Oct2010
+Cd Wuerth, WE-CMB, Bauform S,
+Kw Common Mode Choke, Gleichtaktdrossel,
+$EndMODULE
+#
+$MODULE CommonModeChoke_WuerthType-WE-CMB_Size-XXL_RevA_25Oct2010
+Li CommonModeChoke_WuerthType-WE-CMB_Size-XXL_RevA_25Oct2010
+Cd Wuerth, WE-CMB, Bauform XXL,
+Kw Common Mode Choke, Gleichtaktdrossel,
+$EndMODULE
+#
+$EndLIBDOC

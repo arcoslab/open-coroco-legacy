@@ -1,0 +1,27 @@
+PCBNEW-LibDoc----V1  25.06.2010 17:24:48
+#
+$MODULE OptocouplerModul_FinderType34Point81-AC_RevA_Date25Jun2010
+Li OptocouplerModul_FinderType34Point81-AC_RevA_Date25Jun2010
+Cd Optocoupler, Single Row, Einreihig, Standing, stehend, Finder Type34.81, AC, Wechselstrom Ausgang, RevA, Date 25Jun2010
+Kw Optocoupler, Single Row, Einreihig, Standing, stehend, Finder Type34.81, AC, Wechselstrom Ausgang, RevA, Date 25Jun2010
+$EndMODULE
+#
+$MODULE OptocouplerModul_FinderType34Point81-DC_RevA_Date25Jun2010
+Li OptocouplerModul_FinderType34Point81-DC_RevA_Date25Jun2010
+Cd Optocoupler, Single Row, Einreihig, Standing, stehend, Finder Type34.81, DC, Gleichstrom Ausgang, RevA, Date 25Jun2010
+Kw Optocoupler, Single Row, Einreihig, Standing, stehend, Finder Type34.81, DC, Gleichstrom Ausgang, RevA, Date 25Jun2010
+$EndMODULE
+#
+$MODULE Optocoupler_SMD_ReflowWaveSoldering_KPC357_LTV35x_PC357_SingleChannel_RevA_Date25Jun2010
+Li Optocoupler_SMD_ReflowWaveSoldering_KPC357_LTV35x_PC357_SingleChannel_RevA_Date25Jun2010
+Cd Optocoupler, SMD,  Single Channel, Reflow and Wave Soldering, like KPC357, LTV35x, PC357, RevA, Date 25 Jun 2010,
+Kw Optocoupler, SMD,  Single Channel, Reflow and Wave Soldering, like KPC357, LTV35x, PC357, RevA, Date 25 Jun 2010,
+$EndMODULE
+#
+$MODULE Optocoupler_SMD_HandSoldering_KPC357_LTV35x_PC357_SingleChannel_RevA_Date25Jun2010
+Li Optocoupler_SMD_HandSoldering_KPC357_LTV35x_PC357_SingleChannel_RevA_Date25Jun2010
+Cd Optocoupler, SMD,  Single Channel, Hand Soldering, like KPC357, LTV35x, PC357, RevA, Date 25 Jun 2010,
+Kw Optocoupler, SMD,  Single Channel, Hand Soldering, like KPC357, LTV35x, PC357, RevA, Date 25 Jun 2010,
+$EndMODULE
+#
+$EndLIBDOC

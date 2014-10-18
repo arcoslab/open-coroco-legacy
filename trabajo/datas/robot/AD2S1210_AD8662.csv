@@ -1,0 +1,38 @@
+AD2S1210	1	AD1	x
+20p	2	C4 C8	x
+120p	2	C12 C13	x
+10n	5	C2 C3 C5 C9 C18	x
+100n	3	C16 C17 C19	x
+2.2µ	1	C11	x
+4.7µ	3	C1 C7 C10	x
+10µ	4	C6 C15 C20 C21	x
+220µ	1	C14	x
+DIODE	5	D1 D2 D3 D4 D5	x
+Drill1	1	Drill1	
+Drill2	1	Drill2	
+Drill3	1	Drill3	
+Drill4	1	Drill4	
+FUSE	1	F1	x
+AD8662	1	IC1	x
+JP_1	1	K1	
+V_control	1	K2	
+Power	1	K3	x
+conn_stm32f4	1	P1	
+AOUT	1	P2	x
+conn_motor_control	1	P3	
+JP_2	1	P4	
+JP_3	1	P5	
+RECOM	1	Q1	x
+BC846	2	Q2 Q4	x
+BC856	2	Q3 Q5	x
+0k	2	R22 R23	x
+1k	1	R1	x
+2.2k	4	R2 R9 R14 R21	x
+3.3k	4	R7 R8 R15 R16	x
+4.7k	4	R10 R11 R12 R13	x
+8.66k	2	R3 R25	x
+10k	4	R4 R6 R18 R20	x
+13.6k	2	R17 R27	x
+15.4k	2	R24 R26	x
+22k	2	R5 R19	x
+8.192	MHZ	1	X1

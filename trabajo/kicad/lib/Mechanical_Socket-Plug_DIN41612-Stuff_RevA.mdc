@@ -1,0 +1,15 @@
+PCBNEW-LibDoc----V1  19.05.2010 19:01:14
+#
+$MODULE CardGuide_NONlockable_Fischer-FS85
+Li CardGuide_NONlockable_Fischer-FS85
+Cd Card Guide; Fischer; FS85; non lockable;
+Kw Card Guide; Fischer; FS85; non lockable; Führungsschiene;
+$EndMODULE
+#
+$MODULE CardGuide_Lockable_Fischer-MSVL
+Li CardGuide_Lockable_Fischer-MSVL
+Cd Card Guide; Fischer; MSVL;  lockable;
+Kw Card Guide; Fischer; MSVL;  lockable; Führungsschiene;
+$EndMODULE
+#
+$EndLIBDOC

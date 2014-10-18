@@ -1,0 +1,21 @@
+EESchema-DOCLIB  Version 2.0  Date: Mo 02 Jun 2014 20:11:44 CDT
+#
+$CMP BC856
+D BC856, 65V Vce, 0.1A Ic, PNP, SOT-23
+K BC856 BC556 Equivalent
+F http://www.fairchildsemi.com/ds/BC/BC856.pdf
+$ENDCMP
+#
+$CMP BC857
+D BC857, 45V Vce, 0.1A Ic, PNP, SOT-23
+K BC857 BC557 Equivalent
+F http://www.fairchildsemi.com/ds/BC/BC856.pdf
+$ENDCMP
+#
+$CMP BC858
+D BC858, 30V Vce, 0.1A Ic, PNP, SOT-23
+K BC858 BC558 Equivalent
+F http://www.fairchildsemi.com/ds/BC/BC856.pdf
+$ENDCMP
+#
+#End Doc Library

@@ -1,0 +1,147 @@
+PCBNEW-LibDoc----V1  20.05.2010 21:44:35
+#
+$MODULE Diode_DO-35_SOD27_Horizontal_RM10
+Li Diode_DO-35_SOD27_Horizontal_RM10
+Cd Diode, DO-35,  SOD27, Horizontal, RM 10mm
+Kw Diode, DO-35, SOD27, Horizontal, RM 10mm, 1N4148,
+$EndMODULE
+#
+$MODULE Diode_DO-41_SOD81_Horizontal_RM10
+Li Diode_DO-41_SOD81_Horizontal_RM10
+Cd Diode, DO-41, SOD81, Horizontal, RM 10mm,
+Kw Diode, DO-41, SOD81, Horizontal, RM 10mm, 1N4007, SB140,
+$EndMODULE
+#
+$MODULE Diode_DO-41_SOD81_Vertical_AnodeUp
+Li Diode_DO-41_SOD81_Vertical_AnodeUp
+Cd Diode, DO-41, SOD81, Vertical, Anode Up,
+Kw Diode, DO-41, SOD81, Vertical, Anode Up, 1N4007, SB140,
+$EndMODULE
+#
+$MODULE Diode_DO-201AD_Horizontal_RM15
+Li Diode_DO-201AD_Horizontal_RM15
+Cd Diode DO-201AD Horizontal
+Kw Diode DO-201AD Horizontal SB320 SB340 SB360
+$EndMODULE
+#
+$MODULE Diode_LED_3mm_round_vertical
+Li Diode_LED_3mm_round_vertical
+Cd Leuchtdiode, LED, 3mm, round, rund,  vertical,
+Kw Leuchtdiode, LED,  3mm, round, rund,  vertical,
+$EndMODULE
+#
+$MODULE Diode_LED_5mm_round_vertical
+Li Diode_LED_5mm_round_vertical
+Cd Leuchtdiode, LED,  5mm, round, rund,  vertical,
+Kw Leuchtdiode, LED,  5mm, round, rund,  vertical,
+$EndMODULE
+#
+$MODULE Diode_P600_Horizontal
+Li Diode_P600_Horizontal
+Cd Diode, P600, horizontal,
+Kw Diode, P600, horizontal,
+$EndMODULE
+#
+$MODULE Diode_P600_Vertical_AnodeUp
+Li Diode_P600_Vertical_AnodeUp
+Cd Diode, P600, vertical, Anode up,
+Kw Diode, P600, vertical, Anode up,
+$EndMODULE
+#
+$MODULE Diode_DO-41_SOD81_Vertical_KathodeUp
+Li Diode_DO-41_SOD81_Vertical_KathodeUp
+Cd Diode, DO-41, SOD81, Vertica,l Anode Up,
+Kw Diode, DO-41, SOD81, Vertical, Anode Up, 1N4007, SB140,
+$EndMODULE
+#
+$MODULE Diode_TO-220_Horizontal
+Li Diode_TO-220_Horizontal
+Cd TO-220, Bipolar-BCE, Horizontal,
+Kw TO-220, Bipolar-BCE, Horizontal,
+$EndMODULE
+#
+$MODULE Diode_TO-220_Dual_CommonCathode_Horizontal
+Li Diode_TO-220_Dual_CommonCathode_Horizontal
+Cd TO-220, Diode, Dual, Common Cathode,
+Kw TO-220, Diode, Dual, Common Cathode,
+$EndMODULE
+#
+$MODULE Diode_TO-220_Dual_CommonCathode_Horizontal_LargePads
+Li Diode_TO-220_Dual_CommonCathode_Horizontal_LargePads
+Cd TO-220, Diode, Dual, Common Cathode, Horizontal, Large Pads,
+Kw TO-220, Diode, Dual, Common Cathode, Horizontal, Large Pads,
+$EndMODULE
+#
+$MODULE Diode_TO-220_Dual_CommonCathode_Vertical
+Li Diode_TO-220_Dual_CommonCathode_Vertical
+Cd TO-220, Diode, Dual, Common Cathode,Vertical,
+Kw TO-220, Diode, Dual, Common Cathode, Vertical,
+$EndMODULE
+#
+$MODULE Diode_TO-220_Horizontal_LargePads
+Li Diode_TO-220_Horizontal_LargePads
+Cd TO-220, Diode, Horizontal, Large Pads,
+Kw TO-220, Diode, Horizontal, Large Pads,
+$EndMODULE
+#
+$MODULE Diode_TO-220_Vertical
+Li Diode_TO-220_Vertical
+Cd TO-220, Diode, Vertical,
+Kw TO-220, Diode, Vertical,
+$EndMODULE
+#
+$MODULE Diode_TO-247_Dual_CommonCathode_Horizontal
+Li Diode_TO-247_Dual_CommonCathode_Horizontal
+Cd TO-247, Diode, Dual, Common Cathode, Horizontal,
+Kw TO-247, Diode, Dual, Common Cathode, Horizontal,
+$EndMODULE
+#
+$MODULE Diode_TO-247_Dual_CommonCathode_Horizontal_LargePads
+Li Diode_TO-247_Dual_CommonCathode_Horizontal_LargePads
+Cd TO-247, Diode, Dual, Common Cathode, Horizontal, Large Pads,
+Kw TO-247, Diode, Dual, Common Cathode, Horizontal, Large Pads,
+$EndMODULE
+#
+$MODULE Diode_TO-247_DiodeDual_CommonCathode_Vertical
+Li Diode_TO-247_DiodeDual_CommonCathode_Vertical
+Cd TO-247, Diode, Dual, Common Cathode, Vertical,
+Kw TO-247, Diode, Dual, Common Cathode, Vertical,
+$EndMODULE
+#
+$MODULE Diode_TO-247_Dual_CommonCathode_Vertical
+Li Diode_TO-247_Dual_CommonCathode_Vertical
+Cd TO-247, Diode, Dual, Common Cathode, Vertical,
+Kw TO-247, Diode, Dual, Common Cathode, Vertical,
+$EndMODULE
+#
+$MODULE Diode_TO-247_Horizontal
+Li Diode_TO-247_Horizontal
+Cd Diode, TO-247, TO-218, TOP-3 , horizontal, 1=Anode,  2= Kathode,
+Kw Diode, TO-247, TO-218, TOP-3 , horizontal, 1=Anode,  2= Kathode,
+$EndMODULE
+#
+$MODULE Diode_TO-247_Horizontal_largePads
+Li Diode_TO-247_Horizontal_largePads
+Cd Diode, TO-247, TO-218, TOP-3 , horizontal,  large Pads, 1=Anode,  2= Kathode,
+Kw Diode, TO-247, TO-218, TOP-3 , horizontal,  large Pads, 1=Anode,  2= Kathode,
+$EndMODULE
+#
+$MODULE Diode_TO-247_Horizontal_MountFromLS
+Li Diode_TO-247_Horizontal_MountFromLS
+Cd Diode, TO-247, TO-218, TOP-3, horizontal,  mounted from  LS, 1=Anode,  2= Kathode,
+Kw Diode, TO-247, TO-218, TOP-3, horizontal,  mounted from  LS, 1=Anode,  2= Kathode,
+$EndMODULE
+#
+$MODULE Diode_P600_Vertical_KathodeUp
+Li Diode_P600_Vertical_KathodeUp
+Cd Diode, P600, Vertical, Kathode up,
+Kw Diode, P600, vertical, Kathode up,
+$EndMODULE
+#
+$MODULE Diode_TO-247_Vertical
+Li Diode_TO-247_Vertical
+Cd TO-247, TO-218, TOP-3,  1=Anode,  2=Kathode, Vertical,
+Kw TO-247, TO-218, TOP-3, Anode, Kathode, Vertical,
+$EndMODULE
+#
+$EndLIBDOC

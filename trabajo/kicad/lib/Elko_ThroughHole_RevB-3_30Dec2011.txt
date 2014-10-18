@@ -1,0 +1,40 @@
+# About
+Elko_ThroughHole_RevB-3_30Dec2011.mod
+
+
+Contains the KiCAD module/footprint of some
+radial electrolytic capacitors for through hole
+mounting.
+
+Elko_vert_DM10_RM2-5                     electrolytic capacitor diam. 10mm, pin dist. 2,5mm
+Elko_vert_DM10_RM2-5_CopperClear         electrolytic capacitor diam. 10mm, pin dist. 2,5mm
+Elko_vert_DM10_RM2-5to5                  electrolytic capacitor diam. 10mm, pin dist. 2,5mm and 5mm
+Elko_vert_DM10_RM2-5to5_CopperClear      electrolytic capacitor diam. 10mm, pin dist. 2,5mm and 5mm
+Elko_vert_DM10_RM5                       electrolytic capacitor diam. 10mm, pin dist. 5mm
+Elko_vert_DM10_RM5_CopperClear           electrolytic capacitor diam. 10mm, pin dist. 5mm
+Elko_vert_DM10_RM5to7-5                  electrolytic capacitor diam. 10mm, pin dist. 5mm and 7,5mm
+Elko_vert_DM10_RM5to7-5_CopperClear      electrolytic capacitor diam. 10mm, pin dist. 5mm and 7,5mm
+Elko_vert_DM10_RM7-5                     electrolytic capacitor diam. 10mm, pin dist. 7,5mm
+Elko_vert_DM10_RM7-5_CopperClear         electrolytic capacitor diam. 10mm, pin dist. 7,5mm
+Elko_vert_DM12-5_RM5                     electrolytic capacitor diam. 12,5mm, pin dist. 5mm                
+Elko_vert_DM12-5_RM5_CopperClear         electrolytic capacitor diam. 12,5mm, pin dist. 5mm
+Elko_vert_DM14_RM5                       electrolytic capacitor diam. 14mm, pin dist. 5mm
+Elko_vert_DM14_RM5_CopperClear           electrolytic capacitor diam. 14mm, pin dist. 5mm
+Elko_vert_DM16_RM7-5                     electrolytic capacitor diam. 16mm, pin dist. 7,5mm                       
+Elko_vert_DM16_RM7-5_CopperClear         electrolytic capacitor diam. 16mm, pin dist. 7,5mm
+Elko_vert_DM16_RM7-5_CrossMark           electrolytic capacitor diam. 16mm, pin dist. 7,5mm
+Elko_vert_DM5_RM2                        electrolytic capacitor diam. 5mm, pin dist. 2mm
+Elko_vert_DM5_RM2-5                      electrolytic capacitor diam. 5mm, pin dist. 2,5mm
+Elko_vert_DM5_RM2-5_CopperClear          electrolytic capacitor diam. 5mm, pin dist. 2,5mm
+Elko_vert_DM5_RM2_CopperClear            electrolytic capacitor diam. 5mm, pin dist. 2mm
+Elko_vert_DM6-3_RM2-5                    electrolytic capacitor diam. 6,3mm, pin dist. 2,5mm
+Elko_vert_DM6-3_RM2-5_CopperClear        electrolytic capacitor diam. 6,3mm, pin dist. 2,5mm
+Elko_vert_DM7-5_RM2-5                    electrolytic capacitor diam. 7,5mm, pin dist. 2,5mm
+Elko_vert_DM7-5_RM2-5_CopperClear        electrolytic capacitor diam. 7,5mm, pin dist. 2,5mm
+Elko_vert_DM8_RM3-5                      electrolytic capacitor diam. 8mm, pin dist. 3,5mm       
+Elko_vert_DM8_RM3-5_CopperClear          electrolytic capacitor diam. 8mm, pin dist. 3,5mm
+
+
+Author: Oliver Kirsch and Bernd Wiebus / Uedem / Germany / 07th feb 2012
+GNU-GPL, NO WARRANTY!
+

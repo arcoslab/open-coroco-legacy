@@ -1,0 +1,50 @@
+# About
+the file MountingHole_RevA.mod.
+
+Contains the KiCAD module/footprint of some
+mounting holes.
+
+Normaly mounting holes in KiCAD are made by setting a 
+pad, and setting the hole diameter and pad diameter 
+to the same size. So there will be no pad. This is, 
+because you often do not want pads at mounting holes. 
+But sometimes, you want a broader marking of the hole
+somewhere, but not in the gerber files. For this purpose, 
+this mounting holes are created, with the pad not at the 
+copper layer, but at the comment layer. So you do not 
+have it at the gerber files (I suppose, you do not export 
+your comment layer to gerber), but you can see and print 
+it. But be careful, because i violated some rules doing this.
+KiCAD normally does not accept any non copper layer as
+pad, and so, using this layers is blocked. I did this by
+editing the .mod-file with an editor, but if you now try
+to edit this holes, you cannot do this, because at
+every change KiCAD will recognises the non copper layer
+and blocks the editing of the pad. At moment,
+KiCAD  (2011-04-29 BZR 2986)-stable works fine with this
+workaround, but this may not work at the future. You are
+recommended to use non-copper-plated holes, if you use
+holes without pads. Also, i may be more useful, to use
+milled holes for greater diameters.
+There exists also a symbol "Mounting hole". So you can put
+this holes on the schematic, and link it to a mounting hole
+footprint for PCBnew in CVpcb. This has the advantage,
+that you will allways keep the holes and not vorget them by
+re-reading the netlist at PCBnew. 
+
+MountingHole_2-5mm_RevA_Date21Jun2010 > 2,5mm
+MountingHole_2-7mm_RevA_Date21Jun2010 > 2,7mm
+MountingHole_3mm_RevA_Date21Jun2010 > 3mm
+MountingHole_3-5mm_RevA_Date21Jun2010 > 3,5mm
+MountingHole_3-7mm_RevA_Date21Jun2010 > 3,7mm
+MountingHole_4mm_RevA_Date21Jun2010 > 4mm
+MountingHole_4-5mm_RevA_Date21Jun2010 > 4,5mm
+MountingHole_5mm_RevA_Date21Jun2010 > 5mm
+MountingHole_5-5mm_RevA_Date21Jun2010 > 5,5mm
+MountingHole_6mm_RevA_Date21Jun2010 > 6mm
+MountingHole_6-5mm_RevA_Date21Jun2010 > 6,5mm
+
+
+Author: Bernd Wiebus / Uedem / Germany / 04th July 2011
+GNU-GPL, NO WARRANTY!
+
