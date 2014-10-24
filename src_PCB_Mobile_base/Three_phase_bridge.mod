@@ -1,4 +1,4 @@
-PCBNEW-LibModule-V1  lun 13 oct 2014 06:47:38 CST
+PCBNEW-LibModule-V1  vie 24 oct 2014 06:24:27 CST
 # encoding utf-8
 Units mm
 $INDEX
@@ -1903,39 +1903,38 @@ Ro 0 0 0
 $EndSHAPE3D
 $EndMODULE TO220_small_Heatsink_NO_copper
 $MODULE TO220_small_Heatsink_stand_reduced_area
-Po 0 0 0 15 5299107E 00000000 ~~
+Po 0 0 0 15 544A44F5 00000000 ~~
 Li TO220_small_Heatsink_stand_reduced_area
 Cd Transistor TO 220
 Kw TR TO220 DEV
 Sc 0
-AR 
+AR /528E7A14
 Op 0 0 0
-T0 -0.635 6.731 1.016 1.016 0 0.2032 N V 21 N "TO220_small_Heatsink_stand_reduced_area"
-T1 -0.127 -6.731 1.016 1.016 0 0.2032 N V 21 N "VAL*"
+T0 1.66878 0 1.016 1.016 900 0.2032 N V 21 N "LF1"
+T1 -1.34874 0.01524 1.016 1.016 900 0.2032 N V 21 N "LF33CV"
 DS 2.413 5.334 -2.413 5.334 0.15 21
 DS -2.413 -5.334 -2.413 5.334 0.15 21
 DS 2.413 5.334 2.413 -5.334 0.15 21
 DS -2.413 -5.334 2.413 -5.334 0.15 21
-DS -1.016 -9.652 -1.27 -9.652 0.15 21
 $PAD
 Sh "1" R 1.778 1.778 0 0 0
 Dr 1.143 0 0
 At STD N 00E0FFFF
-Ne 0 ""
+Ne 3 "VCC"
 Po 0 2.54
 $EndPAD
 $PAD
 Sh "2" C 1.778 1.778 0 0 0
 Dr 1.143 0 0
 At STD N 00E0FFFF
-Ne 0 ""
+Ne 1 "+3.3V"
 Po 0 -2.54
 $EndPAD
 $PAD
 Sh "3" C 1.778 1.778 0 0 0
 Dr 1.143 0 0
 At STD N 00E0FFFF
-Ne 0 ""
+Ne 2 "GND"
 Po 0 0
 $EndPAD
 $SHAPE3D
