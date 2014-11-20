@@ -29,13 +29,6 @@
 #define gear_ratio     200.0f   //200:1
 
 
-
-
-//40-> 0.005
-//60->0.01
-//70->0.03
-//80->0.04
-
 //PID parameters
 
 //voltage-frequency-based speed controller
@@ -44,30 +37,7 @@
 #define PI_MAX_SENSORLESS_SVM           90.0f//  0.0005f//(90.0f*frequency/interrupt_frequency) 
 #define PI_MIN_SENSORLESS_SVM          -90.0f// -0.0005f//-(90.0f*frequency/interrupt_frequency) 
 
-/*
-#define I_MAX_SENSORLESS_SVM            0.0005f//  0.0005f//(90.0f*frequency/interrupt_frequency) 
-#define P_MAX_SENSORLESS_SVM            0.0005f//  0.0005f//(90.0f*frequency/interrupt_frequency) 
-#define PI_MAX_SENSORLESS_SVM           0.0005f//  0.0005f//(90.0f*frequency/interrupt_frequency) 
-#define PI_MIN_SENSORLESS_SVM          -0.0005f// -0.0005f//-(90.0f*frequency/interrupt_frequency) 
-*/
-/*
-float P_SENSORLESS_SVM      = 0.0001f; 
-float P_DOWN_SENSORLESS_SVM = 0.0001f; 
-float fake_P_SENSORLESS_SVM = 0.0001f;
-float I_SENSORLESS_SVM      = 0.000000002f;
-float I_DOWN_SENSORLESS_SVM = 0.000000002f;
-float fake_I_SENSORLESS_SVM = 0.000000002f;
-*/
 
-/*
-//extra_load_angle=frequency*360.0f*(2.0f*TICK_PERIOD)+extra_load_angle_increase;
-float P_SENSORLESS_SVM      = 0.000001f; 
-float P_DOWN_SENSORLESS_SVM = 0.000001f; 
-float fake_P_SENSORLESS_SVM = 0.000001f;
-float I_SENSORLESS_SVM      = 0.0000000005f;
-float I_DOWN_SENSORLESS_SVM = 0.0000000005f;
-float fake_I_SENSORLESS_SVM = 0.0000000005f;
-*/
 
 //fast
 //extra_voltage_angle=extra_voltage_angle+extra_load_angle;
@@ -78,15 +48,14 @@ float I_SENSORLESS_SVM      = 0.0f;
 float I_DOWN_SENSORLESS_SVM = 0.0f;
 float fake_I_SENSORLESS_SVM = 0.0f;
 
-//slow
-/*
-float P_SENSORLESS_SVM      = 0.000001f;//0.00001f; 
-float P_DOWN_SENSORLESS_SVM = 0.000001f;//0.00001f; 
-float fake_P_SENSORLESS_SVM = 0.000001f;//0.00001f;
-float I_SENSORLESS_SVM      = 0.0f;
-float I_DOWN_SENSORLESS_SVM = 0.0f;
-float fake_I_SENSORLESS_SVM = 0.0f;
-*/
+//fast
+//extra_voltage_angle=extra_voltage_angle+extra_load_angle;
+float P_SENSORLESS_SVM_FREQUENCY   = 0.00001f; 
+float P_DOWN_SENSORLESS_SVM_FREQUENCY       = 0.00001f; //too high: 0.0001; too slow 0.00001 ; max: 0.000012f
+float I_SENSORLESS_SVM_FREQUENCY            = 0.0000000001f;
+float I_DOWN_SENSORLESS_SVM_FREQUENCY       = 0.0000000001f;
+
+
 //DTC-SVM speed controller
 #define I_MAX_SENSORLESS            60.0f//  0.0005f//(90.0f*frequency/interrupt_frequency) 
 #define P_MAX_SENSORLESS            60.0f//  0.0005f//(90.0f*frequency/interrupt_frequency) 

@@ -824,11 +824,16 @@ class Serial_Stm32f4(object):
 
 
         if   self.print_selection==0:
-            self.new_data_line= "t: %6.2f "                   %self.time                + \
-                                " ref_freq: %6.2f"            %self.reference_frequency + \
-                                " electric_frequency: %10.2f" %self.electric_frequency  + \
-                                " hall_freq: %6.2f"           %self.hall_frequency      + extra_information
-
+            #self.reference_electric_angle   =float(split_string[split_counter+1])
+            m  =self.electric_frequency/self.pole_pairs
+            f  =self.electric_frequency/(self.pole_pairs*self.gear_ratio)
+            self.new_data_line= "t: %6.2f "                   %self.time                    + \
+                                " ref_freq: %6.2f"            %self.reference_frequency     + \
+                                " electric_frequency: %10.2f" %self.electric_frequency      + \
+                                " hall_freq: %6.2f"           %self.hall_frequency          + \
+                                " mechanical_freq: %6.2f"     %m    + \
+                                " gear_freq: %10.6f"           %f + extra_information
+                                
 
         elif self.print_selection==1:
             self.isD=self.isA;
@@ -906,15 +911,22 @@ class Serial_Stm32f4(object):
 
 
         elif self.print_selection==15:
-            self.new_data_line= "t: %6.2f "       %self.time                        + \
-                                " K: %10.6f"       %self.stiffness                   + \
-                                " D: %10.6f"       %self.damping                     + \
-                                " rg: %6.2f"     %self.reference_gear_angle         + \
-                                " g: %12.7f"       %self.gear_angle                 + \
-                                " rf: %9.4f"%self.reference_frequency               + \
-                                " ef: %6.2f"     %self.electric_frequency           + \
-                                " hf: %9.4f"           %self.hall_frequency         + \
-                                " sg: %12.8f:"    %self.strain_gauge                + extra_information
+            m=self.electric_frequency/self.pole_pairs
+            g=self.electric_frequency/(self.pole_pairs*self.gear_ratio)
+
+
+            self.new_data_line= "t: %6.2f "       %self.time                                                + \
+                                " K: %10.6f"       %self.stiffness                                          + \
+                                " D: %10.6f"       %self.damping                                            + \
+                                " rg: %6.2f"     %self.reference_gear_angle                                 + \
+                                " g: %12.7f"       %self.gear_angle                                         + \
+                                " rf: %9.4f"%self.reference_frequency                                       + \
+                                " ef: %6.2f"     %self.electric_frequency                                   + \
+                                " hf: %9.4f"           %self.hall_frequency                                 + \
+                                " sg: %12.8f:"    %self.strain_gauge                                        + \
+                                " mf: %6.2f"     %m                   + \
+                                " gf: %10.6f"     %g + extra_information
+                                
 
             '''
             self.new_data_line= "t: %6.2f "       %self.time                        + \
@@ -928,7 +940,7 @@ class Serial_Stm32f4(object):
                                 " g: %6.2f"       %self.gear_angle                  + \
                                 " e_f: %6.2f"     %self.electric_frequency          + \
                                 " m_f: %6.2f"     %self.mechanic_frequency          + \
-                                " g_f: %6.4f"     %self.gear_frequency              + extra_information
+                                " g_f: %10.6f"     %self.gear_frequency              + extra_information
             '''
 
 

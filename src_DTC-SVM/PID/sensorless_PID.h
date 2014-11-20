@@ -17,7 +17,8 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-void sensorless_pure_speed_SVM_pi_controller(float reference_frequency, float frequency, float* rotating_angle);
+void sensorless_pure_speed_SVM_pi_controller        (float reference_frequency, float frequency, float* rotating_angle);
+void pure_speed_SVM_pi_controller_variable_frequency(float reference_frequency, float frequency, float* rotating_angle);
 
 void sensorless_speed_pi_controller(
      float reference_frequency, float frequency,float* rotating_angle);
