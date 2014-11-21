@@ -792,6 +792,7 @@ void print_regular_data(void)
         printf ("t")  ;  checksum=           print_float_as_bytes(data_timer                   );
         printf ("l")  ;  checksum=checksum  +print_float_as_bytes(data_pi_control_SVM          );
         printf ("x")  ;  checksum=checksum  +print_float_as_bytes(pi_max                       );
+        //printf ("x")  ;  checksum=checksum  +print_float_as_bytes(extra_voltage_angle                       );
 
         //////////////
         //printf ("r")  ;  checksum=checksum  +print_float_as_bytes(data_ref_freq_SVM            );

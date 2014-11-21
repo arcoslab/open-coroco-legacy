@@ -41,6 +41,7 @@
 
 //fast
 //extra_voltage_angle=extra_voltage_angle+extra_load_angle;
+//[Original dirty speed controller]
 float P_SENSORLESS_SVM      = 0.00001f; 
 float P_DOWN_SENSORLESS_SVM = 0.00001f; 
 float fake_P_SENSORLESS_SVM = 0.000002f;
@@ -50,10 +51,11 @@ float fake_I_SENSORLESS_SVM = 0.0f;
 
 //fast
 //extra_voltage_angle=extra_voltage_angle+extra_load_angle;
-float P_SENSORLESS_SVM_FREQUENCY   = 0.00001f; 
-float P_DOWN_SENSORLESS_SVM_FREQUENCY       = 0.00001f; //too high: 0.0001; too slow 0.00001 ; max: 0.000012f
-float I_SENSORLESS_SVM_FREQUENCY            = 0.0000000001f;
-float I_DOWN_SENSORLESS_SVM_FREQUENCY       = 0.0000000001f;
+//[corrected speed controller]
+float P_SENSORLESS_SVM_FREQUENCY   = 0.25f; 
+float P_DOWN_SENSORLESS_SVM_FREQUENCY       = 0.25f; //too high: 0.0001; too slow 0.00001 ; max: 0.000012f
+float I_SENSORLESS_SVM_FREQUENCY            = 0.0f;
+float I_DOWN_SENSORLESS_SVM_FREQUENCY       = 0.0f;
 
 
 //DTC-SVM speed controller

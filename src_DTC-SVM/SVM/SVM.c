@@ -669,7 +669,7 @@ float SVM_speed_close_loop_of_voltage_frequency(float reference_frequency, float
         //extra_load_angle=frequency*360.0f*(2.0f*TICK_PERIOD)+extra_load_angle_increase;
         //extra_voltage_angle=extra_voltage_angle+extra_load_angle;
 
-        extra_voltage_angle=frequency*360.0f*(2.0f*TICK_PERIOD)+extra_load_angle_increase;
+        extra_voltage_angle=extra_voltage_angle+frequency*360.0f*(2.0f*TICK_PERIOD)+extra_load_angle_increase;
 
 
         if (extra_voltage_angle>=360.0f) {extra_voltage_angle=extra_voltage_angle-360.0f;}
@@ -677,6 +677,7 @@ float SVM_speed_close_loop_of_voltage_frequency(float reference_frequency, float
 
        *VsD = 20.0f*Ud*fast_cos(extra_voltage_angle);
        *VsQ = 20.0f*Ud*fast_sine(extra_voltage_angle);
+        pi_max=extra_voltage_angle;
    } 
 
    return extra_load_angle;
