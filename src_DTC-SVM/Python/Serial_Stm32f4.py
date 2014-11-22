@@ -57,7 +57,7 @@ class Serial_Stm32f4(object):
         self.read_capture_state = 'not_collecting'
         self.tag_comment        = ''
         #self.aditional_comment=', STATOR_RESISTANCE_TEST 240degrees,MULTI_ROTOR OPEN LOOP,wrong motor parameters,one psi,wr filt,te filt,k 0.2, actual i,open 0.00005f,Ud 40%,psi_ref=0.0016,38kpwm'
-        self.aditional_comment=', Admitance ,K=5 D=0.00001,Vexta,Ud 70%,openSVM 0.0005max P=0.00001,40k pwm,te wr ignoring i'
+        self.aditional_comment=', Frequency controller, P =0.001, ref=300Hz, using hall_freq [hall sensor physically fixed]'
         self.driving_counter    = 0
         self.various_counter     = 0
         self.type_of_test       = 0        
@@ -2517,7 +2517,7 @@ class Serial_Stm32f4(object):
 
 
                     elif split_command[0]=='one':
-                        self.test_command='G';
+                        self.test_command='d'#'G';
                         self.start_test=True;
                         self.print_selection_setup(int(split_command[2]))
                         self.test_frequency    =split_command[1]

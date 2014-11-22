@@ -935,7 +935,8 @@ else
                                             );
   */
   electric_angle= electric_angle+
-                            SVM_speed_close_loop_of_voltage_frequency(ref_freq_SVM,w_r,true,&V_sD,&V_sQ,U_d,shutdown); 
+                            SVM_speed_close_loop_of_voltage_frequency(ref_freq_SVM,hall_freq,true,&V_sD,&V_sQ,U_d,shutdown); 
+                          //SVM_speed_close_loop_of_voltage_frequency(ref_freq_SVM,w_r,true,&V_sD,&V_sQ,U_d,shutdown); 
                           //SVM_speed_close_loop_of_voltage_frequency(ref_freq_SVM,hall_freq,close_loop_SVM,&V_sD,&V_sQ,U_d,shutdown); 
 
 
