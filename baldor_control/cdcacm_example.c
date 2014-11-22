@@ -37,7 +37,7 @@
 #define PWMFREQ_F       ((float )(PWMFREQ)) //32000.0f
 #define PRESCALE        1                                       //freq_CK_CNT=freq_CK_PSC/(PSC[15:0]+1)
 #define PWM_PERIOD_ARR  SYSFREQ/( PWMFREQ*(PRESCALE+1) )
-#define INIT_DUTY 0.5f
+#define INIT_DUTY 0.9f
 #define PI 3.1416f
 #define TICK_PERIOD 1.0f/PWMFREQ_F
 #define MYUINT_MAX 536870912
@@ -59,7 +59,8 @@ float ref_freq=1;
 float cur_angle=0;
 float last_cur_angle=0;
 float final_ref_freq=40;
-float error, p_error;
+float error=0;
+float p_error=0;
 float i_error=0;
 float cmd_angle;
 float pi_control;
@@ -237,7 +238,7 @@ int ad_ready=false;
 
 
 void calc_freq(void) {
-  static first=true;
+  static bool first=true;
   static int hall_a_last=0;
   static uint last_fall_hall_a_ticks=0;
 
@@ -255,7 +256,7 @@ void calc_freq(void) {
   } else {
     if ((last_pos<32768) && (pos>=32768)){
       hall_a=0;
-      //gpio_clear(LBLUE);
+    //gpio_clear(LBLUE);
     } else {
     hall_a=1;
     gpio_set(LBLUE);
@@ -302,7 +303,7 @@ void calc_freq(void) {
       //update estimated current angle
       est_angle+=2.0f*PI*TICK_PERIOD/(period/TICK_PERIOD);
       if (est_angle > 2.0f*PI) {
-	est_angle=0;
+	est_angle=0; //fix
       }
     }
   }
@@ -375,12 +376,24 @@ void start_up(void) {
 }
 
 int elec_cnt=0;
+#define INCR 0.1f
+#define MAX_OPEN_LOOP_FREQ 6.0f
 
 
 void gen_pwm(void) {
   //calc_attenuation();
 
-
+  static int cont=0;
+  static float paso=0.0f;
+  cont=cont+1;
+  if (!close_loop) {
+    if (cont >= 3200 && ref_freq <= MAX_OPEN_LOOP_FREQ){
+      //paso=1.0f*PI/180.0f;
+      cont=0;
+      ref_freq=ref_freq+INCR;
+    } else {//paso=0.0f;
+    }
+  }
 
   static float pi_times;
   last_cur_angle=cur_angle;
@@ -585,9 +598,14 @@ int main(void)
       while (poll(stdin) > 0) {
 	getc(stdin);
       }
+      printf("Open loop\n");
+      p_error=0;
+      i_error=0;
+      pi_control=0;
+      error=0;
     } else {
       ref_freq=value;
-      //printf("Close loop\n");
+      printf("Close loop\n");
     }
     //printf(" e: %7.2f, e_p %6.2f, e_i: %6.2f, adv: %6.2f, c_f: %6.2f, r_f: %6.2f, att: %6.2f, counter %d, eof %d, buf: %s, v %f, fault reg: 0x%02X, cur_a: %03.2f, pos: 0x%04X %04d, vel: 0x%04X %04d\n", error, p_error, i_error, pi_control*180.0f/PI, 1.0f/(period/TICK_PERIOD), ref_freq, attenuation, counter, eof, cmd, value, spi_data1, cur_angle*180/PI, pos, pos, vel, vel);
     printf(" e: %7.2f, e_p %6.2f, e_i: %6.2f, adv: %6.2f, c_f: %6.2f, r_f: %6.2f, att: %6.2f, counter %d, eof %d, buf: %s, v %f, fault reg: 0x%02X, cur_a: %03.2f, pos: %04d 0x%04X, e_cnt %d, ang %4.2f\n", error, p_error, i_error, pi_control*180.0f/PI, 1.0f/(period/TICK_PERIOD), ref_freq, attenuation, counter, eof, cmd, value, spi_data1, cur_angle*180/PI, pos, pos, elec_cnt, cur_angle*180.0/PI);
