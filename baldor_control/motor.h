@@ -1,1 +1,1 @@
-baldor_big.h
+baldor_big_24v.h

@@ -37,7 +37,7 @@
 #define PWMFREQ_F       ((float )(PWMFREQ)) //32000.0f
 #define PRESCALE        1                                       //freq_CK_CNT=freq_CK_PSC/(PSC[15:0]+1)
 #define PWM_PERIOD_ARR  SYSFREQ/( PWMFREQ*(PRESCALE+1) )
-#define INIT_DUTY 0.9f
+#define INIT_DUTY MIN_ATTENUATION
 #define PI 3.1416f
 #define TICK_PERIOD 1.0f/PWMFREQ_F
 #define MYUINT_MAX 536870912
@@ -47,15 +47,15 @@
 #define HALL_A() gpio_get(GPIOE, GPIO15);
 
 float attenuation=MIN_ATTENUATION;
-int hall_a;
-uint ticks;
-uint period;
+int hall_a=0;
+uint ticks=0;
+uint period= MYUINT_MAX;
 uint temp_period;
 float est_angle=0;
 float duty_a=0.0f;
 float duty_b=0;
 float duty_c=0;
-float ref_freq=1;
+float ref_freq=START_UP_REF_FREQ;
 float cur_angle=0;
 float last_cur_angle=0;
 float final_ref_freq=40;
@@ -67,6 +67,7 @@ float pi_control;
 int close_loop=false;
 int first_closed=false;
 int motor_off;
+bool first_open_loop=true;
 
 void hall_init(void) {
   /* Enable GPIOB and GPIOE clock. */
@@ -248,22 +249,22 @@ void calc_freq(void) {
     pos=((AD2S1210_RD(AD2S1210_REG_POS_H) << 8) | (AD2S1210_RD(AD2S1210_REG_POS_L)));
   }
 
-  if ((last_pos>58982) && (pos<6553)) {
+  //  if ((last_pos>58982) && (pos<6553)) {
+  if ((last_pos>64000) && (pos<1553)) {
     //hall sensor emulation
     hall_a=0;
     gpio_clear(LBLUE);
 
   } else {
-    if ((last_pos<32768) && (pos>=32768)){
-      hall_a=0;
+    if ((last_pos>31768) && (pos<33768)){
+      hall_a=1;
     //gpio_clear(LBLUE);
-    } else {
-    hall_a=1;
-    gpio_set(LBLUE);
     }
   }
   last_pos=pos;
 
+  //printf("pos %hu\n", pos);
+  //printf("ha %d, hal %d ", hall_a, hall_a_last);
 
 
 
@@ -274,28 +275,35 @@ void calc_freq(void) {
     period=UINT_MAX;
     last_fall_hall_a_ticks=ticks;
     first=false;
+    //printf("F\n");
   } else {
     ticks++;
     if (ticks == UINT_MAX) {
       ticks=0;
     }
-    if ((hall_a_last > 0) && (hall_a == 0)) {
+    //if (((hall_a_last > 0) && (hall_a == 0)) || ((hall_a_last == 0) && (hall_a > 0))) {
+    if (((hall_a_last > 0) && (hall_a == 0))) {
+      //printf("hf\n");
       //hall falling edge: new cycle
       //new rotor position measurement
       est_angle=0;
       //gpio_toggle(LGREEN);
       if (ticks > last_fall_hall_a_ticks) { //updating period
-	period=ticks-last_fall_hall_a_ticks;
+	//period=ticks-last_fall_hall_a_ticks;
+	period=(ticks-last_fall_hall_a_ticks)/2.0;
       } else {
-	period=UINT_MAX-last_fall_hall_a_ticks+ticks;
+	//period=UINT_MAX-last_fall_hall_a_ticks+ticks;
+	period=(UINT_MAX-last_fall_hall_a_ticks+ticks)/2.0;
       }
       last_fall_hall_a_ticks=ticks;
     } else {
       //we update period only if is bigger than before
       if (ticks > last_fall_hall_a_ticks) {
-	temp_period=ticks-last_fall_hall_a_ticks;
+	temp_period=(ticks-last_fall_hall_a_ticks)/2.0;
+	//temp_period=ticks-last_fall_hall_a_ticks;
       } else {
-	temp_period=UINT_MAX-last_fall_hall_a_ticks+ticks;
+	temp_period=(UINT_MAX-last_fall_hall_a_ticks+ticks)/2.0;
+	//temp_period=UINT_MAX-last_fall_hall_a_ticks+ticks;
       }
       if (temp_period > period) {
 	period=temp_period;
@@ -363,10 +371,11 @@ void calc_attenuation(void) {
 void start_up(void) {
   if (CUR_FREQ < MIN_CLOSE_LOOP_FREQ) {
     //printf("Open loop\n");
-    ref_freq=START_UP_REF_FREQ;
+    //ref_freq=START_UP_REF_FREQ;
     close_loop=false;
     first_closed=true;
   } else {
+    first_open_loop=true;
     close_loop=true;
   }
   if (close_loop && first_closed) {
@@ -389,6 +398,7 @@ void gen_pwm(void) {
   if (!close_loop) {
     if (cont >= 3200 && ref_freq <= MAX_OPEN_LOOP_FREQ){
       //paso=1.0f*PI/180.0f;
+      //printf("increment\n");
       cont=0;
       ref_freq=ref_freq+INCR;
     } else {//paso=0.0f;
@@ -519,6 +529,7 @@ int main(void)
 
   int elec_cnted=false;
 
+
   while (1){
 
     //fault register
@@ -594,6 +605,7 @@ int main(void)
       }
       //c=getc(stdin);
     }
+    //printf("period: %u\n", period);
     if (!close_loop) {
       while (poll(stdin) > 0) {
 	getc(stdin);
@@ -603,12 +615,18 @@ int main(void)
       i_error=0;
       pi_control=0;
       error=0;
+      if (first_open_loop) {
+	ref_freq=START_UP_REF_FREQ;
+	first_open_loop=false;
+      }
     } else {
       ref_freq=value;
       printf("Close loop\n");
     }
+    //printf("period: %u\n", period);
     //printf(" e: %7.2f, e_p %6.2f, e_i: %6.2f, adv: %6.2f, c_f: %6.2f, r_f: %6.2f, att: %6.2f, counter %d, eof %d, buf: %s, v %f, fault reg: 0x%02X, cur_a: %03.2f, pos: 0x%04X %04d, vel: 0x%04X %04d\n", error, p_error, i_error, pi_control*180.0f/PI, 1.0f/(period/TICK_PERIOD), ref_freq, attenuation, counter, eof, cmd, value, spi_data1, cur_angle*180/PI, pos, pos, vel, vel);
-    printf(" e: %7.2f, e_p %6.2f, e_i: %6.2f, adv: %6.2f, c_f: %6.2f, r_f: %6.2f, att: %6.2f, counter %d, eof %d, buf: %s, v %f, fault reg: 0x%02X, cur_a: %03.2f, pos: %04d 0x%04X, e_cnt %d, ang %4.2f\n", error, p_error, i_error, pi_control*180.0f/PI, 1.0f/(period/TICK_PERIOD), ref_freq, attenuation, counter, eof, cmd, value, spi_data1, cur_angle*180/PI, pos, pos, elec_cnt, cur_angle*180.0/PI);
+    //    printf(" e: %7.2f, e_p %6.2f, e_i: %6.2f, adv: %6.2f, pos: %04d 0x%04X, c_f: %6.2f, r_f: %6.2f, att: %6.2f, counter %d, eof %d, buf: %s, v %f, fault reg: 0x%02X, cur_a: %03.2f, e_cnt %d, ang %4.2f\n", error, p_error, i_error, pi_control*180.0f/PI, pos, pos, 1.0f/(period/TICK_PERIOD), ref_freq, attenuation, counter, eof, cmd, value, spi_data1, cur_angle*180/PI, elec_cnt, cur_angle*180.0/PI);
+    printf(" e: %7.2f, e_p %6.2f, e_i: %6.2f, adv: %6.2f, pos: %04d, c_f: %6.2f, r_f: %6.2f, att: %6.2f, counter %d, eof %d, buf: %s, v %f, fault reg: 0x%02X, cur_a: %03.2f, e_cnt %d, ang %4.2f\n", error, p_error, i_error, pi_control*180.0f/PI, pos, 1.0f/(period/TICK_PERIOD), ref_freq, attenuation, counter, eof, cmd, value, spi_data1, cur_angle*180/PI, elec_cnt, cur_angle*180.0/PI);
 
   }
 }
