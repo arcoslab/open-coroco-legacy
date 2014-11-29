@@ -23,6 +23,9 @@
 #include <libopencm3/stm32/f4/timer.h>
 #include <libopencm3/stm32/f4/nvic.h>
 #include "baldor_control.h"
+#include <libopencm3-plus/newlib/syscall.h>
+#include <libopencm3-plus/utils/misc.h>
+#include <libopencm3-plus/stm32f4discovery/leds.h>
 
 void leds_init(void) {
   rcc_periph_clock_enable(RCC_GPIOD);
@@ -193,15 +196,36 @@ void tim_init(void)
 void system_init(void) {
   rcc_clock_setup_hse_3v3(&hse_8mhz_3v3[CLOCK_3V3_168MHZ]);
   leds_init();
-  cdcacm_init();
+  cdcacm_init(); //default 921600bps
   ad2s1210_init();
   spi_init();
   tim_init();
 }
 
+void tim1_up_tim10_isr(void) {
+  // Clear the update interrupt flag
+  timer_clear_flag(TIM1,  TIM_SR_UIF);
+  //calc_freq();
+  //start_up();
+  //gen_pwm();
+}
 
 int main(void)
 {
   system_init();
+
+  setvbuf(stdin,NULL,_IONBF,0); // Sets stdin in unbuffered mode (normal for usart com)
+  setvbuf(stdout,NULL,_IONBF,0); // Sets stdin in unbuffered mode (normal for usart com)
+  while (poll(stdin) > 0) {
+    printf("Cleaning stdin\n");
+    getc(stdin);
+  }
+
+
+  while(true) {
+    printled(4,LRED);
+    printf("hola\n");
+  }
+
   return(0);
 }
