@@ -193,6 +193,15 @@ void tim_init(void)
   nvic_enable_irq(NVIC_TIM1_UP_TIM10_IRQ);
 }
 
+void serial_conf(void) {
+  setvbuf(stdin,NULL,_IONBF,0); // Sets stdin in unbuffered mode (normal for usart com)
+  setvbuf(stdout,NULL,_IONBF,0); // Sets stdin in unbuffered mode (normal for usart com)
+  while (poll(stdin) > 0) {
+    printf("Cleaning stdin\n");
+    getc(stdin);
+  }
+}
+
 void system_init(void) {
   rcc_clock_setup_hse_3v3(&hse_8mhz_3v3[CLOCK_3V3_168MHZ]);
   leds_init();
@@ -200,6 +209,7 @@ void system_init(void) {
   ad2s1210_init();
   spi_init();
   tim_init();
+  serial_conf();
 }
 
 void tim1_up_tim10_isr(void) {
@@ -214,12 +224,6 @@ int main(void)
 {
   system_init();
 
-  setvbuf(stdin,NULL,_IONBF,0); // Sets stdin in unbuffered mode (normal for usart com)
-  setvbuf(stdout,NULL,_IONBF,0); // Sets stdin in unbuffered mode (normal for usart com)
-  while (poll(stdin) > 0) {
-    printf("Cleaning stdin\n");
-    getc(stdin);
-  }
 
 
   while(true) {
