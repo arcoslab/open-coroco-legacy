@@ -2,14 +2,14 @@
 #define MAX_ATTENUATION 1.0f
 //#define MAX_MOTOR_FREQ 40.0f
 #define MAX_MOTOR_FREQ 20.0f
-#define P 0.0001
-#define P_DOWN 0.0001 //To control deacceleration speed and therefore braking current
-#define I 0.00001 //NMB motor
-#define I_DOWN 0.00001 //NMB motor
-#define I_MAX 87*PI/180.0f
-#define P_MAX 87*PI/180.0f
-#define PI_MAX 87*PI/180.0f //acceleration torque
-#define PI_MIN -60*PI/180.0f //braking torque
+#define P 0.01f
+#define P_DOWN 0.01f //To control deacceleration speed and therefore braking current
+#define I 0.0001f //NMB motor
+#define I_DOWN 0.0001f //NMB motor
+#define I_MAX (87.0f*PI/180.0f)
+#define P_MAX (87.0f*PI/180.0f)
+#define PI_MAX (87.0f*PI/180.0f) //acceleration torque
+#define PI_MIN (-60.0f*PI/180.0f) //braking torque
 /* #define START_ATTENUATION_FREQ 20.0f */
 /* #define START_UP_REF_FREQ 3.0f */
 /* #define MIN_CLOSE_LOOP_FREQ 3.0f */

@@ -265,18 +265,73 @@ void update_est_freq(void) {
   gpio_toggle(LBLUE);
 }
 
-#define MAX_FREQ 10*2*PI
+#define MAX_FREQ 5*2*PI
 #define MIN_EXC_FREQ_PERC 0.7
-#define MIN_EXC_VOLT 0.7f
+#define MIN_EXC_VOLT 0.8f
 #define MAX_EXC_VOLT 1.0f
 
 float exc_volt=0;
+#define RESOLVER_STATOR_OFFSET -45*2*PI/360
+
+float error=0;
+float p_error=0;
+float i_error=0;
+float cmd_angle;
+float pi_control;
+float ref_freq=1*2*PI;
+
+void pi_controller(void) {
+  error=ref_freq-est_freq; // ref_freq-est_freq
+  if (error > 0.0f) {
+    p_error=P*error;
+  } else {
+    p_error=P_DOWN*error;
+  }
+  if (error > 0.0f) {
+    i_error+=I*error;
+  } else {
+    i_error+=I_DOWN*error;
+  }
+  if (i_error > I_MAX){
+    i_error=I_MAX;
+  }
+  if (i_error < -I_MAX) {
+    i_error=-I_MAX;
+  }
+  if (p_error > P_MAX) {
+    p_error=P_MAX;
+  }
+  if (p_error < -P_MAX) {
+    p_error= -P_MAX;
+  }
+  pi_control=p_error+i_error;
+  if (pi_control > PI_MAX) {
+    pi_control = PI_MAX;
+  }
+  if (pi_control < PI_MIN) {
+    pi_control = PI_MIN;
+  }
+}
+
+
+float duty_a=0.0f;
+float duty_b=0.0f;
+float duty_c=0.0f;
+float test=0;
+
 
 void gen_pwm(void) {
-  float duty_a=0.0f;
-  float duty_b=0.0f;
-  float duty_c=0.0f;
-  bool motor_off=true;
+  bool motor_off=false;
+
+
+  pi_controller();
+  cmd_angle=2*RAW_TO_RAD(raw_pos)+RESOLVER_STATOR_OFFSET+pi_control;
+
+  //cmd_angle+=2.0f*PI*TICK_PERIOD*8; //openloop
+  //converting big angles into something between 0 and 2pi
+  if (cmd_angle >= (2.0f*PI)) {
+    cmd_angle=cmd_angle-(2.0f*PI);
+  }
 
 
   if (est_freq<MIN_EXC_FREQ_PERC*MAX_FREQ) {
@@ -284,50 +339,16 @@ void gen_pwm(void) {
   } else {
     exc_volt=MIN_EXC_VOLT+(MAX_EXC_VOLT-MIN_EXC_VOLT)*(est_freq-MIN_EXC_FREQ_PERC*MAX_FREQ)/(MAX_FREQ-MIN_EXC_FREQ_PERC*MAX_FREQ);
   }
+
+  exc_volt+=(MAX_EXC_VOLT-exc_volt)*(pi_control/PI_MAX);
+
   if (exc_volt>1.0f) {
     exc_volt=1.0f;
   }
-  //calc_attenuation();
 
-  /* static int cont=0; */
-  /* static float paso=0.0f; */
-  /* cont=cont+1; */
-  /* if (!close_loop) { */
-  /*   if (cont >= 3200 && ref_freq <= MAX_OPEN_LOOP_FREQ){ */
-  /*     //paso=1.0f*PI/180.0f; */
-  /*     //printf("increment\n"); */
-  /*     cont=0; */
-  /*     ref_freq=ref_freq+INCR; */
-  /*   } else {//paso=0.0f; */
-  /*   } */
-  /* } */
-
-  /* static float pi_times; */
-  /* last_cur_angle=cur_angle; */
-  /* cur_angle+=2.0f*PI*TICK_PERIOD*ref_freq; */
-  /* //converting big angles into something between 0 and 2pi */
-  /* if (cur_angle >= (2.0f*PI)) { */
-  /*   cur_angle=cur_angle-(2.0f*PI); */
-  /* } */
-
-  /* if ((cur_angle >= 89.0f*PI/180.0f) && (cur_angle <= 91.0f*PI/180.0f)) { */
-  /*   //elec_cnt+=1; */
-  /*   //gpio_toggle(LBLUE); //To indicate start of electric cycle */
-  /* } */
-
-  /* cmd_angle=est_angle+HALL_CAL_OFFSET*PI/180.0f; */
-
-  /* if (!close_loop) { */
-  /*   duty_a=sinf(cur_angle); */
-  /*   duty_b=sinf(cur_angle+2.0f*PI/3.0f); */
-  /*   duty_c=sinf(cur_angle+4.0f*PI/3.0f); */
-  /* } else { */
-  /*   pi_controller(); */
-  /*   duty_a=sinf(cmd_angle); */
-  /*   duty_b=sinf(cmd_angle+2.0f*PI/3.0f); */
-  /*   duty_c=sinf(cmd_angle+4.0f*PI/3.0f); */
-  /* } */
-
+  duty_a=sinf(cmd_angle);
+  duty_b=sinf(cmd_angle+2.0f*PI/3.0f);
+  duty_c=sinf(cmd_angle+4.0f*PI/3.0f);
 
 
   if (motor_off) {
@@ -401,7 +422,8 @@ int main(void)
 
 
   while(true) {
-    printf("ad2s_fault: 0x%02X, raw_pos: %05d, raw_pos_last: %05d, diff_pos: %05d, est_freq: %010.5f, exc_volt: %04.2f\n", ad2s1210_fault, raw_pos, raw_pos_last, diff_pos, est_freq, exc_volt);
+    //printf("ad2s_fault: 0x%02X, raw_pos: %05d, raw_pos_last: %05d, diff_pos: %05d, ref_freq: %010.5f, est_freq: %010.5f, exc_volt: %04.2f, p_error: %08.5f, i_error: %04.2f, pi_control: %04.2f, cmd_angle: %04.2f\n", ad2s1210_fault, raw_pos, raw_pos_last, diff_pos, ref_freq, est_freq, exc_volt, p_error, i_error, pi_control, cmd_angle*360/(2*PI));
+    printf("cur_angle: %05d, ref_freq: %010.5f, est_freq: %010.5f, exc_volt: %04.2f, error: %05.2f, p_error: %08.5f, i_error: %04.2f, pi_control: %08.5f, cmd_angle: %06.2f, exc_volt: %04.2f, test: %04.2f\n", raw_pos*360/(1<<16), ref_freq, est_freq, exc_volt, error, p_error, i_error, pi_control, cmd_angle*360/(2*PI), exc_volt, test);
   }
 
   return(0);
