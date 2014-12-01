@@ -265,13 +265,134 @@ void update_est_freq(void) {
   gpio_toggle(LBLUE);
 }
 
+#define MAX_FREQ 10*2*PI
+#define MIN_EXC_FREQ_PERC 0.7
+#define MIN_EXC_VOLT 0.7f
+#define MAX_EXC_VOLT 1.0f
+
+float exc_volt=0;
+
+void gen_pwm(void) {
+  float duty_a=0.0f;
+  float duty_b=0.0f;
+  float duty_c=0.0f;
+  bool motor_off=true;
+
+
+  if (est_freq<MIN_EXC_FREQ_PERC*MAX_FREQ) {
+    exc_volt=MIN_EXC_VOLT;
+  } else {
+    exc_volt=MIN_EXC_VOLT+(MAX_EXC_VOLT-MIN_EXC_VOLT)*(est_freq-MIN_EXC_FREQ_PERC*MAX_FREQ)/(MAX_FREQ-MIN_EXC_FREQ_PERC*MAX_FREQ);
+  }
+  if (exc_volt>1.0f) {
+    exc_volt=1.0f;
+  }
+  //calc_attenuation();
+
+  /* static int cont=0; */
+  /* static float paso=0.0f; */
+  /* cont=cont+1; */
+  /* if (!close_loop) { */
+  /*   if (cont >= 3200 && ref_freq <= MAX_OPEN_LOOP_FREQ){ */
+  /*     //paso=1.0f*PI/180.0f; */
+  /*     //printf("increment\n"); */
+  /*     cont=0; */
+  /*     ref_freq=ref_freq+INCR; */
+  /*   } else {//paso=0.0f; */
+  /*   } */
+  /* } */
+
+  /* static float pi_times; */
+  /* last_cur_angle=cur_angle; */
+  /* cur_angle+=2.0f*PI*TICK_PERIOD*ref_freq; */
+  /* //converting big angles into something between 0 and 2pi */
+  /* if (cur_angle >= (2.0f*PI)) { */
+  /*   cur_angle=cur_angle-(2.0f*PI); */
+  /* } */
+
+  /* if ((cur_angle >= 89.0f*PI/180.0f) && (cur_angle <= 91.0f*PI/180.0f)) { */
+  /*   //elec_cnt+=1; */
+  /*   //gpio_toggle(LBLUE); //To indicate start of electric cycle */
+  /* } */
+
+  /* cmd_angle=est_angle+HALL_CAL_OFFSET*PI/180.0f; */
+
+  /* if (!close_loop) { */
+  /*   duty_a=sinf(cur_angle); */
+  /*   duty_b=sinf(cur_angle+2.0f*PI/3.0f); */
+  /*   duty_c=sinf(cur_angle+4.0f*PI/3.0f); */
+  /* } else { */
+  /*   pi_controller(); */
+  /*   duty_a=sinf(cmd_angle); */
+  /*   duty_b=sinf(cmd_angle+2.0f*PI/3.0f); */
+  /*   duty_c=sinf(cmd_angle+4.0f*PI/3.0f); */
+  /* } */
+
+
+
+  if (motor_off) {
+    duty_a=0;
+    duty_b=0;
+    duty_c=0;
+  }
+
+  if (duty_a < 0.0f)
+    {
+      timer_set_oc_mode(TIM1, TIM_OC1, TIM_OCM_PWM1);
+      timer_disable_oc_output(TIM1,TIM_OC1);
+      timer_enable_oc_output (TIM1, TIM_OC1N);
+      duty_a=-duty_a;
+    }
+  else
+    {
+      timer_set_oc_mode(TIM1, TIM_OC1, TIM_OCM_PWM1);
+      timer_enable_oc_output(TIM1, TIM_OC1 );
+      timer_disable_oc_output (TIM1, TIM_OC1N);
+    }
+  if (duty_b < 0.0f)
+    {
+      timer_set_oc_mode(TIM1, TIM_OC2, TIM_OCM_PWM1);
+      timer_disable_oc_output(TIM1, TIM_OC2 );
+      timer_enable_oc_output (TIM1, TIM_OC2N);
+      duty_b=-duty_b;
+    }
+  else
+    {
+      timer_set_oc_mode(TIM1, TIM_OC2, TIM_OCM_PWM1);
+      timer_enable_oc_output(TIM1, TIM_OC2 );
+      timer_disable_oc_output (TIM1, TIM_OC2N);
+    }
+  if (duty_c < 0.0f)
+    {
+      timer_set_oc_mode(TIM1, TIM_OC3, TIM_OCM_PWM1);
+      timer_disable_oc_output(TIM1, TIM_OC3 );
+      timer_enable_oc_output (TIM1, TIM_OC3N);
+      duty_c=-duty_c;
+    }
+  else
+    {
+      timer_set_oc_mode(TIM1, TIM_OC3, TIM_OCM_PWM1);
+      timer_enable_oc_output(TIM1, TIM_OC3 );
+      timer_disable_oc_output (TIM1, TIM_OC3N);
+    }
+
+  /* Set the capture compare value for OC1. */
+  timer_set_oc_value(TIM1, TIM_OC1, duty_a*exc_volt*PWM_PERIOD_ARR);
+  /* Set the capture compare value for OC1. */
+  timer_set_oc_value(TIM1, TIM_OC2, duty_b*exc_volt*PWM_PERIOD_ARR);
+  /* Set the capture compare value for OC1. */
+  timer_set_oc_value(TIM1, TIM_OC3, duty_c*exc_volt*PWM_PERIOD_ARR);
+  //tim_force_update_event(TIM1);
+}
+
+
 void tim1_up_tim10_isr(void) {
   // Clear the update interrupt flag
   timer_clear_flag(TIM1,  TIM_SR_UIF);
   update_est_freq();
   //calc_freq();
   //start_up();
-  //gen_pwm();
+  gen_pwm();
 }
 
 int main(void)
@@ -280,7 +401,7 @@ int main(void)
 
 
   while(true) {
-    printf("ad2s_fault: 0x%02X, raw_pos: %05d, raw_pos_last: %05d, diff_pos: %05d, est_freq: %010.5f\n", ad2s1210_fault, raw_pos, raw_pos_last, diff_pos, est_freq);
+    printf("ad2s_fault: 0x%02X, raw_pos: %05d, raw_pos_last: %05d, diff_pos: %05d, est_freq: %010.5f, exc_volt: %04.2f\n", ad2s1210_fault, raw_pos, raw_pos_last, diff_pos, est_freq, exc_volt);
   }
 
   return(0);
