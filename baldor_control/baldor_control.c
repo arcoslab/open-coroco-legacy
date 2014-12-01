@@ -26,25 +26,12 @@
 #include <libopencm3-plus/newlib/syscall.h>
 #include <libopencm3-plus/utils/misc.h>
 #include <libopencm3-plus/stm32f4discovery/leds.h>
+#include "ad2s1210.h"
+#include <stdlib.h>
 
 void leds_init(void) {
   rcc_periph_clock_enable(RCC_GPIOD);
   gpio_mode_setup(GPIOD, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO12 | GPIO13 | GPIO14 | GPIO15);
-}
-
-void ad2s1210_init(void) {
-  /* For spi mode select on the ad2s1210 */
-  rcc_periph_clock_enable(RCC_GPIOA);
-  /* Setup GPIOA2 pin for spi mode ad2s1210 select. */
-  gpio_mode_setup(GPIOA, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO2);
-  /* Start with spi communication disabled */
-  gpio_set(GPIOA, GPIO2);
-  // Pin PC2 for sample generation
-  rcc_periph_clock_enable(RCC_GPIOC);
-  /* Setup GPIOC2 pin for ad2s1210 sample. */
-  gpio_mode_setup(GPIOC, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO2);
-  /* Start with sample high, data register update is done in high to low edge */
-  gpio_set(GPIOC, GPIO2);
 }
 
 void spi_init(void) {
@@ -160,14 +147,6 @@ void tim_init(void)
   /* Set the capture compare value for OC3. */
   timer_set_oc_value(TIM1, TIM_OC3, INIT_DUTY*PWM_PERIOD_ARR);//initial_duty_cycle*pwm_period_ARR);//100);
 
-  /* Reenable outputs. */
-  timer_enable_oc_output(TIM1, TIM_OC1);
-  timer_enable_oc_output(TIM1, TIM_OC1N);
-  timer_enable_oc_output(TIM1, TIM_OC2);
-  timer_enable_oc_output(TIM1, TIM_OC2N);
-  timer_enable_oc_output(TIM1, TIM_OC3);
-  timer_enable_oc_output(TIM1, TIM_OC3N);
-
   /* ARR reload enable. */
   timer_enable_preload(TIM1);
 
@@ -202,6 +181,8 @@ void serial_conf(void) {
   }
 }
 
+bool ad_ready=false;
+
 void system_init(void) {
   rcc_clock_setup_hse_3v3(&hse_8mhz_3v3[CLOCK_3V3_168MHZ]);
   leds_init();
@@ -210,11 +191,84 @@ void system_init(void) {
   spi_init();
   tim_init();
   serial_conf();
+  ad2s1210_conf();
+  ad_ready=true;
+}
+
+inline int avg_filter(int in) {
+  static int window[]={0,0,0,0,0,0,0,0,0,0};
+  static uint8_t pw=0;
+  window[pw]=in;
+  pw++;
+  if (pw==10){
+    pw=0;
+  }
+  return((window[0]+window[1]+window[2]+window[3]+window[4]+window[5]+window[6]+window[7]+window[8]+window[9])/10);
+}
+
+#define FILTER_LEN 100
+inline int avg_filter2(int in) {
+  static int filter_window[FILTER_LEN];
+  static uint8_t pw=0;
+  static bool first=true;
+  int out=0;
+  int i;
+  if (first) {
+    for (i=0;i<FILTER_LEN; i++) {
+      filter_window[i]=0;
+    }
+    first=false;
+  }
+  filter_window[pw]=in;
+  pw++;
+  if (pw==FILTER_LEN){
+    pw=0;
+  }
+  for (i=0;i<FILTER_LEN;i++) {
+    out=out+filter_window[i];
+  }
+  return(out/FILTER_LEN);
+}
+
+
+float est_freq=0.0f;
+int raw_pos=0;
+int raw_pos_last=0;
+int diff_pos=0;
+uint8_t ad2s1210_fault=0xFF;
+#define RES_CNT_TOP 20
+
+void update_est_freq(void) {
+  static int res_cnt=0;
+  gpio_toggle(LBLUE);
+  if (ad_ready) {
+    raw_pos_last=raw_pos;
+    AD2S1210_SAMPLE();
+    raw_pos=(int) (((AD2S1210_RD(AD2S1210_REG_POS_H) << 8) | (AD2S1210_RD(AD2S1210_REG_POS_L))));
+    ad2s1210_fault=AD2S1210_RD(AD2S1210_REG_FAULT);
+    if ((raw_pos<4000) && (raw_pos_last>60000)){
+      raw_pos_last=raw_pos_last-(1<<16);
+    } else {
+      if ((raw_pos>60000) && (raw_pos_last<4000)) {
+	raw_pos_last=raw_pos_last+(1<<16);
+      }
+    }
+    diff_pos+=raw_pos-raw_pos_last;
+    if (res_cnt==RES_CNT_TOP) {
+      est_freq=RAW_TO_RAD(avg_filter(diff_pos))/(TICK_PERIOD*RES_CNT_TOP);
+      diff_pos=0;
+      res_cnt=0;
+    } else {
+      res_cnt++;
+    }
+  }
+  gpio_toggle(LBLUE);
 }
 
 void tim1_up_tim10_isr(void) {
   // Clear the update interrupt flag
   timer_clear_flag(TIM1,  TIM_SR_UIF);
+  update_est_freq();
   //calc_freq();
   //start_up();
   //gen_pwm();
@@ -225,10 +279,8 @@ int main(void)
   system_init();
 
 
-
   while(true) {
-    printled(4,LRED);
-    printf("hola\n");
+    printf("ad2s_fault: 0x%02X, raw_pos: %05d, raw_pos_last: %05d, diff_pos: %05d, est_freq: %010.5f\n", ad2s1210_fault, raw_pos, raw_pos_last, diff_pos, est_freq);
   }
 
   return(0);

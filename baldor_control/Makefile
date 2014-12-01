@@ -19,7 +19,7 @@
 
 BINARY = baldor_control
 
-OBJS :=
+OBJS := ad2s1210.o
 
 LDSCRIPT = ../libopencm3-plus/lib/libopencm3_plus_stm32f4discovery.ld
 
