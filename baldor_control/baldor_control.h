@@ -35,5 +35,6 @@ void update_est_freq(void);
 #define INIT_DUTY 0
 #define TICK_PERIOD (1.0f/PWMFREQ_F)
 #define PI 3.1416f
-#define RAW_TO_RAD(RAW) ((RAW)*2.0f*PI/pow(2,16))
+#define RAW_TO_RAD(RAW) ((RAW)*2.0f*PI/(1<<16))
+
 
