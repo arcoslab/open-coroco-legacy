@@ -265,7 +265,8 @@ void update_est_freq(void) {
   gpio_toggle(LBLUE);
 }
 
-#define MAX_FREQ 5*2*PI //12V
+//#define MAX_FREQ 5*2*PI //12V
+#define MAX_FREQ 10*2*PI //24V
 #define MIN_EXC_FREQ_PERC 0.1
 #define MIN_EXC_VOLT 0.1f
 #define MAX_EXC_VOLT 1.0f
@@ -279,7 +280,7 @@ float i_error=0;
 float d_error=0;
 float cmd_angle;
 float pi_control;
-float ref_freq=-3*2*PI;
+float ref_freq=-2*2*PI;
 bool motor_off=false;
 
 void pi_controller(void) {

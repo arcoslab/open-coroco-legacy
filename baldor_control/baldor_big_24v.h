@@ -2,11 +2,14 @@
 #define MAX_ATTENUATION 1.0f
 //#define MAX_MOTOR_FREQ 40.0f
 #define MAX_MOTOR_FREQ 20.0f
-#define P 0.01f
+//#define P 0.01f //12V
+#define P 0.01f //24V
 #define P_BREAK 0.01f //To control deacceleration speed and therefore braking current
-#define I 0.0001f //NMB motor
+//#define I 0.0001f //12V
+#define I 0.00005f //24V
 #define I_BREAK 0.0004f //NMB motor
-#define D 0.1f
+//#define D 0.1f //12V
+#define D 0.5f //24V
 #define I_MAX (87.0f*PI/180.0f)
 #define P_MAX (87.0f*PI/180.0f)
 #define D_MAX (87.0f*PI/180.0f)
