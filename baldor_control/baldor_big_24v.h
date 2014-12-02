@@ -1,28 +1,23 @@
-#define MIN_ATTENUATION 0.7f
-#define MAX_ATTENUATION 1.0f
-//#define MAX_MOTOR_FREQ 40.0f
-#define MAX_MOTOR_FREQ 20.0f
+//#define MAX_FREQ 5*2*PI //12V
+#define MAX_FREQ 10*2*PI //24V
+#define MIN_EXC_FREQ_PERC 0.1
+#define MIN_EXC_VOLT 0.1f
+#define MAX_EXC_VOLT 1.0f
+#define RESOLVER_STATOR_OFFSET -30*2*PI/360
+
 //#define P 0.01f //12V
 #define P 0.01f //24V
-#define P_BREAK 0.01f //To control deacceleration speed and therefore braking current
+
 //#define I 0.0001f //12V
 #define I 0.00005f //24V
-#define I_BREAK 0.0004f //NMB motor
+
 //#define D 0.1f //12V
 #define D 0.5f //24V
-#define I_MAX (87.0f*PI/180.0f)
+
 #define P_MAX (87.0f*PI/180.0f)
+#define I_MAX (87.0f*PI/180.0f)
 #define D_MAX (87.0f*PI/180.0f)
-#define PI_MAX (87.0f*PI/180.0f) //acceleration torque
-#define PI_MAX_BREAK (-60.0f*PI/180.0f) //braking torque
-/* #define START_ATTENUATION_FREQ 20.0f */
-/* #define START_UP_REF_FREQ 3.0f */
-/* #define MIN_CLOSE_LOOP_FREQ 3.0f */
-/* #define FIRST_CLOSE_LOOP_REF_FREQ 10.0f */
-#define START_ATTENUATION_FREQ 5.0f
-#define START_UP_REF_FREQ 1.0f
-#define MIN_CLOSE_LOOP_FREQ 5.0f
-#define FIRST_CLOSE_LOOP_REF_FREQ 12.0f
-#define HALL_CAL_OFFSET -0.0f //degrees (H1)
-//#define FREQ_TO_STOP_MOTOR 30.0f
-#define FREQ_TO_STOP_MOTOR 7.0f
+
+#define PID_MAX (87.0f*PI/180.0f) //acceleration torque
+
+

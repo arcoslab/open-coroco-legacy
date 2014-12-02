@@ -28,6 +28,7 @@
 #include <libopencm3-plus/stm32f4discovery/leds.h>
 #include "ad2s1210.h"
 #include <stdlib.h>
+#include <string.h>
 
 void leds_init(void) {
   rcc_periph_clock_enable(RCC_GPIOD);
@@ -181,7 +182,7 @@ void serial_conf(void) {
   }
 }
 
-bool ad_ready=false;
+bool ad_ready=false; //resolver circuit ad2s
 
 void system_init(void) {
   rcc_clock_setup_hse_3v3(&hse_8mhz_3v3[CLOCK_3V3_168MHZ]);
@@ -265,15 +266,7 @@ void update_est_freq(void) {
   gpio_toggle(LBLUE);
 }
 
-//#define MAX_FREQ 5*2*PI //12V
-#define MAX_FREQ 10*2*PI //24V
-#define MIN_EXC_FREQ_PERC 0.1
-#define MIN_EXC_VOLT 0.1f
-#define MAX_EXC_VOLT 1.0f
-
 float exc_volt=0;
-#define RESOLVER_STATOR_OFFSET -30*2*PI/360
-
 float error=0;
 float p_error=0;
 float i_error=0;
@@ -283,7 +276,7 @@ float pi_control;
 float ref_freq=-2*2*PI;
 bool motor_off=false;
 
-void pi_controller(void) {
+void pid_controller(void) {
   float last_error=0;
   if (motor_off) {
     i_error=0;
@@ -312,11 +305,11 @@ void pi_controller(void) {
     p_error= -P_MAX;
   }
   pi_control=p_error+i_error+D*d_error;
-  if (pi_control > PI_MAX) {
-    pi_control = PI_MAX;
+  if (pi_control > PID_MAX) {
+    pi_control = PID_MAX;
   }
-  if (pi_control < -PI_MAX) {
-    pi_control = -PI_MAX;
+  if (pi_control < -PID_MAX) {
+    pi_control = -PID_MAX;
   }
 }
 
@@ -326,11 +319,8 @@ float duty_b=0.0f;
 float duty_c=0.0f;
 float test=0;
 
-
 void gen_pwm(void) {
-
-
-  pi_controller();
+  pid_controller();
   cmd_angle=2*RAW_TO_RAD(raw_pos)+RESOLVER_STATOR_OFFSET+pi_control;
 
   //cmd_angle+=2.0f*PI*TICK_PERIOD*8; //openloop
@@ -345,9 +335,7 @@ void gen_pwm(void) {
     exc_volt=MIN_EXC_VOLT+(MAX_EXC_VOLT-MIN_EXC_VOLT)*(fabsf(est_freq)-MIN_EXC_FREQ_PERC*MAX_FREQ)/(MAX_FREQ-MIN_EXC_FREQ_PERC*MAX_FREQ);
   }
 
-  exc_volt+=(MAX_EXC_VOLT-exc_volt)*(fabsf(pi_control)/PI_MAX);
-
-  test=fabsf(pi_control);
+  exc_volt+=(MAX_EXC_VOLT-exc_volt)*(fabsf(pi_control)/PID_MAX);
 
   if (exc_volt>1.0f) {
     exc_volt=1.0f;
@@ -356,7 +344,6 @@ void gen_pwm(void) {
   duty_a=sinf(cmd_angle);
   duty_b=sinf(cmd_angle+2.0f*PI/3.0f);
   duty_c=sinf(cmd_angle+4.0f*PI/3.0f);
-
 
   if (motor_off) {
     duty_a=0;
@@ -418,8 +405,6 @@ void tim1_up_tim10_isr(void) {
   // Clear the update interrupt flag
   timer_clear_flag(TIM1,  TIM_SR_UIF);
   update_est_freq();
-  //calc_freq();
-  //start_up();
   gen_pwm();
 }
 
@@ -443,17 +428,13 @@ int main(void)
 	  cmd_s[i]=c;
 	  i++;
 	  putc(c, stdout);
-	//fflush(stdout);
 	}
 	cmd_s[i]='\0';
       }
       printf("%s", cmd_s);
       sscanf(cmd_s, "%s %f", cmd, &value);
       if (strcmp(cmd, "f") == 0){ //set ref freq
-	printf("New reference frequency: %f. Confirm? (Press \"y\")\n", value);
-	//scanf("%s", confirm);
-	//if ((strcmp(confirm, "y") ==0 )) {
-	//  printf("Confirmed!\n");
+	//printf("New reference frequency: %f. Confirm? (Press \"y\")\n", value);
 	ref_freq=value*2*PI;
 	if (value == 0.0f) {
 	  motor_off=true;
@@ -461,12 +442,7 @@ int main(void)
 	  printf("Motor on\n");
 	  motor_off=false;
 	}
-	//} else {
-	//  printf("Cancelled!\n");
-	//}
-	//printled(2, LRED);
       }
-      //c=getc(stdin);
     }
 
     //printf("ad2s_fault: 0x%02X, raw_pos: %05d, raw_pos_last: %05d, diff_pos: %05d, ref_freq: %010.5f, est_freq: %010.5f, exc_volt: %04.2f, p_error: %08.5f, i_error: %04.2f, pi_control: %04.2f, cmd_angle: %04.2f\n", ad2s1210_fault, raw_pos, raw_pos_last, diff_pos, ref_freq, est_freq, exc_volt, p_error, i_error, pi_control, cmd_angle*360/(2*PI));
