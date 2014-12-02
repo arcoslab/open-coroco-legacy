@@ -236,6 +236,7 @@ float est_freq=0.0f;
 int raw_pos=0;
 int raw_pos_last=0;
 int diff_pos=0;
+bool first_est=true;
 uint8_t ad2s1210_fault=0xFF;
 #define RES_CNT_TOP 20
 
@@ -247,6 +248,10 @@ void update_est_freq(void) {
     AD2S1210_SAMPLE();
     raw_pos=(int) (((AD2S1210_RD(AD2S1210_REG_POS_H) << 8) | (AD2S1210_RD(AD2S1210_REG_POS_L))));
     ad2s1210_fault=AD2S1210_RD(AD2S1210_REG_FAULT);
+    if (first_est==true) {
+      raw_pos_last=raw_pos;
+      first_est=false;
+    }
     if ((raw_pos<4000) && (raw_pos_last>60000)){
       raw_pos_last=raw_pos_last-(1<<16);
     } else {
