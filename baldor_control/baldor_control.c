@@ -265,7 +265,7 @@ void update_est_freq(void) {
   gpio_toggle(LBLUE);
 }
 
-#define MAX_FREQ 5*2*PI
+#define MAX_FREQ 5*2*PI //12V
 #define MIN_EXC_FREQ_PERC 0.7
 #define MIN_EXC_VOLT 0.8f
 #define MAX_EXC_VOLT 1.0f
@@ -278,7 +278,7 @@ float p_error=0;
 float i_error=0;
 float cmd_angle;
 float pi_control;
-float ref_freq=1*2*PI;
+float ref_freq=3*2*PI;
 
 void pi_controller(void) {
   error=ref_freq-est_freq; // ref_freq-est_freq
@@ -318,10 +318,10 @@ float duty_a=0.0f;
 float duty_b=0.0f;
 float duty_c=0.0f;
 float test=0;
+bool motor_off=false;
 
 
 void gen_pwm(void) {
-  bool motor_off=false;
 
 
   pi_controller();
@@ -418,12 +418,52 @@ void tim1_up_tim10_isr(void) {
 
 int main(void)
 {
+  int i;
+  int c=0;
+  char cmd_s[50]="";
+  char cmd[10]="";
+  float value=0;
   system_init();
 
 
   while(true) {
+    if ((poll(stdin) > 0)) {
+      i=0;
+      if (poll(stdin) > 0) {
+	c=0;
+	while (c!='\r') {
+	  c=getc(stdin);
+	  cmd_s[i]=c;
+	  i++;
+	  putc(c, stdout);
+	//fflush(stdout);
+	}
+	cmd_s[i]='\0';
+      }
+      printf("%s", cmd_s);
+      sscanf(cmd_s, "%s %f", cmd, &value);
+      if (strcmp(cmd, "f") == 0){ //set ref freq
+	printf("New reference frequency: %f. Confirm? (Press \"y\")\n", value);
+	//scanf("%s", confirm);
+	//if ((strcmp(confirm, "y") ==0 )) {
+	//  printf("Confirmed!\n");
+	ref_freq=value*2*PI;
+	if (value == 0.0f) {
+	  motor_off=true;
+	} else {
+	  printf("Motor on\n");
+	  motor_off=false;
+	}
+	//} else {
+	//  printf("Cancelled!\n");
+	//}
+	//printled(2, LRED);
+      }
+      //c=getc(stdin);
+    }
+
     //printf("ad2s_fault: 0x%02X, raw_pos: %05d, raw_pos_last: %05d, diff_pos: %05d, ref_freq: %010.5f, est_freq: %010.5f, exc_volt: %04.2f, p_error: %08.5f, i_error: %04.2f, pi_control: %04.2f, cmd_angle: %04.2f\n", ad2s1210_fault, raw_pos, raw_pos_last, diff_pos, ref_freq, est_freq, exc_volt, p_error, i_error, pi_control, cmd_angle*360/(2*PI));
-    printf("cur_angle: %05d, ref_freq: %010.5f, est_freq: %010.5f, exc_volt: %04.2f, error: %05.2f, p_error: %08.5f, i_error: %04.2f, pi_control: %08.5f, cmd_angle: %06.2f, exc_volt: %04.2f, test: %04.2f\n", raw_pos*360/(1<<16), ref_freq, est_freq, exc_volt, error, p_error, i_error, pi_control, cmd_angle*360/(2*PI), exc_volt, test);
+    printf("cur_angle: %05d, ref_freq: %010.5f, est_freq: %010.5f, exc_volt: %04.2f, error: %05.2f, p_error: %08.5f, i_error: %04.2f, pi_control: %08.5f, cmd_angle: %06.2f, exc_volt: %04.2f, test: %04.2f\n", raw_pos*360/(1<<16), ref_freq/(2*PI), est_freq/(2*PI), exc_volt, error, p_error, i_error, pi_control, cmd_angle*360/(2*PI), exc_volt, test);
   }
 
   return(0);
