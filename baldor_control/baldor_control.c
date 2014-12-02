@@ -266,31 +266,37 @@ void update_est_freq(void) {
 }
 
 #define MAX_FREQ 5*2*PI //12V
-#define MIN_EXC_FREQ_PERC 0.7
-#define MIN_EXC_VOLT 0.8f
+#define MIN_EXC_FREQ_PERC 0.1
+#define MIN_EXC_VOLT 0.1f
 #define MAX_EXC_VOLT 1.0f
 
 float exc_volt=0;
-#define RESOLVER_STATOR_OFFSET -45*2*PI/360
+#define RESOLVER_STATOR_OFFSET -30*2*PI/360
 
 float error=0;
 float p_error=0;
 float i_error=0;
+float d_error=0;
 float cmd_angle;
 float pi_control;
-float ref_freq=3*2*PI;
+float ref_freq=-3*2*PI;
+bool motor_off=false;
 
 void pi_controller(void) {
-  error=ref_freq-est_freq; // ref_freq-est_freq
-  if (error > 0.0f) {
-    p_error=P*error;
-  } else {
-    p_error=P_DOWN*error;
+  float last_error=0;
+  if (motor_off) {
+    i_error=0;
   }
-  if (error > 0.0f) {
-    i_error+=I*error;
-  } else {
-    i_error+=I_DOWN*error;
+  last_error=error;
+  error=ref_freq-est_freq; // ref_freq-est_freq
+  p_error=P*error;
+  i_error+=I*error;
+  d_error=(d_error+(error-last_error))/2.0f;
+  if (d_error > D_MAX){
+    d_error=D_MAX;
+  }
+  if (d_error < -D_MAX) {
+    d_error=-D_MAX;
   }
   if (i_error > I_MAX){
     i_error=I_MAX;
@@ -304,12 +310,12 @@ void pi_controller(void) {
   if (p_error < -P_MAX) {
     p_error= -P_MAX;
   }
-  pi_control=p_error+i_error;
+  pi_control=p_error+i_error+D*d_error;
   if (pi_control > PI_MAX) {
     pi_control = PI_MAX;
   }
-  if (pi_control < PI_MIN) {
-    pi_control = PI_MIN;
+  if (pi_control < -PI_MAX) {
+    pi_control = -PI_MAX;
   }
 }
 
@@ -318,7 +324,6 @@ float duty_a=0.0f;
 float duty_b=0.0f;
 float duty_c=0.0f;
 float test=0;
-bool motor_off=false;
 
 
 void gen_pwm(void) {
@@ -333,14 +338,15 @@ void gen_pwm(void) {
     cmd_angle=cmd_angle-(2.0f*PI);
   }
 
-
-  if (est_freq<MIN_EXC_FREQ_PERC*MAX_FREQ) {
+  if (fabsf(est_freq)<MIN_EXC_FREQ_PERC*MAX_FREQ) {
     exc_volt=MIN_EXC_VOLT;
   } else {
-    exc_volt=MIN_EXC_VOLT+(MAX_EXC_VOLT-MIN_EXC_VOLT)*(est_freq-MIN_EXC_FREQ_PERC*MAX_FREQ)/(MAX_FREQ-MIN_EXC_FREQ_PERC*MAX_FREQ);
+    exc_volt=MIN_EXC_VOLT+(MAX_EXC_VOLT-MIN_EXC_VOLT)*(fabsf(est_freq)-MIN_EXC_FREQ_PERC*MAX_FREQ)/(MAX_FREQ-MIN_EXC_FREQ_PERC*MAX_FREQ);
   }
 
-  exc_volt+=(MAX_EXC_VOLT-exc_volt)*(pi_control/PI_MAX);
+  exc_volt+=(MAX_EXC_VOLT-exc_volt)*(fabsf(pi_control)/PI_MAX);
+
+  test=fabsf(pi_control);
 
   if (exc_volt>1.0f) {
     exc_volt=1.0f;
