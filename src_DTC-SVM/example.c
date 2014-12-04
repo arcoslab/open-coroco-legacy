@@ -26,7 +26,7 @@
 
 //usb serial cdcacm
 #include <libopencm3-plus/newlib/syscall.h>
-#include <example.h>
+#include "example.h"
 #include <libopencm3-plus/cdcacm_one_serial/cdcacm.h>
 #include <libopencm3-plus/utils/misc.h>
 #include <libopencm3-plus/stm32f4discovery/leds.h>

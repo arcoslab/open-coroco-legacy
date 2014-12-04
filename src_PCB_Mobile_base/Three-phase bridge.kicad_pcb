@@ -2,11 +2,11 @@
 
   (general
     (links 189)
-    (no_connects 16)
-    (area -125.780001 -108.254001 290.509033 187.734701)
+    (no_connects 14)
+    (area 129.490926 130.150399 290.509033 187.734701)
     (thickness 1.6)
     (drawings 8)
-    (tracks 747)
+    (tracks 753)
     (zones 0)
     (modules 92)
     (nets 56)
@@ -20,7 +20,7 @@
     (17 F.Adhes user hide)
     (18 B.Paste user hide)
     (19 F.Paste user hide)
-    (20 B.SilkS user hide)
+    (20 B.SilkS user)
     (21 F.SilkS user)
     (22 B.Mask user hide)
     (23 F.Mask user hide)
@@ -72,7 +72,7 @@
     (pad_drill 1.143)
     (pad_to_mask_clearance 0)
     (aux_axis_origin 0 0)
-    (visible_elements FFFFA019)
+    (visible_elements FFFFE379)
     (pcbplotparams
       (layerselection 284196865)
       (usegerberextensions true)
@@ -904,14 +904,14 @@
     )
   )
 
-  (module R_1206 (layer F.Cu) (tedit 542D41E0) (tstamp 5438A7A9)
+  (module R_1206 (layer F.Cu) (tedit 547EDF5E) (tstamp 5438A7A9)
     (at 149.6949 146.4564 270)
     (descr "SMT capacitor, 1206")
     (path /52B2479C)
     (fp_text reference R28 (at 0.37338 -0.01016 360) (layer F.SilkS)
       (effects (font (size 0.50038 0.50038) (thickness 0.11938)))
     )
-    (fp_text value R (at -0.29718 -0.0254 360) (layer F.SilkS) hide
+    (fp_text value 1K (at -2.8956 0.0381 360) (layer F.SilkS) hide
       (effects (font (size 0.50038 0.50038) (thickness 0.11938)))
     )
     (fp_line (start 1.143 0.8128) (end 1.143 -0.8128) (layer F.SilkS) (width 0.127))
@@ -1121,14 +1121,14 @@
     )
   )
 
-  (module R_1206 (layer F.Cu) (tedit 542AE224) (tstamp 543B9074)
+  (module R_1206 (layer F.Cu) (tedit 547EE043) (tstamp 543B9074)
     (at 172.3898 158.1658 90)
     (descr "SMT capacitor, 1206")
     (path /528E86DF)
     (fp_text reference R6 (at -0.01524 -0.06096 180) (layer F.SilkS)
       (effects (font (size 0.50038 0.50038) (thickness 0.11938)))
     )
-    (fp_text value 3.9k (at 0 1.27 90) (layer F.SilkS) hide
+    (fp_text value 18k (at 0 1.27 90) (layer F.SilkS) hide
       (effects (font (size 0.50038 0.50038) (thickness 0.11938)))
     )
     (fp_line (start 1.143 0.8128) (end 1.143 -0.8128) (layer F.SilkS) (width 0.127))
@@ -1369,14 +1369,14 @@
     )
   )
 
-  (module R_1206 (layer F.Cu) (tedit 542D67D2) (tstamp 529FB5A3)
+  (module R_1206 (layer F.Cu) (tedit 547EDFAF) (tstamp 529FB5A3)
     (at 161.0233 160.91662 90)
     (descr "SMT capacitor, 1206")
     (path /528E9C2A)
     (fp_text reference R3 (at 0.01016 -0.16002 180) (layer F.SilkS)
       (effects (font (size 0.50038 0.50038) (thickness 0.11938)))
     )
-    (fp_text value 1k (at -2.63398 0.01524 180) (layer F.SilkS) hide
+    (fp_text value 4.02k (at -2.63398 0.01524 180) (layer F.SilkS) hide
       (effects (font (size 0.50038 0.50038) (thickness 0.11938)))
     )
     (fp_line (start 1.143 0.8128) (end 1.143 -0.8128) (layer F.SilkS) (width 0.127))
@@ -1400,14 +1400,14 @@
     )
   )
 
-  (module R_1206 (layer F.Cu) (tedit 542D67DF) (tstamp 542D6B9D)
+  (module R_1206 (layer F.Cu) (tedit 547EDFA1) (tstamp 542D6B9D)
     (at 164.83076 158.10992 270)
     (descr "SMT capacitor, 1206")
     (path /528E9C1B)
     (fp_text reference R1 (at 0.00254 0.00762 360) (layer F.SilkS)
       (effects (font (size 0.50038 0.50038) (thickness 0.11938)))
     )
-    (fp_text value 1k (at -2.65176 0.0254 360) (layer F.SilkS) hide
+    (fp_text value 4.02k (at -2.65176 0.0254 360) (layer F.SilkS) hide
       (effects (font (size 0.50038 0.50038) (thickness 0.11938)))
     )
     (fp_line (start 1.143 0.8128) (end 1.143 -0.8128) (layer F.SilkS) (width 0.127))
@@ -3213,12 +3213,12 @@
     )
   )
 
-  (module 0.606_in_diametro_C_1000uF_100V (layer B.Cu) (tedit 5440DB2F) (tstamp 542FB438)
+  (module 0.606_in_diametro_C_1000uF_100V (layer B.Cu) (tedit 54539B22) (tstamp 542FB438)
     (at 275.59 140.1953 270)
     (descr "Condensateur e = 1 pas")
     (tags C)
     (path /529AD65D)
-    (fp_text reference C12 (at 6.81736 0.22352 360) (layer B.SilkS)
+    (fp_text reference C12 (at -0.04826 -0.06604 360) (layer B.SilkS)
       (effects (font (size 1.016 1.016) (thickness 0.2032)) (justify mirror))
     )
     (fp_text value 1000uF (at -5.70484 -0.02794 360) (layer B.SilkS) hide
@@ -3809,6 +3809,10 @@
   (gr_line (start 130.4798 187.6552) (end 130.4798 130.2004) (angle 90) (layer Edge.Cuts) (width 0.1))
   (gr_line (start 289.38728 130.2004) (end 130.4798 130.2004) (angle 90) (layer Edge.Cuts) (width 0.1))
 
+  (segment (start 160.9344 173.9011) (end 163.1823 173.9011) (width 0.3048) (layer F.Cu) (net 1))
+  (segment (start 171.7294 173.0502) (end 173.01464 171.76496) (width 0.3048) (layer F.Cu) (net 1) (tstamp 547D674C))
+  (segment (start 164.0332 173.0502) (end 171.7294 173.0502) (width 0.3048) (layer F.Cu) (net 1) (tstamp 547D6748))
+  (segment (start 163.1823 173.9011) (end 164.0332 173.0502) (width 0.3048) (layer F.Cu) (net 1) (tstamp 547D672E))
   (segment (start 160.9344 168.05656) (end 160.9344 167.47998) (width 0.3048) (layer F.Cu) (net 1))
   (segment (start 160.9344 173.9011) (end 160.9344 172.9486) (width 0.3048) (layer F.Cu) (net 1))
   (segment (start 160.9344 168.05656) (end 160.9344 172.9486) (width 0.3048) (layer F.Cu) (net 1) (tstamp 543D0578))
@@ -3816,6 +3820,7 @@
   (segment (start 160.9344 167.47998) (end 162.34918 166.0652) (width 0.3048) (layer F.Cu) (net 1) (tstamp 543D0581))
   (segment (start 173.01464 171.76496) (end 173.01464 171.84116) (width 0.3048) (layer B.Cu) (net 1))
   (segment (start 173.01464 171.84116) (end 170.60164 174.25416) (width 0.3048) (layer B.Cu) (net 1) (tstamp 543B7768))
+  (segment (start 170.60164 174.25416) (end 170.60164 183.73344) (width 0.3048) (layer B.Cu) (net 1) (tstamp 543B7770))
   (segment (start 182.8292 171.7421) (end 182.8292 174.14494) (width 0.3048) (layer B.Cu) (net 1))
   (segment (start 182.8292 174.14494) (end 182.94096 174.2567) (width 0.3048) (layer B.Cu) (net 1) (tstamp 543ACA2B))
   (segment (start 182.8292 171.7421) (end 182.8292 169.96156) (width 0.3048) (layer B.Cu) (net 1))
@@ -3823,8 +3828,7 @@
   (segment (start 187.72632 165.99408) (end 186.85256 165.9382) (width 0.3048) (layer B.Cu) (net 1) (tstamp 543AC8EA) (status 10))
   (segment (start 182.94096 172.47616) (end 182.94096 174.2567) (width 0.3048) (layer F.Cu) (net 1) (tstamp 543ACA21))
   (segment (start 182.22976 171.76496) (end 182.94096 172.47616) (width 0.3048) (layer F.Cu) (net 1) (tstamp 543ACA20))
-  (segment (start 173.01464 171.76496) (end 182.22976 171.76496) (width 0.3048) (layer F.Cu) (net 1))
-  (segment (start 170.60164 174.25416) (end 170.60164 183.73344) (width 0.3048) (layer B.Cu) (net 1) (tstamp 543B7770))
+  (segment (start 173.01464 171.76496) (end 182.22976 171.76496) (width 0.3048) (layer F.Cu) (net 1) (status 2))
   (segment (start 285.06928 134.75208) (end 283.85262 134.75208) (width 0.3048) (layer F.Cu) (net 2))
   (segment (start 283.85262 134.75208) (end 283.653987 134.950713) (width 0.3048) (layer F.Cu) (net 2) (tstamp 543D0586))
   (segment (start 168.5036 156.71292) (end 168.58996 156.79928) (width 2.032) (layer F.Cu) (net 2) (tstamp 543BBE4D))
@@ -4126,6 +4130,8 @@
   (segment (start 276.97684 180.721) (end 280.54808 184.29224) (width 0.3048) (layer B.Cu) (net 20) (tstamp 543B7A2C))
   (segment (start 149.6949 147.8534) (end 153.11374 147.8534) (width 2.286) (layer F.Cu) (net 21))
   (segment (start 153.11374 147.8534) (end 153.13914 147.828) (width 2.286) (layer F.Cu) (net 21) (tstamp 5438FF6F))
+  (segment (start 157.03296 159.53994) (end 161.00298 159.53994) (width 2.032) (layer F.Cu) (net 22))
+  (segment (start 161.00298 159.53994) (end 161.0233 159.51962) (width 2.032) (layer F.Cu) (net 22) (tstamp 54787442))
   (segment (start 164.8968 159.5247) (end 161.02838 159.5247) (width 2.032) (layer F.Cu) (net 22))
   (segment (start 161.02838 159.5247) (end 161.0233 159.51962) (width 2.032) (layer F.Cu) (net 22) (tstamp 543B91F2))
   (segment (start 153.17724 159.53994) (end 157.03296 159.53994) (width 2.032) (layer F.Cu) (net 22))
