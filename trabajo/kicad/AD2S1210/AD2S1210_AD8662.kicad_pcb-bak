@@ -1378,13 +1378,13 @@
     )
   )
 
-  (module SIP-3 (layer F.Cu) (tedit 53AE1CC7) (tstamp 53894E5A)
+  (module SIP-3 (layer F.Cu) (tedit 54571F1F) (tstamp 53894E5A)
     (at 84.074 52.959 270)
     (path /535B0E85)
     (fp_text reference Q1 (at 8.001 3.175 360) (layer F.SilkS)
       (effects (font (size 1 1) (thickness 0.15)))
     )
-    (fp_text value RECOM (at -0.635 -5.08 270) (layer F.SilkS)
+    (fp_text value RECOM (at 5.715 -5.5372 270) (layer F.SilkS)
       (effects (font (size 1 1) (thickness 0.15)))
     )
     (fp_text user 2 (at 2.54 -1.905 270) (layer F.SilkS)
@@ -1714,12 +1714,12 @@
     )
   )
 
-  (module PIN_ARRAY_3X1 (layer F.Cu) (tedit 4C1130E0) (tstamp 538FCDFB)
+  (module PIN_ARRAY_3X1 (layer F.Cu) (tedit 54571F15) (tstamp 538FCDFB)
     (at 87.122 44.323 180)
     (descr "Connecteur 3 pins")
     (tags "CONN DEV")
     (path /538D3FA9)
-    (fp_text reference K2 (at 0.254 -2.159 180) (layer F.SilkS)
+    (fp_text reference K2 (at -0.27432 2.02184 180) (layer F.SilkS)
       (effects (font (size 1.016 1.016) (thickness 0.1524)))
     )
     (fp_text value V_control (at 0 -2.159 180) (layer F.SilkS) hide
@@ -1749,7 +1749,7 @@
     )
   )
 
-  (module PIN_ARRAY_3X1 (layer F.Cu) (tedit 53AE1F9E) (tstamp 53A3992D)
+  (module PIN_ARRAY_3X1 (layer F.Cu) (tedit 54571A27) (tstamp 54571A27)
     (at 67.183 77.978 180)
     (descr "Connecteur 3 pins")
     (tags "CONN DEV")
@@ -1757,7 +1757,7 @@
     (fp_text reference K1 (at -4.953 -0.635 180) (layer F.SilkS)
       (effects (font (size 1.016 1.016) (thickness 0.1524)))
     )
-    (fp_text value JP_1 (at 0 -2.159 180) (layer F.SilkS) hide
+    (fp_text value JP_1 (at 5.4229 0.5588 180) (layer F.SilkS) hide
       (effects (font (size 1.016 1.016) (thickness 0.1524)))
     )
     (fp_line (start -3.81 1.27) (end -3.81 -1.27) (layer F.SilkS) (width 0.1524))
