@@ -453,6 +453,32 @@ void simple_shutdown(float control_signal,bool* shutdown)
         *shutdown=false;
 }
 
+void shutdown_counter(float ref_frequency,bool* shutdown)
+{   
+    #define INITIAL     0
+    #define COUNTING    1
+    #define WORKING     2
+    #define END         3
+
+    #define MAX_SHUT_COUNTER 50000
+    
+    static int state=INITIAL;
+    static int shut_counter=0;
+    
+    if      (state==INITIAL  && ref_frequency==0.0f)  {state=INITIAL ; *shutdown=true;  shut_counter =0 ; }
+    else if (state==INITIAL  && ref_frequency!=0.0f)  {state=WORKING ; *shutdown=false; shut_counter =0 ; }
+    else if (state==WORKING  && ref_frequency!=0.0f)  {state=WORKING ; *shutdown=false; shut_counter =0 ; }
+    else if (state==WORKING  && ref_frequency==0.0f)  {state=COUNTING; *shutdown=false; shut_counter+=1; }
+    else if (state==COUNTING && ref_frequency!=0.0f)  {state=WORKING ; *shutdown=false; shut_counter =0; }
+    else if (state==COUNTING && ref_frequency==0.0f && shut_counter<MAX_SHUT_COUNTER)  {state=COUNTING ; *shutdown=false; shut_counter +=1; }
+    else if (state==COUNTING && ref_frequency==0.0f && shut_counter>=MAX_SHUT_COUNTER) {state=INITIAL  ; *shutdown=true ; shut_counter  =0; }
+    else    {state=INITIAL; *shutdown=false; shut_counter=0;}  
+
+                
+         
+}
+
+
 #define MINIMUM_SVM_TORQUE 0.01f
 void shutdown_SVM_torque (float torque_reference,float actual_torque,bool* shutdown)
 {
@@ -849,8 +875,8 @@ if (center_aligned_state==FIRST_HALF)
   static float psi_sD_i_neglected=0.0f;
   static float psi_sQ_i_neglected=0.0f;
 
-  //flux_linkage_estimator(2.0f*TICK_PERIOD,V_sD,V_sQ,i_sD,i_sQ,R_s,CUR_FREQ,&psi_sD,&psi_sQ,&psi_s,&psi_s_alpha_SVM);
-  flux_linkage_estimator_neglected_currents (2.0f*TICK_PERIOD,V_sD,V_sQ,&psi_sD_i_neglected,&psi_sQ_i_neglected);
+  flux_linkage_estimator(2.0f*TICK_PERIOD,V_sD,V_sQ,i_sD,i_sQ,R_s,CUR_FREQ,&psi_sD,&psi_sQ,&psi_s,&psi_s_alpha_SVM);
+  //flux_linkage_estimator_neglected_currents (2.0f*TICK_PERIOD,V_sD,V_sQ,&psi_sD_i_neglected,&psi_sQ_i_neglected);
 
 //psi_sD_i_neglected=direct_stator_flux_linkage_estimator_psi_sD     (2.0f*TICK_PERIOD,V_sD,i_sD,R_s,w_r);
 //psi_sQ_i_neglected=quadrature_stator_flux_linkage_estimator_psi_sQ (2.0f*TICK_PERIOD,V_sQ,i_sQ,R_s,w_r);
@@ -873,10 +899,10 @@ if (center_aligned_state==FIRST_HALF)
                                                            //it has to be multiplied by two in order because the switching frequency
                                                            //is half the pwm frequency due to the two-cycle center-aligned signal
   //actual value
-  //w_r = 0.15915494309189533576f*rotor_speed_w_r (psi_sD,psi_sQ,TICK_PERIOD*2.0f); 
+  w_r = 0.15915494309189533576f*rotor_speed_w_r (psi_sD,psi_sQ,TICK_PERIOD*2.0f); 
   
   //using neglected-currents flux-linkage estimator
-  w_r = 0.15915494309189533576f*rotor_speed_w_r (psi_sD_i_neglected,psi_sQ_i_neglected,TICK_PERIOD*2.0f);  
+  //w_r = 0.15915494309189533576f*rotor_speed_w_r (psi_sD_i_neglected,psi_sQ_i_neglected,TICK_PERIOD*2.0f);  
   //w_r = wr_moving_average_filter(w_r); 
   hall_freq=frequency_direction_two_hall_sensors_AB(CUR_FREQ);
 
@@ -935,7 +961,9 @@ else
                                             );
   */
   electric_angle= electric_angle+
-                            SVM_speed_close_loop_of_voltage_frequency(ref_freq_SVM,hall_freq,true,&V_sD,&V_sQ,U_d,shutdown); 
+                            SVM_speed_close_loop_of_voltage_frequency(ref_freq_SVM,CUR_FREQ,true,&V_sD,&V_sQ,U_d,shutdown); 
+                            //SVM_speed_close_loop_of_voltage_frequency(ref_freq_SVM,hall_freq,true,&V_sD,&V_sQ,U_d,shutdown); 
+                            hall_freq=CUR_FREQ;
                           //SVM_speed_close_loop_of_voltage_frequency(ref_freq_SVM,w_r,true,&V_sD,&V_sQ,U_d,shutdown); 
                           //SVM_speed_close_loop_of_voltage_frequency(ref_freq_SVM,hall_freq,close_loop_SVM,&V_sD,&V_sQ,U_d,shutdown); 
 
@@ -999,7 +1027,8 @@ else
                             electric_angle/(pole_pairs*gear_ratio),
                             &shutdown);*/
   //shutdown_admittance_speed (ref_freq_SVM,hall_freq,&shutdown);
-  simple_shutdown(reference_change_electric_angle/(pole_pairs*gear_ratio),&shutdown);
+  //simple_shutdown(reference_change_electric_angle/(pole_pairs*gear_ratio),&shutdown);
+  shutdown_counter(ref_freq_SVM,&shutdown);
   SVM_voltage_switch_inverter_VSI ( duty_a,  duty_b,  duty_c,shutdown);
 }
 

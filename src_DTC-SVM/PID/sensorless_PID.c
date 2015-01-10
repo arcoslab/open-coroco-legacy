@@ -49,14 +49,14 @@ void pure_speed_SVM_pi_controller_variable_frequency(float reference_frequency, 
   if      (p_sensorless_error >  P_MAX_SENSORLESS_SVM) { p_sensorless_error =  P_MAX_SENSORLESS_SVM; }
   else if (p_sensorless_error < -P_MAX_SENSORLESS_SVM) { p_sensorless_error = -P_MAX_SENSORLESS_SVM; }
 
-
+/*
   static float nan_counter=0;
   if (i_sensorless_error!=i_sensorless_error)
     {
       i_sensorless_error=0.0f;
       nan_counter+=1;
     }
-    
+*/    
   pi_control_sensorless=p_sensorless_error+i_sensorless_error;
 
   if      (pi_control_sensorless > PI_MAX_SENSORLESS_SVM) { pi_control_sensorless = PI_MAX_SENSORLESS_SVM; }

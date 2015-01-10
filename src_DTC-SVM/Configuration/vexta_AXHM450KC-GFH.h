@@ -49,10 +49,11 @@ float I_SENSORLESS_SVM      = 0.0f;
 float I_DOWN_SENSORLESS_SVM = 0.0f;
 float fake_I_SENSORLESS_SVM = 0.0f;
 
+
 //fast
 //extra_voltage_angle=extra_voltage_angle+extra_load_angle;
 //[corrected speed controller]
-float P_SENSORLESS_SVM_FREQUENCY   = 0.001f; 
+float P_SENSORLESS_SVM_FREQUENCY   = 0.001; 
 float P_DOWN_SENSORLESS_SVM_FREQUENCY       = 0.001f; //too high: 0.0001; too slow 0.00001 ; max: 0.000012f
 float I_SENSORLESS_SVM_FREQUENCY            = 0.0f;
 float I_DOWN_SENSORLESS_SVM_FREQUENCY       = 0.0f;
