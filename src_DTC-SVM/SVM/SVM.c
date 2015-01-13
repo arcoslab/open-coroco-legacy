@@ -695,6 +695,10 @@ float SVM_speed_close_loop_of_voltage_frequency(float reference_frequency, float
         //extra_load_angle=frequency*360.0f*(2.0f*TICK_PERIOD)+extra_load_angle_increase;
         //extra_voltage_angle=extra_voltage_angle+extra_load_angle;
 
+
+        float Value;
+        Value=frequency*360.0f*(2.0f*TICK_PERIOD)+extra_load_angle_increase;
+        //extra_voltage_angle=extra_voltage_angle+value;
         extra_voltage_angle=extra_voltage_angle+frequency*360.0f*(2.0f*TICK_PERIOD)+extra_load_angle_increase;
 
 
@@ -703,7 +707,7 @@ float SVM_speed_close_loop_of_voltage_frequency(float reference_frequency, float
 
        *VsD = 20.0f*Ud*fast_cos(extra_voltage_angle);
        *VsQ = 20.0f*Ud*fast_sine(extra_voltage_angle);
-        pi_max=extra_voltage_angle;
+        pi_max=Value;//extra_voltage_angle;
    } 
 
    return extra_load_angle;
@@ -875,7 +879,7 @@ if (center_aligned_state==FIRST_HALF)
   static float psi_sD_i_neglected=0.0f;
   static float psi_sQ_i_neglected=0.0f;
 
-  flux_linkage_estimator(2.0f*TICK_PERIOD,V_sD,V_sQ,i_sD,i_sQ,R_s,CUR_FREQ,&psi_sD,&psi_sQ,&psi_s,&psi_s_alpha_SVM);
+  //flux_linkage_estimator(2.0f*TICK_PERIOD,V_sD,V_sQ,i_sD,i_sQ,R_s,CUR_FREQ,&psi_sD,&psi_sQ,&psi_s,&psi_s_alpha_SVM);
   //flux_linkage_estimator_neglected_currents (2.0f*TICK_PERIOD,V_sD,V_sQ,&psi_sD_i_neglected,&psi_sQ_i_neglected);
 
 //psi_sD_i_neglected=direct_stator_flux_linkage_estimator_psi_sD     (2.0f*TICK_PERIOD,V_sD,i_sD,R_s,w_r);
@@ -899,7 +903,7 @@ if (center_aligned_state==FIRST_HALF)
                                                            //it has to be multiplied by two in order because the switching frequency
                                                            //is half the pwm frequency due to the two-cycle center-aligned signal
   //actual value
-  w_r = 0.15915494309189533576f*rotor_speed_w_r (psi_sD,psi_sQ,TICK_PERIOD*2.0f); 
+  //w_r = 0.15915494309189533576f*rotor_speed_w_r (psi_sD,psi_sQ,TICK_PERIOD*2.0f); 
   
   //using neglected-currents flux-linkage estimator
   //w_r = 0.15915494309189533576f*rotor_speed_w_r (psi_sD_i_neglected,psi_sQ_i_neglected,TICK_PERIOD*2.0f);  
@@ -909,7 +913,7 @@ if (center_aligned_state==FIRST_HALF)
   if (w_r!=w_r) w_r=0.0f;
 
   //t_e       = electromagnetic_torque_estimation_t_e   (psi_sD,i_sQ,psi_sQ,i_sD,pole_pairs);
-  t_e       = electromagnetic_torque_estimation_t_e   (psi_sD_i_neglected,i_sQ,psi_sQ_i_neglected,i_sD,pole_pairs);
+  //t_e       = electromagnetic_torque_estimation_t_e   (psi_sD_i_neglected,i_sQ,psi_sQ_i_neglected,i_sD,pole_pairs);
  
 
   //t_e =  te_moving_average_filter(t_e);
