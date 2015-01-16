@@ -55,9 +55,12 @@ float fake_I_SENSORLESS_SVM = 0.0f;
 //[corrected speed controller]
 float P_SENSORLESS_SVM_FREQUENCY   = 0.001f; //0.01=> low speeds (up to 150Hz) 0.001=> high speeds (from 200Hz)
 float P_DOWN_SENSORLESS_SVM_FREQUENCY       = 0.001f;
-float I_SENSORLESS_SVM_FREQUENCY            = 0.00000001f;//0.0000001f;
-float I_DOWN_SENSORLESS_SVM_FREQUENCY       = 0.00000001f;//0.0000001f;
-
+float I_SENSORLESS_SVM_FREQUENCY            = 0.00000f;//0.0000001f;
+float I_DOWN_SENSORLESS_SVM_FREQUENCY       = 0.00000f;//0.0000001f;
+//0.05 15
+//0.01 80
+//0.005 81
+//0.0025 ***
 
 //DTC-SVM speed controller
 #define I_MAX_SENSORLESS            60.0f//  0.0005f//(90.0f*frequency/interrupt_frequency) 

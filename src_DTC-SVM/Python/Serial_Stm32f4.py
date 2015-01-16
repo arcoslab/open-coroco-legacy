@@ -887,8 +887,9 @@ class Serial_Stm32f4(object):
                                 
         elif self.print_selection==7:
             self.new_data_line= "t: %6.2f "                  %self.time                + \
-                                " pi_control: %12.8f"        %self.pi_control          + \
-                                " pi_max: %12.8f"            %self.pi_max              + extra_information
+                                " angle acceleration (pi_control): %12.8f"        %self.pi_control          + \
+                                " total angle advance (2pi*f+pi_control): %12.8f"            %self.pi_max              + \
+                                " hall_freq: %6.2f"          %self.hall_frequency      + extra_information
 
         elif self.print_selection==8:
             self.new_data_line= " P: %12.8f:"               %self.P_speed              + \

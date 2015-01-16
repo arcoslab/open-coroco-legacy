@@ -440,6 +440,7 @@ void collecting_samples(void)
 
         data_pi_control_SVM	=SVM_pi_control;
         data_rotating_angle_SVM =psi_rotating_angle_SVM;
+        data_pi_max=pi_max;
 
         data_strain_gauge=strain_gauge;
 
@@ -791,7 +792,8 @@ void print_regular_data(void)
     {
         printf ("t")  ;  checksum=           print_float_as_bytes(data_timer                   );
         printf ("l")  ;  checksum=checksum  +print_float_as_bytes(data_pi_control_SVM          );
-        printf ("x")  ;  checksum=checksum  +print_float_as_bytes(pi_max                       );
+        printf ("x")  ;  checksum=checksum  +print_float_as_bytes(data_pi_max                       );
+        printf ("h")  ;  checksum=checksum  +print_float_as_bytes(data_CUR_FREQ               );
         //printf ("x")  ;  checksum=checksum  +print_float_as_bytes(extra_voltage_angle                       );
 
         //////////////

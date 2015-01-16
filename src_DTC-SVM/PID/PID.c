@@ -217,7 +217,7 @@ void calc_freq(void)
 
       if (temp_period > period) 
       {
-	period=temp_period;
+	    period=temp_period;
       }
      
       //update estimated current angle

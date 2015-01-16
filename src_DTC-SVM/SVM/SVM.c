@@ -665,7 +665,7 @@ float SVM_speed_close_loop_of_voltage_frequency(float reference_frequency, float
     static float extra_voltage_angle=0.0f;
     static float extra_load_angle=0.0f;
     static float extra_load_angle_increase=0.0f;
-
+    float Value;
 
     if (shutdown==true)
     {
@@ -680,11 +680,16 @@ float SVM_speed_close_loop_of_voltage_frequency(float reference_frequency, float
 
     else if (close_loop_active==false) 
     { 
+        Value=frequency*360.0f*(2.0f*TICK_PERIOD)+extra_load_angle_increase;
+        pure_speed_SVM_pi_controller_variable_frequency(0.0f,0.0f,&extra_load_angle_increase); 
+        pi_max=Value;//extra_voltage_angle;
+
         *VsD=*VsD;
         *VsQ=*VsQ;
         //extra_voltage_angle=0.0f;
         extra_load_angle=0.0f;
         extra_load_angle_increase=0.0f;
+
     } 
 
     else if (close_loop_active==true )
@@ -696,7 +701,7 @@ float SVM_speed_close_loop_of_voltage_frequency(float reference_frequency, float
         //extra_voltage_angle=extra_voltage_angle+extra_load_angle;
 
 
-        float Value;
+        
         Value=frequency*360.0f*(2.0f*TICK_PERIOD)+extra_load_angle_increase;
         //extra_voltage_angle=extra_voltage_angle+value;
         extra_voltage_angle=extra_voltage_angle+frequency*360.0f*(2.0f*TICK_PERIOD)+extra_load_angle_increase;
@@ -964,8 +969,10 @@ else
                                             strain_gauge
                                             );
   */
+   float intermidiate_value;
+   intermidiate_value = wr_moving_average_filter(CUR_FREQ); 
   electric_angle= electric_angle+
-                            SVM_speed_close_loop_of_voltage_frequency(ref_freq_SVM,CUR_FREQ,true,&V_sD,&V_sQ,U_d,shutdown); 
+                            SVM_speed_close_loop_of_voltage_frequency(ref_freq_SVM,intermidiate_value,true,&V_sD,&V_sQ,U_d,shutdown); 
                             //SVM_speed_close_loop_of_voltage_frequency(ref_freq_SVM,hall_freq,true,&V_sD,&V_sQ,U_d,shutdown); 
                             hall_freq=CUR_FREQ;
                           //SVM_speed_close_loop_of_voltage_frequency(ref_freq_SVM,w_r,true,&V_sD,&V_sQ,U_d,shutdown); 
