@@ -908,7 +908,7 @@ if (center_aligned_state==FIRST_HALF)
                                                            //it has to be multiplied by two in order because the switching frequency
                                                            //is half the pwm frequency due to the two-cycle center-aligned signal
   //actual value
-  //w_r = 0.15915494309189533576f*rotor_speed_w_r (psi_sD,psi_sQ,TICK_PERIOD*2.0f); 
+ // w_r = 0.15915494309189533576f*rotor_speed_w_r (psi_sD,psi_sQ,TICK_PERIOD*2.0f); 
   
   //using neglected-currents flux-linkage estimator
   //w_r = 0.15915494309189533576f*rotor_speed_w_r (psi_sD_i_neglected,psi_sQ_i_neglected,TICK_PERIOD*2.0f);  
@@ -918,7 +918,7 @@ if (center_aligned_state==FIRST_HALF)
   if (w_r!=w_r) w_r=0.0f;
 
   //t_e       = electromagnetic_torque_estimation_t_e   (psi_sD,i_sQ,psi_sQ,i_sD,pole_pairs);
-  //t_e       = electromagnetic_torque_estimation_t_e   (psi_sD_i_neglected,i_sQ,psi_sQ_i_neglected,i_sD,pole_pairs);
+  t_e       = electromagnetic_torque_estimation_t_e   (psi_sD_i_neglected,i_sQ,psi_sQ_i_neglected,i_sD,pole_pairs);
  
 
   //t_e =  te_moving_average_filter(t_e);
@@ -969,10 +969,10 @@ else
                                             strain_gauge
                                             );
   */
-   float intermidiate_value;
-   intermidiate_value = wr_moving_average_filter(CUR_FREQ); 
+   //float intermidiate_value;
+   //intermidiate_value = wr_moving_average_filter(CUR_FREQ); 
   electric_angle= electric_angle+
-                            SVM_speed_close_loop_of_voltage_frequency(ref_freq_SVM,intermidiate_value,true,&V_sD,&V_sQ,U_d,shutdown); 
+                            SVM_speed_close_loop_of_voltage_frequency(ref_freq_SVM,CUR_FREQ,true,&V_sD,&V_sQ,U_d,shutdown); 
                             //SVM_speed_close_loop_of_voltage_frequency(ref_freq_SVM,hall_freq,true,&V_sD,&V_sQ,U_d,shutdown); 
                             hall_freq=CUR_FREQ;
                           //SVM_speed_close_loop_of_voltage_frequency(ref_freq_SVM,w_r,true,&V_sD,&V_sQ,U_d,shutdown); 

@@ -32,10 +32,10 @@
 //PID parameters
 
 //voltage-frequency-based speed controller
-#define I_MAX_SENSORLESS_SVM            90.0f//  0.0005f//(90.0f*frequency/interrupt_frequency) 
-#define P_MAX_SENSORLESS_SVM            90.0f//  0.0005f//(90.0f*frequency/interrupt_frequency) 
-#define PI_MAX_SENSORLESS_SVM           90.0f//  0.0005f//(90.0f*frequency/interrupt_frequency) 
-#define PI_MIN_SENSORLESS_SVM          -90.0f// -0.0005f//-(90.0f*frequency/interrupt_frequency) 
+#define I_MAX_SENSORLESS_SVM            0.015f //90.0f//  0.0005f//(90.0f*frequency/interrupt_frequency) 
+#define P_MAX_SENSORLESS_SVM            0.015f //90.0f//  0.0005f//(90.0f*frequency/interrupt_frequency) 
+#define PI_MAX_SENSORLESS_SVM           0.015f //90.0f//  0.0005f//(90.0f*frequency/interrupt_frequency) 
+#define PI_MIN_SENSORLESS_SVM          -0.015f // -90.0f// -0.0005f//-(90.0f*frequency/interrupt_frequency) 
 
 
 

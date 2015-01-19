@@ -960,8 +960,8 @@ class Serial_Stm32f4(object):
             self.new_data_line= "t: %6.2f "          %self.time            + \
                                 " hall_f: %6.2f"     %self.hall_frequency  + \
                                 " prev_HA: %6.2f"    %self.prev_halla      + \
-                                " prev_HB: %6.2f"    %self.prev_hallb      + \
                                 " HA: %6.2f"         %self.halla           + \
+                                " prev_HB: %6.2f"    %self.prev_hallb      + \
                                 " HB: %6.2f"         %self.hallb           + extra_information
 
 

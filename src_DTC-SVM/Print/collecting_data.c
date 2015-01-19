@@ -462,7 +462,12 @@ void collecting_samples(void)
             data_previous_hall_a = previous_hall_a;
             data_previous_hall_b = previous_hall_b;
         }
-
+            data_hall_a = hall_a;
+            data_hall_b = hall_b;
+            //data_previous_hall_a = old_hall_a;//previous_hall_a;
+            //data_previous_hall_b = old_hall_b;//previous_hall_b;
+            data_previous_hall_a = previous_hall_a;
+            data_previous_hall_b = previous_hall_b;
 }
 
 void print_captured_data(void)
@@ -792,8 +797,8 @@ void print_regular_data(void)
     {
         printf ("t")  ;  checksum=           print_float_as_bytes(data_timer                   );
         printf ("l")  ;  checksum=checksum  +print_float_as_bytes(data_pi_control_SVM          );
-        printf ("x")  ;  checksum=checksum  +print_float_as_bytes(data_pi_max                       );
-        printf ("h")  ;  checksum=checksum  +print_float_as_bytes(data_CUR_FREQ               );
+        //printf ("x")  ;  checksum=checksum  +print_float_as_bytes(data_pi_max                       );
+        //printf ("h")  ;  checksum=checksum  +print_float_as_bytes(data_hall_a);//data_CUR_FREQ               );
         //printf ("x")  ;  checksum=checksum  +print_float_as_bytes(extra_voltage_angle                       );
 
         //////////////
