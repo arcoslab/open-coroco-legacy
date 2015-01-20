@@ -36,6 +36,8 @@ void pure_speed_SVM_pi_controller_variable_frequency(float reference_frequency, 
   static float i_sensorless_error       = 0.0f;
   float        pi_control_sensorless    = 0.0f;
 
+  
+
   sensorless_error=reference_frequency-frequency;
 
   if (sensorless_error > 0.0f) {  p_sensorless_error  = P_SENSORLESS_SVM_FREQUENCY      * sensorless_error;
@@ -69,10 +71,12 @@ void pure_speed_SVM_pi_controller_variable_frequency(float reference_frequency, 
   else 
     *rotating_angle=0.0f;
   */
+  if (pi_control_sensorless!=pi_control_sensorless) pi_control_sensorless=0.0f;
+  
 
   *rotating_angle=pi_control_sensorless;
 
-  SVM_pi_control=*rotating_angle;           //pi_control_sensorless
+  if (frequency>300.0f || frequency <0.0f) SVM_pi_control=*rotating_angle;           //pi_control_sensorless
   phase_advance_SVM=pi_control_sensorless;  //*rotating_angle;//pi_control_sensorless;
   pi_max=P_MAX_SENSORLESS_SVM;
 }

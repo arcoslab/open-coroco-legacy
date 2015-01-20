@@ -21,7 +21,7 @@
 bool collecting_sensorless_data = true;
 bool transmitting_to_python = false;
 
-#define SAMPLES 1
+#define SAMPLES 300
 
 #define COLLECTING_SPEED_DELAY 0
 
