@@ -53,24 +53,24 @@
 | P8         CONN_1      ,,
 | P9         CONN_1      ,,
 | P10        CONN_1      ,,
-| R1         1k          ,/,
+| R1         4.02k       ,/,
 | R2         36          ,/,
-| R3         1k          ,/,
+| R3         4.02        ,/,
 | R4         36          ,/,
 | R5         1k          ,/,
-| R6         3.9k        ,/,
+| R6         18k         ,/,
 | R7         1k          ,/,
 | R8         1k          ,/,
 | R9         1k          ,/,
 | R10        1k          ,/,
 | R11        1k          ,/,
 | R12        1k          ,/,
-| R13        1k          ,/,
+| R13        4.02k       ,/,
 | R14        36          ,/,
-| R15        1k          ,/,
+| R15        4.02k       ,/,
 | R16        36          ,/,
-| R17        1k          ,/,
-| R18        1k          ,/,
+| R17        4.02k       ,/,
+| R18        4.02k       ,/,
 | R19        36          ,/,
 | R20        36          ,/,
 | R21        1k          ,/,
@@ -79,8 +79,8 @@
 | R24        1k          ,/,
 | R25        1k          ,/,
 | R26        1k          ,/,
-| R27        R           ,/,
-| R28        R           ,/,
+| R27        4.02k       ,/,
+| R28        1k          ,/,
 | R_Shunt_1  0.05        ,,
 | R_Shunt_2  0.05        ,,
 | S1         IRF1010N    ,,
@@ -92,93 +92,93 @@
 | STM32_CONN1 CONN_STM32_25X2,,X
 #End Cmp,,
 ,,
-#Componentes ( orden = Valor ),,
-| BATTERY_12V  BT1       ,,
-| BATTERY_48   BT2       ,,
-| 0.1uF        C8        ,,
-| 0.1uF        C10       ,,
-| 0.33uF       C11       ,,
-| 2.2uF        C9        ,,
-| 10uF         C16       ,,
-| 100uF        C3        ,,
-| 100uF        C4        ,,
-| 100uF        C5        ,,
-| 100uF        C6        ,,
-| 100u         C7        ,,
-| 100uF        C14       ,,
-| 100uF        C15       ,,
-| 100uF        C17       ,,
-| 1000uF       C1        ,,
-| 1000uF       C2        ,,
-| 1000uF       C12       ,,
-| 1000uF       C13       ,,
-| LED          D1        ,,
-| LED          D2        ,,
-| LED          D3        ,,
-| LED          D4        ,,
-| LED          D5        ,,
-| LED          D6        ,,
-| LED          D7        ,,
-| LED          D8        ,,
-| LED          D9        ,,
-| LED          D10       ,,
-| LED          D11       ,,
-| HALL_SENSOR  H1        ,,
-| HALL_SENSOR  H2        ,,
-| HALL_SENSOR  H3        ,,
-| INA148       INA1      ,,
-| INA148       INA2      ,,
-| IR_2110      IR1       ,,
-| IR_2110      IR2       ,,
-| IR_2110      IR3       ,,
-| L7805CV      L1        ,,
-| LF33CV       LF1       ,,
-| MCP6022-I/P  M1        ,,
-| MCP6022-I/P  M2        ,,
-| CONN_1       P7        ,,
-| CONN_1       P8        ,,
-| CONN_1       P9        ,,
-| CONN_1       P10       ,,
-| CONN_1       P1        ,,
-| POWER_FUSE   P2        ,,
-| CONN_2       P3        ,,
-| CONN_1       P4        ,,
-| CONN_1       P5        ,,
-| POWER_FUSE   P6        ,,
-| 36           R2        ,"Las de 51 son de prueba, entre menor el valor mas rapido commuta el ",
-| 36           R4        ,,
-| 36           R14       ,,
-| 36           R16       ,,
-| 36           R19       ,,
-| 36           R20       ,,
-| 1k           R1        ,,
-| 1k           R3        ,,
-| 1k           R5        ,,
-| 1k           R7        ,,
-| 1k           R8        ,,
-| 1k           R9        ,,
-| 1k           R10       ,,
-| 1k           R11       ,,
-| 1k           R12       ,,
-| 1k           R13       ,"4,02 K",
-| 1k           R15       ,"4,02 K",
-| 1k           R17       ,"4,02 K",
-| 1k           R18       ,"4,02 K",
-| 1k           R21       ,,
-| 1k           R22       ,,
-| 1k           R23       ,,
-| 1k           R24       ,,
-| 1k           R25       ,,
-| 1k           R26       ,,
-| 3.9k         R6        ,18 K,
-| R            R27       ,"4,02 K",
-| R            R28       ,"4,02 K",
-| IRF1010N     S1        ,,
-| IRF1010N     S2        ,,
-| IRF1010N     S3        ,,
-| IRF1010N     S4        ,,
-| IRF1010N     S5        ,,
-| IRF1010N     S6        ,,
+#Componentes ( orden = Valor )
+| BATTERY_12V  BT1       
+| BATTERY_48   BT2       
+| 0.1uF        C8        
+| 0.1uF        C10       
+| 0.33uF       C11       
+| 2.2uF        C9        
+| 10uF         C16       
+| 100uF        C3        
+| 100uF        C4        
+| 100uF        C5        
+| 100uF        C6        
+| 100u         C7        
+| 100uF        C14       
+| 100uF        C15       
+| 100uF        C17       
+| 1000uF       C1        
+| 1000uF       C2        
+| 1000uF       C12       
+| 1000uF       C13       
+| LED          D1        
+| LED          D2        
+| LED          D3        
+| LED          D4        
+| LED          D5        
+| LED          D6        
+| LED          D7        
+| LED          D8        
+| LED          D9        
+| LED          D10       
+| LED          D11       
+| HALL_SENSOR  H1        
+| HALL_SENSOR  H2        
+| HALL_SENSOR  H3        
+| INA148       INA1      
+| INA148       INA2      
+| IR_2110      IR1       
+| IR_2110      IR2       
+| IR_2110      IR3       
+| L7805CV      L1        
+| LF33CV       LF1       
+| MCP6022-I/P  M1        
+| MCP6022-I/P  M2        
+| CONN_1       P7        
+| CONN_1       P8        
+| CONN_1       P9        
+| CONN_1       P10       
+| CONN_1       P1        
+| POWER_FUSE   P2        
+| CONN_2       P3        
+| CONN_1       P4        
+| CONN_1       P5        
+| POWER_FUSE   P6        
+| 36           R2        Las de 51 son de prueba, entre menor el valor mas rapido commuta el ",
+| 36           R4        
+| 36           R14       
+| 36           R16       
+| 36           R19       
+| 36           R20       
+| 1k           R1        
+| 1k           R3        
+| 1k           R5        
+| 1k           R7        
+| 1k           R8        
+| 1k           R9        
+| 1k           R10       
+| 1k           R11       
+| 1k           R12       
+| 4.02k        R13       
+| 4.02k        R15      
+| 4.02k        R17     
+| 4.02k        R18       
+| 1k           R21       
+| 1k           R22       
+| 1k           R23       
+| 1k           R24       
+| 1k           R25       
+| 1k           R26       
+| 18k          R6        
+| 4.02k        R27       
+| 1k           R28       
+| IRF1010N     S1        
+| IRF1010N     S2        
+| IRF1010N     S3        
+| IRF1010N     S4        
+| IRF1010N     S5        
+| IRF1010N     S6        
 | 1N4003       1N1       ,diodos proposito general,
 | CONN_STM32_25X2 STM32_CONN1,,
 | 0.05         R_Shunt_2 ,,
