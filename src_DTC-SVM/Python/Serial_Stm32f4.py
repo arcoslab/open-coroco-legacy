@@ -57,7 +57,7 @@ class Serial_Stm32f4(object):
         self.read_capture_state = 'not_collecting'
         self.tag_comment        = ''
         #self.aditional_comment=', STATOR_RESISTANCE_TEST 240degrees,MULTI_ROTOR OPEN LOOP,wrong motor parameters,one psi,wr filt,te filt,k 0.2, actual i,open 0.00005f,Ud 40%,psi_ref=0.0016,38kpwm'
-        self.aditional_comment=', Frequency controller, P =0.001, ref=300Hz, using hall_freq [hall sensor physically fixed]'
+        self.aditional_comment=', hall frequency controller, P =0.001'
         self.driving_counter    = 0
         self.various_counter     = 0
         self.type_of_test       = 0        
@@ -887,8 +887,9 @@ class Serial_Stm32f4(object):
                                 
         elif self.print_selection==7:
             self.new_data_line= "t: %6.2f "                  %self.time                + \
-                                " pi_control: %12.8f"        %self.pi_control          + \
-                                " pi_max: %12.8f"            %self.pi_max              + extra_information
+                                " angle acceleration (pi_control): %12.8f"        %self.pi_control          + \
+                                " total angle advance (2pi*f+pi_control): %12.8f"            %self.pi_max              + \
+                                " hall_freq: %6.2f"          %self.hall_frequency      + extra_information
 
         elif self.print_selection==8:
             self.new_data_line= " P: %12.8f:"               %self.P_speed              + \
@@ -959,8 +960,8 @@ class Serial_Stm32f4(object):
             self.new_data_line= "t: %6.2f "          %self.time            + \
                                 " hall_f: %6.2f"     %self.hall_frequency  + \
                                 " prev_HA: %6.2f"    %self.prev_halla      + \
-                                " prev_HB: %6.2f"    %self.prev_hallb      + \
                                 " HA: %6.2f"         %self.halla           + \
+                                " prev_HB: %6.2f"    %self.prev_hallb      + \
                                 " HB: %6.2f"         %self.hallb           + extra_information
 
 

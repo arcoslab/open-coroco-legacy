@@ -76,6 +76,7 @@ float data_phase_advance_SVM;
 float data_V_s_ref_relative_angle;
 
 float data_pi_control_SVM;
+float data_pi_max;
 float data_ref_freq_SVM;
 int data_state_SVM;
 float data_rotating_angle_SVM;

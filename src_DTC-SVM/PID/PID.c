@@ -158,10 +158,11 @@ void calc_freq(void)
   //static int  hall_a = 0;
   static int  hall_a_last=0;
   static uint last_fall_hall_a_ticks=0;
-
-  hall_a=HALL_A();
-  hall_b=HALL_B();
-  
+  static int hall_bounce_counter=0;
+  //hall_a=HALL_A();
+  //hall_b=HALL_B();
+  hall_a=HALL_B();
+  hall_b=HALL_A(); 
 
   if (first) 
   {
@@ -183,14 +184,14 @@ void calc_freq(void)
       ticks=0;
     }
 
-    
-    if ((hall_a_last > 0) && (hall_a == 0)) 
+    hall_bounce_counter+=1;
+    if ((hall_a_last > 0) && (hall_a == 0) ) 
     {
       //hall falling edge: new cycle
       //new rotor position measurement
       est_angle=0;
       angle_hall1=0.0f;  //***
-
+      hall_bounce_counter=0;
 
       if (ticks > last_fall_hall_a_ticks) 
       { //updating period
@@ -217,7 +218,7 @@ void calc_freq(void)
 
       if (temp_period > period) 
       {
-	period=temp_period;
+	    period=temp_period;
       }
      
       //update estimated current angle
