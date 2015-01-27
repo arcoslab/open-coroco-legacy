@@ -1,4 +1,4 @@
-(kicad_pcb (version 3) (host pcbnew "(22-Jun-2014 BZR 4027)-stable")
+(kicad_pcb (version 3) (host pcbnew "(25-Oct-2014 BZR 4029)-stable")
 
   (general
     (links 200)
@@ -1714,7 +1714,7 @@
     )
   )
 
-  (module PIN_ARRAY_3X1 (layer F.Cu) (tedit 54571F15) (tstamp 538FCDFB)
+  (module PIN_ARRAY_3X1 (layer F.Cu) (tedit 54C7991E) (tstamp 538FCDFB)
     (at 87.122 44.323 180)
     (descr "Connecteur 3 pins")
     (tags "CONN DEV")
@@ -1722,7 +1722,7 @@
     (fp_text reference K2 (at -0.27432 2.02184 180) (layer F.SilkS)
       (effects (font (size 1.016 1.016) (thickness 0.1524)))
     )
-    (fp_text value V_control (at 0 -2.159 180) (layer F.SilkS) hide
+    (fp_text value V_out (at 0 -2.159 180) (layer F.SilkS)
       (effects (font (size 1.016 1.016) (thickness 0.1524)))
     )
     (fp_line (start -3.81 1.27) (end -3.81 -1.27) (layer F.SilkS) (width 0.1524))
