@@ -22,7 +22,7 @@
 #include <libopencm3/stm32/f4/nvic.h>
 #include <libopencm3/stm32/f4/spi.h>
 #include <libopencm3-plus/newlib/syscall.h>
-#include <resolver_test.h>
+#include "resolver_test.h"
 #include <libopencm3-plus/cdcacm_one_serial/cdcacm.h>
 #include <stdio.h>
 #include <libopencm3-plus/utils/misc.h>
