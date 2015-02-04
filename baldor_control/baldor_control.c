@@ -30,6 +30,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+
+
 void leds_init(void) {
   rcc_periph_clock_enable(RCC_GPIOD);
   gpio_mode_setup(GPIOD, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO12 | GPIO13 | GPIO14 | GPIO15);
@@ -441,7 +443,9 @@ int main(void)
       if (strcmp(cmd, "f") == 0){ //set ref freq
 	//printf("New reference frequency: %f. Confirm? (Press \"y\")\n", value);
 	ref_freq=value;
-	printf("ef: %010.5f ca: %05d\n", est_freq, raw_pos);
+	//printf("ef: %010.5f ca: %05d\n", est_freq, raw_pos); //**************Remove comment and comment the line below
+    //printf("ef: %010.5f ca: %05d\n", ref_freq, raw_pos);
+    printf("STM32_POSITION %010.5f ca %05d\n", ref_freq, raw_pos);
 	if (value == 0.0f) {
 	  //motor_off=true;
 	} else {
@@ -453,6 +457,8 @@ int main(void)
 
     //printf("ad2s_fault: 0x%02X, raw_pos: %05d, raw_pos_last: %05d, diff_pos: %05d, ref_freq: %010.5f, est_freq: %010.5f, exc_volt: %04.2f, p_error: %08.5f, i_error: %04.2f, pi_control: %04.2f, cmd_angle: %04.2f\n", ad2s1210_fault, raw_pos, raw_pos_last, diff_pos, ref_freq, est_freq, exc_volt, p_error, i_error, pi_control, cmd_angle*360/(2*PI));
     //printf("cur_angle: %05d, ref_freq: %010.5f, est_freq: %010.5f, exc_volt: %04.2f, error: %05.2f, p_error: %08.5f, i_error: %04.2f, pi_control: %08.5f, cmd_angle: %06.2f, exc_volt: %04.2f, test: %04.2f\n", raw_pos*360/(1<<16), ref_freq/(2*PI), est_freq/(2*PI), exc_volt, error, p_error, i_error, pi_control, cmd_angle*360/(2*PI), exc_volt, test);
+    //printf("ef: %010.5f ca: %6.5f\n", est_freq, ref_freq);
+    //printf("ef: %010.5f ca: %05d\n", ref_freq, raw_pos);
   }
 
   return(0);

@@ -7,11 +7,13 @@ y.Network.init()
 port=y.BufferedPortBottle()
 portname="/ds3/stick1_y"
 corocoportname="/coroco/baldor/in"
+corocoportname2="/coroco/baldor/in2"
+
 port.open(portname)
 style=y.ContactStyle()
 style.persistent=1
 y.Network.connect(portname,corocoportname,style)
-
+y.Network.connect(portname,corocoportname2,style)
 import pygame as pg
 pg.init()
 pg.joystick.init()
@@ -30,6 +32,8 @@ if True:
         bottle=port.prepare()
         bottle.clear()
         bottle.addDouble(y_out)
+        bottle.addString("hola")
+
         port.write()
         sleep(0.01)
 #except:

@@ -54,13 +54,15 @@ endif
 
 $(info plus $(LIBOPENCM3_PLUS))
 
+
+
 CFLAGS		+= -Os -g \
 		   -Wall -Wextra -Wimplicit-function-declaration \
 		   -Wredundant-decls -Wmissing-prototypes -Wstrict-prototypes \
 		   -Wundef -Wshadow \
 		   -I$(TOOLCHAIN_DIR)/include -I$(LIBOPENCM3_PLUS)/include\
 		   -fno-common -mcpu=cortex-m4 -mthumb \
-		   -mfloat-abi=hard -mfpu=fpv4-sp-d16 -MD -DSTM32F4
+		   -mfloat-abi=hard -mfpu=fpv4-sp-d16 -MD -DSTM32F4 $(BALDOR_FLAGS)
 LDSCRIPT	?= $(BINARY).ld
 LDFLAGS		+= --static -lc -lm -lnosys -L$(TOOLCHAIN_DIR)/lib \
 			 -L$(TOOLCHAIN_DIR)/lib/stm32/f4 -L$(LIBOPENCM3_PLUS)/lib\
