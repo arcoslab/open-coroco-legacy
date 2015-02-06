@@ -33,7 +33,7 @@ try:
         while not connected:
             try:
                 #com=s.Serial("/dev/ttyACM"+str(serial_device_counter), baudrate=921600,timeout=1)#115200,timeout=1)
-                com=s.Serial("/dev/ttyACM"+str(3), baudrate=921600,timeout=1)#115200,timeout=1)
+                com=s.Serial("/dev/ttyACM"+str(2), baudrate=921600,timeout=1)#115200,timeout=1)
                 print "Connecting to /dev/ttyACM"+str(serial_device_counter)
             except:
                 serial_device_counter=serial_device_counter+1
