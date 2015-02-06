@@ -49,7 +49,7 @@ try:
             com.read(com.inWaiting())
 
         try:
-            while True:
+            while connected==True:
                 bottle=port.read(False)
                 if bottle:
 
@@ -96,8 +96,9 @@ try:
                         portout.write(True)
                         print "joystick: "+str(value)+"raw angle: "+str(raw_angle)+" rads: "+str(rads)+" odometry: "+str(odometry)+" est_freq: "+str(est_freq)
                     else:
-                        connect= False
+                        connected=False
                         print "wrong stm32, detected: ",stm32_position
+                        serial_device_counter=serial_device_counter+1
                         #raw_input("Enter to continue: ") 
                     #print "freq: ",cmd_speed,"joystick: ",value, "raw angle: ", raw_angle, " rads: ", rads, " odometry: ", odometry , " est_freq: ", est_freq
                     
@@ -112,7 +113,7 @@ try:
             print com.inWaiting()
             print "error! error!"
             #print line
-            connect= False
+            connected=False
 
 except KeyboardInterrupt:
     print " " 
