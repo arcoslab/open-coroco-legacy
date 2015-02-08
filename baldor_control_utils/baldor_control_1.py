@@ -113,9 +113,9 @@ try:
                         bottleout.addString(stm32_position)
                         portout.write(True)
 
-                        bottleout1=portout.prepare()
+                        bottleout1=portout_position.prepare()
                         bottleout1.clear()
-                        bottleout1.addString(stm32_position)
+                        bottleout1.addString('1')#stm32_position)
                         portout_position.write(True)
                                                 
                         

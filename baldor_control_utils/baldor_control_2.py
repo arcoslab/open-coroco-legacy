@@ -44,10 +44,11 @@ try:
         #connected=False
         while not connected:
 
-                bottle=portin_position2.read(False)
-                if bottle:
+                bottle_in2=portin_position2.read(False)
+                if bottle_in2:
                     print "There is a bottle from STM32_1"
-                    portin_position2=bottle.get(0)
+                    portin_position2=bottle_in2.get(0)
+                    print "portin_position2: ",portin_position2
                     stm32_position1=portin_position2.asString()
                     print "position from STM32_1: ",stm32_position1
                     if serial_device_counter == stm32_position1:
@@ -63,10 +64,10 @@ try:
                         if (serial_device_counter>100):
                           serial_device_counter=0
                           print "Connect opencoroco usb cable, trying: /dev/ttyACM"+str(serial_device_counter)         
-                        else:
-                            connected=True
-                            print "Connected to /dev/ttyACM"+str(serial_device_counter) 
-                            print "stm32_position: " + stm32_position
+                    else:
+                        connected=True
+                        print "Connected to /dev/ttyACM"+str(serial_device_counter) 
+                        print "stm32_position: " + stm32_position
 
 
 
