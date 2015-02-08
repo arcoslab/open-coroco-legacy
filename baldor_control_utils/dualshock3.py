@@ -6,14 +6,16 @@ from time import sleep
 y.Network.init()
 port=y.BufferedPortBottle()
 portname="/ds3/stick1_y"
-corocoportname="/coroco/baldor/in"
-corocoportname2="/coroco/baldor/in2"
-
 port.open(portname)
+
 style=y.ContactStyle()
 style.persistent=1
-y.Network.connect(portname,corocoportname,style)
+corocoportname1="/coroco/baldor/in1"
+corocoportname2="/coroco/baldor/in2"
+y.Network.connect(portname,corocoportname1,style)
 y.Network.connect(portname,corocoportname2,style)
+
+
 import pygame as pg
 pg.init()
 pg.joystick.init()

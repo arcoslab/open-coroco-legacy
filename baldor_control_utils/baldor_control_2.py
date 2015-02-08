@@ -12,8 +12,20 @@ y.Network.init()
 port=y.BufferedPortBottle()
 portname="/coroco/baldor/in2"
 port.open(portname)
+
 portout=y.BufferedPortBottle()
 portnameout="/coroco/baldor/out2"
+portout.open(portnameout)
+
+
+
+
+portin_position2=y.BufferedPortBottle()
+portname_position2="/coroco/baldor/position/in2"
+portin_position2.open(portname_position2)
+
+portout=y.BufferedPortBottle()
+portnameout="/coroco/baldor/position/out2"
 portout.open(portnameout)
 
 
@@ -23,7 +35,7 @@ raw_angle=0.
 angle=0.
 rads=0.
 
-
+stm32_position='0'
 
 serial_device_counter=0
 connected=False
@@ -31,18 +43,37 @@ try:
     while True:
         #connected=False
         while not connected:
-            try:
-                com=s.Serial("/dev/ttyACM"+str(serial_device_counter), baudrate=921600,timeout=1)#115200,timeout=1)
-                #com=s.Serial("/dev/ttyACM"+str(2), baudrate=921600,timeout=1)#115200,timeout=1)
-                print "Connecting to /dev/ttyACM"+str(serial_device_counter)
-            except:
-                serial_device_counter=serial_device_counter+1
-                if (serial_device_counter>100):
-                  serial_device_counter=0
-                print "Connect opencoroco usb cable, trying: /dev/ttyACM"+str(serial_device_counter)         
-            else:
-                connected=True
-                print "Connected to /dev/ttyACM"+str(serial_device_counter) 
+
+                bottle=portin_position2.read(False)
+                if bottle:
+                    print "There is a bottle from STM32_1"
+                    portin_position2=bottle.get(0)
+                    stm32_position1=portin_position2.asString()
+                    print "position from STM32_1: ",stm32_position1
+                    if serial_device_counter == stm32_position1:
+                        serial_device_counter+=1
+
+                    try:
+                        com=s.Serial("/dev/ttyACM"+str(serial_device_counter), baudrate=921600,timeout=1)#115200,timeout=1)
+                        #com=s.Serial("/dev/ttyACM"+str(2), baudrate=921600,timeout=1)#115200,timeout=1)
+                        print "Connecting to /dev/ttyACM"+str(serial_device_counter)
+
+                    except:
+                        serial_device_counter=serial_device_counter+1
+                        if (serial_device_counter>100):
+                          serial_device_counter=0
+                          print "Connect opencoroco usb cable, trying: /dev/ttyACM"+str(serial_device_counter)         
+                        else:
+                            connected=True
+                            print "Connected to /dev/ttyACM"+str(serial_device_counter) 
+                            print "stm32_position: " + stm32_position
+
+
+
+
+                else:
+                    print "No bottle from STM32_1"
+
             #sleep(0.1)
 
         while com.inWaiting()>0:
