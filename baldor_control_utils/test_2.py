@@ -42,8 +42,10 @@ style=y.ContactStyle()
 style.persistent=1
 stm32_1_input_port_1_name="/stm32_1/position/in1"
 stm32_3_input_port_1_name="/stm32_3/position/in1"
+stm32_4_input_port_1_name="/stm32_4/position/in1"
 y.Network.connect(stm32_2_output_port_1_name,stm32_1_input_port_1_name,style)
 y.Network.connect(stm32_2_output_port_1_name,stm32_3_input_port_1_name,style)
+y.Network.connect(stm32_2_output_port_1_name,stm32_4_input_port_1_name,style)
 
 
 

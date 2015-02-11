@@ -19,24 +19,24 @@ y.Network.init()
 #creting an output port for stm32_1_position
 stm32_3_output_port_1       =y.BufferedPortBottle()
 stm32_3_output_port_1_name  ="/stm32_3/position/out1"
-stm32_3_output_port_1.open(stm32_2_output_port_1_name)
+stm32_3_output_port_1.open(stm32_3_output_port_1_name)
 
 #creating an input port from stm32_1
 stm32_3_input_port_1        =y.BufferedPortBottle()
 stm32_3_input_port_1_name   ="/stm32_3/position/in1"
-stm32_3_input_port_1.open(stm32_1_input_port_1_name)
+stm32_3_input_port_1.open(stm32_3_input_port_1_name)
 
 #creating an input port from stm32_2
 stm32_3_input_port_2        =y.BufferedPortBottle()
 stm32_3_input_port_2_name   ="/stm32_3/position/in2"
-stm32_3_input_port_2.open(stm32_2_input_port_1_name)
+stm32_3_input_port_2.open(stm32_3_input_port_2_name)
 
 
 
 #creating an input port from PS3 controller
 stm32_3_input_port_speed_1        =y.BufferedPortBottle()
 stm32_3_input_port_speed_1_name   ="/stm32_3/speed/in_1"
-stm32_3_input_port_speed_1.open(stm32_2_input_port_speed_1_name)
+stm32_3_input_port_speed_1.open(stm32_3_input_port_speed_1_name)
 
 
 
@@ -156,48 +156,48 @@ while True:
 
 
             #-----------Connected to STM32-------------------------------
-            if stm32_2_position=='2':            
+            if stm32_2_position=='3':            
             
                 #-------------------Communication though yarp bottles-----------
                 sleep(0.01)
 
                 #sending a bottle through the output_port_1
-                stm32_2_output_bottle_1=stm32_2_output_port_1.prepare()
-                stm32_2_output_bottle_1.clear()
-                stm32_2_output_bottle_1.addString("hola2")
-                stm32_2_output_port_1.write()
+                stm32_3_output_bottle_1=stm32_3_output_port_1.prepare()
+                stm32_3_output_bottle_1.clear()
+                stm32_3_output_bottle_1.addString("hola2")
+                stm32_3_output_port_1.write()
                 sleep(0.01)
 
                 #receaving a bottle from the input port 1
-                stm32_2_input_bottle_1=stm32_2_input_port_1.read(False)
-                if stm32_2_input_bottle_1:
-                    stm32_2_input_data_1=stm32_2_input_bottle_1.get(0)
-                    stm32_1_position=stm32_2_input_data_1.asString()
-                    print "there is a bottle from ",stm32_2_input_port_1_name
+                stm32_3_input_bottle_1=stm32_3_input_port_1.read(False)
+                if stm32_3_input_bottle_1:
+                    stm32_3_input_data_1=stm32_3_input_bottle_1.get(0)
+                    stm32_1_position=stm32_3_input_data_1.asString()
+                    print "there is a bottle from ",stm32_3_input_port_1_name
                     print "bottle content: ",stm32_1_position
                     
                 else:
-                    print "there is no bottle from ",stm32_2_input_port_1_name    
+                    print "there is no bottle from ",stm32_3_input_port_1_name    
                  
 
                #receiving a bottle from PS3 controller
-                stm32_2_input_bottle_speed_1=stm32_2_input_port_speed_1.read(False)
-                if stm32_2_input_bottle_speed_1:
-                    stm32_2_input_data_speed_1=stm32_2_input_bottle_speed_1.get(0)
-                    speed_1_value=stm32_2_input_data_speed_1.asDouble()
+                stm32_3_input_bottle_speed_1=stm32_3_input_port_speed_1.read(False)
+                if stm32_3_input_bottle_speed_1:
+                    stm32_3_input_data_speed_1=stm32_3_input_bottle_speed_1.get(0)
+                    speed_1_value=stm32_3_input_data_speed_1.asDouble()
                     cmd_speed=speed_1_value
-                    print "there is a bottle from ",stm32_2_input_port_speed_1_name
+                    print "there is a bottle from ",stm32_3_input_port_speed_1_name
                     print "bottle content: ",speed_1_value
                     
                 else:
-                    print "there is no bottle from ",stm32_2_input_port_speed_1_name       
+                    print "there is no bottle from ",stm32_3_input_port_speed_1_name       
 
 
             #------not connected to STM32 2----------------
             else:
                 connected=False
-                print "wrong stm32, detected: ",stm32_2_position
-                stm32_2_position='0'
+                print "wrong stm32, detected: ",stm32_3_position
+                stm32_3_position='0'
                 serial_device_counter=serial_device_counter+1
 
     except SerialException:
