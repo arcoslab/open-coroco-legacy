@@ -17,22 +17,26 @@ y.Network.init()
 
 
 #creting an output port for stm32_1_position
-stm32_2_output_port_1       =y.BufferedPortBottle()
-stm32_2_output_port_1_name  ="/stm32_2/position/out1"
-stm32_2_output_port_1.open(stm32_2_output_port_1_name)
+stm32_3_output_port_1       =y.BufferedPortBottle()
+stm32_3_output_port_1_name  ="/stm32_3/position/out1"
+stm32_3_output_port_1.open(stm32_2_output_port_1_name)
 
+#creating an input port from stm32_1
+stm32_3_input_port_1        =y.BufferedPortBottle()
+stm32_3_input_port_1_name   ="/stm32_3/position/in1"
+stm32_3_input_port_1.open(stm32_1_input_port_1_name)
 
 #creating an input port from stm32_2
-stm32_2_input_port_1        =y.BufferedPortBottle()
-stm32_2_input_port_1_name   ="/stm32_2/position/in1"
-stm32_2_input_port_1.open(stm32_2_input_port_1_name)
+stm32_3_input_port_2        =y.BufferedPortBottle()
+stm32_3_input_port_2_name   ="/stm32_3/position/in2"
+stm32_3_input_port_2.open(stm32_2_input_port_1_name)
 
 
 
 #creating an input port from PS3 controller
-stm32_2_input_port_speed_1        =y.BufferedPortBottle()
-stm32_2_input_port_speed_1_name   ="/stm32_2/speed/in_1"
-stm32_2_input_port_speed_1.open(stm32_2_input_port_speed_1_name)
+stm32_3_input_port_speed_1        =y.BufferedPortBottle()
+stm32_3_input_port_speed_1_name   ="/stm32_3/speed/in_1"
+stm32_3_input_port_speed_1.open(stm32_2_input_port_speed_1_name)
 
 
 
@@ -40,10 +44,8 @@ stm32_2_input_port_speed_1.open(stm32_2_input_port_speed_1_name)
 #connecting with remote port STM32_1
 style=y.ContactStyle()
 style.persistent=1
-stm32_1_input_port_1_name="/stm32_1/position/in1"
-stm32_3_input_port_1_name="/stm32_3/position/in1"
-y.Network.connect(stm32_2_output_port_1_name,stm32_1_input_port_1_name,style)
-y.Network.connect(stm32_2_output_port_1_name,stm32_3_input_port_1_name,style)
+stm32_4_input_port_1_name="/stm32_4/position/in1"
+y.Network.connect(stm32_3_output_port_1_name,stm32_4_input_port_1_name,style)
 
 
 
@@ -63,6 +65,7 @@ cmd_speed=0.0
 #for serial port
 stm32_1_position='0'
 stm32_2_position='0'
+stm32_3_position='0'
 serial_device_counter=0
 connected=False
 
@@ -74,17 +77,30 @@ while True:
     #-------------------Confirming stm32_1_position from yarp bottles-----------
 
 
-    while stm32_1_position!='1':
+    while stm32_1_position!='1' and stm32_2_position!='2':
+
         #receaving a bottle from the input port 1
-        stm32_2_input_bottle_1=stm32_2_input_port_1.read(False)
-        if stm32_2_input_bottle_1:
-            stm32_2_input_data_1=stm32_2_input_bottle_1.get(0)
-            stm32_1_position=stm32_2_input_data_1.asString()
-            print "there is a bottle from ",stm32_2_input_port_1_name
+        stm32_3_input_bottle_1=stm32_3_input_port_1.read(False)
+        if stm32_3_input_bottle_1:
+            stm32_3_input_data_1=stm32_3_input_bottle_1.get(0)
+            stm32_1_position=stm32_3_input_data_1.asString()
+            print "there is a bottle from ",stm32_3_input_port_1_name
             print "bottle content: ",stm32_1_position
             
         else:
-            print "there is no bottle from ",stm32_2_input_port_1_name    
+            print "there is no bottle from ",stm32_3_input_port_1_name   
+
+        #receaving a bottle from the input port 2
+        stm32_3_input_bottle_2=stm32_3_input_port_2.read(False)
+        if stm32_3_input_bottle_2:
+            stm32_3_input_data_2=stm32_3_input_bottle_2.get(0)
+            stm32_2_position=stm32_3_input_data_2.asString()
+            print "there is a bottle from ",stm32_3_input_port_2_name
+            print "bottle content: ",stm32_2_position
+            
+        else:
+            print "there is no bottle from ",stm32_3_input_port_2_name   
+ 
      
 
     #------------Connecting to the serial port---------------------
@@ -95,14 +111,14 @@ while True:
         try:
             sleep(0.01)
             #serial_device_counter=3;
-            if serial_device_counter==stm32_1_position:
-                serial_device_counter=stm32_1_position+1
+            if serial_device_counter==stm32_3_position:
+                serial_device_counter=stm32_3_position+1
 
             print "Connecting to /dev/ttyACM"+str(serial_device_counter)
             com=s.Serial("/dev/ttyACM"+str(serial_device_counter), baudrate=921600,timeout=1)
             
         except:
-            sleep(0.01)
+            #sleep(0.01)
             if (serial_device_counter>10):
               serial_device_counter=0
             print "Connect opencoroco usb cable, trying: /dev/ttyACM"+str(serial_device_counter)  

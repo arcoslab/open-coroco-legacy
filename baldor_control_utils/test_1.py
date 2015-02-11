@@ -34,7 +34,7 @@ stm32_1_input_port_speed_1.open(stm32_1_input_port_speed_1_name)
 
 
 
-#connecting with remote port STM32_1
+#connecting with remote port STM32_2
 style=y.ContactStyle()
 style.persistent=1
 stm32_2_input_port_1_name="/stm32_2/position/in1"
@@ -51,7 +51,7 @@ angle=0.
 rads=0.
 
 value=33
-cmd_speed=44
+cmd_speed=0.0
 
 #for serial port
 stm32_position='0'
@@ -143,6 +143,7 @@ while True:
                 if stm32_1_input_bottle_speed_1:
                     stm32_1_input_data_speed_1=stm32_1_input_bottle_speed_1.get(0)
                     speed_1_value=stm32_1_input_data_speed_1.asDouble()
+                    cmd_speed=speed_1_value
                     print "there is a bottle from ",stm32_1_input_port_speed_1_name
                     print "bottle content: ",speed_1_value
                     
