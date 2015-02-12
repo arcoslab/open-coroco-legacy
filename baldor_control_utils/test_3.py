@@ -69,6 +69,9 @@ stm32_3_position='0'
 serial_device_counter=0
 connected=False
 
+serial_1=0
+serial_2=0
+serial_3=0
 
 
 
@@ -77,24 +80,36 @@ while True:
     #-------------------Confirming stm32_1_position from yarp bottles-----------
 
 
-    while stm32_1_position!='1' and stm32_2_position!='2':
-
+    #while stm32_1_position!='1' and stm32_2_position!='2':
+    while stm32_1_position!='1':
         #receaving a bottle from the input port 1
         stm32_3_input_bottle_1=stm32_3_input_port_1.read(False)
         if stm32_3_input_bottle_1:
+
             stm32_3_input_data_1=stm32_3_input_bottle_1.get(0)
             stm32_1_position=stm32_3_input_data_1.asString()
+
+            stm32_3_input_data_1=stm32_3_input_bottle_1.get(1)
+            serial_1=stm32_3_input_data_1.asInt()
+
             print "there is a bottle from ",stm32_3_input_port_1_name
             print "bottle content: ",stm32_1_position
             
         else:
             print "there is no bottle from ",stm32_3_input_port_1_name   
 
+
+    while stm32_2_position!='2':
         #receaving a bottle from the input port 2
         stm32_3_input_bottle_2=stm32_3_input_port_2.read(False)
         if stm32_3_input_bottle_2:
+
             stm32_3_input_data_2=stm32_3_input_bottle_2.get(0)
             stm32_2_position=stm32_3_input_data_2.asString()
+
+            stm32_3_input_data_2=stm32_3_input_bottle_2.get(1)
+            serial_2=stm32_3_input_data_2.asString()
+
             print "there is a bottle from ",stm32_3_input_port_2_name
             print "bottle content: ",stm32_2_position
             
@@ -111,15 +126,19 @@ while True:
         try:
             sleep(0.01)
             #serial_device_counter=3;
-            if serial_device_counter==stm32_3_position:
-                serial_device_counter=stm32_3_position+1
+            if serial_device_counter==serial_1:
+                serial_device_counter=serial_1+1
+            if serial_device_counter==serial_2:
+                serial_device_counter=serial_2+1
+
+
 
             print "Connecting to /dev/ttyACM"+str(serial_device_counter)
             com=s.Serial("/dev/ttyACM"+str(serial_device_counter), baudrate=921600,timeout=1)
             
         except:
             #sleep(0.01)
-            if (serial_device_counter>10):
+            if (serial_device_counter>100):
               serial_device_counter=0
             print "Connect opencoroco usb cable, trying: /dev/ttyACM"+str(serial_device_counter)  
             #print "stm32_position: " + stm32_position 
@@ -156,7 +175,7 @@ while True:
 
 
             #-----------Connected to STM32-------------------------------
-            if stm32_2_position=='3':            
+            if stm32_3_position=='3':            
             
                 #-------------------Communication though yarp bottles-----------
                 sleep(0.01)
@@ -164,7 +183,8 @@ while True:
                 #sending a bottle through the output_port_1
                 stm32_3_output_bottle_1=stm32_3_output_port_1.prepare()
                 stm32_3_output_bottle_1.clear()
-                stm32_3_output_bottle_1.addString("hola2")
+                stm32_3_output_bottle_1.addString(stm32_3_position)#"hola2")
+                stm32_3_output_bottle_1.addInt(serial_device_counter)#"hola2")
                 stm32_3_output_port_1.write()
                 sleep(0.01)
 

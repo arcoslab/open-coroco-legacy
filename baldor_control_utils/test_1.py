@@ -77,7 +77,7 @@ while True:
             print "Connecting to /dev/ttyACM"+str(serial_device_counter)
         except:
             
-            if (serial_device_counter>10):
+            if (serial_device_counter>100):
               serial_device_counter=0
             print "Connect opencoroco usb cable, trying: /dev/ttyACM"+str(serial_device_counter)  
             print "stm32_position: " + stm32_position     
@@ -127,6 +127,7 @@ while True:
                 stm32_1_output_bottle_1=stm32_1_output_port_1.prepare()
                 stm32_1_output_bottle_1.clear()
                 stm32_1_output_bottle_1.addString(stm32_1_position)
+                stm32_1_output_bottle_1.addInt(serial_device_counter)                
                 stm32_1_output_port_1.write()
 
 

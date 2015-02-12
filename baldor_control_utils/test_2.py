@@ -41,8 +41,8 @@ stm32_2_input_port_speed_1.open(stm32_2_input_port_speed_1_name)
 style=y.ContactStyle()
 style.persistent=1
 stm32_1_input_port_1_name="/stm32_1/position/in1"
-stm32_3_input_port_1_name="/stm32_3/position/in1"
-stm32_4_input_port_1_name="/stm32_4/position/in1"
+stm32_3_input_port_1_name="/stm32_3/position/in2"
+stm32_4_input_port_1_name="/stm32_4/position/in2"
 y.Network.connect(stm32_2_output_port_1_name,stm32_1_input_port_1_name,style)
 y.Network.connect(stm32_2_output_port_1_name,stm32_3_input_port_1_name,style)
 y.Network.connect(stm32_2_output_port_1_name,stm32_4_input_port_1_name,style)
@@ -105,7 +105,7 @@ while True:
             
         except:
             sleep(0.01)
-            if (serial_device_counter>10):
+            if (serial_device_counter>100):
               serial_device_counter=0
             print "Connect opencoroco usb cable, trying: /dev/ttyACM"+str(serial_device_counter)  
             #print "stm32_position: " + stm32_position 
@@ -150,7 +150,8 @@ while True:
                 #sending a bottle through the output_port_1
                 stm32_2_output_bottle_1=stm32_2_output_port_1.prepare()
                 stm32_2_output_bottle_1.clear()
-                stm32_2_output_bottle_1.addString("hola2")
+                stm32_2_output_bottle_1.addString(stm32_2_position)#"hola2")
+                stm32_2_output_bottle_1.addInt(serial_device_counter)#"hola2")
                 stm32_2_output_port_1.write()
                 sleep(0.01)
 
