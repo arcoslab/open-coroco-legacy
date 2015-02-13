@@ -68,6 +68,7 @@ stm32_2_position='0'
 serial_device_counter=0
 connected=False
 
+serial_1=0
 
 
 
@@ -97,8 +98,8 @@ while True:
         try:
             sleep(0.01)
             #serial_device_counter=3;
-            if serial_device_counter==stm32_1_position:
-                serial_device_counter=stm32_1_position+1
+            if serial_device_counter==serial_1:#stm32_1_position:
+                serial_device_counter=serial_1+1#stm32_1_position+1
 
             print "Connecting to /dev/ttyACM"+str(serial_device_counter)
             com=s.Serial("/dev/ttyACM"+str(serial_device_counter), baudrate=921600,timeout=1)
@@ -158,10 +159,15 @@ while True:
                 #receaving a bottle from the input port 1
                 stm32_2_input_bottle_1=stm32_2_input_port_1.read(False)
                 if stm32_2_input_bottle_1:
+
                     stm32_2_input_data_1=stm32_2_input_bottle_1.get(0)
                     stm32_1_position=stm32_2_input_data_1.asString()
+
+                    stm32_2_input_data_1=stm32_2_input_bottle_1.get(1)
+                    serial_1=stm32_2_input_data_1.asInt()
+
                     print "there is a bottle from ",stm32_2_input_port_1_name
-                    print "bottle content: ",stm32_1_position
+                    print "bottle content: Position_1=",stm32_1_position,"serial_1: ttyACM",serial_1 
                     
                 else:
                     print "there is no bottle from ",stm32_2_input_port_1_name    

@@ -44,7 +44,7 @@ stm32_3_input_port_speed_1.open(stm32_3_input_port_speed_1_name)
 #connecting with remote port STM32_1
 style=y.ContactStyle()
 style.persistent=1
-stm32_4_input_port_1_name="/stm32_4/position/in1"
+stm32_4_input_port_1_name="/stm32_4/position/in3"
 y.Network.connect(stm32_3_output_port_1_name,stm32_4_input_port_1_name,style)
 
 
@@ -71,7 +71,7 @@ connected=False
 
 serial_1=0
 serial_2=0
-serial_3=0
+
 
 
 
@@ -93,11 +93,13 @@ while True:
             serial_1=stm32_3_input_data_1.asInt()
 
             print "there is a bottle from ",stm32_3_input_port_1_name
-            print "bottle content: ",stm32_1_position
+            print "bottle content=> Position_1: ",stm32_1_position,"Device: ttyACM",serial_1
+            #raw_input("Enter enter: ")
             
         else:
             print "there is no bottle from ",stm32_3_input_port_1_name   
-
+            #raw_input("Enter enter: ")
+            
 
     while stm32_2_position!='2':
         #receaving a bottle from the input port 2
@@ -111,11 +113,14 @@ while True:
             serial_2=stm32_3_input_data_2.asString()
 
             print "there is a bottle from ",stm32_3_input_port_2_name
-            print "bottle content: ",stm32_2_position
+            print "bottle content=> Position_2: ",stm32_2_position, " device_2: ", serial_2
+            #raw_input("Enter enter: ")
+            
             
         else:
             print "there is no bottle from ",stm32_3_input_port_2_name   
- 
+            #raw_input("Enter enter: ")
+            
      
 
     #------------Connecting to the serial port---------------------
@@ -142,11 +147,15 @@ while True:
               serial_device_counter=0
             print "Connect opencoroco usb cable, trying: /dev/ttyACM"+str(serial_device_counter)  
             #print "stm32_position: " + stm32_position 
-            serial_device_counter=serial_device_counter+1      
+            serial_device_counter=serial_device_counter+1 
+            #raw_input("Enter enter: ")
+                 
         else:
             connected=True
             print "Connected to /dev/ttyACM"+str(serial_device_counter) 
             #print "stm32_position: " + stm32_position
+            #raw_input("Enter enter: ")
+            
         
 
 
@@ -169,8 +178,9 @@ while True:
             line=com.readline() 
             print "line_from_stm: ",line 
             line_split=line.split()
-            stm32_2_position=line_split[0]
-            print "stm32_position: " + stm32_2_position
+            stm32_3_position=line_split[0]
+            print "stm32_position: " + stm32_3_position
+            #raw_input("Enter enter: ")
             
 
 
@@ -193,13 +203,34 @@ while True:
                 if stm32_3_input_bottle_1:
                     stm32_3_input_data_1=stm32_3_input_bottle_1.get(0)
                     stm32_1_position=stm32_3_input_data_1.asString()
+
+                    stm32_3_input_data_1=stm32_3_input_bottle_1.get(1)
+                    serial_1=stm32_3_input_data_1.asInt()
+
                     print "there is a bottle from ",stm32_3_input_port_1_name
-                    print "bottle content: ",stm32_1_position
+                    print "bottle content: Position_1=",stm32_1_position,"serial_1: ttyACM",serial_1 
+
                     
                 else:
-                    print "there is no bottle from ",stm32_3_input_port_1_name    
+                    print "there is no bottle from ",stm32_4_input_port_1_name    
                  
 
+
+                #receaving a bottle from the input port 2
+                stm32_3_input_bottle_2=stm32_3_input_port_2.read(False)
+                if stm32_3_input_bottle_2:
+                    stm32_3_input_data_2=stm32_3_input_bottle_2.get(0)
+                    stm32_2_position=stm32_3_input_data_2.asString()
+
+                    stm32_3_input_data_2=stm32_3_input_bottle_2.get(1)
+                    serial_2=stm32_3_input_data_2.asInt()
+
+                    print "there is a bottle from ",stm32_3_input_port_2_name
+                    print "bottle content: Position_2=",stm32_2_position,"serial_2: ttyACM",serial_2 
+
+                else:
+                    print "there is no bottle from ",stm32_3_input_port_2_name    
+                 
                #receiving a bottle from PS3 controller
                 stm32_3_input_bottle_speed_1=stm32_3_input_port_speed_1.read(False)
                 if stm32_3_input_bottle_speed_1:
