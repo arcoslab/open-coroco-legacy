@@ -146,7 +146,7 @@ while True:
             
         else:
             print "there is no bottle from ",stm32_4_input_port_3_name   
-            raw_input("Enter enter: ")
+            #raw_input("Enter enter: ")
     #------------Connecting to the serial port---------------------
 
    

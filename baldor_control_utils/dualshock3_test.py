@@ -21,11 +21,11 @@ joystick_output_port_2.open(joystick_output_port_2_name)
 #creating output port 3
 joystick_output_port_3=y.BufferedPortBottle()
 joystick_output_port_3_name="/ds3/stick1_y/out3"
-joystick_output_port_3.open(joystick_output_port_2_name)
+joystick_output_port_3.open(joystick_output_port_3_name)
 #creating output port 4
 joystick_output_port_4=y.BufferedPortBottle()
 joystick_output_port_4_name="/ds3/stick1_y/out4"
-joystick_output_port_4.open(joystick_output_port_3_name)
+joystick_output_port_4.open(joystick_output_port_4_name)
 
 
 #connecting joystick data to motors
