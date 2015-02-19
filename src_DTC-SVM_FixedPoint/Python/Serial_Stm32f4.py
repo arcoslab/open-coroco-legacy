@@ -64,7 +64,8 @@ class Serial_Stm32f4(object):
         self.various_counter     = 0
         self.type_of_test       = 0        
         self.exception          = 'N'
-        self.read_strings       =False
+        #self.read_strings       =False
+        self.read_strings       =True
 
         #debugging finite statemachine
         self.start_debugging=False
@@ -454,7 +455,8 @@ class Serial_Stm32f4(object):
                     bytes=1
                     info=''
                     i=0
-                    while i<6:
+                    while i<11:
+                    #while i<4:
                         single_character = self.ser.read(bytes)
                         #print "single_character_byte_to_float: "+single_character + " ord: " +str(ord(single_character))
                         #print "single_character: "
@@ -513,6 +515,7 @@ class Serial_Stm32f4(object):
                 #print "split_string[split_counter]: " + split_string[split_counter] + " split_string[split_counter+1 ]: "+split_string[split_counter+1]
                 print split_counter
                 print split_counter+1
+                '''
                 if   (split_string[split_counter]=='t'):   self.time                =float(split_string[split_counter+1])
                 elif (split_string[split_counter]=='r'):   self.reference_frequency =float(split_string[split_counter+1])
                 elif (split_string[split_counter]=='h'):   self.hall_frequency      =float(split_string[split_counter+1])
@@ -520,15 +523,10 @@ class Serial_Stm32f4(object):
                     self.electric_frequency  =float(split_string[split_counter+1])
                     self.mechanic_frequency  =self.electric_frequency/self.pole_pairs
                     self.gear_frequency      =self.mechanic_frequency/self.gear_ratio
-
-                #elif (split_string[split_counter]=='4'):   self.valor_numerico1 =float(split_string[split_counter+1])#Prueba
-                #elif (split_string[split_counter]=='4'):   self.valor_numerico1 =int(split_string[split_counter+1])#Prueba
-                elif (split_string[split_counter]=='4'):   self.valor_numerico1 =str(split_string[split_counter+1])#Prueba
-                #elif (split_string[split_counter]=='5'):   self.valor_numerico2 =float(split_string[split_counter+1])#Prueba
-                #elif (split_string[split_counter]=='5'):   self.valor_numerico2 =int(split_string[split_counter+1])#Prueba
+                '''
+                #if   (split_string[split_counter]=='t'):   self.time                =float(split_string[split_counter+1])
+                if (split_string[split_counter]=='4'):   self.valor_numerico1 =str(split_string[split_counter+1])#Prueba
                 elif (split_string[split_counter]=='5'):   self.valor_numerico2 =str(split_string[split_counter+1])#Prueba
-                #elif (split_string[split_counter]=='6'):   self.valor_numericoR1 =float(split_string[split_counter+1])#Prueba
-                #elif (split_string[split_counter]=='6'):   self.valor_numericoR1 =int(split_string[split_counter+1])#Prueba
                 elif (split_string[split_counter]=='6'):   self.valor_numericoR1 =str(split_string[split_counter+1])#Prueba
                 elif (split_string[split_counter]=='A'):   self.isA =float(split_string[split_counter+1])
                 elif (split_string[split_counter]=='B'):   self.isB =float(split_string[split_counter+1])

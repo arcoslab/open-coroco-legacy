@@ -907,47 +907,14 @@ void print_regular_data(void)
     else if (print_selection==20)
     {
       
-        //printf("X")   ;
-/*
+        /*
+        //printf("X");
         printf("t")   ;   checksum=           print_float_as_bytes(data_timer                   );
-        printf("4")   ;   checksum = checksum + print_float_as_bytes(data_V1);
-        printf("5")   ;   checksum = checksum + print_float_as_bytes(data_V2);
-        printf("6")   ;   checksum = checksum + print_float_as_bytes(data_R1);
-*/
-
-        printf("t")   ;   checksum=           print_float_as_bytes(data_timer                   );
-        //printf("4")   ;   checksum = checksum + fixedpt_print(data_V1);
-        printf("4")   ;   fixedpt_print(data_V1);
-        //printf("5")   ;   checksum = checksum + fixedpt_print(data_V2);
-        printf("5")   ;   fixedpt_print(data_V2);
-        //printf("6")   ;   checksum = checksum + fixedpt_print(data_R1);
-        printf("6")   ;   fixedpt_print(data_R1);
-
-  /*
-        printf("t")   ;   checksum=           print_float_as_bytes(data_timer                   );
-        printf("4")   ;   checksum = checksum + print_fixedpt_as_bytes(data_V1);
-        printf("5")   ;   checksum = checksum + print_fixedpt_as_bytes(data_V2);
-        printf("6")   ;   checksum = checksum + print_fixedpt_as_bytes(data_R1);
-  */
-  /*
-        printf("t")   ;   checksum=           print_float_as_bytes(data_timer                   );
-        printf("4")   ;   checksum = checksum + print_int_as_bytes(data_V1);
-        printf("5")   ;   checksum = checksum + print_int_as_bytes(data_V2);
-        printf("6")   ;   checksum = checksum + print_int_as_bytes(data_R1);
-  */
-        
-        //printf("\nUsing the %d-bit precision, %d.%d format", FIXEDPT_BITS, FIXEDPT_WBITS, FIXEDPT_FBITS);
-        //printf("\nThe most precise number: "); fixedpt_print(1);
-        //printf("\nThe biggest number: ");fixedpt_print(0x7fffff00);
-        //Por alguna razon no puedo hacer printf de las lineas anteriores???
-     //   printf ("\nValor1: ")  ;            fixedpt_print(Valor1                   );
-     //   printf ("\nValor2: ")  ;   fixedpt_print(Valor2                  );
-     //   printf ("\nResultado = Valor1 + Valor2 = ")  ;   fixedpt_print(Suma                  );
-     //   printf ("\nResultado = Valor1 - Valor2 = ")  ;   fixedpt_print(Resta                  );
-     //   printf ("\nResultado = Valor1 * Valor2 = ")  ;   fixedpt_print(Multiplicacion                  );
-     //   printf ("\nResultado = Valor1 / Valor2 = ")  ;   fixedpt_print(Division                  );
-     //   printf ("\nResultado = Sqrt(Valor2) = ")  ;   fixedpt_print(Sqrt2                  );
+        printf("4")   ;   fixedpt_print(data_V1); //printf("\n");
+        printf("5")   ;   fixedpt_print(data_V2); //printf("\n");
+        printf("6")   ;   fixedpt_print(data_R1); //printf("\n");
         //printf("m");
+        */
 
     }
 

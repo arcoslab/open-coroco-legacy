@@ -83,6 +83,7 @@
  //#define FIXEDPT_WBITS 12
 
  float prueba;
+ char checksum;
 
 int main(void)
 {
@@ -116,9 +117,9 @@ int main(void)
   //V5 = fixedpt_rconst(5.013014015); 
 
 
-  //V1 = fixedpt_fromint(-2);
-  //V2 = fixedpt_fromint(-1);
-  //prueba = 2.0f;
+  //V1 = fixedpt_fromint(2);
+  //V2 = fixedpt_fromint(1);
+  prueba = 2.0f;
 
   system_init();
    
@@ -157,7 +158,7 @@ int main(void)
   {
 
 
-  printf("X");
+  printf("X\n");
   //printf("4_: ")   ; fixedpt_print(V1); //MINICOM
   //printf("5_: ")   ; fixedpt_print(V2); //MINICOM
   R1 = fixedpt_add(V1,V2);    
@@ -165,7 +166,11 @@ int main(void)
   //R3 = fixedpt_mul(V1,V2);
   //R4 = fixedpt_div(V1,V2);
   //printf("6_:  ")   ; fixedpt_print(R1); //MINICOM
-  printf("m");
+  //printf("t\n")   ;   checksum=           print_float_as_bytes(data_timer                   );
+  printf("4\n")   ;   fixedpt_print(data_V1); //printf("\n");
+  printf("5\n")   ;   fixedpt_print(data_V2); //printf("\n");
+  printf("6\n")   ;   fixedpt_print(data_R1); //printf("\n");
+  printf("m\n");
   //  printf("X");
     //printf("P")   ; print_float_as_bytes(V1);
     //R1 = V1 + V2;
@@ -173,11 +178,19 @@ int main(void)
     //R1 = R1 + V4;
     //R1 = R1 + V5;
 
-  
-  printf("Estas son pruebas de fixedpt_print\n");
+  //fixedpt_print(V1); printf("\n");
+  //fixedpt_print(V2); printf("\n");
+  //fixedpt_print(R1); printf("\n");
+
+  /*
+  //printf("Estas son pruebas de fixedpt_print\n");
   printf("V1: ");  fixedpt_print(V1); printf("\n");
   printf("V2: ");  fixedpt_print(V2); printf("\n");
   printf("R1: ");  fixedpt_print(R1); printf("\n");
+  printf("m");
+  */
+
+//  printf("V: %f\n", prueba);
 /*
   printf("Estas son pruebas de float\n");
   printf("float number: "); printf("%f", prueba); printf("\n");
@@ -217,7 +230,7 @@ int main(void)
       
 
 
-
+///*
     if (transmitting_to_python==true)
     {
         if (print_selection==9) { full_print_regular_data();  }
@@ -225,6 +238,7 @@ int main(void)
         transmitting_to_python=false;
         collecting_sensorless_data=true; 
     }
+//*/
 
 //    print_selection=20;
 //    print_regular_data();

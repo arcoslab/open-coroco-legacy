@@ -1,13 +1,14 @@
 #!/usr/bin/env python
 
 #importing libraries
-import yarp     as y
+#import yarp     as y
 import serial   as s
 from serial import SerialException
 from numpy  import pi
 from time   import sleep
+import sys
 
-
+'''
 #-----------------yarp connection----------------------------------
 
 #starting yarp network
@@ -43,7 +44,7 @@ stm32_4_input_port_1_name="/stm32_4/position/in1"
 y.Network.connect(stm32_1_output_port_1_name,stm32_2_input_port_1_name,style)
 y.Network.connect(stm32_1_output_port_1_name,stm32_3_input_port_1_name,style)
 y.Network.connect(stm32_1_output_port_1_name,stm32_4_input_port_1_name,style)
-
+'''
 
 #------------------Initial values -----------------
 
@@ -61,8 +62,9 @@ cmd_speed=0.0
 stm32_position='0'
 serial_device_counter=0
 connected=False
-
-
+while_interation = 0;
+avoid_loop = False
+pause = 0
 
 
 while True:
@@ -111,12 +113,21 @@ while True:
             #reading data from stm32
             line=com.readline() 
             print "line_from_stm: ",line 
-            line_split=line.split()
-            stm32_1_position=line_split[0]
-            print "stm32_position: " + stm32_1_position
-            
+            #line_split=line.split()
+            #stm32_1_position=line_split[0]
+            #print "stm32_position: " + stm32_1_position
+            while_interation = while_interation + 1;
 
-            
+            if(not avoid_loop):
+                if(while_interation==5):
+                    while_interation = 0;
+                    print "Press '9' to exit,'a' to avoid loop or anything else to continue"
+                    pause = raw_input()
+                    if (pause == '9'):
+                        sys.exit("User wanted to exit")
+                    if (pause == 'a'):
+                        avoid_loop = True
+            '''          
             #-----------connected to STM32 1----------
             if stm32_1_position=='1':
 
@@ -161,7 +172,7 @@ while True:
                 print "wrong stm32, detected: ",stm32_1_position
                 stm32_1_position='0'
                 serial_device_counter=serial_device_counter+1
-
+            '''
 
     except SerialException:
         #com.close()
