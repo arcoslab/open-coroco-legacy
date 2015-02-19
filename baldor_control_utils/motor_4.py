@@ -204,7 +204,7 @@ while True:
             print "line_from_stm: ",line 
             line_split=line.split()
             stm32_4_position=line_split[0]
-            print "stm32_position: " + stm32_3_position
+            print "stm32_position: " + stm32_4_position
             #raw_input("Enter enter: ")
             
 
