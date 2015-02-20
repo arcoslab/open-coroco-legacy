@@ -85,6 +85,14 @@
  float prueba;
  char checksum;
 
+/*
+Using the 32-bit precision, 20.12 format
+
+The most precise number: 0.000244140625
+The biggest number: 524287.9375
+*/
+
+
 int main(void)
 {
   //The fixedpt_fromint() function only can be used if the argument is an integer, 
@@ -110,15 +118,12 @@ int main(void)
   V5    = 5.013014015f;
 */
   
-  V1 = fixedpt_rconst(1.013014015);
-  V2 = fixedpt_rconst(2.013014015); 
-  //V3 = fixedpt_rconst(3.013014015); 
-  //V4 = fixedpt_rconst(4.013014015); 
-  //V5 = fixedpt_rconst(5.013014015); 
-
-
-  //V1 = fixedpt_fromint(2);
-  //V2 = fixedpt_fromint(1);
+  //V1 = fixedpt_rconst(-1.013014015);
+  //V2 = fixedpt_rconst(2.013014015);
+  V2 = fixedpt_rconst(524287.9374);
+  //V1 = fixedpt_rconst(0.001); 
+  V1 = fixedpt_fromint(2);
+  //V2 = fixedpt_fromint(-11);
   prueba = 2.0f;
 
   system_init();
@@ -161,10 +166,10 @@ int main(void)
   printf("X\n");
   //printf("4_: ")   ; fixedpt_print(V1); //MINICOM
   //printf("5_: ")   ; fixedpt_print(V2); //MINICOM
-  R1 = fixedpt_add(V1,V2);    
+  //R1 = fixedpt_add(V1,V2);    
   //R1 = fixedpt_sub(V2,V1);
-  //R3 = fixedpt_mul(V1,V2);
-  //R4 = fixedpt_div(V1,V2);
+  //R1 = fixedpt_mul(V1,V2);
+  R1 = fixedpt_div(V2,V1);
   //printf("6_:  ")   ; fixedpt_print(R1); //MINICOM
   //printf("t\n")   ;   checksum=           print_float_as_bytes(data_timer                   );
   printf("4\n")   ;   fixedpt_print(data_V1); //printf("\n");
