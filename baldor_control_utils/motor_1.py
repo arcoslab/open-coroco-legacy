@@ -85,9 +85,7 @@ while True:
             #print "stm32_position: " + stm32_position
     '''
     motor.connecting_to_stm32()
-    serial_device_counter=motor.serial_device_counter
-    connected=motor.connec
- 
+    
    
  
 
@@ -95,20 +93,20 @@ while True:
     #-----------------------------
     try:
    
-        while connected==True:
+        while motor.connected==True:
 
             #waiting for data from stm32 serial port
-            while com.inWaiting()>0:
-                com.read(com.inWaiting())
+            while motor.com.inWaiting()>0:
+                motor.com.read(motor.com.inWaiting())
                 print "waiting"  
             
             #writing data from stm32
-            com.write("f "+str(cmd_speed)+"\n\r")
+            motor.com.write("f "+str(cmd_speed)+"\n\r")
             print "writing to stm32: "+ str(cmd_speed)+"original_value: "+str(value)+"test: "
             print "Connected to /dev/ttyACM"+str(serial_device_counter)   
 
             #reading data from stm32
-            line=com.readline() 
+            line=motor.com.readline() 
             print "line_from_stm: ",line 
             line_split=line.split()
             stm32_1_position=line_split[0]
@@ -156,10 +154,10 @@ while True:
 
             #---------not connected to STM32 1----------------
             else:
-                connected=False
+                motor.connected=False
                 print "wrong stm32, detected: ",stm32_1_position
                 stm32_1_position='0'
-                serial_device_counter=serial_device_counter+1
+                motor.serial_device_counter=motor.serial_device_counter+1
 
 
     except SerialException:
@@ -168,4 +166,4 @@ while True:
         print com.inWaiting()
         print "error! error!"
         #print line
-        connected=False  
+        motor.connected=False  

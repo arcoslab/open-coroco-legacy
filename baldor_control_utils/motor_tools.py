@@ -9,7 +9,7 @@ class motor_tools(object):
     serial_device_counter=0
     MAX_serial_device_counter=100
     device_type="/dev/ttyACM"
-    
+    #com=s.Serial(device_type+str(serial_device_counter), baudrate=baudrate,timeout=timeout)
 
     connected=False
     position='0'
@@ -19,7 +19,7 @@ class motor_tools(object):
         while not self.connected:
             try:
                 #serial_device_counter=3;
-                com=s.Serial(self.device_type+str(self.serial_device_counter), baudrate=self.baudrate,timeout=self.timeout)
+                self.com=s.Serial(self.device_type+str(self.serial_device_counter), baudrate=self.baudrate,timeout=self.timeout)
                 print "Connecting toooo "+self.device_type+str(self.serial_device_counter)
             except:
                 
