@@ -65,30 +65,7 @@ motor=motor_tools()
 while True:
     
     #------------Connecting to the serial port---------------------
-    '''
-    #initial connection
-    while not connected:
-        try:
-            #serial_device_counter=3;
-            com=s.Serial("/dev/ttyACM"+str(serial_device_counter), baudrate=921600,timeout=1)
-            print "Connecting to /dev/ttyACM"+str(serial_device_counter)
-        except:
-            
-            if (serial_device_counter>100):
-              serial_device_counter=0
-            print "Connect opencoroco usb cable, trying: /dev/ttyACM"+str(serial_device_counter)  
-            print "stm32_position: " + stm32_position     
-            serial_device_counter=serial_device_counter+1  
-        else:
-            connected=True
-            print "Connected to /dev/ttyACM"+str(serial_device_counter) 
-            #print "stm32_position: " + stm32_position
-    '''
     motor.connecting_to_stm32()
-    
-   
- 
-
 
     #-----------------------------
     try:
@@ -103,7 +80,7 @@ while True:
             #writing data from stm32
             motor.com.write("f "+str(cmd_speed)+"\n\r")
             print "writing to stm32: "+ str(cmd_speed)+"original_value: "+str(value)+"test: "
-            print "Connected to /dev/ttyACM"+str(serial_device_counter)   
+            print "Connected to /dev/ttyACM"+str(motor.serial_device_counter)   
 
             #reading data from stm32
             line=motor.com.readline() 
@@ -120,37 +97,14 @@ while True:
                 #-------------------Communication though yarp bottles-----------
                 sleep(0.01)
 
-                #sending a bottle with stm32_1 position
-                stm32_1_output_bottle_1=out_1.prepare()
-                stm32_1_output_bottle_1.clear()
-                stm32_1_output_bottle_1.addString(stm32_1_position)
-                stm32_1_output_bottle_1.addInt(serial_device_counter)                
-                out_1.write()
+
+                motor.send_a_bottle(out_1,stm32_1_position,motor.serial_device_counter)
+
+                stm32_2_position=motor.receive_a_motor_bottle(in_1,stm32_2_in_1_name)
+
+                cmd_speed=motor.receive_a_joystick_bottle(in_speed,in_speed_name)
 
 
-                #receiving a bottle from stm32_2
-                stm32_1_input_bottle_1=in_1.read(False)
-                if stm32_1_input_bottle_1:
-                    stm32_1_input_data_1=stm32_1_input_bottle_1.get(0)
-                    stm32_2_position=stm32_1_input_data_1.asString()
-                    print "there is a bottle from ",stm32_2_in_1_name
-                    print "bottle content: ",stm32_2_position
-                    
-                else:
-                    print "there is no bottle from ",stm32_2_in_1_name    
-
-
-                #receiving a bottle from PS3 controller
-                stm32_1_input_bottle_speed_1=in_speed.read(False)
-                if stm32_1_input_bottle_speed_1:
-                    stm32_1_input_data_speed_1=stm32_1_input_bottle_speed_1.get(0)
-                    speed_1_value=stm32_1_input_data_speed_1.asDouble()
-                    cmd_speed=speed_1_value
-                    print "there is a bottle from ",in_speed_name
-                    print "bottle content: ",speed_1_value
-                    
-                else:
-                    print "there is no bottle from ",in_speed_name   
 
             #---------not connected to STM32 1----------------
             else:
@@ -163,7 +117,7 @@ while True:
     except SerialException:
         #com.close()
         #del com
-        print com.inWaiting()
+        print motor.com.inWaiting()
         print "error! error!"
         #print line
         motor.connected=False  
