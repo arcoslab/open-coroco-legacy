@@ -6,7 +6,7 @@ import serial  as s
 from serial import SerialException
 from numpy  import pi
 from time   import sleep
-
+from motor_tools  import *
 
 
 
@@ -72,23 +72,14 @@ serial_1=0
 
 
 
+motor=motor_tools()
+
+
 while True:
 
     #-------------------Confirming stm32_1_position from yarp bottles-----------
 
-
-    while stm32_1_position!='1':
-        #receaving a bottle from the input port 1
-        stm32_2_input_bottle_1=stm32_2_input_port_1.read(False)
-        if stm32_2_input_bottle_1:
-            stm32_2_input_data_1=stm32_2_input_bottle_1.get(0)
-            stm32_1_position=stm32_2_input_data_1.asString()
-            print "there is a bottle from ",stm32_2_input_port_1_name
-            print "bottle content: ",stm32_1_position
-            
-        else:
-            print "there is no bottle from ",stm32_2_input_port_1_name    
-     
+    stm32_1_position=motor.checking_motor_position('1',stm32_1_position,stm32_2_input_port_1,stm32_2_input_port_1_name)
 
     #------------Connecting to the serial port---------------------
 

@@ -72,52 +72,19 @@ while True:
    
         while motor.connected==True:
 
-            #waiting for data from stm32 serial port
-            while motor.com.inWaiting()>0:
-                motor.com.read(motor.com.inWaiting())
-                print "waiting"  
-            
-            #writing data from stm32
-            motor.com.write("f "+str(cmd_speed)+"\n\r")
-            print "writing to stm32: "+ str(cmd_speed)+"original_value: "+str(value)+"test: "
-            print "Connected to /dev/ttyACM"+str(motor.serial_device_counter)   
-
-            #reading data from stm32
-            line=motor.com.readline() 
-            print "line_from_stm: ",line 
-            line_split=line.split()
-            stm32_1_position=line_split[0]
-            print "stm32_position: " + stm32_1_position
-            
-
+            motor.serial_port_communication(motor,cmd_speed,value)
             
             #-----------connected to STM32 1----------
-            if stm32_1_position=='1':
+            if motor.position=='1':
 
                 #-------------------Communication though yarp bottles-----------
                 sleep(0.01)
-
-
-                motor.send_a_bottle(out_1,stm32_1_position,motor.serial_device_counter)
-
-                stm32_2_position=motor.receive_a_motor_bottle(in_1,stm32_2_in_1_name)
-
+                motor.send_a_bottle(out_1,motor.position,motor.serial_device_counter)
                 cmd_speed=motor.receive_a_joystick_bottle(in_speed,in_speed_name)
-
-
 
             #---------not connected to STM32 1----------------
             else:
-                motor.connected=False
-                print "wrong stm32, detected: ",stm32_1_position
-                stm32_1_position='0'
-                motor.serial_device_counter=motor.serial_device_counter+1
-
+                motor.retry_serial_connection()
 
     except SerialException:
-        #com.close()
-        #del com
-        print motor.com.inWaiting()
-        print "error! error!"
-        #print line
-        motor.connected=False  
+        motor.serial_exception_handling()
