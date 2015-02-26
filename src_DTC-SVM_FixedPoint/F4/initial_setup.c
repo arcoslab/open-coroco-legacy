@@ -520,7 +520,7 @@ void system_init(void) {
   printled(4, LRED);
   //PID_tim_init();
   //DTC_tim_init();
-  DTC_SVM_tim_init();
+//  DTC_SVM_tim_init(); //Desactivado temporalmente para realizar las pruebas de fixedpoint.
   adc_init();
   test_ports_init();
   stdin_init();

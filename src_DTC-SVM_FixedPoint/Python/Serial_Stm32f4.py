@@ -450,7 +450,36 @@ class Serial_Stm32f4(object):
                                 self.checksum_python=self.checksum_python-256
                         #print ord(ch)
                     return data
+    
+    def get_data_and_checksum(self):
+                    bytes=1
+                    info=''
+                    i=0
+                    while i<4:
+                        single_character = self.ser.read(bytes)
+                        #print "single_character_byte_to_float: "+single_character + " ord: " +str(ord(single_character))
+                        info +=single_character
+                        i=i+1;
+                    convertion = bytes_to_float(info)
+                    if (convertion[0]==True):                      
+                        data = convertion[1]
+                        self.transmition_error=False
+                        #print "found, whaat!"+str(data)
+                    else:   
+                        self.transmition_error=True
+                        data=0
+                        #print " four bytes not found" 
+                    
+                    info_counter=0
+                    for ch in info:
+                        if info_counter<len(info)-1:
+                            self.checksum_python=self.checksum_python+ord(ch)
+                            if self.checksum_python>=256:
+                                self.checksum_python=self.checksum_python-256
+                        #print ord(ch)
+                    return data
 
+    '''Modificada
     def get_data_and_checksum_string(self):
                     bytes=1
                     info=''
@@ -490,7 +519,7 @@ class Serial_Stm32f4(object):
                     #return data
                     #return float(info)
                     return info
-
+    '''
 
     def read_data_from_stm32_strings(self):
         bytes = 1
@@ -635,15 +664,13 @@ class Serial_Stm32f4(object):
                     self.electric_frequency  =self.get_data_and_checksum()
                     self.mechanic_frequency  =self.electric_frequency/self.pole_pairs
                     self.gear_frequency      =self.mechanic_frequency/self.gear_ratio
-                #elif (single_character=='4'):   self.valor_numerico1 =self.get_data_and_checksum_ints() #Pruebas Temporales
-                elif (single_character=='4'):   self.valor_numerico1 =self.get_data_and_checksum_string() #Pruebas Temporales
-                #elif (single_character=='4'):   self.valor_numerico1 =self.get_data_and_checksum() #Pruebas Temporales
-                #elif (single_character=='5'):   self.valor_numerico2 =self.get_data_and_checksum_ints() #Pruebas Temporales
-                elif (single_character=='5'):   self.valor_numerico2 =self.get_data_and_checksum_string() #Pruebas Temporales
-                #elif (single_character=='5'):   self.valor_numerico2 =self.get_data_and_checksum() #Pruebas Temporales
+                #elif (single_character=='4'):   self.valor_numerico1 =self.get_data_and_checksum_string() #Pruebas Temporales
+                elif (single_character=='4'):   self.valor_numerico1 =self.get_data_and_checksum() #Pruebas Temporales
+                #elif (single_character=='5'):   self.valor_numerico2 =self.get_data_and_checksum_string() #Pruebas Temporales
+                elif (single_character=='5'):   self.valor_numerico2 =self.get_data_and_checksum() #Pruebas Temporales
                 #elif (single_character=='6'):   self.valor_numericoR1 =self.get_data_and_checksum_ints() #Pruebas Temporales
-                elif (single_character=='6'):   self.valor_numericoR1 =self.get_data_and_checksum_string() #Pruebas Temporales
-                #elif (single_character=='6'):   self.valor_numericoR1 =self.get_data_and_checksum() #Pruebas Temporales
+                #elif (single_character=='6'):   self.valor_numericoR1 =self.get_data_and_checksum_string() #Pruebas Temporales
+                elif (single_character=='6'):   self.valor_numericoR1 =self.get_data_and_checksum() #Pruebas Temporales
                 elif (single_character=='A'):   self.isA =self.get_data_and_checksum()
                 elif (single_character=='B'):   self.isB =self.get_data_and_checksum()
                 elif (single_character=='C'):   self.isC =self.get_data_and_checksum()
@@ -968,16 +995,18 @@ class Serial_Stm32f4(object):
                                 #" Vs_cita_relative: %6.2f"   %self.Vs_relative_cita      
 
         elif self.print_selection==20:
+        	#'''
             #self.new_data_line= "t: %6.2f "                  %self.time                + \
              #                   "  Valor1: %f"                %self.valor_numerico1    + \
               #                  "  Valor2: %f"                %self.valor_numerico2    + \
                #                 "  Suma: %f"                  %self.valor_numericoR1
             #self.new_data_line= "t: %6.2f "                  %self.time               
+            #'''
             print (" t: " ,self.time); #print(self.time)
             print (" Valor1: " ,self.valor_numerico1);  #print(self.valor_numerico1)
             print (" Valor2: " ,self.valor_numerico2);  #print(self.valor_numerico2)
             print ("  Suma:  " ,self.valor_numericoR1); #print(self.valor_numericoR1)
-
+            
         elif self.print_selection==5:
             self.new_data_line= "t: %6.2f "                  %self.time                + \
                                 " psisD: %10.6f"             %self.psi_sD              + \

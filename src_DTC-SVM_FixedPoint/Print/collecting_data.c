@@ -464,11 +464,12 @@ void collecting_samples(void)
         data_V2 = V2; //Linea de prueba
         data_R1 = R1; //Linea de prueba
         
+        /*
         data_R2 = R2; //Linea de prueba
         data_R3 = R3; //Linea de prueba
         data_R4 = R4; //Linea de prueba
         data_R5 = R5; //Linea de prueba
-        
+        */
 
 
         if (print_selection==15)

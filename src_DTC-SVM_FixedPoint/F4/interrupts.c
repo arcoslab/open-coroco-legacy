@@ -124,6 +124,7 @@ float volatile data_V5;
 //fixedpt volatile Valor1, Valor2, Valor3, Valor4, Valor5, Suma, Resta, Multiplicacion, Division;//, Sqrt2;//, ONE, TWO;
 //fixedpt volatile data_Valor1, data_Valor2, data_Valor3, data_Valor4, data_Valor5, data_Suma, data_Resta, data_Multiplicacion, data_Division;//, Sqrt2;//, ONE, TWO;
 
+
 fixedpt volatile V1;
 fixedpt volatile V2;
 fixedpt volatile R1;
@@ -163,7 +164,7 @@ void tim1_up_tim10_isr(void)
   //la duracion de mas se puede deber a que la asignacion de los valores se realiza dentro de la funcion para el fixed y para float no es asi.
 
 
-  gpio_set(GPIOD, GPIO12);
+  //gpio_set(GPIOD, GPIO12); //Desactivado temporalmente para las pruebas
   
   /*
   V1    = 1.013014015f;
@@ -322,9 +323,12 @@ printf("\n");
 
     //a = a+1;
   //}
-  gpio_clear(GPIOD, GPIO12);
+  
+  //gpio_clear(GPIOD, GPIO12); //Desactivado temporalmente por las pruebas de fixedpoint.
 
 ///*
+    //Desactivado temporalmente por las pruebas de fixedpoint
+    /*
     if(a<1000)
       {
         gpio_set(GPIOD, GPIO12);
@@ -338,6 +342,7 @@ printf("\n");
       else{
         a=0;
       }
+    */
 
 //*/
 
