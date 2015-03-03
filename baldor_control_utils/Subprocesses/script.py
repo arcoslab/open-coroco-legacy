@@ -1,26 +1,15 @@
 import os
 import subprocess
 
-#esto cambia el directorio del bash a home
-os.chdir ('/home')
+joystick = 'xfce4-terminal --working-directory=/home/lenouch/local/src/open-coroco/baldor_control_utils/Subprocesses/ -e "python ps3controller.py" -H '
+test_1 = 'xfce4-terminal --working-directory=/home/lenouch/local/src/open-coroco/baldor_control_utils/Subprocesses/ -e "python test_1.py " -H '
+test_2 = 'xfce4-terminal --working-directory=/home/lenouch/local/src/open-coroco/baldor_control_utils/Subprocesses/ -e "python test_2.py " -H '
+test_3 = 'xfce4-terminal --working-directory=/home/lenouch/local/src/open-coroco/baldor_control_utils/Subprocesses/ -e "python test_3.py " -H '
+test_4 = 'xfce4-terminal --working-directory=/home/lenouch/local/src/open-coroco/baldor_control_utils/Subprocesses/ -e "python test_4.py " -H '
 
-#el while repite el proceso indefinidamente, imprime el error solo para info
-#subprocess.call corre en el bash lo que esta dentro de ''
-#cada comando del bash va separado por " , "
-#subprocess.call devuelve 0 si no hay error o 1 si hay error
 
-while subprocess.call(["python", "mcalderon/Desktop/Subprocesses/ps3controller.py"])==1:
-    print "error running first file, attempting again"
-
-while subprocess.call(["python","mcalderon/Desktop/Subprocesses/test_1.py"])==1:
-    print "error running first file, attempting again"
-
-while subprocess.call(["python", "mcalderon/Desktop/Subprocesses/test_2.py"])==1:
-    print "\n error running first file, attempting again \n"
-    
-while subprocess.call(["python", "mcalderon/Desktop/Subprocesses/test_3.py"])==1:
-    print "\n error running first file, attempting again \n"
-
-while subprocess.call(["python", "mcalderon/Desktop/Subprocesses/test_4.py"])==1:
-    print "\n error running first file, attempting again \n"
-
+os.system(joystick)
+os.system(test_1)
+os.system(test_2)
+os.system(test_3)
+os.system(test_4)
