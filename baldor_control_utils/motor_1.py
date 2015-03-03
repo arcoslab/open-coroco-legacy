@@ -65,7 +65,7 @@ motor=motor_tools()
 while True:
     
     #------------Connecting to the serial port---------------------
-    motor.connecting_to_stm32()
+    motor.connecting_to_stm32(1,0,0,0,0)
 
     #-----------------------------
     try:
