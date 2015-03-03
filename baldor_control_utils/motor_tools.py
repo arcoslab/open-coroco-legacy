@@ -19,10 +19,32 @@ class motor_tools(object):
 
     #--------------serial port connection------------------------------
 
-    def connecting_to_stm32(self):
+    def connecting_to_stm32(self,motor_number,serial_1,serial_2,serial_3,serial_4):
 
         while not self.connected:
             try:
+
+
+            #serial_device_counter=3;
+            if motor_number==2 or motor_number==3 or motor_number==4:
+       
+                if self.serial_device_counter==serial_1:
+                    self.serial_device_counter=serial_1+1
+
+            if motor_number==3 or motor_number==4:
+            
+                if self.serial_device_counter==serial_2:
+                    self.serial_device_counter=serial_2+1
+                
+            if motor_number==4:
+
+                if self.serial_device_counter==serial_3:
+                    serial_device_counter=serial_2+1
+
+
+
+
+
                 #serial_device_counter=3;
                 self.com=s.Serial(self.device_type+str(self.serial_device_counter), baudrate=self.baudrate,timeout=self.timeout)
                 print "Connecting toooo "+self.device_type+str(self.serial_device_counter)
