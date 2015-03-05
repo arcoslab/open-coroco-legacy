@@ -49,7 +49,7 @@ raw_angle=0.
 angle=0.
 rads=0.
 
-value=33
+value=0
 cmd_speed=0.0
 
 #for serial port

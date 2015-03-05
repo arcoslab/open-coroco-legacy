@@ -86,6 +86,28 @@ class motor_tools(object):
             line_split=line.split()        
             self.position=line_split[0]
             print "stm32_position: " + self.position
+
+
+            est_freq=float(line_split[1])
+            last_raw_angle=float(raw_angle)
+            raw_angle=int(line_split[3])
+            if last_raw_angle>(2**16-2**13) and raw_angle<(2**13):
+                last_raw_angle-=2**16
+            if raw_angle>(2**16-2**13) and last_raw_angle<(2**13):
+                last_raw_angle+=2**16
+            angle+=raw_angle-last_raw_angle
+            rads=angle*2*pi/2**16
+            odometry=rads*((wheel_diameter*0.0254)/2.0)
+
+
+
+            bottleout=portout.prepare()
+            bottleout.clear()
+            bottleout.addDouble(odometry)
+            portout.write(True)
+
+
+
         except: 
             self.position='0'
             print "stm32_position: " + self.position
