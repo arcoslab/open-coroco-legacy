@@ -65,9 +65,9 @@ if True:
 
 
         V1=y_out
-        V2=V1-1000.0
-        V3=V2-1000.0
-        V4=V3-1000.0
+        V2=V1#V1-1000.0
+        V3=V1#V2-1000.0
+        V4=V1#-1000.0
         
         #sending position to stm32s
 

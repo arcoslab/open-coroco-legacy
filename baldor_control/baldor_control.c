@@ -445,7 +445,11 @@ int main(void)
 	ref_freq=value;
 	//printf("ef: %010.5f ca: %05d\n", est_freq, raw_pos); //**************Remove comment and comment the line below
     //printf("ef: %010.5f ca: %05d\n", ref_freq, raw_pos);
-    printf("STM32_POSITION %010.5f ca %05d\n", ref_freq, raw_pos);
+    //printf("STM32_POSITION %010.5f ca %05d\n", ref_freq, raw_pos);
+
+    //printf("STM32_POSITION %010.5f ca %05d\n", ref_freq, raw_pos);
+    //printf("%d %010.5f ca %05d\n",STM32_POSITION, ref_freq, raw_pos);
+    printf("%d %010.5f ca: %05d ref: %6.2f\n",STM32_POSITION, est_freq, raw_pos,ref_freq);
 	if (value == 0.0f) {
 	  //motor_off=true;
 	} else {
@@ -459,6 +463,7 @@ int main(void)
     //printf("cur_angle: %05d, ref_freq: %010.5f, est_freq: %010.5f, exc_volt: %04.2f, error: %05.2f, p_error: %08.5f, i_error: %04.2f, pi_control: %08.5f, cmd_angle: %06.2f, exc_volt: %04.2f, test: %04.2f\n", raw_pos*360/(1<<16), ref_freq/(2*PI), est_freq/(2*PI), exc_volt, error, p_error, i_error, pi_control, cmd_angle*360/(2*PI), exc_volt, test);
     //printf("ef: %010.5f ca: %6.5f\n", est_freq, ref_freq);
     //printf("ef: %010.5f ca: %05d\n", ref_freq, raw_pos);
+    //printf("%d %010.5f ca %05d\n",STM32_POSITION, ref_freq, raw_pos);
   }
 
   return(0);

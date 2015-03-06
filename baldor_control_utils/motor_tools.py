@@ -98,9 +98,9 @@ class motor_tools(object):
             
             est_freq=line_split[1]
             print "est_fre q: ",est_freq
-            
-            self.last_raw_angle=float(self.raw_angle)
             '''
+            self.last_raw_angle=float(self.raw_angle)
+            
             self.raw_angle=int(line_split[3])
             if self.last_raw_angle>(2**16-2**13) and self.raw_angle<(2**13):
                 self.last_raw_angle-=2**16
@@ -205,7 +205,7 @@ class motor_tools(object):
         if input_bottle:
             input_data=input_bottle.get(0)
             speed_value=input_data.asDouble()
-            cmd_speed=speed_value
+            cmd_speed=speed_value*self.max_speed
             print "there is a bottle from ",port_name
             print "bottle content: ",speed_value
             return cmd_speed
