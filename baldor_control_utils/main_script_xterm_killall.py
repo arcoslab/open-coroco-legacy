@@ -28,9 +28,9 @@ try:
 
     	#Run the commands
 	os.system(yarpserver)
-    	#print "bla bla"
+    	sleep(1.1)
 	os.system(joystick)
-    	sleep(0.01)
+    	sleep(1.1)
 	os.system(test_1)
     	sleep(0.01)
     	os.system(test_2)

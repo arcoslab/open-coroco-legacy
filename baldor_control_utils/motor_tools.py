@@ -1,6 +1,6 @@
 import serial   as s
 from serial import SerialException
-
+from numpy  import pi
 
 class motor_position(object):
     position='0'
@@ -21,6 +21,13 @@ class motor_tools(object):
     position='0'
 
 
+    wheel_diameter=5.95 #inches
+    max_speed=12*2*pi
+    last_raw_angle=0.
+    raw_angle=0.
+    angle=0.
+    rads=0.
+    
 
 
     #--------------serial port connection------------------------------
@@ -86,6 +93,26 @@ class motor_tools(object):
             line_split=line.split()        
             self.position=line_split[0]
             print "stm32_position: " + self.position
+
+            #------------------------------------------
+            
+            est_freq=line_split[1]
+            print "est_fre q: ",est_freq
+            
+            self.last_raw_angle=float(self.raw_angle)
+            '''
+            self.raw_angle=int(line_split[3])
+            if self.last_raw_angle>(2**16-2**13) and self.raw_angle<(2**13):
+                self.last_raw_angle-=2**16
+            if self.raw_angle>(2**16-2**13) and self.last_raw_angle<(2**13):
+                self.last_raw_angle+=2**16
+            self.angle+=self.raw_angle-self.last_raw_angle
+            self.rads=self.angle*2*pi/2**16
+            odometry=self.rads*((self.wheel_diameter*0.0254)/2.0)
+            print "odometry: ", odometry
+            print "raw angle: ", self.raw_angle, " rads: ", self.rads, " odometry: ", self.odometry , " est_freq: ", self.est_freq
+            #-------------------------------------------
+            '''
         except: 
             self.position='0'
             print "stm32_position: " + self.position
