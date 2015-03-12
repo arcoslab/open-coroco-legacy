@@ -1,0 +1,21 @@
+debo encontrar la manera de:
+
+1. Realizar divisiones en multiplos de 2. por ejemplo
+	2 / 2
+	16 / 2
+	16 / 4
+	16 / 8
+	16 / 16
+
+Y asi sucesivamente, en teoria no deben durar nada porque son simples
+desplazamientos a la derecha o izquierda.
+
+2. Encontrar la manera de pasar de punto fijo a punto flotante. Recuerde que en viceversa ya existe un metodo para eso. 
+	//LISTO
+
+3. Medir la duracion que tiene hacer transciones de punto fijo a punto flontante y viceversa.
+
+4. Comparar la cantidad de uso de memoria entre las diferentes representaciones.
+
+
+	

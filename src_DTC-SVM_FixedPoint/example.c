@@ -135,8 +135,14 @@ int main(void)
   //V1 = fixedpt_fromint(2);
   //V2 = fixedpt_fromint(-11);
   
-  prueba = 2.0f;
-
+  //Prueba Conversiones
+  /*
+  prueba = 2.4f;
+  V1 = fixedpt_rconst(prueba);
+  prueba = fixedpt_tofloat(V1);
+  prueba = prueba - 1;
+  V2 = fixedpt_rconst(prueba);
+  */
   system_init();
    
   printf ("\n\n****************************************************************************************************************\n");
@@ -158,8 +164,6 @@ int main(void)
 
 //Prueba Para verificar el funcionamiento correcto de la nueva opcion de configuracion implementada p20 con fixed.
 
-
-
  /*
   printf("X");
   printf("4")   ; print_fixedpt_as_bytes(V1);
@@ -169,11 +173,13 @@ int main(void)
   printf("m");
  */
   
-int i = 0;
-int j = 0;
+  //Duracion Osciloscopio
+  
+//int i = 0;
+//int j = 0;
   while (1)
   {
-
+/*
   //R1 = fixedpt_div(V1,V2);  
   printf("X\n");
   gpio_set(GPIOD, GPIO13);
@@ -203,11 +209,11 @@ int j = 0;
   }
   i=0;
   j=0;
- 
+*/ 
 
   //printf("6_:  ")   ; fixedpt_print(R1); //MINICOM
   //printf("t\n")   ;   checksum=           print_float_as_bytes(data_timer                   );
-  
+  printf("X\n");
   printf("4\n")   ;   fixedpt_print(data_V1); //printf("\n");
   printf("5\n")   ;   fixedpt_print(data_V2); //printf("\n");
   printf("6\n")   ;   fixedpt_print(data_R1); //printf("\n");
@@ -277,7 +283,7 @@ int j = 0;
 
 
 ///*
-/*
+
        //Desactivado temporalmente para las pruebas de osciloscopio
     if (transmitting_to_python==true)
     {
@@ -286,7 +292,7 @@ int j = 0;
         transmitting_to_python=false;
         collecting_sensorless_data=true; 
     }
-*/    
+    
 
 
 //    print_selection=20;

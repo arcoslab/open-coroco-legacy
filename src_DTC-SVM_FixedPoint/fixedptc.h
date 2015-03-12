@@ -125,6 +125,9 @@ typedef	__uint128_t fixedptud; //por alguna razon no me lo reconoce
 #define FIXEDPT_HALF_PI	fixedpt_rconst(3.14159265358979323846 / 2)
 #define FIXEDPT_E	fixedpt_rconst(2.7182818284590452354)
 
+//Nueva Funcion Agregada, fixedpt_tofloat();
+#define fixedpt_tofloat(T) ((float) ((T)*((float)(1)/(float)(1 << FIXEDPT_FBITS))))
+
 #define fixedpt_abs(A) ((A) < 0 ? -(A) : (A))
 
 
