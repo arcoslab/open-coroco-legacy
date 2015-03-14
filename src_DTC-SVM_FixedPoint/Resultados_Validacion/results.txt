@@ -6,6 +6,7 @@ debo encontrar la manera de:
 	16 / 4
 	16 / 8
 	16 / 16
+//LISTO
 
 Y asi sucesivamente, en teoria no deben durar nada porque son simples
 desplazamientos a la derecha o izquierda.
