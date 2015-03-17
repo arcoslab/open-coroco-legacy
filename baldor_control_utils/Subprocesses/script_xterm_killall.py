@@ -11,7 +11,7 @@ try:
 	test_3 = 'xterm  -geometry +1280-0 -e "python test_3.py " &'
 	test_4 = 'xterm  -geometry +600+400 -e "python test_4.py " &'
 
-	#Run the commands
+	#Run the commandsush
 	os.system(yarpserver)
 	os.system(joystick)
 	os.system(test_1)
@@ -22,10 +22,11 @@ try:
 	#Just for keeping the program running
 	while(True):
 		s = raw_input('Just keeping the program running ')
+	 
 
 #If Ctrl+C... then kill all the python programs and yarpserver
 except KeyboardInterrupt:
 	
-	print "Killing all "
+	print ("Killing all ")
 	kill = "killall python yarpserver"
 	os.system(kill)
