@@ -1,3 +1,4 @@
+Viernes 13 de marzo
 debo encontrar la manera de:
 
 1. Realizar divisiones en multiplos de 2. por ejemplo
@@ -17,6 +18,24 @@ desplazamientos a la derecha o izquierda.
 3. Medir la duracion que tiene hacer transciones de punto fijo a punto flontante y viceversa.
 
 4. Comparar la cantidad de uso de memoria entre las diferentes representaciones.
+
+-------------------------------------------------------------------
+Que se ha realizado para optimizar el funcionamiento de open-coroco
+
+El primer paso fue trabajar con la evaluacion de que tan factible resultaba implementar un filtro de Kalman al funcionamiento actual del open-coroco, especificamente realizar la sustitucion del filtro pasa bajos que se encuentra en el metodo DTC_SVM().
+
+Para eso de determinaron dos opciones:
+1. Una era, basandose en la mayoria o en la totalidad de los articulos investigados, relacionados con el tema de control de torque por impedancia, era necesario modificar el modelo actual del motor, ya que el actual esta realizado desde el estator, y los articulos lo plantean desde el rotor. Sin embargo, modificar el modelo matematico era tan complicado como iniciar el open-coroco de nuevo pues todo el proyecto esta basado en el modelo matematico ya desarrollado desde el estator.
+
+2. La otra opcion era, basando en el algoritmo matematico que define el filtro de Kalman y en el calculo de jacobianos de las funciones clase y los valores de varianza y covarianza caracteristicos, implementar el filtro desde cero, con ayuda de un paper folleto interesante que describe el algoritmo. Pero esta ultima no se eligio porque la complejidad era bastante alta y no era un proyecto para terminar en un semestre. 
+
+
+Luego, se tomo la desicion de evaluar la representacion de punto fijo en el open-coroco, conocer si el STM32F4 lo podria soportar y cuales serian los costos en tiempo de procesamiento que se podria mejorar para las cuatro operaciones basicas.
+Para esta parte lo primero fue realizar una investigacion de como esta conformada la represantacion de un numero en punto fijo y otro en punto flotante para conocer las ventajas y debilidades de cada uno, luego se trato de encontrar una biblioteca en C que permitiera realizar estas operaciones en el STM de manera mas sencilla y con menos pulgas. 
+Entonces se decidio usar la libreria fixedpt.h, desarrollada por Ivan Vora y Tim Z. 
+La misma tenia casi todo lo que se ocupaba, pero le hacia falta un metodo que pasara de punto fijo a punto flotante, entonces e realizo ese metodo. Luego de una serie de pruebas se obtuvieron los resultados de la carpeta Resultados_de_Validacion.
+Aun falta hacer una comparacion de uso de memoria flash, rom y allocated entre las dos representaciones, para evaluar tambien el incremento o decremento en consumo de recursos.
+
 
 
 	
