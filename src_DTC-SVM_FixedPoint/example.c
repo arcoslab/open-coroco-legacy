@@ -83,7 +83,9 @@
  //#define FIXEDPT_WBITS 12
 
  float prueba;
+ int pruebai = 16;
  char checksum;
+ 
 
 /*
 Using the 32-bit precision, 20.12 format
@@ -118,6 +120,7 @@ int main(void)
   V4    = 4.013014015f;
   V5    = 5.013014015f;
 */
+
   /*//Punto Flotante
   V1 = 524287.9374f;
   V2 = 0.001f;
@@ -130,13 +133,13 @@ int main(void)
   //Fixed Point
   //V1 = fixedpt_rconst(1.013014015);
   //V2 = fixedpt_rconst(-2.013014015);
-  V1 = fixedpt_rconst(524287.9374);
+  //V1 = fixedpt_rconst(524287.9374);
   //V2 = fixedpt_rconst(0.001);
   //V1 = fixedpt_rconst(16.0); 
   //V1 = fixedpt_rconst(1.0); 
   //V2 = fixedpt_rconst(8.0); 
   //V1 = fixedpt_fromint(-11);
-  V2 = fixedpt_fromint(2);
+  //V2 = fixedpt_fromint(2);
   //V1 = fixedpt_rconst(-2.013014015);
   //V2 = fixedpt_rconst(1.013014015);
   
@@ -168,7 +171,6 @@ int main(void)
 */
 
 //Prueba Para verificar el funcionamiento correcto de la nueva opcion de configuracion implementada p20 con fixed.
-
  /*
   printf("X");
   printf("4")   ; print_fixedpt_as_bytes(V1);
@@ -194,19 +196,22 @@ int j = 0;
   
   gpio_set(GPIOD, GPIO13);
   while (i<1000){
-    R1 = fixedpt_div(V1,V2);  
+    pruebai = pruebai >> 1;
+    //R1 = fixedpt_div(V1,V2);  
     //R1 = fixedpt_add(V1,V2);    
     //R1 = fixedpt_sub(V2,V1);
     //R1 = fixedpt_mul(V1,V2);
     //R1 = V1 / V2;    
+
     i=i+1;
   }
   
   gpio_clear(GPIOD, GPIO13);
 
   while (j<1000){
+    pruebai = pruebai >> 1;
     //R1 = V1 / V2;
-    R1 = fixedpt_div(V1,V2);  
+    //R1 = fixedpt_div(V1,V2);  
     //R1 = fixedpt_add(V1,V2);    
     //R1 = fixedpt_sub(V2,V1);
     //R1 = fixedpt_mul(V1,V2);

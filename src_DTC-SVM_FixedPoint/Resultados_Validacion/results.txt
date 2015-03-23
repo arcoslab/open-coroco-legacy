@@ -1,3 +1,7 @@
+FIXEDPT_WBITS:
+	collecting_data.h
+	interrupts.c
+
 Viernes 13 de marzo
 debo encontrar la manera de:
 
@@ -16,8 +20,28 @@ desplazamientos a la derecha o izquierda.
 	//LISTO
 
 3. Medir la duracion que tiene hacer transciones de punto fijo a punto flontante y viceversa.
+	//LISTO
 
-4. Comparar la cantidad de uso de memoria entre las diferentes representaciones.
+4. Comparar la cantidad de uso de memoria entre las diferentes representaciones. Tanto memoria flash, como memoria EPROM
+Se tienen dos opciones:
+	arm-none-eabi-size example.elf
+	Esta da la informacion en bytes, fuente http://www.support.code-red-tech.com/CodeRedWiki/FlashRamSize 
+		flash = text + data.
+		RAM = data + bss.
+	El problema es que para saber cuanto aumenta la cantidad de memoria en fixed, habria que pasar todo el proyecto a fixedpt.
+	
+
+
+5. Hacer pruebas para medir el tiempo de los desplazamientos a izquierda y derecha tanto el punto flotante como en punto fijo.
+	//LISTO
+
+6. Implementar el codigo en una de las funciones de open-coroco, por ejemplo la del PID, o alguna que sea muy relevante.
+
+7. Pensar si es bueno o si hay tiempo para entrarle a lo de conversion ADC.
+
+
+
+
 
 -------------------------------------------------------------------
 Que se ha realizado para optimizar el funcionamiento de open-coroco
@@ -37,5 +61,14 @@ La misma tenia casi todo lo que se ocupaba, pero le hacia falta un metodo que pa
 Aun falta hacer una comparacion de uso de memoria flash, rom y allocated entre las dos representaciones, para evaluar tambien el incremento o decremento en consumo de recursos.
 
 
-
+*************************************************************************************************************************************************
 	
+Chris has left a new comment on the post "Developing STM32 microcontroller code on Linux (Pa...":
+
+It depends on what you mean by "memory". If you are talking about flash size, then you can use the "size" command to tell you the amount of flash your program will use (the .text section). If you are talking about static memory, then you can also use the "size" command to look at that (.bss and .data sections). If you are talking about stack usage, then you can pass -fstack-usage to the compiler to get some information about stack usage. If you are talking about dynamic memory allocation (malloc and friends), then there aren't a lot of great tools to track it and you'll have to do it by hand.
+
+Post a comment.
+
+Unsubscribe to comments on this post.
+
+Posted by Chris to Chris Lalancette at March 15, 2015 at 4:11 PM 
