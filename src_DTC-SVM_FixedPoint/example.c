@@ -83,7 +83,9 @@
  //#define FIXEDPT_WBITS 12
 
  float prueba;
+ int pruebai = 16;
  char checksum;
+ 
 
 /*
 Using the 32-bit precision, 20.12 format
@@ -118,6 +120,7 @@ int main(void)
   V4    = 4.013014015f;
   V5    = 5.013014015f;
 */
+
   /*//Punto Flotante
   V1 = 524287.9374f;
   V2 = 0.001f;
@@ -128,15 +131,26 @@ int main(void)
   */
 
   //Fixed Point
-  //V1 = fixedpt_rconst(-1.013014015);
-  //V2 = fixedpt_rconst(2.013014015);
-  V1 = fixedpt_rconst(524287.9374);
-  V2 = fixedpt_rconst(2.0); 
-  //V1 = fixedpt_fromint(2);
-  //V2 = fixedpt_fromint(-11);
+  //V1 = fixedpt_rconst(1.013014015);
+  //V2 = fixedpt_rconst(-2.013014015);
+  //V1 = fixedpt_rconst(524287.9374);
+  //V2 = fixedpt_rconst(0.001);
+  //V1 = fixedpt_rconst(16.0); 
+  //V1 = fixedpt_rconst(1.0); 
+  //V2 = fixedpt_rconst(8.0); 
+  //V1 = fixedpt_fromint(-11);
+  //V2 = fixedpt_fromint(2);
+  //V1 = fixedpt_rconst(-2.013014015);
+  //V2 = fixedpt_rconst(1.013014015);
   
-  prueba = 2.0f;
-
+  //Prueba Conversiones
+  /*
+  prueba = 2.4f;
+  V1 = fixedpt_rconst(prueba);
+  prueba = fixedpt_tofloat(V1);
+  prueba = prueba - 1;
+  V2 = fixedpt_rconst(prueba);
+  */
   system_init();
    
   printf ("\n\n****************************************************************************************************************\n");
@@ -157,9 +171,6 @@ int main(void)
 */
 
 //Prueba Para verificar el funcionamiento correcto de la nueva opcion de configuracion implementada p20 con fixed.
-
-
-
  /*
   printf("X");
   printf("4")   ; print_fixedpt_as_bytes(V1);
@@ -169,33 +180,38 @@ int main(void)
   printf("m");
  */
   
+  //Duracion Osciloscopio
+  
 int i = 0;
 int j = 0;
+
   while (1)
   {
-
-  //R1 = fixedpt_div(V1,V2);  
-  printf("X\n");
-  gpio_set(GPIOD, GPIO13);
+  //printf("X\n");
+  
   //printf("4_: ")   ; fixedpt_print(V1); //MINICOM
   //printf("5_: ")   ; fixedpt_print(V2); //MINICOM
   
 
   
+  gpio_set(GPIOD, GPIO13);
   while (i<1000){
-    R1 = fixedpt_div(V1,V2);  
+    pruebai = pruebai >> 1;
+    //R1 = fixedpt_div(V1,V2);  
     //R1 = fixedpt_add(V1,V2);    
     //R1 = fixedpt_sub(V2,V1);
     //R1 = fixedpt_mul(V1,V2);
     //R1 = V1 / V2;    
+
     i=i+1;
   }
   
   gpio_clear(GPIOD, GPIO13);
 
   while (j<1000){
+    pruebai = pruebai >> 1;
     //R1 = V1 / V2;
-    R1 = fixedpt_div(V1,V2);  
+    //R1 = fixedpt_div(V1,V2);  
     //R1 = fixedpt_add(V1,V2);    
     //R1 = fixedpt_sub(V2,V1);
     //R1 = fixedpt_mul(V1,V2);
@@ -203,14 +219,15 @@ int j = 0;
   }
   i=0;
   j=0;
- 
 
   //printf("6_:  ")   ; fixedpt_print(R1); //MINICOM
   //printf("t\n")   ;   checksum=           print_float_as_bytes(data_timer                   );
-  
+
+  printf("X\n");
   printf("4\n")   ;   fixedpt_print(data_V1); //printf("\n");
   printf("5\n")   ;   fixedpt_print(data_V2); //printf("\n");
   printf("6\n")   ;   fixedpt_print(data_R1); //printf("\n");
+
   /*
   printf("4")   ;   print_float_as_bytes(data_V1);
   printf("5")   ;   print_float_as_bytes(data_V2);
@@ -276,9 +293,10 @@ int j = 0;
       
 
 
-///*
-/*
+
+
        //Desactivado temporalmente para las pruebas de osciloscopio
+      /*
     if (transmitting_to_python==true)
     {
         if (print_selection==9) { full_print_regular_data();  }
@@ -286,7 +304,7 @@ int j = 0;
         transmitting_to_python=false;
         collecting_sensorless_data=true; 
     }
-*/    
+*/
 
 
 //    print_selection=20;

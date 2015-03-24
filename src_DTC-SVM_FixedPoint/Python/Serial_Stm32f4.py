@@ -306,7 +306,7 @@ class Serial_Stm32f4(object):
         self.valor_numericoR1_vector         = [] #PRueba
 
 
-
+    
     def connecting_to_stm32F4(self):
         while self.connecting==True:
             try:

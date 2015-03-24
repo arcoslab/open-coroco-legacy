@@ -21,7 +21,8 @@
 
 PREFIX	?= arm-none-eabi
 # PREFIX		?= arm-elf
-CC		= $(PREFIX)-gcc
+#CC		= $(PREFIX)-gcc
+CC		= $(PREFIX)-gcc -fstack-usage #Modified by JeanCarlos to review the amount of stack used.
 LD		= $(PREFIX)-gcc
 OBJCOPY		= $(PREFIX)-objcopy
 OBJDUMP		= $(PREFIX)-objdump
