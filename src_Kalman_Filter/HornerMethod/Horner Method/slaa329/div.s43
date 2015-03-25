@@ -1,0 +1,46 @@
+;******************************************************************************
+;   MSP430FG439 Integer-Integer division using Algorithm described in Hamacher
+;
+;   Description: This code performs a 16-bit integer-integer division 
+;                of numbers to return an 16-bit integer
+;                 
+;
+;   Note:        This code assumes 32.768kHz XTAL on LFXT1 on the MSP430FG439 
+;
+;                  MSP430FG439
+;               -----------------
+;              |              XIN|-  
+;              |                 | 32.768kHz
+;              |             XOUT|-
+;              |                 |
+;
+;
+;
+;   K. Venkat
+;   Texas Instruments Inc.
+;   July 2006
+;   Built with IAR Embedded Workbench Version: 3.41A
+;*******************************************************************************/
+	    public div_hamacher
+
+	    RSEG CODE
+div_hamacher:
+
+            ;   R12 has dividend  
+            ;   R14 has divisor
+        
+            mov.w     #16,R11
+            clr.w     R13
+start:      rla.w     R12
+            rlc.w     R13
+            bis.w     #1, R12
+            sub.w     R14,R13
+            jge       loc1
+            add.w     R14,R13
+            bic.w     #1, R12
+loc1:       dec.w     R11
+            cmp.w     #0,R11
+            jnz       start
+            ret
+            END
+        

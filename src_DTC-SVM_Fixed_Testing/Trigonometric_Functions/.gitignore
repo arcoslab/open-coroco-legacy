@@ -1,0 +1,20 @@
+#Temporal files
+*~
+
+#files created after compiling
+*.elf
+*.d
+*.hex
+*.list
+*.o
+*.srec
+*.bin
+*.log
+*.pdf
+*.ods
+*.jpg
+motor.h
+atan_table.h
+sine_table.h
+.gdb_history
+.gdb_history

@@ -1,0 +1,18 @@
+#Temporal files
+*~
+
+#files created after compiling
+*.elf
+*.d
+*.hex
+*.list
+*.o
+*.srec
+*.bin
+*.log
+*.pdf
+*.ods
+
+motor.h
+.gdb_history
+.gdb_history

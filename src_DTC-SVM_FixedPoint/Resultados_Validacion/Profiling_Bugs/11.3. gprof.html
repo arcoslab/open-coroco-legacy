@@ -1,0 +1,27 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252"><title>11.3. gprof</title><link rel="stylesheet" href="11.3.%20gprof_archivos/tools06.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.49"><link rel="home" href="http://socgsa.cs.clemson.edu/seminar/tools06/docbook/html/tools06.html" title="CSGSA Tools '06"><link rel="up" href="http://socgsa.cs.clemson.edu/seminar/tools06/docbook/html/ch11.html" title="Chapter 11. gcc, gdb, gprof, distcc, colorgcc"><link rel="previous" href="http://socgsa.cs.clemson.edu/seminar/tools06/docbook/html/ch11s02.html" title="11.2. GDB"><link rel="next" href="http://socgsa.cs.clemson.edu/seminar/tools06/docbook/html/ch11s04.html" title="11.4. distcc"></head><body bgcolor="white" link="#0000FF" text="black" vlink="#840084" alink="#0000FF"><div class="navheader"><table summary="Navigation header" width="100%"><tbody><tr><th colspan="3" align="center">11.3. gprof</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="http://socgsa.cs.clemson.edu/seminar/tools06/docbook/html/ch11s02.html">Prev</a>&nbsp;</td><th width="60%" align="center">Chapter 11. gcc, gdb, gprof, distcc, colorgcc</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="http://socgsa.cs.clemson.edu/seminar/tools06/docbook/html/ch11s04.html">Next</a></td></tr></tbody></table><hr></div><img src="11.3.%20gprof_archivos/logo.png"><div class="section"><div class="titlepage"><div><h2 class="title" style="clear: both"><a name="id2405665"></a>11.3. gprof</h2></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt>11.3.1. <a href="http://socgsa.cs.clemson.edu/seminar/tools06/docbook/html/ch11s03.html#id2403726">Creating the executable</a></dt><dt>11.3.2. <a href="http://socgsa.cs.clemson.edu/seminar/tools06/docbook/html/ch11s03.html#id2404367">Running the executable</a></dt><dt>11.3.3. <a href="http://socgsa.cs.clemson.edu/seminar/tools06/docbook/html/ch11s03.html#id2404406">Obtaining the profile information</a></dt></dl></div><div class="simplesect"><div class="titlepage"></div><div class="itemizedlist"><ul type="disc"><li><a href="http://www.gnu.org/software/binutils" target="_top">gprof</a>: Displays profiling information</li><li><a href="http://socgsa.cs.clemson.edu/seminar/tools06/resources/12_gcc/gprof/Dictionary.hpp" target="_top">Dictionary.hpp</a></li><li><a href="http://socgsa.cs.clemson.edu/seminar/tools06/resources/12_gcc/gprof/Dictionary.cpp" target="_top">Dictionary.cpp</a></li><li><a href="http://socgsa.cs.clemson.edu/seminar/tools06/resources/12_gcc/gprof/Makefile" target="_top">Makefile</a></li><li><a href="http://socgsa.cs.clemson.edu/seminar/tools06/resources/12_gcc/gprof/main.cpp" target="_top">main.cpp</a></li></ul></div></div><div class="section"><div class="titlepage"><div><h3 class="title"><a name="id2403726"></a>11.3.1. Creating the executable</h3></div></div><p>
+         <span class="strong"><i>Note:</i></span> Static, but not shared, libraries can be profiled.
+      </p><p>
+         To use <b>gprof</b>, you must compile and link your program using the
+         <tt>-pg</tt> flag.  This flag will generate extra code to write profile
+         information suitable for the analysis program gprof.
+      </p><pre class="screen"><tt>$</tt> <b>ls</b>
+Dictionary.cpp  Dictionary.hpp  Makefile  main.cpp
+<tt>$</tt> <b>g++</b> -pg -c Dictionary.cpp
+<tt>$</tt> <b>g++</b> -pg -c main.cpp
+<tt>$</tt> <b>g++</b> -pg -o profiled-dictionary Dictionary.o main.o 
+<tt>$</tt> <b>ls</b>
+Dictionary.cpp  Dictionary.hpp  Dictionary.o  Makefile  main.cpp  main.o  profiled-dictionary*
+</pre></div><div class="section"><div class="titlepage"><div><h3 class="title"><a name="id2404367"></a>11.3.2. Running the executable</h3></div></div><p>
+         Run the executable as usual to generate <tt>gmon.out</tt>:
+      </p><pre class="screen"><tt>$</tt> <b>./profiled-dictionary</b> <tt>/usr/share/dict/words</tt>
+<tt>$</tt> <b>ls</b>
+Dictionary.cpp  Dictionary.o  gmon.out  main.o
+Dictionary.hpp  Makefile      main.cpp  profiled-dictionary*
+</pre></div><div class="section"><div class="titlepage"><div><h3 class="title"><a name="id2404406"></a>11.3.3. Obtaining the profile information</h3></div></div><p>
+         Run <b>gprof</b> to obtain the profile information:
+      </p><pre class="screen"><tt>$</tt> <b>gprof</b> profiled-dictionary &gt; gprof.dat
+<tt>$</tt> <b>ls</b>
+Dictionary.cpp  Dictionary.o  gmon.out   main.cpp  profiled-dictionary*
+Dictionary.hpp  Makefile      gprof.dat  main.o
+</pre></div></div><div class="navfooter"><hr><table summary="Navigation footer" width="100%"><tbody><tr><td width="40%" align="left"><a accesskey="p" href="http://socgsa.cs.clemson.edu/seminar/tools06/docbook/html/ch11s02.html">Prev</a>&nbsp;</td><td width="20%" align="center"><a accesskey="u" href="http://socgsa.cs.clemson.edu/seminar/tools06/docbook/html/ch11.html">Up</a></td><td width="40%" align="right">&nbsp;<a accesskey="n" href="http://socgsa.cs.clemson.edu/seminar/tools06/docbook/html/ch11s04.html">Next</a></td></tr><tr><td valign="top" width="40%" align="left">11.2. GDB&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="http://socgsa.cs.clemson.edu/seminar/tools06/docbook/html/tools06.html">Home</a></td><td valign="top" width="40%" align="right">&nbsp;11.4. distcc</td></tr></tbody></table></div>
+</body></html>

@@ -1,0 +1,72 @@
+;******************************************************************************
+;   MSP430FG439 Integer-Float multiplication using Horner's Algorithm 
+;
+;   Description: This code performs a 16-bit integer-float multplication 
+;                of numbers to return an 16-bit integer
+;                 
+;
+;   Note:        This code assumes 32.768kHz XTAL on LFXT1 on the MSP430FG439 
+;
+;                 MSP430FG439
+;               -----------------
+;              |              XIN|-  
+;              |                 | 32.768kHz
+;              |             XOUT|-
+;              |                 |
+;
+;
+;   K. Venkat
+;   Texas Instruments Inc.
+;   July 2006
+;   Built with IAR Embedded Workbench Version: 3.41A
+;*******************************************************************************/
+            public mul_horner_float
+
+	    RSEG CODE
+mul_horner_float
+
+            ; Integer part
+        
+            mov.w     R12,R13               ; The operand "input" in register R12 
+            rla.w     R13             
+            add.w     R12,R13               ; X1=X*2^1+X
+            rla.w     R13
+            rla.w     R13
+            add.w     R12,R13               ; X2=X1*2^2+X
+            rla.w     R13
+            add.w     R12,R13               ; X3=X2*2^1+X
+            rla.w     R13
+            add.w     R12,R13               ; X4=X4*2^1+X
+            rla.w     R13
+            rla.w     R13
+            rla.w     R13
+            add.w     R12,R13               ; X5=X4*2^3+X, R13 has intermediate 
+                                            ; result due to integer part 441
+        
+            ; Fractional Part
+        
+            mov.w     R12,R14               ; The operand "input" in register R12 
+            rra.w     R14
+            rra.w     R14
+            rra.w     R14
+            add.w     R12,R14               ; X1=X*2^-3+X  
+            rra.w     R14
+            add.w     R12,R14               ; X2=X1*2^-1+X
+            rra.w     R14
+            rra.w     R14
+            add.w     R12,R14               ; X3=X2*2^-2+X
+            rra.w     R14
+            rra.w     R14
+            add.w     R12,R14               ; X4=X3*2^-2+X
+            rra.w     R14
+            add.w     R12,R14               ; X4=X3*2^-1+X
+            rra.w     R14                   ; X5=X4*2^-1
+            add.w     R14,R13               ; Intermediate results added to give 
+                                            ; final result
+            mov.w     R13,R12               ; The final answer returned to the 
+                                            ; calling function
+        
+            ret
+            END
+        
+       

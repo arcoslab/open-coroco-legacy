@@ -1,0 +1,87 @@
+
+/*
+ * Document level
+ *
+ */
+html { }
+
+body {
+	color: #333;
+	font-family: courier;
+	font-size: 1em;
+	margin: 0em 2em 0em 2em;
+	padding: 0px;
+}
+
+a {
+   /*color: #6586c0;*/
+   color: #330066;
+}
+a:link {
+   /*color: #6586c0;*/
+   color: #330066;
+}
+a:visited {
+}
+a:hover {
+   text-decoration: none;
+}
+a:active {
+   color: #000;
+}
+
+/******************************************************************************/
+
+h1.title {
+   padding: 0.5ex 0px 0ex 0px;
+   margin: 0px 0px 0px 0px;
+}
+
+h3.author {
+   padding: 1.5ex 0px 0px 0px;
+   margin: 0px 0px 0px 0px;
+}
+
+.sect3 p {
+}
+
+.programlisting {
+   background-color: #dddddd;
+   border: 1px dashed black;
+   color: black;
+   margin: 1.0em 8% 1.0em 8%;
+   padding: 0.5em;
+}
+
+.screen {
+   border: 1px solid black;
+   color: black;
+   margin: 1.0em 8% 1.0em 8%;
+   padding: 0.5em;
+}
+
+.calloutlist table {
+   margin: 1.0em 8% 1.0em 8%;
+}
+
+.strong {
+   font-weight: bold;
+}
+
+.term {
+   /*color: #000066;*/
+   color: #330066;
+   font-weight: bold;
+}
+
+.toc a {
+   text-decoration: none;
+}
+
+.orgname {
+}
+
+.note {
+   padding: 0em 0ex 1.0em 0ex;
+}
+
