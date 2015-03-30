@@ -18,6 +18,8 @@
  */
 int optimal_voltage_vector=0;
 #define CURRENT_LIMIT 14.99f
+
+
 //-----------------voltage and current space vectors---------------------
 
 
@@ -140,6 +142,7 @@ float quadrature_stator_flux_linkage_estimator_psi_sQ (float T,float V_sQ,float 
   return previous_psi_sQ;
 }
 */
+
 
 float direct_stator_flux_linkage_estimator_psi_sD     (float T,float V_sD,float i_sD,float R_s)//,float electric_frequency)
 {
@@ -449,13 +452,30 @@ float rotor_speed_w_r(float psi_sD, float psi_sQ, float T)
   return w_;
 }
 
-
-
-
+/*
+fixedpt psi_sD_frequency;
+fixedpt i_sQ_frequency;
+fixedpt psi_sQ_frequency;
+fixedpt i_sD_frequency;
+fixedpt pole_pairs_frequency;
+static fixedpt k_factor_electromag_torque_estimation_fixed;
+fixedpt t_e_fixed;
+fixedpt A,B,C,D;
+*/
 
 //electromagnetic torque estimation
 float electromagnetic_torque_estimation_t_e(float psi_sD,float i_sQ, float psi_sQ,float i_sD,float pole_pairs)
 {
+	/*
+	psi_sD_frequency = fixedpt_rconst(psi_sD);
+	i_sQ_frequency = fixedpt_rconst(i_sQ);
+	psi_sQ_frequency = fixedpt_rconst(psi_sQ);
+	i_sD_frequency = fixedpt_rconst(i_sD);
+	pole_pairs_frequency = fixedpt_rconst(pole_pairs);
+	k_factor_electromag_torque_estimation_fixed = fixedpt_rconst(1.5);
+	gpio_set(GPIOD, GPIO14);
+	*/
+
   //float t_e=0.0f;
   //t_e=(3.0f/2.0f)*pole_pairs* (psi_sD*i_sQ-psi_sQ*i_sD);
 /*
@@ -472,8 +492,20 @@ float electromagnetic_torque_estimation_t_e(float psi_sD,float i_sQ, float psi_s
   psi_sQ = psis*fast_sine(psis_alpha);
 
 */
-
+  /*
+  	A = fixedpt_mul(psi_sD_frequency,i_sQ_frequency);
+  	B = fixedpt_mul(psi_sQ_frequency,i_sD_frequency);
+  	D = fixedpt_mul(k_factor_electromag_torque_estimation_fixed,pole_pairs_frequency);
+  	C = fixedpt_sub(A,B);
+  	t_e_fixed = fixedpt_mul(D,C);
+  */
+  /*
+  	t_e_fixed = fixedpt_mul(k_factor_electromag_torque_estimation_fixed,fixedpt_mul(pole_pairs_frequency,fixedpt_sub(fixedpt_mul(psi_sD_frequency,i_sQ_frequency),fixedpt_mul(psi_sQ_frequency,i_sD_frequency))));
+	gpio_clear(GPIOD, GPIO14);
+  */
+  	
   return ( 1.5f*pole_pairs* (psi_sD*i_sQ-psi_sQ*i_sD) );//t_e;
+//	return fixedpt_tofloat(t_e_fixed);//t_e;
 }
 
 

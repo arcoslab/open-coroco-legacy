@@ -105,4 +105,4 @@ collecting_data.c:1202:6:print_fixedpt_as_bytes	24	static
 collecting_data.c:1224:6:print_int_as_bytes	24	static
 collecting_data.c:1246:1:fixedpt_print	80	static
 parameter_identification.c:20:6:pwm_parameter_identification	32	static
-example.c:98:5:main	8	static
+example.c:100:5:main	8	static

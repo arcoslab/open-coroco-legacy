@@ -28,6 +28,15 @@ void leds_init(void)
 
 void hall_init(void) 
 {
+/*
+asm(
+"LDR.W R0, =0xE000ED88 ;"
+"LDR R1, [R0];"
+"ORR R1, R1, #(0xF << 20) ;"
+"STR R1, [R0];"
+"DSB ;"
+"ISB;");
+*/
   /* Enable GPIOB and GPIOE clock. */
   rcc_peripheral_enable_clock(&RCC_AHB1ENR, RCC_AHB1ENR_IOPBEN);
   rcc_peripheral_enable_clock(&RCC_AHB1ENR, RCC_AHB1ENR_IOPEEN);
@@ -526,7 +535,7 @@ void system_init(void) {
   stdin_init();
   
   //floating point unit
-  //pre_main();  
-  
+  //pre_main();
+
 }
 

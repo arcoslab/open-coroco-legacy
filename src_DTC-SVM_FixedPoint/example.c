@@ -82,7 +82,9 @@
  #include "fixedptc.h"
  //#define FIXEDPT_WBITS 12
 
- float prueba;
+ float prueba = 1.013014015;
+ float prueba2 = -2.013014015;
+ float R1_float;
  int pruebai = 16;
  char checksum;
  
@@ -131,8 +133,8 @@ int main(void)
   */
 
   //Fixed Point
-  //V1 = fixedpt_rconst(1.013014015);
-  //V2 = fixedpt_rconst(-2.013014015);
+  //V1 = fixedpt_rconst(prueba);
+  //V2 = fixedpt_rconst(prueba2);
   //V1 = fixedpt_rconst(524287.9374);
   //V2 = fixedpt_rconst(0.001);
   //V1 = fixedpt_rconst(16.0); 
@@ -195,13 +197,18 @@ int j = 0;
 
   
   gpio_set(GPIOD, GPIO13);
+
   while (i<1000){
-    pruebai = pruebai >> 1;
+    //pruebai = pruebai >> 1;
     //R1 = fixedpt_div(V1,V2);  
     //R1 = fixedpt_add(V1,V2);    
     //R1 = fixedpt_sub(V2,V1);
     //R1 = fixedpt_mul(V1,V2);
-    //R1 = V1 / V2;    
+    //R1 = V1 / V2;
+    //R1 = fixedpt_rconst(524287.9374);    
+    //R1 = fixedpt_rconst(prueba);   
+    R1_float = prueba + prueba2; 
+
 
     i=i+1;
   }
@@ -209,12 +216,15 @@ int j = 0;
   gpio_clear(GPIOD, GPIO13);
 
   while (j<1000){
-    pruebai = pruebai >> 1;
+    //pruebai = pruebai >> 1;
     //R1 = V1 / V2;
     //R1 = fixedpt_div(V1,V2);  
     //R1 = fixedpt_add(V1,V2);    
     //R1 = fixedpt_sub(V2,V1);
     //R1 = fixedpt_mul(V1,V2);
+    //R1 = fixedpt_rconst(524287.9374);    
+    //R1 = fixedpt_rconst(prueba);    
+    R1_float = prueba + prueba2;
     j=j+1;
   }
   i=0;

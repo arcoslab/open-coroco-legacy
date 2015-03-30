@@ -106,26 +106,56 @@ float data_previous_hall_b=0.0f;
 
 
 
-
-
-
 void tim1_up_tim10_isr(void) 
 {
   //oscilloscope flag: start of interrupt
   gpio_set(GPIOD, GPIO11);
+
    
   //Clear the update interrupt flag
   timer_clear_flag(TIM1,  TIM_SR_UIF);
 
   calc_freq();
 
-
+/* ORIGINAL
 if (center_aligned_state==FIRST_HALF)
 {
   //oscilloscope flag: start of First HALF
   gpio_set(GPIOB, GPIO15);
-  
   voltage_measure (ADC1,ADC_CHANNEL1);
+}
+else 
+{
+  //oscilloscope flag: start of second half
+  gpio_set(GPIOD, GPIO9);
+  DTC_SVM();
+  collecting_floating_data();
+  colllecting_flux_linkage();
+  gpio_clear(GPIOD, GPIO11);
+}
+
+  //oscilloscope flag: start of halves
+  //gpio_clear(GPIOB, GPIO15);
+
+  //oscilloscope flag: end of interrupt
+  gpio_clear(GPIOD, GPIO9);
+  
+}
+*/
+
+
+//MODIFICADA
+if (center_aligned_state==FIRST_HALF)
+{
+  //oscilloscope flag: start of First HALF
+  gpio_set(GPIOB, GPIO15);
+
+  gpio_set(GPIOB, GPIO14); //agregada  
+  voltage_measure (ADC1,ADC_CHANNEL1);
+  gpio_clear(GPIOB, GPIO14); //agregada  
+
+  voltage_measure (ADC2,ADC_CHANNEL2);//agregada isB_shunt
+  voltage_measure (ADC3,ADC_CHANNEL3);//agregada Ud
 }
 else 
 {
@@ -146,8 +176,6 @@ else
 }
 
 
-
-
 void adc_isr(void)
 {
 
@@ -162,7 +190,7 @@ void adc_isr(void)
   float V_shunt_B  = 0.0f;
   float V_strain_gauge =0.0f;
   
-
+/* ORIGINAL
   if (adc_counter==0)
   {
     V_stm32_A = adc_read_regular(ADC1);
@@ -182,10 +210,14 @@ void adc_isr(void)
     voltage_measure (ADC1,ADC_CHANNEL3);
     adc_counter++; 
   }
+  */
 
+  V_stm32_A = adc_read_regular(ADC1);//agregada
+  V_stm32_B = adc_read_regular(ADC2);//agregada
+  V_stm32_strain_gauge = adc_read_regular(ADC3);//agregada
 
-  else
-  {
+  //else //quitado
+  //{   //quitado
     V_stm32_Ud = adc_read_regular(ADC1)*(VREF/ADC_CONVERSION_FACTOR);
     U_d        =    V_stm32_Ud*BATTERY_VOLTAGE_CONVERTION_FACTOR; 
 
@@ -235,4 +267,4 @@ void adc_isr(void)
   }
 
 
-}
+//}//quitado

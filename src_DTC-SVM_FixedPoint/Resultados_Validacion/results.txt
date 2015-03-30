@@ -72,3 +72,28 @@ Post a comment.
 Unsubscribe to comments on this post.
 
 Posted by Chris to Chris Lalancette at March 15, 2015 at 4:11 PM 
+
+
+electromagnetic_torque_estimation_t_e funcion a pasara
+
+En la imagen scope_57.png, se puede observar el tiempo que transcurre entre lo que se envia la instruccion de activar un pin,  y luego desactivarlo inmediatamente. Es tan veloz que la señal no logra estabilizarce antes de caer. 72.6ns
+	gpio_set(GPIOD, GPIO13);
+  	gpio_clear(GPIOD, GPIO13);
+
+
+En la imagen scope_58 se puede observar la duracion de la funcion electromagnetic_torque_estimation_t_e  usando float, la version original.
+Duracion 103ns scope_58
+
+En la imagen scope_59 se puede observar la duracion de la misma funcion pero usando representacion fixed point, la cual evidentemente es mucho mayor, tarda 4.07us, Esto es en parte por el cambio de representacion de los argumentos.
+
+Si no se toma en cuenta la duracion del cambio de representacion, se esta tardando 275.6ns, realizando el calculo con la siguiente linea. scope_60
+t_e_fixed = fixedpt_mul(k_factor_electromag_torque_estimation_fixed,fixedpt_mul(pole_pairs_frequency,fixedpt_sub(fixedpt_mul(psi_sD_frequency,i_sQ_frequency),fixedpt_sub(psi_sQ_frequency,i_sD_frequency))));
+
+Si no se toma en cuenta la duracion del cambio de representacion, pero se realiza la operacion en diferentes lineas, se tarda lo que se ve en scope_61. 419,1ns
+A = fixedpt_mul(psi_sD_frequency,i_sQ_frequency);
+B = fixedpt_mul(psi_sQ_frequency,i_sD_frequency);
+D = fixedpt_mul(k_factor_electromag_torque_estimation_fixed,pole_pairs_frequency);
+C = fixedpt_sub(A,B);
+t_e_fixed = fixedpt_mul(D,C);
+
+

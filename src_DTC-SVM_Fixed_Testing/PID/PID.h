@@ -16,6 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+ #include "./../fixedptc.h"
+ #define FIXEDPT_WBITS 16
+
 float frequency_direction_two_hall_sensors_AB(float frequency);
 void calc_freq(void);
 void start_up(void);

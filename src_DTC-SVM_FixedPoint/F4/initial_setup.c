@@ -483,6 +483,8 @@ void DTC_tim_init(void)
 void adc_init (void)
 {
   rcc_peripheral_enable_clock(&RCC_APB2ENR, RCC_APB2ENR_ADC1EN);
+  rcc_peripheral_enable_clock(&RCC_APB2ENR, RCC_APB2ENR_ADC2EN);//agregada
+  rcc_peripheral_enable_clock(&RCC_APB2ENR, RCC_APB2ENR_ADC3EN);//agregada
   rcc_peripheral_enable_clock(&RCC_AHB1ENR, RCC_AHB1ENR_IOPAEN);
   rcc_peripheral_enable_clock(&RCC_AHB1ENR, RCC_AHB1ENR_IOPCEN);
 
@@ -496,19 +498,37 @@ void adc_init (void)
   adc_set_clk_prescale(ADC_CCR_ADCPRE_BY2);
   adc_disable_scan_mode(ADC1);
   adc_set_single_conversion_mode(ADC1);
+  adc_disable_scan_mode(ADC2);//agregada
+  adc_set_single_conversion_mode(ADC2);//agregada
+  adc_disable_scan_mode(ADC3);//agregada
+  adc_set_single_conversion_mode(ADC3);//agregada
 
+/*//ORIGINAL
   adc_set_sample_time(ADC1, ADC_CHANNEL1, ADC_SMPR_SMP_3CYC);   //isA shunt
   adc_set_sample_time(ADC1, ADC_CHANNEL2, ADC_SMPR_SMP_3CYC);   //isB shunt
   adc_set_sample_time(ADC1, ADC_CHANNEL3, ADC_SMPR_SMP_3CYC);   //Ud
   adc_set_sample_time(ADC1, ADC_CHANNEL11, ADC_SMPR_SMP_3CYC);  //isA hall current
   adc_set_sample_time(ADC1, ADC_CHANNEL12, ADC_SMPR_SMP_3CYC);  //isB hall current
   adc_set_sample_time(ADC1, ADC_CHANNEL15, ADC_SMPR_SMP_3CYC);  //strain_gauge torque sensor
+*/
 
+  //Modificadas
+  adc_set_sample_time(ADC1, ADC_CHANNEL1, ADC_SMPR_SMP_3CYC);   //isA shunt
+  adc_set_sample_time(ADC2, ADC_CHANNEL2, ADC_SMPR_SMP_3CYC);   //isB shunt
+  adc_set_sample_time(ADC3, ADC_CHANNEL3, ADC_SMPR_SMP_3CYC);   //Ud
+  adc_set_sample_time(ADC1, ADC_CHANNEL11, ADC_SMPR_SMP_3CYC);  //isA hall current
+  adc_set_sample_time(ADC1, ADC_CHANNEL12, ADC_SMPR_SMP_3CYC);  //isB hall current
+  adc_set_sample_time(ADC3, ADC_CHANNEL15, ADC_SMPR_SMP_3CYC);  //strain_gauge torque sensor
   adc_set_multi_mode(ADC_CCR_MULTI_INDEPENDENT);
+
   adc_power_on(ADC1);
+  adc_power_on(ADC2);//agregada
+  adc_power_on(ADC3);//agregada
 
   nvic_enable_irq(NVIC_ADC_IRQ);
   adc_enable_eoc_interrupt(ADC1);
+  adc_enable_eoc_interrupt(ADC2);//agregada
+  adc_enable_eoc_interrupt(ADC3);//agregada
   //adc_disable_eoc_interrupt(ADC1);
 }
 

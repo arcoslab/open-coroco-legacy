@@ -17,7 +17,8 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
+#include "./../fixedptc.h"
+#define FIXEDPT_WBITS 16
 
 //float vector_magnitude              (float quadrature_component, float direct_component);
 //float vector_angle                  (float quadrature_component, float direct_component);

@@ -97,21 +97,12 @@ int previous_hall_b=0;
 int  old_hall_a;
 static int  old_hall_b;
 
-//Nuevas Variables FixedPoint
-//fixedpt frequency_fixedpt;
-
 float frequency_direction_two_hall_sensors_AB(float frequency)
-{ 
-    //gpio_set(GPIOD, GPIO14);
-    //frequency_fixedpt = fixedpt_rconst(frequency); //agregada
-    
-    
+{
     static bool first_spin=true;
  
     //float actual_frequency=0.0;
-    
-    static float sign=1.0f; //quitada
-    //static fixedpt sign = fixedpt_fromint(1); //agregada
+    static float sign=1.0f;
 
     if (first_spin==true)
     {
@@ -130,20 +121,11 @@ float frequency_direction_two_hall_sensors_AB(float frequency)
 
     if (previous_hall_a!=hall_a || previous_hall_b!=hall_b)
     {
-      
-    if      (hall_a==0 && hall_b==0 && previous_hall_a >0 && previous_hall_b==0)    sign = -sign;//sign =-1.0f;
-    else if (hall_a==0 && hall_b >0 && previous_hall_a==0 && previous_hall_b==0)    sign = -sign;//sign =-1.0f;
-    else if (hall_a >0 && hall_b >0 && previous_hall_a==0 && previous_hall_b >0)    sign = -sign;//sign =-1.0f;
-    else if (hall_a >0 && hall_b==0 && previous_hall_a >0 && previous_hall_b >0)    sign = -sign;//sign =-1.0f;
-    else                                                                            sign = -sign;//sign = 1.0;
-      
-    /*  
     if      (hall_a==0 && hall_b==0 && previous_hall_a >0 && previous_hall_b==0)    sign =-1.0f;
     else if (hall_a==0 && hall_b >0 && previous_hall_a==0 && previous_hall_b==0)    sign =-1.0f;
     else if (hall_a >0 && hall_b >0 && previous_hall_a==0 && previous_hall_b >0)    sign =-1.0f;
     else if (hall_a >0 && hall_b==0 && previous_hall_a >0 && previous_hall_b >0)    sign =-1.0f;
     else                                                                            sign = 1.0;
-    */
     }
     
 
@@ -167,9 +149,7 @@ if (previous_hall_a!=hall_a || previous_hall_b!=hall_b)
     previous_hall_b=hall_b;
 
 */
-    //gpio_clear(GPIOD, GPIO14);
     return frequency*sign;    
-    //return fixedpt_tofloat(fixedpt_mul(frequency_fixedpt,sign));
 }
 
 void calc_freq(void) 
