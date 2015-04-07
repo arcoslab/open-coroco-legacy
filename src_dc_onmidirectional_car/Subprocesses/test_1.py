@@ -14,7 +14,7 @@ from time   import sleep
 y.Network.init()
 
 
-#creting output port
+#creating output port
 stm32_1_output_port_1=y.BufferedPortBottle()
 stm32_1_output_port_1_name="/stm32_1/position/out1"
 stm32_1_output_port_1.open(stm32_1_output_port_1_name)

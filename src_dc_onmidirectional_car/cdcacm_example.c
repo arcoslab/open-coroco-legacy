@@ -23,7 +23,7 @@
 #include <libopencm3/stm32/f4/timer.h>
 #include <libopencm3/stm32/f4/nvic.h>
 #include <libopencm3-plus/newlib/syscall.h>
-#include <cdcacm_example.h>
+#include "cdcacm_example.h"
 #include <libopencm3-plus/cdcacm_one_serial/cdcacm.h>
 #include <stdio.h>
 #include <libopencm3-plus/utils/misc.h>
@@ -299,7 +299,7 @@ void tim1_init(void)
 	//nvic_enable_irq(NVIC_TIM1_TRG_COM_TIM11_IRQ);	//f4
 
 	/* Reset TIM1 peripheral. */
-	timer_reset(TIM1);
+	timer_reset(TIM1);f
 
 	/* Timer global mode:
 	 * - No divider
@@ -446,7 +446,7 @@ float pi_control_l=0;
 
 void pi_controller(void) {
 //PID right motor
-  pid_error_r=ref_enc_r-encoder_speed_r; // ref_freq-cur_freq ... ref_enc_r must be duty_r (send from the ros-python interface 
+  pid_error_r=ref_enc_r-encoder_speed_r; // ref_freq-cur_freq ... ref_enc_r must be duty_r (sent from the ros-python interface) 
   i_pid_error_r+=pid_error_r;
 
   if (i_pid_error_r > I_MAX){
@@ -466,7 +466,7 @@ void pi_controller(void) {
   duty_r=pi_control_r;
 
 //PID left motor
-  pid_error_l=ref_enc_l-encoder_speed_l; // ref_freq-cur_freq ... ref_enc_l must be duty_l (send from the ros-python interface
+  pid_error_l=ref_enc_l-encoder_speed_l; // ref_freq-cur_freq ... ref_enc_l must be duty_l (sent from the ros-python interface)
   i_pid_error_l+=pid_error_l;
 
   if (i_pid_error_l > I_MAX){
@@ -489,9 +489,10 @@ void pi_controller(void) {
 
 void gen_pwm(void) {
 	//duty is calculated in the pi_controller rutine...
-  pi_controller();
-  //duty_r=ref_freqR/10.0f;
-  //duty_l=ref_freqL/10.0f;
+//comentamos el pi_controller y descomentamos el duty_r y duty_l
+  //pi_controller();
+  duty_r=ref_freqR/10.0f;
+  duty_l=ref_freqL/10.0f;
   static uint32_t pwm_enc_count=0;
   pwm_enc_count++;
   if (pwm_enc_count>PWM_ENC_CYCLES) {
@@ -641,11 +642,14 @@ int main(void){
       if( (strcmp(cmdR, "r") == 0) && (strcmp(cmdL, "l") == 0) ){ 
 				//set ref freq
 
-				ref_enc_r=valueR;
-				ref_enc_l=valueL;
+
+//comentamos las lineas de ref_enc_r y ref_enc_l, para hacer pruebas directas con el pwm, y tambien comentamos el controlador pi
+
+				//ref_enc_r=valueR;
+				//ref_enc_l=valueL;
 						
-/*			ref_freqR=valueR;*/
-/*			ref_freqL=valueL;*/
+			ref_freqR=valueR;
+			ref_freqL=valueL;
 		/*Get encoder counters*/
 
 						

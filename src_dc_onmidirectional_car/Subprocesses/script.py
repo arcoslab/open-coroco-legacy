@@ -8,8 +8,8 @@ import yarp
 
 #joystick = 'xfce4-terminal --working-directory=/home/tumacher/local/src/repositories/arcoslab/light-open-coroco/open-coroco/baldor_control_utils/Subprocesses/  -e "python ps3controller.py" -H '
 
-<<<<<<< HEAD
-#Change directory. 
+
+#Change directory! 
 directory = '/home/lenouch/local/src/open-coroco/baldor_control_utils/Subprocesses/'
 try: 
 	yarpserver = 'xfce4-terminal --working-directory='+directory+' -e "yarpserver --write" --title=Yarpserver --geometry 40x20+0-0 '
@@ -38,7 +38,7 @@ except KeyboardInterrupt:
 	
 
 
-=======
+
 #test_1 = 'xfce4-terminal --working-directory=/home/tumacher/local/src/repositories/arcoslab/light-open-coroco/open-coroco/baldor_control_utils/Subprocesses/ -e "python test_1.py " -H '
 #test_2 = 'xfce4-terminal --working-directory=/home/tumacher/local/src/repositories/arcoslab/light-open-coroco/open-coroco/baldor_control_utils/Subprocesses/ -e "python test_2.py " -H '
 #test_3 = 'xfce4-terminal --working-directory=/home/tumacher/local/src/repositories/arcoslab/light-open-coroco/open-coroco/baldor_control_utils/Subprocesses/ -e "python test_3.py " -H '
@@ -50,4 +50,4 @@ except KeyboardInterrupt:
 #os.system(test_2)
 #os.system(test_3)
 #os.system(test_4)
->>>>>>> a0433e5f8b2f94a498b8aa5788dcbd0cf893b461
+#>>>>>>> a0433e5f8b2f94a498b8aa5788dcbd0cf893b461
