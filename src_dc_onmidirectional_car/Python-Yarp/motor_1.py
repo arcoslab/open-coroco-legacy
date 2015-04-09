@@ -81,7 +81,7 @@ while True:
                 #-------------------Communication though yarp bottles-----------
                 sleep(0.01)
                 motor.send_a_bottle(out_1,motor.position,motor.serial_device_counter)
-                cmd_speed=motor.receive_a_joystick_bottle(in_speed,in_speed_name)
+                motor.receive_a_joystick_bottle(in_speed,in_speed_name)
 
             #---------not connected to STM32 1----------------
             else:

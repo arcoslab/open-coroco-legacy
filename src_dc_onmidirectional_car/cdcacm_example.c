@@ -299,7 +299,7 @@ void tim1_init(void)
 	//nvic_enable_irq(NVIC_TIM1_TRG_COM_TIM11_IRQ);	//f4
 
 	/* Reset TIM1 peripheral. */
-	timer_reset(TIM1);f
+	timer_reset(TIM1);
 
 	/* Timer global mode:
 	 * - No divider
@@ -593,7 +593,7 @@ bool receive_a_string(char* cmd_s){
       c=getc(stdin);
       cmd_s[i]=c;
       i++;
-      putc(c, stdout); //no necesito q me devuelva lo q escribo?
+      //putc(c, stdout); //no necesito q me devuelva lo q escribo?
     }
     
     cmd_s[i]='\0';
@@ -628,7 +628,7 @@ int main(void){
   float valueR;//Right Motor speed
   float valueL;//Left Motor speed
 
-  while (1){
+  while (1){ 
 		
 /*			printf("a teR: %d teL: %d\n", totalencoderR,totalencoderL);*/
 /*    printf("a teR: %d teL: %d EncSR: %f EncSL: %f error_r: %f i_pid_error_r: %f pi_control_r: %f error_l: %f i_pid_error_l: %f pi_control_l: %f\n", rpos, rneg, totalencoderR, encoderR, totalencoderL, encoderL, encoder_speed_r, encoder_speed_l, pid_error_r, i_pid_error_r, pi_control_r, pid_error_l, i_pid_error_l, pi_control_l);*/
@@ -653,8 +653,12 @@ int main(void){
 		/*Get encoder counters*/
 
 						
-		printf("a teR: %d teL: %d\n", totalencoderR,totalencoderL);
-					
+		//printf("a teR: %d teL: %d\n", totalencoderR,totalencoderL);
+		//printf("1 a teR: %f teL: %f\n", ref_freqR,ref_freqL);
+        
+        //printf ("1 sa b 4 5 \n");
+        printf("%d %f ca: %f  \n",STM32_POSITION, ref_freqR,ref_freqL);
+        //printf("1 teR: %d teL: %d\n", totalencoderR,totalencoderL);			
       }
     }
 

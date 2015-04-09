@@ -22,13 +22,17 @@ class motor_tools(object):
 
 
     wheel_diameter=5.95 #inches
-    max_speed=12*2*pi
+    max_speed=10.0#12*2*pi
     
     last_raw_angle=0.
     raw_angle=0.
     angle=0.
     rads=0.
     
+
+    #speed values
+    speed_right=0.
+    speed_left=0.
 
 
     #--------------serial port connection------------------------------
@@ -142,11 +146,10 @@ class motor_tools(object):
             print "waiting"  
        
         #writing data from stm32
-        cmd_speed_R=cmd_speed_R/self.max_speed*10
-        cmd_speed_L=cmd_speed_L/self.max_speed*10
+
                 
 
-        self.com.write("r"+" "+str(cmd_speed_R)+" l "+str(cmd_speed_R)+"\n\r")
+        self.com.write("r"+" "+str(self.speed_right)+" l "+str(self.speed_left)+"\n\r")
         print "writing to stm32: "+ str(cmd_speed_R)+"original_value: "+str(value)+"test: "
         print "Connected to /dev/ttyACM"+str(self.serial_device_counter)   
 
@@ -221,14 +224,18 @@ class motor_tools(object):
 
         input_bottle=input_port.read(False)
         if input_bottle:
+
+
             input_data=input_bottle.get(0)
-            speed_value=input_data.asDouble()
-            cmd_speed=speed_value*self.max_speed
+            self.speed_right=self.max_speed*input_data.asDouble()
+
+            input_data=input_bottle.get(1)
+            self.speed_left=self.max_speed*input_data.asDouble()
+                        
             print "there is a bottle from ",port_name
-            print "bottle content: ",speed_value
-            return cmd_speed
+            print "bottle content: speed_right=>",self.speed_right,"speed_left=>", self.speed_left
+            
             
         else:
             print "there is no bottle from ",port_name 
-            return 0 
-        
+            

@@ -26,5 +26,11 @@ LDSCRIPT = ../libopencm3-plus/lib/libopencm3_plus_stm32f4discovery.ld
 OOCD_INTERFACE = stlink-v2
 OOCD_BOARD = stm32f4discovery
 
+
+#this flag will identify the number of the motor 
+#for example if you want to compile the motor#1:
+#make MOTOR=1 
+BALDOR_FLAGS  =  -DSTM32_POSITION=$(MOTOR)
+
 include Makefile.include
 
