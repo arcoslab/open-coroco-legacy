@@ -67,11 +67,11 @@ if True:
         #------------------------------------------------------------------------------
 
         #getting position from left joystick
-        x1=js.get_axis(0)       #Left joystick left to right values -1.0 to 0.99
-        y1=js.get_axis(1)       #Left joystick up to down values -1.0 to 0.99
+        x1=js.get_axis(1)       #Left joystick left to right values -1.0 to 0.99
+        y1=js.get_axis(0)       #Left joystick up to down values -1.0 to 0.99
 
-        y1_out=-y1              #Controller gives negative values for the upbutton
-        x1_out=x1
+        y1_out=y1              #Controller gives negative values for the upbutton
+        x1_out=-x1
 
 
 	    #getting position from right joystick
