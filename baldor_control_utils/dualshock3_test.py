@@ -126,7 +126,7 @@ if True:
         #stm32 1
         joystick_output_bottle_1=joystick_output_port_1.prepare()
         joystick_output_bottle_1.clear()
-        joystick_output_bottle_1.addDouble(right_)
+        joystick_output_bottle_1.addDouble(right_1)
         joystick_output_port_1.write()
 
         #stm32 2
@@ -144,7 +144,7 @@ if True:
         #stm32 4
         joystick_output_bottle_4=joystick_output_port_4.prepare()
         joystick_output_bottle_4.clear()
-        joystick_output_bottle_4.addDouble(lef_2)
+        joystick_output_bottle_4.addDouble(left_2)
         joystick_output_port_4.write()
 
 
