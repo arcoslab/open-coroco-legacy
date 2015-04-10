@@ -118,7 +118,7 @@ if True:
         '''
         right_1 =-v2
         left_1  = v1
-        right_2 = v4
+        right_2 = -v4
         left_2  = v3
 
         #sending position to stm32s
