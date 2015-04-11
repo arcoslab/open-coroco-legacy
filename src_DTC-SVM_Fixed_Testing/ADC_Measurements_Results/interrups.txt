@@ -1,0 +1,36 @@
+PIN GPIO9
+Optimizado
+19.3us, imagen scope_66
+
+Original
+La duracion es la misma, 19.3us
+
+
+
+PIN GPIO15
+Optimizado
+9.4us scope_68 scope_69
+
+Original
+13.1us scope_67 scope_70
+
+
+Basicamente, el metodo de medicion es el siguiente.
+1. Se tienen tres archivos de interrups.c
+interrupt Respaldo Intacto: contiene el codigo original sin modificaciones.
+interrupt Varios ADC, contiene las optimizaciones realizadas.
+2. Se abre el que se desea y se guarda con el nombre interrupts.c 
+sustituyendo lo que hay. 
+3. Se realiza la simulacion y se mide PIN B15 y D9 de cada uno.
+NOTA NO MODIFICAR RESPALDO_INTACTO ni VARIOS_ADC
+
+Hasta el momento se puede decir que si podria obtener una buena 
+ventaja al utilizar esta optimizacion. Se debe verificar que los
+resultados obtenidos son los que se esperan, con respecto al
+funcionamiento del open-coroco.
+
+
+
+
+
+

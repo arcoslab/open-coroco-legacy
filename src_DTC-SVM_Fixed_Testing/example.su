@@ -90,12 +90,12 @@ SVM.c:662:7:SVM_speed_close_loop_of_voltage_frequency	48	static
 SVM.c:723:6:SVM_speed_close_loop	40	static
 SVM.c:765:6:SVM_torque_close_loop	40	static
 SVM.c:858:7:DTC_SVM	72	static
-interrupts.c:179:6:adc_isr	24	static
+interrupts.c:151:6:adc_isr	16	static
 collecting_data.c:128:6:collecting_collected_in_buffer	16	static
 collecting_data.c:111:6:colllecting_flux_linkage	8	static
 collecting_data.c:306:6:collecting_samples	8	static
 collecting_data.c:219:6:collecting_floating_data	8	static
-interrupts.c:109:6:tim1_up_tim10_isr	8	static
+interrupts.c:112:6:tim1_up_tim10_isr	8	static
 collecting_data.c:473:6:print_captured_data	0	static
 collecting_data.c:525:6:print_captured_collected_char	216	static
 collecting_data.c:1073:6:print_collected_data_buffer_character	0	static

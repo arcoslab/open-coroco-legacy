@@ -22,8 +22,8 @@ initial_setup.c:44:6:test_ports_init	8	static
 initial_setup.c:55:6:DTC_SVM_tim_init	8	static
 initial_setup.c:198:6:PID_tim_init	8	static
 initial_setup.c:340:6:DTC_tim_init	8	static
-initial_setup.c:483:6:adc_init	8	static
-initial_setup.c:515:6:system_init	8	static
+initial_setup.c:483:6:adc_init	16	static
+initial_setup.c:535:6:system_init	8	static
 shunt.c:63:6:voltage_measure	24	static
 sensorless_PID.c:34:6:sensorless_pure_speed_SVM_pi_controller	0	static
 sensorless_PID.c:85:6:sensorless_speed_pi_controller	0	static
@@ -105,4 +105,4 @@ collecting_data.c:1202:6:print_fixedpt_as_bytes	24	static
 collecting_data.c:1224:6:print_int_as_bytes	24	static
 collecting_data.c:1246:1:fixedpt_print	80	static
 parameter_identification.c:20:6:pwm_parameter_identification	32	static
-example.c:100:5:main	8	static
+example.c:100:5:main	16	static
