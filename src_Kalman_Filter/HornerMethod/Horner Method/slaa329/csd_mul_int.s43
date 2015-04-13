@@ -1,0 +1,47 @@
+;******************************************************************************
+;   MSP430FG439 Integer-Integer multiplication using Horner's Algorithm using CSD format
+;
+;   Description: This code performs a 16-bit integer-integer multplication 
+;                of numbers to return an 16-bit integer
+;                 
+;
+;   Note:        This code assumes 32.768kHz XTAL on LFXT1 on the MSP430FG439 
+;
+;                 MSP430FG439
+;               -----------------
+;              |              XIN|-  
+;              |                 | 32.768kHz
+;              |             XOUT|-
+;              |                 |
+;
+;
+;   K. Venkat
+;   Texas Instruments Inc.
+;   July 2006
+;   Built with IAR Embedded Workbench Version: 3.41A
+;*******************************************************************************/
+            public mul_csd_int
+        
+	    RSEG CODE
+mul_csd_int:
+
+            mov.w     R12,R13               ; The operand "input" in register R12 
+            rla.w     R13
+            rla.w     R13
+            rla.w     R13
+            sub.w     R12,R13               ; X1=X*2^3-X
+            rla.w     R13
+            rla.w     R13
+            rla.w     R13
+            sub.w     R12,R13               ; X2=X1*2^3-X
+            rla.w     R13
+            rla.w     R13
+            rla.w     R13
+            add.w     R12,R13               ; Final result=X3=X2*2^3+X
+            mov.w     R13,R12               ; The final answer returned to the 
+                                            ; calling function
+        
+            ret
+            END  
+        
+       

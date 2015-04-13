@@ -1,0 +1,67 @@
+;******************************************************************************
+;   MSP430FG439 Integer Integer multiplication using the Algorithm explained in Hamacher
+;
+;   Description: This code performs a 16-bit 16-bit integer-integer multplication 
+;                 of numbers 
+;                 
+;
+;   Note:        This code assumes 32.768kHz XTAL on LFXT1 on the MSP430FG439 
+;
+;                 MSP430FG439
+;               -----------------
+;              |              XIN|-  
+;              |                 | 32.768kHz
+;              |             XOUT|-
+;              |                 |
+;
+;
+;   K. Venkat
+;   Texas Instruments Inc.
+;   July 2006
+;   Built with IAR Embedded Workbench Version: 3.41A
+;*******************************************************************************/
+            public mul_hamacher
+            RSEG CODE
+mul_hamacher:
+
+#define x1 R9
+#define z0 R13
+#define z1 R15
+#define x  R12
+#define y  R14
+
+            push.w    R9
+
+	    clr.w     z0
+	    mov.w     z0,z1
+	    mov.w     z0,x1
+	    tst.w     x
+	    jge	      xbooth_2
+	    mov.w     #-1,x1
+	    jmp       xbooth_2
+xbooth_6
+	    add.w     x,z1
+	    addc.w    x1,z0
+xbooth_1
+	    rla.w     x
+	    rlc.w     x1
+xbooth_2
+	    rra.w     y
+	    jc	      xbooth_5
+	    jne	      xbooth_1
+	    jmp	      xbooth_4
+xbooth_5
+	    sub.w     x,z1
+	    subc.w    x1,z0
+xbooth_3
+	    rla.w     x
+	    rlc.w     x1
+	    rra.w     y
+	    jnc	      xbooth_6
+	    cmp.w     #0FFFFh,y
+	    jne	      xbooth_3
+xbooth_4
+            mov.w     z1,R12
+            pop.w     R9
+            ret
+            END

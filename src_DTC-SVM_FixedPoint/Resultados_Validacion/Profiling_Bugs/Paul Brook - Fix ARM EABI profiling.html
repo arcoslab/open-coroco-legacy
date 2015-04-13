@@ -1,0 +1,149 @@
+<!-- MHonArc v2.6.3 -->
+<!--X-Subject: Fix ARM EABI profiling -->
+<!--X-From-R13: Bnhy Pebbx <cnhyNpbqrfbheprel.pbz> -->
+<!--X-Date: 8 Oct 2008 13:39:00 &#45;0000 -->
+<!--X-Message-Id: 200810081437.57803.paul@codesourcery.com -->
+<!--X-Content-Type: text/plain -->
+<!--X-Head-End-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML//EN">
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<title>Paul Brook - Fix ARM EABI profiling</title>
+</head>
+<body>
+<!--X-Body-Begin-->
+<!--X-User-Header-->
+<!--htdig_noindex-->
+<p>This is the mail archive of the 
+<tt>gcc-patches@gcc.gnu.org</tt>
+mailing list for the <a href="http://gcc.gnu.org/">GCC project</a>.
+
+
+<!--/htdig_noindex-->
+<!--X-User-Header-End-->
+<!--X-TopPNI-->
+<!--htdig_noindex-->
+</p><hr>
+<table border="0">
+  <tbody><tr><th align="left">Index Nav:</th>
+      <td colspan="2">
+        [<a href="http://gcc.gnu.org/ml/gcc-patches/2008-10/index.html#00319">Date&nbsp;Index</a>] [<a href="http://gcc.gnu.org/ml/gcc-patches/2008-10/subjects.html#00319">Subject&nbsp;Index</a>] [<a href="http://gcc.gnu.org/ml/gcc-patches/2008-10/authors.html#00319">Author&nbsp;Index</a>] [<a href="http://gcc.gnu.org/ml/gcc-patches/2008-10/threads.html#00319">Thread&nbsp;Index</a>]
+      </td>
+  </tr>
+  <tr><th align="left">Message Nav:</th>
+      <td>[<a href="http://gcc.gnu.org/ml/gcc-patches/2008-10/msg00318.html">Date&nbsp;Prev</a>]&nbsp;[<a href="http://gcc.gnu.org/ml/gcc-patches/2008-10/msg00320.html">Date&nbsp;Next</a>]</td>
+      <td>[<a href="http://gcc.gnu.org/ml/gcc-patches/2008-10/msg00318.html">Thread&nbsp;Prev</a>]&nbsp;[<a href="http://gcc.gnu.org/ml/gcc-patches/2008-10/msg01248.html">Thread&nbsp;Next</a>]</td>
+  </tr>
+  <tr><th align="left">Other format:</th>
+  <td>[<a href="http://gcc.gnu.org/cgi-bin/get-raw-msg?listname=gcc-patches&amp;date=2008-10&amp;msgid=200810081437.57803.paul%40codesourcery.com">Raw text</a>]</td>
+  </tr>
+</tbody></table>
+<!--/htdig_noindex-->
+
+<!--X-TopPNI-End-->
+<!--X-MsgBody-->
+<!--X-Subject-Header-Begin-->
+<h1>Fix ARM EABI profiling</h1>
+<!--X-Subject-Header-End-->
+<!--X-Head-of-Message-->
+<ul>
+<li><em>From</em>: Paul Brook &lt;paul at codesourcery dot com&gt;</li>
+<li><em>To</em>: gcc-patches at gcc dot gnu dot org</li>
+<li><em>Date</em>: Wed, 8 Oct 2008 14:37:57 +0100</li>
+<li><em>Subject</em>: Fix ARM EABI profiling</li>
+</ul>
+<!--X-Head-of-Message-End-->
+<!--X-Head-Body-Sep-Begin-->
+<hr>
+<!--X-Head-Body-Sep-End-->
+<!--X-Body-of-Message-->
+<pre>The -pg option (gprof profiling) is broken on ARM EABI targets.  The _mcount 
+implementation we inherited from legacy targets assumes FP(r11) points to an 
+old 4-word APCS frame layout. Recent gcc changes mean that the stack layout 
+is no longer predictable, even when a frame pointer is used. This has always 
+been true (and -pg broken) for Thumb-2 code.
+
+The patch below changes EABI based targets to use a new function profiler 
+entry point, using a different ABI that should work in all circumstances.
+
+The corresponding glibc support has been available for some time: 
+<a href="http://sourceware.org/ml/libc-ports/2008-04/msg00009.html">http://sourceware.org/ml/libc-ports/2008-04/msg00009.html</a>
+
+We current assume that the mcount implementation does not need to be passed a 
+a counter variable. This is true of at least the Linux implementation. 
+There's some discussion of other potential requirements here:
+<a href="http://gcc.gnu.org/ml/gcc-patches/2005-05/msg01001.html">http://gcc.gnu.org/ml/gcc-patches/2005-05/msg01001.html</a>
+I'm deferring support for more needy mcount implementations until someone 
+demonstrates actual need.
+
+While Thumb profiling has been busted pretty much forever, ARM profiling has 
+regressed from mostly working to not working at all. I believe this is ample 
+qualification for making this change during stage 3.
+
+Tested on arm-linux-gnueabi.
+Applied to svn trunk
+
+Paul
+
+2008-10-08  Paul Brook  &lt;paul@codesourcery.com&gt;
+
+	gcc/
+	* config/arm/bpabi.h (ARM_FUNCTION_PROFILER): Define new EABI
+	compatible profiler (__gnu_mcount_nc).
+	(SUBTARGET_FRAME_POINTER_REQUIRED): Define.
+
+Index: gcc/config/arm/bpabi.h
+===================================================================
+--- gcc/config/arm/bpabi.h	(revision 140937)
++++ gcc/config/arm/bpabi.h	(working copy)
+@@ -147,3 +147,20 @@
+ #undef FINI_SECTION_ASM_OP
+ #define INIT_ARRAY_SECTION_ASM_OP ARM_EABI_CTORS_SECTION_OP
+ #define FINI_ARRAY_SECTION_ASM_OP ARM_EABI_DTORS_SECTION_OP
++
++/* The legacy _mcount implementation assumes r11 points to a
++    4-word APCS frame.  This is generally not true for EABI targets,
++    particularly not in Thumb mode.  We assume the mcount
++    implementation does not require a counter variable (No Counter).
++    Note that __gnu_mcount_nc will be entered with a misaligned stack.
++    This is OK because it uses a special calling convention anyway.  */
++
++#undef  ARM_FUNCTION_PROFILER
++#define ARM_FUNCTION_PROFILER(STREAM, LABELNO)  			\
++{									\
++  fprintf (STREAM, "\tpush\t{lr}\n");					\
++  fprintf (STREAM, "\tbl\t__gnu_mcount_nc\n");				\
++}
++
++#undef SUBTARGET_FRAME_POINTER_REQUIRED
++#define SUBTARGET_FRAME_POINTER_REQUIRED 0
+
+</pre>
+<!--X-Body-of-Message-End-->
+<!--X-MsgBody-End-->
+<!--X-Follow-Ups-->
+<hr>
+<!--X-Follow-Ups-End-->
+<!--X-References-->
+<!--X-References-End-->
+<!--X-BotPNI-->
+<!--htdig_noindex-->
+<table border="0">
+  <tbody><tr><th align="left">Index Nav:</th>
+      <td colspan="2">
+        [<a href="http://gcc.gnu.org/ml/gcc-patches/2008-10/index.html#00319">Date&nbsp;Index</a>] [<a href="http://gcc.gnu.org/ml/gcc-patches/2008-10/subjects.html#00319">Subject&nbsp;Index</a>] [<a href="http://gcc.gnu.org/ml/gcc-patches/2008-10/authors.html#00319">Author&nbsp;Index</a>] [<a href="http://gcc.gnu.org/ml/gcc-patches/2008-10/threads.html#00319">Thread&nbsp;Index</a>]
+      </td>
+  </tr>
+  <tr><th align="left">Message Nav:</th>
+      <td>[<a href="http://gcc.gnu.org/ml/gcc-patches/2008-10/msg00318.html">Date&nbsp;Prev</a>]&nbsp;[<a href="http://gcc.gnu.org/ml/gcc-patches/2008-10/msg00320.html">Date&nbsp;Next</a>]</td>
+      <td>[<a href="http://gcc.gnu.org/ml/gcc-patches/2008-10/msg00318.html">Thread&nbsp;Prev</a>]&nbsp;[<a href="http://gcc.gnu.org/ml/gcc-patches/2008-10/msg01248.html">Thread&nbsp;Next</a>]</td>
+  </tr>
+</tbody></table>
+<!--/htdig_noindex-->
+
+<!--X-BotPNI-End-->
+<!--X-User-Footer-->
+<!--X-User-Footer-End-->
+
+
+</body></html>

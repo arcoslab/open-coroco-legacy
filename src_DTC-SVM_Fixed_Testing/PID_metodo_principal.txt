@@ -1,0 +1,11 @@
+Se realizo una prueba en la que se tomo el metodo
+float frequency_direction_two_hall_sensors_AB(float frequency)
+del fichero PID.c, y se modifico para que realizara los calculos con el uso de la representacion en punto fijo.
+
+Usando Punto Flotante, tarda: 431ns scope_54.png
+Usando Punto Fijo, tarda: 1.814us scope_52.png 
+Usando Punto Fijo, pero sin medir lo que tarda la conversion de punto flotante a punto fijo: 354ns scope_53.png
+
+La duracion total de la parte de interrupcion, medida mediante el pin11:
+Usando Punto Flotante en PID.c: 54.2us scope_55.png
+Usando Punto Fijo en PID.c: 54.2us scope_56.png

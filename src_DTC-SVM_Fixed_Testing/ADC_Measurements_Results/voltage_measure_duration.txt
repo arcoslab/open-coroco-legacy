@@ -1,0 +1,6 @@
+Funtion					Time us		image
+voltage_measure(ADC1,ADC_CHANNEL1);	1.228		scope_62
+voltage_measure(ADC2,ADC_CHANNEL2);	0.884		scope_63
+voltage_measure(ADC3,ADC_CHANNEL3);	0.942		scope_64
+voltage_measure(ADC3,ADC_CHANNEL3);	0.880		scope_65
+

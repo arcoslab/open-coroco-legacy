@@ -1,3 +1,7 @@
+#Universidad de Costa Rica
+#Author: Jean Carlos Chavarria Hughes
+#B11814
+
 Para utilizar el dispositivo en la computadora, se debe instalar y flasear el STM32, para lo cual se debe ingresar a la pagina:
 
 https://wiki.arcoslab.eie.ucr.ac.cr/doku.php/stm32f4
