@@ -1,0 +1,63 @@
+PCBNEW-LibDoc----V1  09.07.2010 17:10:58
+#
+$MODULE Socket_MOLEX-KK-RM3-96mm_Lock_3pin_straight
+Li Socket_MOLEX-KK-RM3-96mm_Lock_3pin_straight
+Cd Socket, MOLEX, KK, RM 3.96mm, Lock, 3pin, straight,
+Kw Socket, MOLEX, KK, RM 3.96mm, Lock, 3pin, straight,
+$EndMODULE
+#
+$MODULE Socket_MOLEX-KK-RM3-96mm_Lock_4pin_straight
+Li Socket_MOLEX-KK-RM3-96mm_Lock_4pin_straight
+Cd Socket, MOLEX, KK, RM 3.96mm, Lock, 4pin, straight,
+Kw Socket, MOLEX, KK, RM 3.96mm, Lock, 4pin, straight,
+$EndMODULE
+#
+$MODULE Socket_MOLEX-KK-RM3-96mm_Lock_5pin_straight
+Li Socket_MOLEX-KK-RM3-96mm_Lock_5pin_straight
+Cd Socket, MOLEX, KK, RM 3.96mm, Lock, 5pin, straight,
+Kw Socket, MOLEX, KK, RM 3.96mm, Lock, 5pin, straight,
+$EndMODULE
+#
+$MODULE Socket_MOLEX-KK-RM3-96mm_Lock_6pin_straight
+Li Socket_MOLEX-KK-RM3-96mm_Lock_6pin_straight
+Cd Socket, MOLEX, KK, RM 3.96mm, Lock, 6pin, straight,
+Kw Socket, MOLEX, KK, RM 3.96mm, Lock, 6pin, straight,
+$EndMODULE
+#
+$MODULE Socket_MOLEX-KK-RM3-96mm_Lock_2pin_straight
+Li Socket_MOLEX-KK-RM3-96mm_Lock_2pin_straight
+Cd Socket, MOLEX, KK, RM 3.96mm, Lock, 2pin, straight,
+Kw Socket, MOLEX, KK, RM 3.96mm, Lock, 2pin, straight,
+$EndMODULE
+#
+$MODULE Socket_MOLEX-KK-RM2-54mm_Lock_6pin_straight
+Li Socket_MOLEX-KK-RM2-54mm_Lock_6pin_straight
+Cd Socket, MOLEX, KK, RM 2.54mm, Lock, 6pin, straight,
+Kw Socket, MOLEX, KK, RM 2.54mm, Lock, 6pin, straight,
+$EndMODULE
+#
+$MODULE Socket_MOLEX-KK-RM2-54mm_Lock_2pin_straight
+Li Socket_MOLEX-KK-RM2-54mm_Lock_2pin_straight
+Cd Socket, MOLEX, KK, RM 2.54mm, Lock, 2pin, straight,
+Kw Socket, MOLEX, KK, RM 2.54mm, Lock, 2pin, straight,
+$EndMODULE
+#
+$MODULE Socket_MOLEX-KK-RM2-54mm_Lock_3pin_straight
+Li Socket_MOLEX-KK-RM2-54mm_Lock_3pin_straight
+Cd Socket, MOLEX, KK, RM 2.54mm, Lock, 3pin, straight,
+Kw Socket, MOLEX, KK, RM 2.54mm, Lock, 3pin, straight,
+$EndMODULE
+#
+$MODULE Socket_MOLEX-KK-RM2-54mm_Lock_4pin_straight
+Li Socket_MOLEX-KK-RM2-54mm_Lock_4pin_straight
+Cd Socket, MOLEX, KK, RM 2.54mm, Lock, 4pin, straight,
+Kw Socket, MOLEX, KK, RM 2.54mm, Lock, 4pin, straight,
+$EndMODULE
+#
+$MODULE Socket_MOLEX-KK-RM2-54mm_Lock_5pin_straight
+Li Socket_MOLEX-KK-RM2-54mm_Lock_5pin_straight
+Cd Socket, MOLEX, KK, RM 2.54mm, Lock, 5pin, straight,
+Kw Socket, MOLEX, KK, RM 2.54mm, Lock, 5pin, straight,
+$EndMODULE
+#
+$EndLIBDOC

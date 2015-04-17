@@ -1,0 +1,13 @@
+EESchema-DOCLIB  Version 2.0  Date: Di 01 Jul 2014 21:39:10 CDT
+#
+$CMP CONN_10X2
+D symbole general de connecteur
+K CONN
+$ENDCMP
+#
+$CMP JTAG
+D symbole general de connecteur
+K CONN
+$ENDCMP
+#
+#End Doc Library

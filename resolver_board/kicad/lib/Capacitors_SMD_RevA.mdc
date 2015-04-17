@@ -1,0 +1,39 @@
+PCBNEW-LibDoc----V1  21.06.2010 22:37:51
+#
+$MODULE Capacitor_SMD1206_ReflowWave_RevA_Date21Jun2010
+Li Capacitor_SMD1206_ReflowWave_RevA_Date21Jun2010
+Cd Capacitor, SMD, 1206, Reflow, Wave,
+Kw Capacitor, SMD, 1206, Reflow, Wave,
+$EndMODULE
+#
+$MODULE Capacitor_SMD1206_HandSoldering_RevA_Date21Jun2010
+Li Capacitor_SMD1206_HandSoldering_RevA_Date21Jun2010
+Cd Capacitor, SMD, 1206, HandSoldering,
+Kw Capacitor, SMD, 1206, Hand soldering,
+$EndMODULE
+#
+$MODULE Capacitor_SMD0805_ReflowWave_RevA_Date21Jun2010
+Li Capacitor_SMD0805_ReflowWave_RevA_Date21Jun2010
+Cd Capacitor, SMD, 0805, Reflow, Wave,
+Kw Capacitor, SMD, 0805, Reflow, Wave,
+$EndMODULE
+#
+$MODULE Capacitor_SMD0805_HandSoldering_RevA_Date21Jun2010
+Li Capacitor_SMD0805_HandSoldering_RevA_Date21Jun2010
+Cd Capacitor, SMD, 0805, Hand soldering,
+Kw Capacitor, SMD, 0805, Hand soldering,
+$EndMODULE
+#
+$MODULE Capacitor_SMD2512_HandSoldering_RevA_Date21Jun2010
+Li Capacitor_SMD2512_HandSoldering_RevA_Date21Jun2010
+Cd Capacitor, SMD, 2512, Hand soldering,
+Kw Capacitor, SMD, 2512, Hand soldering,
+$EndMODULE
+#
+$MODULE Capacitor_SMD2512_ReflowWave_RevA_Date21Jun2010
+Li Capacitor_SMD2512_ReflowWave_RevA_Date21Jun2010
+Cd Capacitor, SMD, 2512, Reflow, Wave,
+Kw Capacitor, SMD, 2512, Reflow, Wave,
+$EndMODULE
+#
+$EndLIBDOC

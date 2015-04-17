@@ -1,0 +1,23 @@
+# About
+Opto-Devices_RevC_30Apr2011.mod
+
+
+Contains the KiCAD module/footprint of some
+opto-electrical devices.
+ 
+
+Optocoupler_6pin_wide_Stile-I_RevA_31Mar2011
+Optocoupler_6pin_wide_Stile-II_RevA_31Mar2011
+FiberOpticTX_Toshiba_TOTX170_TOTX173_TOTX193_TOTX194_RevA_01Apr2011
+FiberOpticRX_Toshiba_TORX170_TORX173_TORX193_TORX194_RevA_01Apr2011
+FIBEROPTIC-RX_AGILENT_HFBR-252x_REVA_01APR2011
+FIBEROPTIC-TX_AGILENT_HFBR-152x_REVA_01APR2011
+OptocouplerModul_FinderType34Point81-AC_RevA_Date25Jun2010
+OptocouplerModul_FinderType34Point81-DC_RevA_Date25Jun2010
+Optocoupler_SMD_HandSoldering_KPC357_LTV35x_PC357_SingleChannel_RevA_Date25Jun2010
+Optocoupler_SMD_ReflowWaveSoldering_KPC357_LTV35x_PC357_SingleChannel_RevA_Date25Jun2010
+
+
+Author: Bernd Wiebus / Uedem / Germany / 30 Apr 2011
+GNU-GPL, NO WARRANTY!
+

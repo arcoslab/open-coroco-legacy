@@ -1,0 +1,45 @@
+PCBNEW-LibDoc----V1  11.05.2010 15:33:05
+#
+$MODULE WireConnection_1-2mmDrill
+Li WireConnection_1-2mmDrill
+Cd Wire Connection; Drahtbrücke; 1,2mm Drill;
+Kw Wire Connection; Drahtbrücke; 1,2mm Drill; Move Pads free!; Pads frei verschieben!
+$EndMODULE
+#
+$MODULE WireConnection_1-5mmDrill
+Li WireConnection_1-5mmDrill
+Cd Wire Connection; Drahtbrücke; 1,5mm Drill;
+Kw Wire Connection; Drahtbrücke; 1,5mm Drill; Move Pads free!; Pads frei verschieben!
+$EndMODULE
+#
+$MODULE WireConnection_1mmDrill
+Li WireConnection_1mmDrill
+Cd Wire Connection; Drahtbrücke; 1mm Drill;
+Kw Wire Connection; Drahtbrücke; 1mm Drill; Move Pads free!; Pads frei verschieben!
+$EndMODULE
+#
+$MODULE WireConnection_2-5mmDrill
+Li WireConnection_2-5mmDrill
+Cd Wire Connection; Drahtbrücke; 2,5mm Drill;
+Kw Wire Connection; Drahtbrücke; 2,5mm Drill; Move Pads free!; Pads frei verschieben!
+$EndMODULE
+#
+$MODULE WireConnection_2-5mmDrill_largePad
+Li WireConnection_2-5mmDrill_largePad
+Cd Wire Connection; Drahtbrücke; 2,5mm Drill; large Pad;
+Kw Wire Connection; Drahtbrücke; 2,5mm Drill; large Pad; Move Pads free!; Pads frei verschieben!
+$EndMODULE
+#
+$MODULE WireConnection_2mmDrill
+Li WireConnection_2mmDrill
+Cd Wire Connection; Drahtbrücke; 2mm Drill;
+Kw Wire Connection; Drahtbrücke; 2mm Drill; Move Pads free!; Pads frei verschieben!
+$EndMODULE
+#
+$MODULE WireConnection_0-8mmDrill
+Li WireConnection_0-8mmDrill
+Cd Wire Connection; Drahtbrücke; 0,8mm Drill;
+Kw Wire Connection; Drahtbrücke; 0,8mm Drill; Move Pads free!; Pads frei verschieben!
+$EndMODULE
+#
+$EndLIBDOC

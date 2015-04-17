@@ -1,0 +1,141 @@
+PCBNEW-LibDoc----V1  05.08.2010 13:29:41
+#
+$MODULE Trafo_CHK-EI48-8VA_1xSec_RevA_04Aug2010
+Li Trafo_CHK-EI48-8VA_1xSec_RevA_04Aug2010
+Cd Trafo, Printtrafo, CHK, EI48, 8VA, 1x Sec,
+Kw Trafo, Printtrafo, CHK, EI48, 8VA, 1x Sec,
+$EndMODULE
+#
+$MODULE Trafo_CHK-EI48-8VA_2xSec_RevA_04Aug2010
+Li Trafo_CHK-EI48-8VA_2xSec_RevA_04Aug2010
+Cd Trafo, Printtrafo, CHK, EI48, 8VA, 2x Sec,
+Kw Trafo, Printtrafo, CHK, EI48, 8VA, 2x Sec,
+$EndMODULE
+#
+$MODULE Trafo_CHK-EI48-8VA_Neutral_RevA_04Aug2010
+Li Trafo_CHK-EI48-8VA_Neutral_RevA_04Aug2010
+Cd Trafo, Printtrafo, CHK, EI48, 8VA, neutral,
+Kw Trafo, Printtrafo, CHK, EI48, 8VA, neutral,
+$EndMODULE
+#
+$MODULE Trafo_CHK-EI48-10VA_1xSec_RevA_04Aug2010
+Li Trafo_CHK-EI48-10VA_1xSec_RevA_04Aug2010
+Cd Trafo, Printtrafo, CHK, EI48, 10VA, 1x Sec,
+Kw Trafo, Printtrafo, CHK, EI48, 10VA, 1x Sec,
+$EndMODULE
+#
+$MODULE Trafo_CHK-EI48-10VA_2xSec_RevA_04Aug2010
+Li Trafo_CHK-EI48-10VA_2xSec_RevA_04Aug2010
+Cd Trafo, Printtrafo, CHK, EI48, 10VA, 2x Sec,
+Kw Trafo, Printtrafo, CHK, EI48, 10VA, 2x Sec,
+$EndMODULE
+#
+$MODULE Trafo_CHK-EI48-10VA_Neutral_RevA_04Aug2010
+Li Trafo_CHK-EI48-10VA_Neutral_RevA_04Aug2010
+Cd Trafo, Printtrafo, CHK, EI48, 10VA, neutral,
+Kw Trafo, Printtrafo, CHK, EI48, 10VA, neutral,
+$EndMODULE
+#
+$MODULE Trafo_CHK-EI42-5VA_Neutral_RevA_05Aug2010
+Li Trafo_CHK-EI42-5VA_Neutral_RevA_05Aug2010
+Cd Trafo, Printtrafo, CHK, EI42, 5VA, neutral,
+Kw Trafo, Printtrafo, CHK, EI42, 5VA, neutral,
+$EndMODULE
+#
+$MODULE Trafo_CHK-EI42-5VA_2xSec_RevA_05Aug2010
+Li Trafo_CHK-EI42-5VA_2xSec_RevA_05Aug2010
+Cd Trafo, Printtrafo, CHK, EI42, 5VA, 2x Sec,
+Kw Trafo, Printtrafo, CHK, EI42, 5VA, 2x Sec,
+$EndMODULE
+#
+$MODULE Trafo_CHK-EI42-5VA_1xSec_RevA_05Aug2010
+Li Trafo_CHK-EI42-5VA_1xSec_RevA_05Aug2010
+Cd Trafo, Printtrafo, CHK, EI42, 5VA, 1x Sec,
+Kw Trafo, Printtrafo, CHK, EI42, 5VA, 1x Sec,
+$EndMODULE
+#
+$MODULE Trafo_CHK-EI38-3VA_Neutral_RevA_05Aug2010
+Li Trafo_CHK-EI38-3VA_Neutral_RevA_05Aug2010
+Cd Trafo, Printtrafo, CHK, EI38, 3VA, neutral,
+Kw Trafo, Printtrafo, CHK, EI42, 3VA, neutral,
+$EndMODULE
+#
+$MODULE Trafo_CHK-EI38-3VA_1xSec_RevA_05Aug2010
+Li Trafo_CHK-EI38-3VA_1xSec_RevA_05Aug2010
+Cd Trafo, Printtrafo, CHK, EI38, 3VA, 1x Sec,
+Kw Trafo, Printtrafo, CHK, EI38, 3VA, 1x Sec,
+$EndMODULE
+#
+$MODULE Trafo_CHK-EI38-3VA_2xSec_RevA_05Aug2010
+Li Trafo_CHK-EI38-3VA_2xSec_RevA_05Aug2010
+Cd Trafo, Printtrafo, CHK, EI38, 3VA, 2x Sec,
+Kw Trafo, Printtrafo, CHK, EI38, 3VA, 2x Sec,
+$EndMODULE
+#
+$MODULE Trafo_CHK-EI30-2VA_Neutral_RevA_05Aug2010
+Li Trafo_CHK-EI30-2VA_Neutral_RevA_05Aug2010
+Cd Trafo, Printtrafo, CHK, EI30, 2VA, neutral,
+Kw Trafo, Printtrafo, CHK, EI30, 2VA, neutral,
+$EndMODULE
+#
+$MODULE Trafo_CHK-EI30-2VA_2xSec_RevA_05Aug2010
+Li Trafo_CHK-EI30-2VA_2xSec_RevA_05Aug2010
+Cd Trafo, Printtrafo, CHK, EI30, 2VA, 2x Sec,
+Kw Trafo, Printtrafo, CHK, EI30, 2VA, 2x Sec,
+$EndMODULE
+#
+$MODULE Trafo_CHK-EI30-2VA_1xSec_RevA_05Aug2010
+Li Trafo_CHK-EI30-2VA_1xSec_RevA_05Aug2010
+Cd Trafo, Printtrafo, CHK, EI30, 2VA, 1x Sec,
+Kw Trafo, Printtrafo, CHK, EI30, 2VA, 1x Sec,
+$EndMODULE
+#
+$MODULE Trafo_CHK-EI54-12VA_Neutral_RevA_05Aug2010
+Li Trafo_CHK-EI54-12VA_Neutral_RevA_05Aug2010
+Cd Trafo, Printtrafo, CHK, EI54, 12VA, neutral,
+Kw Trafo, Printtrafo, CHK, EI54, 12VA, neutral,
+$EndMODULE
+#
+$MODULE Trafo_CHK-EI54-12VA_1xSec_RevA_05Aug2010
+Li Trafo_CHK-EI54-12VA_1xSec_RevA_05Aug2010
+Cd Trafo, Printtrafo, CHK, EI54, 12VA, 1x Sec,
+Kw Trafo, Printtrafo, CHK, EI54, 12VA, 1x Sec,
+$EndMODULE
+#
+$MODULE Trafo_CHK-EI54-12VA_2xSec_RevA_05Aug2010
+Li Trafo_CHK-EI54-12VA_2xSec_RevA_05Aug2010
+Cd Trafo, Printtrafo, CHK, EI54, 12VA, 2x Sec,
+Kw Trafo, Printtrafo, CHK, EI54, 12VA, 2x Sec,
+$EndMODULE
+#
+$MODULE Trafo_CHK-EI54-16VA_Neutral_RevA_05Aug2010
+Li Trafo_CHK-EI54-16VA_Neutral_RevA_05Aug2010
+Cd Trafo, Printtrafo, CHK, EI54, 16VA, neutral,
+Kw Trafo, Printtrafo, CHK, EI54, 16VA, neutral,
+$EndMODULE
+#
+$MODULE Trafo_CHK-EI54-16VA_1xSec_RevA_05Aug2010
+Li Trafo_CHK-EI54-16VA_1xSec_RevA_05Aug2010
+Cd Trafo, Printtrafo, CHK, EI54, 16VA, 1x Sec,
+Kw Trafo, Printtrafo, CHK, EI54, 16VA, 1x Sec,
+$EndMODULE
+#
+$MODULE Trafo_CHK-EI54-16VA_2xSec_RevA_05Aug2010
+Li Trafo_CHK-EI54-16VA_2xSec_RevA_05Aug2010
+Cd Trafo, Printtrafo, CHK, EI54, 16VA, 2x Sec,
+Kw Trafo, Printtrafo, CHK, EI54, 16VA, 2x Sec,
+$EndMODULE
+#
+$MODULE Trafo_Flat_CHK-UI30-4VA_RevA_05Aug2010
+Li Trafo_Flat_CHK-UI30-4VA_RevA_05Aug2010
+Cd Trafo, Flattrafo, CHK, UI30, 4VA,
+Kw Trafo, Flattrafo, CHK, UI30, 4VA,
+$EndMODULE
+#
+$MODULE Trafo_Flat_CHK-UI39-10VA_RevA_05Aug2010
+Li Trafo_Flat_CHK-UI39-10VA_RevA_05Aug2010
+Cd Trafo, Flattrafo, CHK, UI39, 10VA,
+Kw Trafo, Flattrafo, CHK, UI39, 10VA,
+$EndMODULE
+#
+$EndLIBDOC

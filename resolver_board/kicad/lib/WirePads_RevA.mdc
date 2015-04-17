@@ -1,0 +1,183 @@
+PCBNEW-LibDoc----V1  11.05.2010 15:32:16
+#
+$MODULE SolderWirePad_3x_2mmDrill
+Li SolderWirePad_3x_2mmDrill
+Cd Solder Wire Pad; Lötanschluss; 3x; 2mm Drill;
+Kw Solder Wire Pad; Lötanschluss; 3x; 2mm Drill;
+$EndMODULE
+#
+$MODULE SolderWirePad_2x_2mmDrill
+Li SolderWirePad_2x_2mmDrill
+Cd Solder Wire Pad; Lötanschluss; 2mm Drill;
+Kw Solder Wire Pad; Lötanschluss; 2mm Drill;
+$EndMODULE
+#
+$MODULE SolderWirePad_4xInline_2mmDrill
+Li SolderWirePad_4xInline_2mmDrill
+Cd Solder Wire Pad; Lötanschluss; 4x in Line; 2mm Drill;
+Kw Solder Wire Pad; Lötanschluss; 4x in Line; 2mm Drill;
+$EndMODULE
+#
+$MODULE SolderWirePad_single_2-5mmDrill
+Li SolderWirePad_single_2-5mmDrill
+Cd Solder Wire Pad; Lötanschluss; 2,5mm Drill;
+Kw Solder Wire Pad; Lötanschluss; 2,5mm Drill;
+$EndMODULE
+#
+$MODULE SolderWirePad_4xinLine_2-5mmDrill
+Li SolderWirePad_4xinLine_2-5mmDrill
+Cd Solder Wire Pad; Lötanschluss; 4xinLine; 2,5mm Drill;
+Kw Solder Wire Pad; Lötanschluss; 4xinLine; 2,5mm Drill;
+$EndMODULE
+#
+$MODULE SolderWirePad_3x_2-5mmDrill
+Li SolderWirePad_3x_2-5mmDrill
+Cd Solder Wire Pad; Lötanschluss; 3x; 2,5mm Drill;
+Kw Solder Wire Pad; Lötanschluss; 3x; 2,5mm Drill;
+$EndMODULE
+#
+$MODULE SolderWirePad_2x_2-5mmDrill
+Li SolderWirePad_2x_2-5mmDrill
+Cd Solder Wire Pad; Lötanschluss; 2x; 2,5mm Drill
+Kw Solder Wire Pad; Lötanschluss; 2x; 2,5mm Drill;
+$EndMODULE
+#
+$MODULE SolderWirePad_single_2mmDrill
+Li SolderWirePad_single_2mmDrill
+Cd Solder Wire Pad; Lötanschluss; 2mm Drill;
+Kw Solder Wire Pad; Lötanschluss; 2mm Drill;
+$EndMODULE
+#
+$MODULE SolderWirePad_single_1-5mmDrill
+Li SolderWirePad_single_1-5mmDrill
+Cd Solder Wire Pad; Lötanschluss; 1,5mm Drill;
+Kw Solder Wire Pad; Lötanschluss; 1,5mm Drill;
+$EndMODULE
+#
+$MODULE SolderWirePad_single_1-2mmDrill
+Li SolderWirePad_single_1-2mmDrill
+Cd Solder Wire Pad; Lötanschluss; 1,2mm Drill;
+Kw Solder Wire Pad; Lötanschluss; 1,2mm Drill;
+$EndMODULE
+#
+$MODULE SolderWirePad_single_1mmDrill
+Li SolderWirePad_single_1mmDrill
+Cd Solder Wire Pad; Lötanschluss; 1mm Drill;
+Kw Solder Wire Pad; Lötanschluss; 1mm Drill;
+$EndMODULE
+#
+$MODULE SolderWirePad_single_0-8mmDrill
+Li SolderWirePad_single_0-8mmDrill
+Cd Solder Wire Pad; Lötanschluss; 0,8mm Drill;
+Kw Solder Wire Pad; Lötanschluss; 0,8mm Drill;
+$EndMODULE
+#
+$MODULE SolderWirePad_2x_1-5mmDrill
+Li SolderWirePad_2x_1-5mmDrill
+Cd Solder Wire Pad; Lötanschluss; 1,5mm Drill;
+Kw Solder Wire Pad; Lötanschluss; 1,5mm Drill;
+$EndMODULE
+#
+$MODULE SolderWirePad_2x_1-2mmDrill
+Li SolderWirePad_2x_1-2mmDrill
+Cd Solder Wire Pad; Lötanschluss; 1,2mm Drill;
+Kw Solder Wire Pad; Lötanschluss; 1,2mm Drill;
+$EndMODULE
+#
+$MODULE SolderWirePad_2x_1mmDrill
+Li SolderWirePad_2x_1mmDrill
+Cd Solder Wire Pad; Lötanschluss; 1mm Drill;
+Kw Solder Wire Pad; Lötanschluss; 1mm Drill;
+$EndMODULE
+#
+$MODULE SolderWirePad_2x_0-8mmDrill
+Li SolderWirePad_2x_0-8mmDrill
+Cd Solder Wire Pad; Lötanschluss; 0,8mm Drill;
+Kw Solder Wire Pad; Lötanschluss; 0,8mm Drill;
+$EndMODULE
+#
+$MODULE SolderWirePad_3x_1-5mmDrill
+Li SolderWirePad_3x_1-5mmDrill
+Cd Solder Wire Pad; Lötanschluss; 3x; 1,5mm Drill;
+Kw Solder Wire Pad; Lötanschluss; 3x; 1,5mm Drill;
+$EndMODULE
+#
+$MODULE SolderWirePad_3x_1-2mmDrill
+Li SolderWirePad_3x_1-2mmDrill
+Cd Solder Wire Pad; Lötanschluss; 3x; 1,2mm Drill;
+Kw Solder Wire Pad; Lötanschluss; 3x; 1,2mm Drill;
+$EndMODULE
+#
+$MODULE SolderWirePad_3x_1mmDrill
+Li SolderWirePad_3x_1mmDrill
+Cd Solder Wire Pad; Lötanschluss; 3x; 1mm Drill;
+Kw Solder Wire Pad; Lötanschluss; 3x; 1mm Drill;
+$EndMODULE
+#
+$MODULE SolderWirePad_3x_0-8mmDrill
+Li SolderWirePad_3x_0-8mmDrill
+Cd Solder Wire Pad; Lötanschluss; 3x; 0,8mm Drill;
+Kw Solder Wire Pad; Lötanschluss; 3x; 0,8mm Drill;
+$EndMODULE
+#
+$MODULE SolderWirePad_4xInline_1-5mmDrill
+Li SolderWirePad_4xInline_1-5mmDrill
+Cd Solder Wire Pad; Lötanschluss; 4x in Line; 1,5mm Drill;
+Kw Solder Wire Pad; Lötanschluss; 4x in Line; 1,5mm Drill;
+$EndMODULE
+#
+$MODULE SolderWirePad_4xInline_1-2mmDrill
+Li SolderWirePad_4xInline_1-2mmDrill
+Cd Solder Wire Pad; Lötanschluss; 4x in Line; 1,2mm Drill;
+Kw Solder Wire Pad; Lötanschluss; 4x in Line; 1,2mm Drill;
+$EndMODULE
+#
+$MODULE SolderWirePad_4xInline_1mmDrill
+Li SolderWirePad_4xInline_1mmDrill
+Cd Solder Wire Pad; Lötanschluss; 4x in Line; 1mm Drill;
+Kw Solder Wire Pad; Lötanschluss; 4x in Line; 1mm Drill;
+$EndMODULE
+#
+$MODULE SolderWirePad_4xInline_0-8mmDrill
+Li SolderWirePad_4xInline_0-8mmDrill
+Cd Solder Wire Pad; Lötanschluss; 4x in Line; 0,8mm Drill;
+Kw Solder Wire Pad; Lötanschluss; 4x in Line; 0,8mm Drill;
+$EndMODULE
+#
+$MODULE SolderWirePad_4xSquare_2mmDrill
+Li SolderWirePad_4xSquare_2mmDrill
+Cd Solder Wire Pad; Lötanschluss; 4x Square; 2mm Drill;
+Kw Solder Wire Pad; Lötanschluss; 4x Square; 2mm Drill;
+$EndMODULE
+#
+$MODULE SolderWirePad_4xSquare_2-5mmDrill
+Li SolderWirePad_4xSquare_2-5mmDrill
+Cd Solder Wire Pad; Lötanschluss; 4x Square; 2,5mm Drill;
+Kw Solder Wire Pad; Lötanschluss; 4x Square; 2,5mm Drill;
+$EndMODULE
+#
+$MODULE SolderWirePad_4xSquare_1-5mmDrill
+Li SolderWirePad_4xSquare_1-5mmDrill
+Cd Solder Wire Pad; Lötanschluss; 4x Square; 1,5mm Drill;
+Kw Solder Wire Pad; Lötanschluss; 4x Square; 1,5mm Drill;
+$EndMODULE
+#
+$MODULE SolderWirePad_4xSquare_1-2mmDrill
+Li SolderWirePad_4xSquare_1-2mmDrill
+Cd Solder Wire Pad; Lötanschluss; 4x Square; 1,2mm Drill;
+Kw Solder Wire Pad; Lötanschluss; 4x Square; 1,2mm Drill;
+$EndMODULE
+#
+$MODULE SolderWirePad_4xSquare_1mmDrill
+Li SolderWirePad_4xSquare_1mmDrill
+Cd Solder Wire Pad; Lötanschluss; 4x Square; 1mm Drill;
+Kw Solder Wire Pad; Lötanschluss; 4x Square; 1mm Drill;
+$EndMODULE
+#
+$MODULE SolderWirePad_4xSquare_0-8mmDrill
+Li SolderWirePad_4xSquare_0-8mmDrill
+Cd Solder Wire Pad; Lötanschluss; 4x Square; 0,8mm Drill;
+Kw Solder Wire Pad; Lötanschluss; 4x Square; 0,8mm Drill;
+$EndMODULE
+#
+$EndLIBDOC

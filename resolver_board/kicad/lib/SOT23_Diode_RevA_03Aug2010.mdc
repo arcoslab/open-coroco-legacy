@@ -1,0 +1,15 @@
+PCBNEW-LibDoc----V1  03.08.2010 19:28:31
+#
+$MODULE SOT23_Diode_RevA_03Aug2010
+Li SOT23_Diode_RevA_03Aug2010
+Cd SOT23, Standard, Diode,
+Kw SOT23, Standard, Diode,
+$EndMODULE
+#
+$MODULE SOT23_Diode_Handsoldering_RevA_03Aug2010
+Li SOT23_Diode_Handsoldering_RevA_03Aug2010
+Cd SOT23,  Diode, Handsoldering,
+Kw SOT23,  Diode, Handsoldering,
+$EndMODULE
+#
+$EndLIBDOC

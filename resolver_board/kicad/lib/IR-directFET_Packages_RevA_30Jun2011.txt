@@ -1,0 +1,62 @@
+# About
+The File IR-directFET_RevA_30Jun2011.mod
+
+Contains the KiCAD module/footprint of some
+directFET Transistor housings from International Rectifier.
+"directFET" is a trademark of International Rectifier and the 
+housings are proprietary. So be careful using them.
+Please look also to International Rectifiers application note 
+AN-1035 and the actual transistor datasheets.
+Those footprints are untested yet!
+So be nice and make a report to bernd.wiebus@gmx.de
+and tell about your experiences!
+Contains 
+
+SH-Outline
+SJ-Outline
+SQ-Outline
+ST-Outline
+S1-Outline
+MN-Outline
+NP-Outline
+MT-Outline
+MX-Outline
+MZ-Outline
+L8-Outline
+
+IR-directFET_ST-Outline_Names_RevA_30Jun2011
+IR-directFET_ST-Outline_Numbers_RevA_30Jun2011
+IR-directFET_ST-Outline_Numbers_SquareHeatSink_RevA_30Jun2011
+IR-directFET_MN-Outline_Names_RevA_30Jun2011
+IR-directFET_MN-Outline_Numbers_RevA_30Jun2011
+IR-directFET_SJ-Outline_Names_RevA_30Jun2011
+IR-directFET_SJ-Outline_Numbers_RevA_30Jun2011
+IR-directFET_SH-Outline_Names_RevA_30Jun2011
+IR-directFET_SH-Outline_Numbers_RevA_30Jun2011
+IR-directFET_MZ-Outline_Names_RevA_30Jun2011
+IR-directFET_MZ-Outline_Numnbers_RevA_30Jun2011
+IR-directFET_SQ-Outline_Names_RevA_30Jun2011
+IR-directFET_SQ-Outline_Numbers_RevA_30Jun2011
+IR-directFET_S1-Outline_Names_RevA_30Jun2011
+IR-directFET_S1-Outline_Numbers_RevA_30Jun2011
+IR-directFET_MP-Outline_Names_RevA_30Jun2011
+IR-directFET_MP-Outline_Numbers_RevA_30Jun2011
+IR-directFET_MT-Outline_Numbers_RevA_30Jun2011
+IR-directFET_MT-Outline_Names_RevA_30Jun2011
+IR-directFET_MX-Outline_Names_RevA_30Jun2011
+IR-directFET_MX-Outline_Numbers_RevA_30Jun2011
+IR-directFET_L8-Outline_Names_RevA_30Jun2011
+IR-directFET_L8-Outline_Numbers_RevA_30Jun2011
+
+IR-directFET_ST-Outline_Numbers_SquareHeatSink_RevA_30Jun2011 is an 
+experimental footprint with an 1 inch square copper plane
+heatsink. 
+ 
+Footprints with names have pads associated with letters G,S and D for 
+Gate, Sours and Drain.
+Footprints with numbers have pads associated with numbers like recommendet 
+by International Rectifier.
+
+Author: Bernd Wiebus / Uedem / Germany / xx month 201x
+GNU-GPL, NO WARRANTY!
+

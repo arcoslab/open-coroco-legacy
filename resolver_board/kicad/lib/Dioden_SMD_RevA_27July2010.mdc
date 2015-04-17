@@ -1,0 +1,99 @@
+PCBNEW-LibDoc----V1  Di 26 Okt 2010 22:37:00 CEST
+#
+$MODULE Diode-SMC_Standard_RevA_26July2010
+Li Diode-SMC_Standard_RevA_26July2010
+Cd Diode SMC Standard
+Kw Diode SMC Standard
+$EndMODULE
+#
+$MODULE Diode-SMB_Standard_RevA_26July2010
+Li Diode-SMB_Standard_RevA_26July2010
+Cd Diode SMB Standard
+Kw Diode SMB Standard
+$EndMODULE
+#
+$MODULE Diode-SMA_Standard_RevA_26July2010
+Li Diode-SMA_Standard_RevA_26July2010
+Cd Diode SMA
+Kw Diode SMA
+$EndMODULE
+#
+$MODULE Diode-MELF_Standard_RevA_27July2010
+Li Diode-MELF_Standard_RevA_27July2010
+Cd Diode MELF Standard
+Kw Diode MELF Standard
+$EndMODULE
+#
+$MODULE Diode-MiniMELF_Standard_RevA_27July2010
+Li Diode-MiniMELF_Standard_RevA_27July2010
+Cd Diode Mini-MELF Standard
+Kw Diode Mini-MELF Standard
+$EndMODULE
+#
+$MODULE Diode-SMC_Handsoldering_RevA_27July2010
+Li Diode-SMC_Handsoldering_RevA_27July2010
+Cd Diode SMC Handsoldering
+Kw Diode SMC Handsoldering
+$EndMODULE
+#
+$MODULE Diode-SMB_Handsoldering_RevA_27July2010
+Li Diode-SMB_Handsoldering_RevA_27July2010
+Cd Diode SMB Handsoldering
+Kw Diode SMB Handsoldering
+$EndMODULE
+#
+$MODULE Diode-SMA_Handsoldering_RevA_27July2010
+Li Diode-SMA_Handsoldering_RevA_27July2010
+Cd Diode SMA Handsoldering
+Kw Diode SMA Handsoldering
+$EndMODULE
+#
+$MODULE Diode-MELF_Handsoldering_RevA_27July2010
+Li Diode-MELF_Handsoldering_RevA_27July2010
+Cd Diode MELF Handsoldering
+Kw Diode MELF Handsoldering
+$EndMODULE
+#
+$MODULE Diode-MiniMELF_Handsoldering_RevA_27July2010
+Li Diode-MiniMELF_Handsoldering_RevA_27July2010
+Cd Diode Mini-MELF Handsoldering
+Kw Diode Mini-MELF Handsoldering
+$EndMODULE
+#
+$MODULE Diode-Universal-SMA-SMB_Handsoldering_RevA_27July2010
+Li Diode-Universal-SMA-SMB_Handsoldering_RevA_27July2010
+Cd Diode, Universal, SMA, SMB, Handsoldering,
+Kw Diode, Universal, SMA, SMB, Handsoldering,
+$EndMODULE
+#
+$MODULE Diode-Universal-SMB-SMC_Handsoldering_RevA_27July2010
+Li Diode-Universal-SMB-SMC_Handsoldering_RevA_27July2010
+Cd Diode, Universal, SMB, SMC, Handsoldering,
+Kw Diode, Universal, SMB, SMC, Handsoldering,
+$EndMODULE
+#
+$MODULE Diode-Universal-SMC-RM10_Handsoldering_RevA_27July2010
+Li Diode-Universal-SMC-RM10_Handsoldering_RevA_27July2010
+Cd Diode, Universal, SMC, RM10, Handsoldering, SMD, Thruhole,
+Kw Diode, Universal, SMC, RM10, Handsoldering, SMD, Thruhole,
+$EndMODULE
+#
+$MODULE Diode-Universal-MELF-RM10_Handsoldering_RevA_27July2010
+Li Diode-Universal-MELF-RM10_Handsoldering_RevA_27July2010
+Cd Diode, Universal, MELF, RM10, Handsoldering, SMD, Thruhole,
+Kw Diode, Universal, MELF, RM10, Handsoldering, SMD, Thruhole,
+$EndMODULE
+#
+$MODULE Diode_SOT23_RevA_03Aug2010
+Li Diode_SOT23_RevA_03Aug2010
+Cd SOT23, Standard, Diode,
+Kw SOT23, Standard, Diode,
+$EndMODULE
+#
+$MODULE Diode_SOT23_Handsoldering_RevA_03Aug2010
+Li Diode_SOT23_Handsoldering_RevA_03Aug2010
+Cd SOT23,  Transistor, Handsoldering,
+Kw SOT23,  Transistor, Handsoldering,
+$EndMODULE
+#
+$EndLIBDOC

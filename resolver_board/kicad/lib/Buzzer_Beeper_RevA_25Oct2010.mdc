@@ -1,0 +1,39 @@
+PCBNEW-LibDoc----V1  So 24 Okt 2010 15:25:02 CEST
+#
+$MODULE MagneticBuzzer_ProjectsUnlimited_AI-4228-TWT-R_RevA_25Oct2010
+Li MagneticBuzzer_ProjectsUnlimited_AI-4228-TWT-R_RevA_25Oct2010
+Cd Buzzer, Elektromagnetic Beeper, Summer, 3-28V-DC,
+Kw Projects Unlimited, AI-4228-TWT-R,
+$EndMODULE
+#
+$MODULE MagneticBuzzer_ProSignal_ABT-410-RC_RevA_25Oct2010
+Li MagneticBuzzer_ProSignal_ABT-410-RC_RevA_25Oct2010
+Cd Buzzer, Elektromagnetic Beeper, Summer, 1,5V-DC,
+Kw Pro Signal, ABT-410-RC,
+$EndMODULE
+#
+$MODULE MagneticBuzzer_ProSignal_ABI-010-RC_RevA_25Oct2010
+Li MagneticBuzzer_ProSignal_ABI-010-RC_RevA_25Oct2010
+Cd Buzzer, Elektromagnetic Beeper, Summer, 12V-DC,
+Kw Pro Signal, ABI-010-RC,
+$EndMODULE
+#
+$MODULE MagneticBuzzer_ProSignal_ABI-009-RC_RevA_25Oct2010
+Li MagneticBuzzer_ProSignal_ABI-009-RC_RevA_25Oct2010
+Cd Buzzer, Elektromagnetic Beeper, Summer, 6V-DC,
+Kw Pro Signal, ABI-009-RC,
+$EndMODULE
+#
+$MODULE MagneticBuzzer_StarMicronics_HMB-06_HMB-12_RevA_25Oct2010
+Li MagneticBuzzer_StarMicronics_HMB-06_HMB-12_RevA_25Oct2010
+Cd Buzzer, Elektromagnetic Beeper, Summer,
+Kw Star Micronics, HMB-06, HMB-12,
+$EndMODULE
+#
+$MODULE MagneticBuzzer_Kingstate_KCG0601_RevA_25Oct2010
+Li MagneticBuzzer_Kingstate_KCG0601_RevA_25Oct2010
+Cd Buzzer, Elektromagnetic Beeper, Summer,
+Kw Kingstate, KCG0601,
+$EndMODULE
+#
+$EndLIBDOC

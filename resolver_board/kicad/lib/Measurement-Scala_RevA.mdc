@@ -1,0 +1,123 @@
+PCBNEW-LibDoc----V1  02.07.2010 16:09:18
+#
+$MODULE Gauge_10mm_Type2_SilkScreenTop_RevA_Date22Jun2010
+Li Gauge_10mm_Type2_SilkScreenTop_RevA_Date22Jun2010
+Cd Gauge, Massstab, 10mm, SilkScreenTop, Type 2,
+Kw Gauge, Massstab, 10mm, SilkScreenTop, Type 2,
+$EndMODULE
+#
+$MODULE Gauge_10mm_Type3_SilkScreenTop_RevA_Date22Jun2010
+Li Gauge_10mm_Type3_SilkScreenTop_RevA_Date22Jun2010
+Cd Gauge, Massstab, 10mm, SilkScreenTop, Type 3,
+Kw Gauge, Massstab, 10mm, SilkScreenTop, Type 3,
+$EndMODULE
+#
+$MODULE Gauge_10mm_Type4_SilkScreenTop_RevA_Date22Jun2010
+Li Gauge_10mm_Type4_SilkScreenTop_RevA_Date22Jun2010
+Cd Gauge, Massstab, 10mm, SilkScreenTop, Type 4,
+Kw Gauge, Massstab, 10mm, SilkScreenTop, Type 4,
+$EndMODULE
+#
+$MODULE Gauge_10mm_Type5_SilkScreenTop_RevA_Date22Jun2010
+Li Gauge_10mm_Type5_SilkScreenTop_RevA_Date22Jun2010
+Cd Gauge, Massstab, 10mm, SilkScreenTop, Type 5,
+Kw Gauge, Massstab, 10mm, SilkScreenTop, Type 5,
+$EndMODULE
+#
+$MODULE Gauge_50mm_Type1_SilkScreenTop_RevA_Date22Jun2010
+Li Gauge_50mm_Type1_SilkScreenTop_RevA_Date22Jun2010
+Cd Gauge, Massstab, 50mm, SilkScreenTop, Type 1,
+Kw Gauge, Massstab, 50mm, SilkScreenTop, Type 1,
+$EndMODULE
+#
+$MODULE Gauge_50mm_Type2_SilkScreenTop_RevA_Date22Jun2010
+Li Gauge_50mm_Type2_SilkScreenTop_RevA_Date22Jun2010
+Cd Gauge, Massstab, 50mm, SilkScreenTop, Type 2,
+Kw Gauge, Massstab, 50mm, SilkScreenTop, Type 2,
+$EndMODULE
+#
+$MODULE Gauge_100mm_Type1_SilkScreenTop_RevA_Date22Jun2010
+Li Gauge_100mm_Type1_SilkScreenTop_RevA_Date22Jun2010
+Cd Gauge, Massstab, 100mm, SilkScreenTop, Type 1,
+Kw Gauge, Massstab, 100mm, SilkScreenTop, Type 1,
+$EndMODULE
+#
+$MODULE Gauge_100mm_Type2_SilkScreenTop_RevA_Date22Jun2010
+Li Gauge_100mm_Type2_SilkScreenTop_RevA_Date22Jun2010
+Cd Gauge, Massstab, 100mm, SilkScreenTop, Type 2,
+Kw Gauge, Massstab, 100mm, SilkScreenTop, Type 2,
+$EndMODULE
+#
+$MODULE Gauge_100mm_Type1_ CopperTop_RevA_Date22Jun2010
+Li Gauge_100mm_Type1_ CopperTop_RevA_Date22Jun2010
+Cd Gauge, Massstab, 100mm,  CopperTop, Type 1,
+Kw Gauge, Massstab, 100mm,  CopperTop, Type 1,
+$EndMODULE
+#
+$MODULE Gauge_10mm_Type4_CopperTop_RevA_Date22Jun2010
+Li Gauge_10mm_Type4_CopperTop_RevA_Date22Jun2010
+Cd Gauge, Massstab, 10mm, CopperTop, Type 4,
+Kw Gauge, Massstab, 10mm, CopperTop, Type 4,
+$EndMODULE
+#
+$MODULE Gauge_100mm_Type2_CopperTop_RevA_Date22Jun2010
+Li Gauge_100mm_Type2_CopperTop_RevA_Date22Jun2010
+Cd Gauge, Massstab, 100mm, CopperTop, Type 2,
+Kw Gauge, Massstab, 100mm,  CopperTop, Type 2,
+$EndMODULE
+#
+$MODULE Gauge_100mm_Type1_CopperTop_RevA_Date22Jun2010
+Li Gauge_100mm_Type1_CopperTop_RevA_Date22Jun2010
+Cd Gauge, Massstab, 100mm, CopperTop, Type 1,
+Kw Gauge, Massstab, 100mm, CopperTop, Type 1,
+$EndMODULE
+#
+$MODULE Gauge_50mm_Type2_CopperTop_RevA_Date22Jun2010
+Li Gauge_50mm_Type2_CopperTop_RevA_Date22Jun2010
+Cd Gauge, Massstab, 50mm, CopperTop, Type 2,
+Kw Gauge, Massstab, 50mm, CopperTop, Type 2,
+$EndMODULE
+#
+$MODULE Gauge_50mm_Type1_CopperTop_RevA_Date22Jun2010
+Li Gauge_50mm_Type1_CopperTop_RevA_Date22Jun2010
+Cd Gauge, Massstab, 50mm, CopperTop, Type 1,
+Kw Gauge, Massstab, 50mm, CopperTop, Type 1,
+$EndMODULE
+#
+$MODULE Gauge_10mm_Type5_CopperTop_RevA_Date22Jun2010
+Li Gauge_10mm_Type5_CopperTop_RevA_Date22Jun2010
+Cd Gauge, Massstab, 10mm, CopperTop, Type 5,
+Kw Gauge, Massstab, 10mm, CopperTop, Type 5,
+$EndMODULE
+#
+$MODULE Gauge_10mm_Type3_CopperTop_RevA_Date22Jun2010
+Li Gauge_10mm_Type3_CopperTop_RevA_Date22Jun2010
+Cd Gauge, Massstab, 10mm, CopperTop, Type 3,
+Kw Gauge, Massstab, 10mm, CopperTop, Type 3,
+$EndMODULE
+#
+$MODULE Gauge_10mm_Type2_CopperTop_RevA_Date22Jun2010
+Li Gauge_10mm_Type2_CopperTop_RevA_Date22Jun2010
+Cd Gauge, Massstab, 10mm, CopperTop, Type 2,
+Kw Gauge, Massstab, 10mm, CopperTop, Type 2,
+$EndMODULE
+#
+$MODULE Gauge_10mm_Type1_SilkScreenTop_RevA_Date22Jun2010
+Li Gauge_10mm_Type1_SilkScreenTop_RevA_Date22Jun2010
+Cd Gauge, Massstab, 10mm, SilkScreenTop, Type 1,
+Kw Gauge, Massstab, 10mm, SilkScreenTop, Type 1,
+$EndMODULE
+#
+$MODULE Gauge_10mm_Type1_CopperTop_RevA_Date22Jun2010
+Li Gauge_10mm_Type1_CopperTop_RevA_Date22Jun2010
+Cd Gauge, Massstab, 10mm, CopperTop, Type 1,
+Kw Gauge, Massstab, 10mm, CopperTop, Type 1,
+$EndMODULE
+#
+$MODULE Gauge_100mm_Grid_Type1_CopperTop_RevA_Date02Jul2010
+Li Gauge_100mm_Grid_Type1_CopperTop_RevA_Date02Jul2010
+Cd Gauge, Massstab, 100mm, Gitter, Grid, CopperTop, Type 1,
+Kw Gauge, Massstab, 100mm, Gitter, Grid, CopperTop, Type 1,
+$EndMODULE
+#
+$EndLIBDOC

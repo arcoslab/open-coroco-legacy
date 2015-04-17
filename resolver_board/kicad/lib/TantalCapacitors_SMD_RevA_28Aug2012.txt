@@ -1,0 +1,34 @@
+# About the File
+TantalCapacitors_SMD_RevA_28Aug2012.mod
+
+
+Contains the KiCAD module/footprint of some
+tantalum capacitors of the size A to E (EIA 3216, 3528, 6032, 7343 and 7360).
+There are different footprints for reflow, wave and handsoldering process.
+ 
+TantalC_SizeA_EIA-3216_HandSoldering_RevA_28Aug2012
+TantalC_SizeA_EIA-3216_Reflow_RevA_28Aug2012
+TantalC_SizeA_EIA-3216_Wave_RevA_28Aug2012
+TantalC_SizeB_EIA-3528_HandSoldering_RevA_28Aug2012
+TantalC_SizeB_EIA-3528_Reflow_RevA_28Aug2012
+TantalC_SizeB_EIA-3528_Wave_RevA_28Aug2012
+TantalC_SizeC_EIA-6032_HandSoldering_RevA_28Aug2012
+TantalC_SizeC_EIA-6032_Reflow_RevA_28Aug2012
+TantalC_SizeC_EIA-6032_Wave_RevA_28Aug2012
+TantalC_SizeD_EIA-7343_HandSoldering_RevA_28Aug2012
+TantalC_SizeD_EIA-7343_Reflow_RevA_28Aug2012
+TantalC_SizeD_EIA-7343_Wave_RevA_28Aug2012
+TantalC_SizeE_EIA-7360_HandSoldering_RevA_28Aug2012
+TantalC_SizeE_EIA-7360_Reflow_RevA_28Aug2012
+TantalC_SizeE_EIA-7360_Wave_RevA_28Aug2012
+
+
+There is also a file TantalCapacitors_SMD_RevA_28Aug2012.pdf which contains 
+a pdf preview of the footprints.
+
+For suggestions and improvements please contact me at
+bernd.wiebus@gmx.de
+
+Author: Bernd Wiebus / Uedem / Germany / 28th August 2012
+GNU-GPL, NO WARRANTY!
+

@@ -1,0 +1,29 @@
+# About the file 
+Resistor_ThroughHole_RevB_22Apr2011.mod
+
+
+Contains the KiCAD module/footprint of some
+throughole and power resistors.
+
+Resistor_Horizontal_RM10mm_22Apr2011
+Resistor_Horizontal_RM15mm_22Apr2011
+Resistor_Horizontal_RM30mm_22Apr2011
+Resistor_Horizontal_RM25mm_22Apr2011
+Resistor_Horizontal_RM20mm_22Apr2011
+Resistor_TO-220_Horizontal
+Resistor_TO-220_Horizontal_LargePads
+Resistor_TO-220_Horizontal_MountedFromLS
+Resistor_TO-220_Horizontal_MountedFromLS_LargePads
+Resistor_TO-220_Vertical
+Resistor_Vertical_RM7.5mm_22Apr2011
+Resistor_Vertical_RM5mm_22Apr2011
+Resistor_Cement_Horizontal_Meggitt-SBC-2_22Apr2011
+Resistor_Cement_KOA-BGR-3N_22Apr2011
+Resistor_Cement_LargePads_KOA-BGR-3N_22Apr2011
+Resistor_Cement_Vertical_LargePads_KOA-BGR-5N-7N_22Apr2011
+Resistor_Cement_Vertical_KOA-BGR-5N-7N_22Apr2011
+
+
+Author: Bernd Wiebus / Uedem / Germany / 14 june 2011
+GNU-GPL, NO WARRANTY!
+

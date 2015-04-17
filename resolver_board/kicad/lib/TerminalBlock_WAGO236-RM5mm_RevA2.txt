@@ -1,0 +1,21 @@
+# About
+TerminalBlock_WAGO236-RM5mm_RevA2.mod
+
+
+Contains the KiCAD module/footprint of some
+WAGO 236 Series terminal blocks with 5mm raster.
+ 
+TerminalBlock_WAGO-236_2Stift_RM5mm_10pol
+TerminalBlock_WAGO-236_2Stift_RM5mm_1pol
+TerminalBlock_WAGO-236_2Stift_RM5mm_2pol
+TerminalBlock_WAGO-236_2Stift_RM5mm_3pol
+TerminalBlock_WAGO-236_2Stift_RM5mm_4pol
+TerminalBlock_WAGO-236_2Stift_RM5mm_5pol
+TerminalBlock_WAGO-236_2Stift_RM5mm_6pol
+TerminalBlock_WAGO-236_2Stift_RM5mm_7pol
+TerminalBlock_WAGO-236_2Stift_RM5mm_8pol
+TerminalBlock_WAGO-236_2Stift_RM5mm_9pol
+
+Author: Bernd Wiebus / Uedem / Germany / 21 Feb. 2012
+GNU-GPL, NO WARRANTY!
+
