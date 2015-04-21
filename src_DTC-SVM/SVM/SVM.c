@@ -657,7 +657,50 @@ void SVM_starting_open_loop(bool open_loop,float* VsD, float*VsQ, float Ud)
 }
 */
 
+float SVM_speed_close_loop_of_voltage_frequency_old(float reference_frequency, float frequency,bool close_loop_active, float* VsD, float* VsQ,float Ud,bool shutdown)
+{
 
+    static float extra_voltage_angle=0.0f;
+    static float extra_load_angle=0.0f;
+    static float extra_load_angle_increase=0.0f;
+
+
+    if (shutdown==true)
+    {
+        *VsD=0.0f;
+        *VsQ=0.0f;
+
+        //extra_voltage_angle=0.0f;
+        extra_load_angle=0.0f;
+        extra_load_angle_increase=0.0f;
+        
+    }
+
+    else if (close_loop_active==false) 
+    { 
+        *VsD=*VsD;
+        *VsQ=*VsQ;
+        //extra_voltage_angle=0.0f;
+        extra_load_angle=0.0f;
+        extra_load_angle_increase=0.0f;
+    } 
+
+    else if (close_loop_active==true )
+    {  
+        sensorless_pure_speed_SVM_pi_controller(reference_frequency,frequency,&extra_load_angle_increase); 
+
+        extra_load_angle=extra_load_angle+extra_load_angle_increase;
+        //extra_load_angle=frequency*360.0f*(2.0f*TICK_PERIOD)+extra_load_angle_increase;
+        extra_voltage_angle=extra_voltage_angle+extra_load_angle;
+        if (extra_voltage_angle>=360.0f) {extra_voltage_angle=extra_voltage_angle-360.0f;}
+        if (extra_voltage_angle<0.0f)    {extra_voltage_angle=extra_voltage_angle+360.0f;}
+
+       *VsD = 20.0f*Ud*fast_cos(extra_voltage_angle);
+       *VsQ = 20.0f*Ud*fast_sine(extra_voltage_angle);
+   } 
+
+   return extra_load_angle;
+}
 
 float SVM_speed_close_loop_of_voltage_frequency(float reference_frequency, float frequency,bool close_loop_active, float* VsD, float* VsQ,float Ud,bool shutdown)
 {
@@ -908,10 +951,10 @@ if (center_aligned_state==FIRST_HALF)
                                                            //it has to be multiplied by two in order because the switching frequency
                                                            //is half the pwm frequency due to the two-cycle center-aligned signal
   //actual value
-  w_r = 0.15915494309189533576f*rotor_speed_w_r (psi_sD,psi_sQ,TICK_PERIOD*2.0f); 
+  //w_r = 0.15915494309189533576f*rotor_speed_w_r (psi_sD,psi_sQ,TICK_PERIOD*2.0f); 
   
   //using neglected-currents flux-linkage estimator
-  //w_r = 0.15915494309189533576f*rotor_speed_w_r (psi_sD_i_neglected,psi_sQ_i_neglected,TICK_PERIOD*2.0f);  
+  w_r = 0.15915494309189533576f*rotor_speed_w_r (psi_sD_i_neglected,psi_sQ_i_neglected,TICK_PERIOD*2.0f);  
   //w_r = wr_moving_average_filter(w_r); 
   hall_freq=frequency_direction_two_hall_sensors_AB(CUR_FREQ);
 
@@ -975,7 +1018,7 @@ else
                             //SVM_speed_close_loop_of_voltage_frequency(ref_freq_SVM,CUR_FREQ,true,&V_sD,&V_sQ,U_d,shutdown); 
                             //SVM_speed_close_loop_of_voltage_frequency(ref_freq_SVM,hall_freq,true,&V_sD,&V_sQ,U_d,shutdown); 
                             //hall_freq=CUR_FREQ;
-                            SVM_speed_close_loop_of_voltage_frequency(ref_freq_SVM,w_r      ,true,&V_sD,&V_sQ,U_d,shutdown); 
+                            SVM_speed_close_loop_of_voltage_frequency_old(ref_freq_SVM,w_r      ,true,&V_sD,&V_sQ,U_d,shutdown); 
                             //SVM_speed_close_loop_of_voltage_frequency(ref_freq_SVM,hall_freq,close_loop_SVM,&V_sD,&V_sQ,U_d,shutdown); 
 
 
