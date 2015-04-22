@@ -28,6 +28,17 @@ void SVM_starting_open_loop(
                             float reference_frequency
                            );
 
+float SVM_speed_close_loop_of_voltage_frequency_old(
+                                                float reference_frequency, 
+                                                float frequency,
+                                                bool close_loop_active, 
+                                                float* VsD, 
+                                                float* VsQ,
+                                                float Ud,
+                                                bool shutdown
+                                               );
+
+
 float SVM_speed_close_loop_of_voltage_frequency(
                                                 float reference_frequency, 
                                                 float frequency,
