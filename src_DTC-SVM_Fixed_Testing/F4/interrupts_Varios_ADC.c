@@ -153,7 +153,7 @@ if (center_aligned_state==FIRST_HALF)
   voltage_measure (ADC1,ADC_CHANNEL1);
 
 
-  //voltage_measure (ADC2,ADC_CHANNEL2);//agregada isB_shunt
+  voltage_measure (ADC2,ADC_CHANNEL2);//agregada isB_shunt
     
   gpio_set(GPIOD, GPIO14); //agregada  
   voltage_measure (ADC3,ADC_CHANNEL3);//agregada Ud
