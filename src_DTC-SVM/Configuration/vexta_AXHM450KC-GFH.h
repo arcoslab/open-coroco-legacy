@@ -95,8 +95,8 @@ float fake_I_SENSORLESS_TORQUE = 0.0f;
 #define DAMPING   0.00001f
 #define MAX_SPEED 120.0f
 
-//Battey
-#define UD_PERCENTAGE   1.0f//0.7f    //0.8f
+//Battery
+#define UD_PERCENTAGE   0.8f    //0.8f is the max value. More than that causes the battery to deliver an oscilating voltage instead of a dc voltaje. Furthermore, if you use 100% the current rises too much and the fuse melts.
 #define MAXIMUM_OPEN_LOOP_SPEED 100.0f
 #define MAXIMUM_OPEN_LOOP_ANGLE_INCREASE 0.0005f//0.0005f
 
