@@ -37,8 +37,20 @@
 #define PI_MAX_SENSORLESS_SVM           90.0f//  0.0005f//(90.0f*frequency/interrupt_frequency) 
 #define PI_MIN_SENSORLESS_SVM          -90.0f// -0.0005f//-(90.0f*frequency/interrupt_frequency) 
 
+//fast
+//extra_voltage_angle=extra_voltage_angle+extra_load_angle;
+//[Original dirty speed controller]
+float P_SENSORLESS_SVM      = 0.001f; 
+float P_DOWN_SENSORLESS_SVM = 0.001f; 
+//float fake_P_SENSORLESS_SVM = 0.000002f;
+float I_SENSORLESS_SVM      = 0.0f;
+float I_DOWN_SENSORLESS_SVM = 0.0f;
+float fake_I_SENSORLESS_SVM = 0.0f;
 
 
+
+/************************************************************
+****Activate when using the function: "SVM_speed_close_loop_of_voltage_frequency_old"****
 //fast
 //extra_voltage_angle=extra_voltage_angle+extra_load_angle;
 //[Original dirty speed controller]
@@ -48,15 +60,8 @@ float fake_P_SENSORLESS_SVM = 0.000002f;
 float I_SENSORLESS_SVM      = 0.0f;
 float I_DOWN_SENSORLESS_SVM = 0.0f;
 float fake_I_SENSORLESS_SVM = 0.0f;
+****************************************************************/
 
-
-//fast
-//extra_voltage_angle=extra_voltage_angle+extra_load_angle;
-//[corrected speed controller]
-float P_SENSORLESS_SVM_FREQUENCY   = 1000.0f; 
-float P_DOWN_SENSORLESS_SVM_FREQUENCY       = 1000.0f; //too high: 0.0001; too slow 0.00001 ; max: 0.000012f
-float I_SENSORLESS_SVM_FREQUENCY            = 0.0f;
-float I_DOWN_SENSORLESS_SVM_FREQUENCY       = 0.0f;
 
 
 //DTC-SVM speed controller
@@ -73,21 +78,11 @@ float I_DOWN_SENSORLESS = 0.0f;
 float fake_I_SENSORLESS = 0.0f;
 
 
-//DTC-SVM torque controller
-#define I_MAX_SENSORLESS_TORQUE            90.0f//  0.005f//(90.0f*frequency/interrupt_frequency) 
-#define P_MAX_SENSORLESS_TORQUE            90.0f//  0.005f//(90.0f*frequency/interrupt_frequency) 
-#define PI_MAX_SENSORLESS_TORQUE           90.0f//  0.005f//(90.0f*frequency/interrupt_frequency) 
-#define PI_MIN_SENSORLESS_TORQUE          -90.0f//  -0.005f//-(90.0f*frequency/interrupt_frequency) 
-
-float P_SENSORLESS_TORQUE      = 0.0f;
-float P_DOWN_SENSORLESS_TORQUE = 0.0f;
-float fake_P_SENSORLESS_TORQUE = 0.0f;
-float I_SENSORLESS_TORQUE      = 0.0f;
-float I_DOWN_SENSORLESS_TORQUE = 0.0f;
-float fake_I_SENSORLESS_TORQUE = 0.0f;
 
 
-#define FIXED_LOAD_ANGLE 80.0f
+
+
+
 
 
 //Admittance controller

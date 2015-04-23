@@ -87,28 +87,6 @@ void  floating_switching_states (float* S_A, float* S_B, float* S_C)
 
 }
 
-/*
-float direct_stator_voltage_V_sD     (int S_A, int S_B, int S_C,float U_d)
-{
-  return (2.0f/3.0f)*U_d*(S_A-0.5f*S_B-0.5f*S_C);
-}
-
-float quadrature_stator_voltage_V_SQ (int S_B, int S_C,float U_d)
-{ 
-  return (1.0f/sqrtf(3.0f))*U_d*(S_B-S_C);
-}
-  
-
-float floating_switches_direct_stator_voltage_V_sD     (float S_A, float S_B, float S_C,float U_d)
-{
-  return (2.0f/3.0f)*U_d*(S_A-0.5f*S_B-0.5f*S_C);
-}
-
-float floating_switches_quadrature_stator_voltage_V_SQ (float S_B, float S_C,float U_d)
-{ 
-  return (1.0f/sqrtf(3.0f))*U_d*(S_B-S_C);
-}
-*/
 //---------------------stator flux-linkage space vector estimation-------------------------------
 #define PI_CTE 3.14159265359f 
 #define F_CUTOFF 5.0f//5.0f
@@ -122,24 +100,7 @@ float floating_switches_quadrature_stator_voltage_V_SQ (float S_B, float S_C,flo
 #define a_sD 0.0f
 #define b_sQ 0.0f
 
-/*
-float direct_stator_flux_linkage_estimator_psi_sD     (float T,float V_sD,float i_sD,float R_s)
-{
-  static float previous_psi_sD=0.0f;
-  previous_psi_sD = ( previous_psi_sD+T*(V_sD-i_sD*R_s) )/(1.0f+T*W_CUTOFF);
 
-  return previous_psi_sD;
-}
-
-float quadrature_stator_flux_linkage_estimator_psi_sQ (float T,float V_sQ,float i_sQ,float R_s)
-{
-  static float previous_psi_sQ=0.0f;
-
-  previous_psi_sQ = ( previous_psi_sQ+T*(V_sQ-i_sQ*R_s) )/(1.0f+T*W_CUTOFF);
-
-  return previous_psi_sQ;
-}
-*/
 
 float direct_stator_flux_linkage_estimator_psi_sD     (float T,float V_sD,float i_sD,float R_s)//,float electric_frequency)
 {
@@ -352,92 +313,7 @@ void flux_linkage_estimator_neglected_currents (float T,float V_sD,float V_sQ, f
 
 
 
-/*
-float stator_flux_linkage_magnite_psi_s               (float psi_sD,float psi_sQ)
-{
-  return sqrtf( (psi_sQ*psi_sQ+psi_sD*psi_sD) );
-  //return sqrtf( ( powf(psi_sQ,2.0f)+powf(psi_sD,2.0f) ) );
-}
-*/
-/*
-float flux_linkage_angle_psi_s_angle(float cmd_angle_PID)//float psi_sD, float psi_sQ)
-{
-  float psi_angle=0.0f;
- 
-  //return psi_angle=vector_angle(psi_sQ,psi_sD);
-  
-        float captured_cmd_angle;
-        captured_cmd_angle=cmd_angle_PID;
-        
-        while (captured_cmd_angle>(2.0f*PI) )
-          captured_cmd_angle=captured_cmd_angle-2.0f*PI;
-        float ang_PID;
-        ang_PID=(180.0f/PI)*captured_cmd_angle;
-        if (ang_PID<0.0f)
-          ang_PID=ang_PID+360.0f;
-        float actual_hall_angle;
-        actual_hall_angle=ang_PID*-1.0f;
-        if (actual_hall_angle<0.0f)
-          actual_hall_angle=actual_hall_angle+360.0f;
-        if (actual_hall_angle>360.0f)
-          actual_hall_angle=actual_hall_angle-360.0f;
-        
-        return psi_angle=actual_hall_angle;
-}
-*/
-/*
-int stator_flux_linkage_sector_alpha                (float psi_sD, float psi_sQ)
-{
-  float psi_angle=0.0f;
-  int psi_alpha=0;
-  psi_angle=vector_angle(psi_sQ,psi_sD);//+178.23f;
-  //psi_angle=flux_linkage_angle_psi_s_angle(cmd_angle);
 
-
-
-
-//  if(psi_angle>=360.0f)
-//    psi_angle=psi_angle-360.0f;
-//  if (psi_angle<0.0f)
-//    psi_angle=psi_angle+360.0f;
-   
-
-
-  //sector selection
-  if      ( ( (psi_angle>=330.0f) && (psi_angle<=360.0f) ) ||
-            ( (psi_angle>=  0.0f) && (psi_angle<  30.0f) ) )
-  {   
-    psi_alpha=1;
-  }
-  else if   ( (psi_angle>= 30.0f) && (psi_angle<  90.0f) ) 
-  {   
-    psi_alpha=2;
-  } 
-  else if   ( (psi_angle>= 90.0f) && (psi_angle< 150.0f) ) 
-  {   
-    psi_alpha=3;
-  } 
-  else if   ( (psi_angle>=150.0f) && (psi_angle< 210.0f) ) 
-  {   
-    psi_alpha=4;
-  } 
-  else if   ( (psi_angle>=210.0f) && (psi_angle< 270.0f) ) 
-  {   
-    psi_alpha=5;
-  } 
-  else if   ( (psi_angle>=270.0f) && (psi_angle< 330.0f) ) 
-  {   
-    psi_alpha=6;
-  } 
-  else 
-  {
-    psi_alpha=0;
-  }
-  
-  return psi_alpha;
-  
-}
-*/
 float rotor_speed_w_r(float psi_sD, float psi_sQ, float T)
 {
   static float previous_psi_sD=0.0f;
@@ -456,44 +332,11 @@ float rotor_speed_w_r(float psi_sD, float psi_sQ, float T)
 //electromagnetic torque estimation
 float electromagnetic_torque_estimation_t_e(float psi_sD,float i_sQ, float psi_sQ,float i_sD,float pole_pairs)
 {
-  //float t_e=0.0f;
-  //t_e=(3.0f/2.0f)*pole_pairs* (psi_sD*i_sQ-psi_sQ*i_sD);
-/*
-  float psis=0.0f;
-  float psis_alpha=0.0f;
-  float lag_angle=0.0f;
-  fast_vector_angle_and_magnitude(psi_sQ,psi_sD,&psis,&psis_alpha);
-  lag_angle   = 30.0f;
-
-  
-  psis_alpha = psis_alpha+lag_angle;
-
-  psi_sD = psis*fast_cos (psis_alpha);
-  psi_sQ = psis*fast_sine(psis_alpha);
-
-*/
-
   return ( 1.5f*pole_pairs* (psi_sD*i_sQ-psi_sQ*i_sD) );//t_e;
 }
 
 
 
-//stator flux-linkage reference
-/*
-float stator_flux_linkage_reference_psi_s_ref(float psi_F,float te_ref,float L_sq,float pole_pairs)
-{
-  return sqrtf ( psi_F*psi_F+L_sq*L_sq*(2.0f*te_ref/(3.0f*pole_pairs*psi_F))*(2.0f*te_ref/(3.0f*pole_pairs*psi_F))            );
-}
-*/
-
-
-//quadrature rotor inductance
-/*
-float quadrature_rotor_inductance_L_sq (float psi_s,float psi_F,float t_e,float pole_pairs)
-{
-  return sqrtf(psi_s*psi_s-psi_F*psi_F)/(2.0f*t_e/(3.0f*pole_pairs*psi_F));
-}
-*/
 //hysteresis windows
 int stator_flux_linkage_hysteresis_controller_d_psi(float psi_s_ref, float psi_s,float psi_delta_percentage)
 {
@@ -668,31 +511,7 @@ void voltage_switch_inverter_VSI(int S_A, int S_B, int S_C)
     duty_c=0.0f;
     attenuation=1.0f;
   }
-/*
-//#define CURRENT_LIMIT 14.0f
-  if ( i_sA        >CURRENT_LIMIT || i_sA        <-CURRENT_LIMIT || 
-       i_sB        >CURRENT_LIMIT || i_sB        <-CURRENT_LIMIT || 
-       (-i_sA-i_sB)>CURRENT_LIMIT || (-i_sA-i_sB)<-CURRENT_LIMIT)
-  {
-    duty_a=0.0f;
-    duty_b=0.0f;
-    duty_c=0.0f;
-    attenuation=1.0f;
-    motor_stop=true;
-    //printf("\n\nMotor off, overcurrent...\n\n");
- }
-*/
-  
-/*      //PWM mode
-	TIM_OCM_FROZEN,
-	TIM_OCM_ACTIVE,
-	TIM_OCM_INACTIVE,
-	TIM_OCM_TOGGLE,
-	TIM_OCM_FORCE_LOW,
-	TIM_OCM_FORCE_HIGH,
-	TIM_OCM_PWM1,
-	TIM_OCM_PWM2,
-*/
+
 
 
 //dtc switching selection
@@ -774,53 +593,7 @@ if (close_loop)
     }
 }
 
-//open loop switching selection
-/*
-else 
-{
 
-  if (duty_a < 0.0f)
-    {
-      timer_set_oc_mode(TIM1, TIM_OC1, TIM_OCM_PWM1);
-      timer_disable_oc_output(TIM1,TIM_OC1);
-      timer_enable_oc_output (TIM1, TIM_OC1N);
-      duty_a=-duty_a;
-    }
-  else
-    {
-      timer_set_oc_mode(TIM1, TIM_OC1, TIM_OCM_PWM1);
-      timer_enable_oc_output(TIM1, TIM_OC1 );
-      timer_disable_oc_output (TIM1, TIM_OC1N);
-    }
-  if (duty_b < 0.0f)
-    {
-      timer_set_oc_mode(TIM1, TIM_OC2, TIM_OCM_PWM1);
-      timer_disable_oc_output(TIM1, TIM_OC2 );
-      timer_enable_oc_output (TIM1, TIM_OC2N);
-      duty_b=-duty_b;
-    }
-  else
-    {
-      timer_set_oc_mode(TIM1, TIM_OC2, TIM_OCM_PWM1);
-      timer_enable_oc_output(TIM1, TIM_OC2 );
-      timer_disable_oc_output (TIM1, TIM_OC2N);
-    }
-  if (duty_c < 0.0f)
-    {
-      timer_set_oc_mode(TIM1, TIM_OC3, TIM_OCM_PWM1);
-      timer_disable_oc_output(TIM1, TIM_OC3 );
-      timer_enable_oc_output (TIM1, TIM_OC3N);
-      duty_c=-duty_c;
-    }
-  else
-    {
-      timer_set_oc_mode(TIM1, TIM_OC3, TIM_OCM_PWM1);
-      timer_enable_oc_output(TIM1, TIM_OC3 );
-      timer_disable_oc_output (TIM1, TIM_OC3N);
-    }
-
-}
-*/
 
 
   /* Set the capture compare value for OC1. */
@@ -833,68 +606,11 @@ else
 }
 
 
-/*
-float direct_clark_transformation(float i_sA, float i_sB, float i_sC)
-{
-	float i_sD;
-	i_sD=(2.0f/3.0f) * (i_sA-(1.0f/2.0f)*i_sB-(1.0f/2.0f)*i_sC);
-	//i_sD=i_sA;
-	return i_sD;
-}
 
-float quadrature_clark_transformation(float i_sA,float i_sB,float i_sC)
-{
-	float i_sQ;
-	i_sQ=(2.0f/3.0f)*(sqrtf(3.0f)/2.0f) * (i_sB-i_sC);
-	//i_sQ=(i_sA+2.0f*i_sB)/sqrtf(3.0f);		
-	return i_sQ;
-}
-*/
-/*
-float vector_magnitude(float quadrature_component, float direct_component)
-{
-	float magnitude;
-	magnitude=sqrtf( (quadrature_component*quadrature_component+direct_component*direct_component) );
-	return magnitude;
-}
-
-
-float vector_angle(float quadrature_component, float direct_component)
-{
-	float angle;
-	//angle=180.0f/PI*atanf(quadrature_component/direct_component);
-	angle=57.295779513082320f*atanf(quadrature_component/direct_component);
-
-	
-
-	if (angle>=360.0f)
-		angle=angle-360.0f;
-	else if (angle<0.0f)
-		angle=angle+360.0f;
-
-	if ( (quadrature_component<=0.0f) && (direct_component<0.0f) )
-		angle=angle+180.0f;
-
-	else if ( (quadrature_component>0.0f)&&(direct_component<0.0f))
-		angle=angle-180.0f;
-
-	return angle;
-}
-*/
 float fast_vector_angle(float y, float x)
 {
   float angle;
-/*
-  if      (x>=0.0f && y>=0.0f &&  x>= y) { angle =        fast_atan( y/ x); }  //1st quadrant
-  else if (x>=0.0f && y>=0.0f &&  y> x)  { angle =  90.0f-fast_atan( x/ y); }  //2nd quadrant
-  else if (x< 0.0f && y>=0.0f &&  y>=-x) { angle =  90.0f+fast_atan(-x/ y); }  //3rd quadrant
-  else if (x< 0.0f && y>=0.0f && -x> y)  { angle = 180.0f-fast_atan( y/-x); }  //4th quadrant
-  else if (x< 0.0f && y< 0.0f && -x>=-y) { angle = 180.0f+fast_atan(-y/-x); }  //5th quadrant
-  else if (x< 0.0f && y< 0.0f && -y>-x)  { angle = 270.0f-fast_atan(-x/-y); }  //6th quadrant
-  else if (x>=0.0f && y< 0.0f && -y>= x) { angle = 270.0f+fast_atan( x/-y); }  //7th quadrant 
-  else if (x>=0.0f && y< 0.0f &&  x>-y)  { angle = 360.0f-fast_atan(-y/ x); }  //8th quadrant 
-  else                                   { angle =   0.0f                 ; }  //lost quadrant
-*/
+
   if      (x>=0.0f && y>=0.0f &&  x>= y) { angle =        fast_atan( y/ x); }  //1st quadrant
   else if (x>=0.0f && y>=0.0f &&  y> x)  { angle =  90.0f-fast_atan( x/ y); }  //2nd quadrant
   else if (x< 0.0f && y>=0.0f &&  y>=-x) { angle =  90.0f+fast_atan(-x/ y); }  //3rd quadrant
@@ -981,29 +697,6 @@ float stator_angle_to_phase_A(float stator_angle)
 
 
 
-/*
-	//park_transformation
-	V_sD		=direct_clark_transformation	(duty_a,duty_b,duty_c);
-	V_sQ		=quadrature_clark_transformation(duty_a,duty_b,duty_c);
-	V_s_angle	=vector_angle			(V_sQ,V_sD);
-	V_s_magnitude	=vector_magnitude		(V_sQ,V_sD);		
-
-	B=phase_A_angle_to_stator_angle(A_phase_angle_degree);
-	A=stator_angle_to_phase_A(V_s_angle);
-*/
-
-
-	//inverse park transformation	
-/*
-	A=A_inverse_clark_transformation(V_sQ);
-	B=B_inverse_clark_transformation(V_sD,V_sQ);
-	C=C_inverse_clark_transformation(V_sD,V_sQ);
-	
-	A=duty_cycle_to_angle(	A_inverse_clark_transformation(V_sQ)		);
-  	B=duty_cycle_to_angle(	B_inverse_clark_transformation(V_sD,V_sQ)	);
-	C=duty_cycle_to_angle(	C_inverse_clark_transformation(V_sD,V_sQ)	);
-*/
-
 
 #define P_DTC 0.01f//0.000028f
 #define I_DTC 1.0f
@@ -1017,103 +710,11 @@ float DTC_torque_reference_PI(float w, float w_ref)
   te_ref=-P_DTC*te_error;
   
   return te_ref;
-/*
-  if (error > 0.0f) 
-  {
-    p_error=P*error;
-  } 
-  else 
-  {
-    p_error=P_DOWN*error;
-  }
-
-  if (error > 0.0f) {
-    i_error+=I*error;
-  } 
-  else 
-  {
-    i_error+=I_DOWN*error;
-  }
-
-  if (i_error > I_MAX)
-  {
-    i_error=I_MAX;
-  }
-  if (i_error < -I_MAX) 
-  {
-    i_error=-I_MAX;
-  }
-  if (p_error > P_MAX) 
-  {
-    p_error=P_MAX;
-  }
-  if (p_error < -P_MAX) 
-  {
-    p_error= -P_MAX;
-  }
-
-  pi_control=p_error+i_error;
-
-  if (pi_control > PI_MAX) 
-  {
-    pi_control = PI_MAX;
-  }
-  if (pi_control < PI_MIN) 
-  {
-    pi_control = PI_MIN;
-  }
-*/
-
 
 }
 
 
 
 
-/*
-//wrapper
-void DTC(void)//(float i_sA,float i_sB, float U_d,float L_sq,float psi_F,float t_e_ref)
-{
 
-  //switching_states                        (&S_A,&S_B,&S_C);
-  //V_sD    =direct_stator_voltage_V_sD     (S_A,S_B,S_C,U_d);
-  //V_sQ    =quadrature_stator_voltage_V_SQ (    S_B,S_C,U_d);
-  V_sD    =floating_switches_direct_stator_voltage_V_sD     (S_A_f,S_B_f,S_C_f,U_d);
-  V_sQ    =floating_switches_quadrature_stator_voltage_V_SQ (      S_B_f,S_C_f,U_d);
- 
-
-  V_s     =vector_magnitude               (V_sQ,V_sD);
-  cita_V_s=vector_angle                   (V_sQ,V_sD);
-
-  i_sD    =direct_stator_current_i_sD     (i_sA);
-  i_sQ    =quadrature_stator_current_i_sQ (i_sA,i_sB);
-  i_s     =vector_magnitude               (i_sQ,i_sD);
-  cita_i_s=vector_angle                   (i_sQ,i_sD);
-
-  psi_sD   =direct_stator_flux_linkage_estimator_psi_sD     (TICK_PERIOD,V_sD,i_sD,R_s);
-  psi_sQ   =quadrature_stator_flux_linkage_estimator_psi_sQ (TICK_PERIOD,V_sQ,i_sQ,R_s);
-  psi_s    =stator_flux_linkage_magnite_psi_s               (psi_sD,psi_sQ);
-  psi_alpha=stator_flux_linkage_sector_alpha                (psi_sD,psi_sQ);
-  w_r=rotor_speed_w_r(psi_sD,psi_sQ,TICK_PERIOD);
-
-  t_e      =electromagnetic_torque_estimation_t_e(psi_sD,i_sQ,psi_sQ,i_sD,pole_pairs);
-  //t_e_ref=DTC_torque_reference_PI(CUR_FREQ, ref_freq);
-
-  psi_s_ref=stator_flux_linkage_reference_psi_s_ref(psi_F,t_e_ref,L_sq,pole_pairs);
-
-
-  d_psi=stator_flux_linkage_hysteresis_controller_d_psi   (psi_s_ref, psi_s,psi_delta_percentage);
-  d_te =electromagnetic_torque_hysteresis_controller_d_te (t_e_ref  , t_e  ,t_e_delta_percentage);
-
-
-  optimal_voltage_switching_vector_selection_table(d_psi,d_te,psi_alpha,&S_A,&S_B,&S_C);
-
-if (dtc_on)
-{
-  voltage_switch_inverter_VSI(S_A,S_B,S_C,i_sA,i_sB);
-  
-}
-
-
-}*/
 

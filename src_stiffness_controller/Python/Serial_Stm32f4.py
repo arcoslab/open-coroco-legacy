@@ -41,7 +41,7 @@ class Serial_Stm32f4(object):
         self.empty_vectors=False
 
         #pyserial configuration
-        self.root_path           = "/home/tumacher/local/src/repositories/arcoslab/another_open-coroco/open-coroco/src_DTC-SVM/Python/measures/"
+        self.root_path           = "./measures/"
         self.dev_type       ="/dev/ttyACM"
         self.serial_speed   =115200
         self.serial_timeout =1
@@ -2439,8 +2439,7 @@ class Serial_Stm32f4(object):
                     elif     split_command[0]=='L':
                         self.write_a_line(line)
                     #psi_ref
-                    elif     split_command[0]=='F':
-                        self.write_a_line(line)
+
 
                     #updating reference torque
                     elif     split_command[0]=='Q':

@@ -813,12 +813,7 @@ void print_regular_data(void)
         printf ("I")  ;  checksum=checksum  +print_float_as_bytes(I_SENSORLESS                  );
     }
 
-    else if (print_selection==10)
-    {
-        printf ("t")  ;  checksum=           print_float_as_bytes(data_timer                   );
-        printf ("j")  ;  checksum=          +print_float_as_bytes(fake_P_SENSORLESS_TORQUE                  );
-        //printf ("i")  ;  checksum=checksum  +print_float_as_bytes(fake_I_SENSORLESS_TORQUE                  );
-    }
+
 
     else if (print_selection==12)
     {

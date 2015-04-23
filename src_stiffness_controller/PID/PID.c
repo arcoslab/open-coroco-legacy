@@ -470,11 +470,7 @@ void frequency_input(void)
       {
         load_angle=value;
       }
-      if (strcmp(cmd, "F") == 0)
-      {
-        psi_ref_user=value;
-        user_input  =true;
-      }
+
  
 
       if (strcmp(cmd, "Q") == 0)
@@ -516,13 +512,7 @@ void frequency_input(void)
         print_selection   = 8;
       }	 
 
-      if (strcmp(cmd, "#") == 0)
-      {
-        fake_P_SENSORLESS_TORQUE =value;
-        P_SENSORLESS_TORQUE      = value/1000000000.0f;
-        P_DOWN_SENSORLESS_TORQUE = value/1000000000.0f;
-        print_selection   = 10;
-      }	       
+     
 
 
 
@@ -534,13 +524,7 @@ void frequency_input(void)
         print_selection   = 8;
       }
 
-      if (strcmp(cmd, "T") == 0)
-      {
-        fake_I_SENSORLESS_TORQUE =value;
-        I_SENSORLESS_TORQUE      = value/10000000000000000000.0f;
-        I_DOWN_SENSORLESS_TORQUE = value/10000000000000000000.0f;
-        print_selection   = 10;
-      }
+
 
 
       if (strcmp(cmd, "p") == 0)
