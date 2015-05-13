@@ -41,7 +41,8 @@ class Serial_Stm32f4(object):
         self.empty_vectors=False
 
         #pyserial configuration
-        self.root_path           = "/home/tumacher/local/src/repositories/arcoslab/another_open-coroco/open-coroco/src_DTC-SVM/Python/measures/"
+        #self.root_path           = "/home/tumacher/local/src/repositories/arcoslab/another_open-coroco/open-coroco/src_DTC-SVM/Python/measures/"
+        self.root_path           = "/home/black/ProyectoFinal/open-coroco-new/open-coroco/src_DTC-SVM/Python/measures/"
         self.dev_type       ="/dev/ttyACM"
         self.serial_speed   =115200
         self.serial_timeout =1

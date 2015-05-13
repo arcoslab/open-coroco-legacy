@@ -30,15 +30,16 @@ Se tienen dos opciones:
 		RAM = data + bss.
 	El problema es que para saber cuanto aumenta la cantidad de memoria en fixed, habria que pasar todo el proyecto a fixedpt.
 	
-
+//LISTO
 
 5. Hacer pruebas para medir el tiempo de los desplazamientos a izquierda y derecha tanto el punto flotante como en punto fijo.
 	//LISTO
 
 6. Implementar el codigo en una de las funciones de open-coroco, por ejemplo la del PID, o alguna que sea muy relevante.
+//LISTO
 
 7. Pensar si es bueno o si hay tiempo para entrarle a lo de conversion ADC.
-
+//LISTO
 
 
 
