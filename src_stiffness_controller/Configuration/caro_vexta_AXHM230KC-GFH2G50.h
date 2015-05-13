@@ -17,16 +17,19 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-//vexta_AXHM450KC-GFH4G200_parameters
-
+//vexta_AXHM230KC-GFH2G50_parameters
+//"Caro's motor"
 
 //motor parameters
+
+//pending
 #define R_s_0          0.78f    //Ohms
 #define L_s_d_0        0.0001f  //0.000038671875f  //H   0.000089f H
 #define L_s_q_0	       0.0001f  //0.00003515625f  //(54uH)H   0.000089f H
 #define psi_F_0        0.0075f  //0.0016f//0.005f    //0.0016f  //Wb-t (weber-turn) (kg m2 s-2 A-1)
+//confirmed
 #define pole_pairs_0   5.0f	    //five pole pairs (five d-axis)
-#define gear_ratio     200.0f   //200:1
+#define gear_ratio     50.0f   //200:1
 
 
 //PID parameters
@@ -53,8 +56,8 @@ float fake_I_SENSORLESS_SVM = 0.0f;
 //fast
 //extra_voltage_angle=extra_voltage_angle+extra_load_angle;
 //[corrected speed controller]
-float P_SENSORLESS_SVM_FREQUENCY   = 1000.0f; 
-float P_DOWN_SENSORLESS_SVM_FREQUENCY       = 1000.0f; //too high: 0.0001; too slow 0.00001 ; max: 0.000012f
+float P_SENSORLESS_SVM_FREQUENCY   = 0.001; 
+float P_DOWN_SENSORLESS_SVM_FREQUENCY       = 0.001f; //too high: 0.0001; too slow 0.00001 ; max: 0.000012f
 float I_SENSORLESS_SVM_FREQUENCY            = 0.0f;
 float I_DOWN_SENSORLESS_SVM_FREQUENCY       = 0.0f;
 
@@ -95,8 +98,8 @@ float fake_I_SENSORLESS_TORQUE = 0.0f;
 #define DAMPING   0.00001f
 #define MAX_SPEED 120.0f
 
-//Battery
-#define UD_PERCENTAGE   0.8f    //0.8f is the max value. More than that causes the battery to deliver an oscilating voltage instead of a dc voltaje. Furthermore, if you use 100% the current rises too much and the fuse melts.
+//Battey
+#define UD_PERCENTAGE   0.7f    //0.8f
 #define MAXIMUM_OPEN_LOOP_SPEED 100.0f
 #define MAXIMUM_OPEN_LOOP_ANGLE_INCREASE 0.0005f//0.0005f
 
