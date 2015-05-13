@@ -456,12 +456,12 @@ float SVM_speed_close_loop_of_voltage_frequency(float reference_frequency, float
         if (extra_voltage_angle<0.0f)    {extra_voltage_angle=extra_voltage_angle+360.0f;}
 
 
-       *VsD = SVM_V_s_ref_D (psi_s_ref,psi_s,psi_s_alpha_SVM,extra_voltage_angle,i_sD,R_s,2.0f*TICK_PERIOD);
-       *VsQ = SVM_V_s_ref_Q (psi_s_ref,psi_s,psi_s_alpha_SVM,extra_voltage_angle,i_sQ,R_s,2.0f*TICK_PERIOD);
+       //*VsD = SVM_V_s_ref_D (psi_s_ref,psi_s,psi_s_alpha_SVM,extra_voltage_angle,i_sD,R_s,2.0f*TICK_PERIOD);
+       //*VsQ = SVM_V_s_ref_Q (psi_s_ref,psi_s,psi_s_alpha_SVM,extra_voltage_angle,i_sQ,R_s,2.0f*TICK_PERIOD);
 
 
-        //*VsD = 20.0f*Ud*fast_cos(extra_voltage_angle);
-        //*VsQ = 20.0f*Ud*fast_sine(extra_voltage_angle);
+        *VsD = 20.0f*Ud*fast_cos(extra_voltage_angle);
+        *VsQ = 20.0f*Ud*fast_sine(extra_voltage_angle);
         pi_max=frequency*360.0f*(2.0f*TICK_PERIOD)+extra_load_angle_increase;//Value;//extra_voltage_angle;
    } 
 
@@ -547,11 +547,13 @@ else
 
 
   electric_angle= electric_angle+
+                            /*DTC-SVM PID controller*/                            
+
                             /*SVM with PID controller on the frequency calculated with the hall sensor*/
-                            SVM_speed_close_loop_of_voltage_frequency(ref_freq_SVM,hall_freq,true,&V_sD,&V_sQ,U_d,shutdown); 
+                            //SVM_speed_close_loop_of_voltage_frequency(ref_freq_SVM,hall_freq,true,&V_sD,&V_sQ,U_d,shutdown); 
   
                             /*SVM with lineal increase of electric frequency [based on frecuency calculated with the flux-linkage estimator]*/ 
-                            //SVM_speed_close_loop_of_voltage_frequency_old(ref_freq_SVM,w_r      ,true,&V_sD,&V_sQ,U_d,shutdown);
+                            SVM_speed_close_loop_of_voltage_frequency_old(ref_freq_SVM,w_r      ,true,&V_sD,&V_sQ,U_d,shutdown);
 
 #define MAX_GEAR_CYCLES 100.0f
 
@@ -593,6 +595,11 @@ else
   T_max_on =SVM_T_max_on (T_med_on,T1,T2,cita_V_s);
 
   SVM_phase_duty_cycles           (&duty_a, &duty_b, &duty_c, cita_V_s,T_max_on,T_med_on,T_min_on);
+  
+  //duty_a=0.5f;
+  //duty_b=0.0f;
+  //duty_c=0.0f;
+
   
 
   shutdown_counter(ref_freq_SVM,&shutdown);

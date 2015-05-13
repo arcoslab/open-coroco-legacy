@@ -21,13 +21,13 @@
 
 
 //motor parameters
-#define R_s_0          0.78f    //Ohms
-#define L_s_d_0        0.0001f  //0.000038671875f  //H   0.000089f H
-#define L_s_q_0	       0.0001f  //0.00003515625f  //(54uH)H   0.000089f H
-#define psi_F_0        0.0075f  //0.0016f//0.005f    //0.0016f  //Wb-t (weber-turn) (kg m2 s-2 A-1)
-#define pole_pairs_0   5.0f	    //five pole pairs (five d-axis)
-#define gear_ratio     200.0f   //200:1
-
+#define R_s_0                   0.78f    //Ohms
+#define L_s_d_0                 0.0001f  //0.000038671875f  //H   0.000089f H
+#define L_s_q_0	                0.0001f  //0.00003515625f  //(54uH)H   0.000089f H
+#define psi_F_0                 0.0075f  //0.0016f//0.005f    //0.0016f  //Wb-t (weber-turn) (kg m2 s-2 A-1)
+#define pole_pairs_0            5.0f	    //five pole pairs (five d-axis)
+#define gear_ratio              200.0f   //200:1
+#define DEAD_TIME_PERCENTAGE    1000.0f     //Dead time for switching from high to low transistors
 
 //PID parameters
 
@@ -37,6 +37,8 @@
 #define PI_MAX_SENSORLESS_SVM           90.0f//  0.0005f//(90.0f*frequency/interrupt_frequency) 
 #define PI_MIN_SENSORLESS_SVM          -90.0f// -0.0005f//-(90.0f*frequency/interrupt_frequency) 
 
+
+/*
 //fast
 //extra_voltage_angle=extra_voltage_angle+extra_load_angle;
 //[Original dirty speed controller]
@@ -46,11 +48,11 @@ float P_DOWN_SENSORLESS_SVM = 0.001f;
 float I_SENSORLESS_SVM      = 0.0f;
 float I_DOWN_SENSORLESS_SVM = 0.0f;
 float fake_I_SENSORLESS_SVM = 0.0f;
+*/
 
 
-
-/************************************************************
-****Activate when using the function: "SVM_speed_close_loop_of_voltage_frequency_old"****
+/************************************************************/
+////Activate when using the function: "SVM_speed_close_loop_of_voltage_frequency_old"////
 //fast
 //extra_voltage_angle=extra_voltage_angle+extra_load_angle;
 //[Original dirty speed controller]
@@ -60,7 +62,7 @@ float fake_P_SENSORLESS_SVM = 0.000002f;
 float I_SENSORLESS_SVM      = 0.0f;
 float I_DOWN_SENSORLESS_SVM = 0.0f;
 float fake_I_SENSORLESS_SVM = 0.0f;
-****************************************************************/
+/****************************************************************/
 
 
 
