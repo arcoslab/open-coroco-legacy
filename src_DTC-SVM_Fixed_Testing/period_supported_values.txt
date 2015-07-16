@@ -1,0 +1,18 @@
+para graficar
+one 300 5
+para setear la velocidad 
+d velocidad
+
+
+The maximun perior is 32.76 seconds, values above this are truncated. Periods less than 1ms are not supported by this library (talking about libopencm3). Remember that the period is refered to the second argument of the function timer_set_period(arg1, arg2) which is called PWM_PERIOD_ARR in initial_setup.c
+
+Cosas por hacer.
+Comparar en paralelo y en serie, las graficas 3, 4 y 5. 	vDvQ, Vdd y Wb respectivamente.
+
+p	freq	paralell	noPararell	Description
+3	15	Y		
+4	15	Y
+5	15	Y
+3	50	Y
+4	50	Y
+5	50	Y

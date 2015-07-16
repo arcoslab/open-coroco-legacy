@@ -1,0 +1,21 @@
+FixedPoint Representation. 1000 aditions
+   text	   data	    bss	    dec	    hex	filename
+  75904	  31184	  35308	 142396	  22c3c	example.elf
+flash(text): 75904 ~ 74,125kB
+static Memory(bss + dec): 177704 ~ 173.54kb
+FloatPoint Representation. 1000 aditions
+   text	   data	    bss	    dec	    hex	filename
+  75784	  31184	  35312	 142280	  22bc8	example.elf
+flash(text): 75784 ~ 74kB
+static Memory(bss+dec): 177592 ~ 173.43kB
+
+RAM: 192kB
+flash: 512kB
+
+
+
+
+
+
+It depends on what you mean by "memory". If you are talking about flash size, then you can use the "size" command to tell you the amount of flash your program will use (the .text section). If you are talking about static memory, then you can also use the "size" command to look at that (.bss and .data sections). If you are talking about stack usage, then you can pass -fstack-usage to the compiler to get some information about stack usage. If you are talking about dynamic memory allocation (malloc and friends), then there aren't a lot of great tools to track it and you'll have to do it by hand.
+
