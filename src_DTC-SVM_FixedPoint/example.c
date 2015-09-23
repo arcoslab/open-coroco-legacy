@@ -133,8 +133,8 @@ int main(void)
   */
 
   //Fixed Point
-  //V1 = fixedpt_rconst(prueba);
-  //V2 = fixedpt_rconst(prueba2);
+  V1 = fixedpt_rconst(prueba);
+  V2 = fixedpt_rconst(prueba2);
   //V1 = fixedpt_rconst(524287.9374);
   //V2 = fixedpt_rconst(0.001);
   //V1 = fixedpt_rconst(16.0); 
@@ -184,24 +184,25 @@ int main(void)
   
   //Duracion Osciloscopio
   
-int i = 0;
-int j = 0;
+//int i = 0;
+//int j = 0;
 
   while (1)
   {
+
   //printf("X\n");
   
   //printf("4_: ")   ; fixedpt_print(V1); //MINICOM
   //printf("5_: ")   ; fixedpt_print(V2); //MINICOM
   
 
-  
+/* Pruebas con osciloscopio  
   gpio_set(GPIOD, GPIO13);
 
   while (i<1000){
     //pruebai = pruebai >> 1;
     //R1 = fixedpt_div(V1,V2);  
-    //R1 = fixedpt_add(V1,V2);    
+    R1 = fixedpt_add(V1,V2);    
     //R1 = fixedpt_sub(V2,V1);
     //R1 = fixedpt_mul(V1,V2);
     //R1 = V1 / V2;
@@ -219,41 +220,48 @@ int j = 0;
     //pruebai = pruebai >> 1;
     //R1 = V1 / V2;
     //R1 = fixedpt_div(V1,V2);  
-    //R1 = fixedpt_add(V1,V2);    
+    R1 = fixedpt_add(V1,V2);    
     //R1 = fixedpt_sub(V2,V1);
     //R1 = fixedpt_mul(V1,V2);
     //R1 = fixedpt_rconst(524287.9374);    
     //R1 = fixedpt_rconst(prueba);    
-    R1_float = prueba + prueba2;
+    //R1_float = prueba + prueba2;
     j=j+1;
   }
   i=0;
   j=0;
+*/
+
 
   //printf("6_:  ")   ; fixedpt_print(R1); //MINICOM
   //printf("t\n")   ;   checksum=           print_float_as_bytes(data_timer                   );
-
+/*
   printf("X\n");
   printf("4\n")   ;   fixedpt_print(data_V1); //printf("\n");
   printf("5\n")   ;   fixedpt_print(data_V2); //printf("\n");
   printf("6\n")   ;   fixedpt_print(data_R1); //printf("\n");
-
+*/
   /*
+  printf("X\n");
   printf("4")   ;   print_float_as_bytes(data_V1);
   printf("5")   ;   print_float_as_bytes(data_V2);
   printf("6")   ;   print_float_as_bytes(data_R1);
-  */
   printf("m\n");
+  */
+  
   //  printf("X");
     //printf("P")   ; print_float_as_bytes(V1);
     //R1 = V1 + V2;
     //R1 = R1 + V3;
     //R1 = R1 + V4;
     //R1 = R1 + V5;
-
-  //fixedpt_print(V1); printf("\n");
-  //fixedpt_print(V2); printf("\n");
-  //fixedpt_print(R1); printf("\n");
+/*
+printf("X\n");
+  fixedpt_print(V1); printf("\n");
+  fixedpt_print(V2); printf("\n");
+  fixedpt_print(R1); printf("\n");
+printf("m\n");
+*/
 
   /*
   //printf("Estas son pruebas de fixedpt_print\n");
@@ -306,7 +314,7 @@ int j = 0;
 
 
        //Desactivado temporalmente para las pruebas de osciloscopio
-      /*
+      
     if (transmitting_to_python==true)
     {
         if (print_selection==9) { full_print_regular_data();  }
@@ -314,7 +322,7 @@ int j = 0;
         transmitting_to_python=false;
         collecting_sensorless_data=true; 
     }
-*/
+
 
 
 //    print_selection=20;

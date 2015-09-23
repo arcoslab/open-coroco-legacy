@@ -9,3 +9,16 @@ Usando Punto Fijo, pero sin medir lo que tarda la conversion de punto flotante a
 La duracion total de la parte de interrupcion, medida mediante el pin11:
 Usando Punto Flotante en PID.c: 54.2us scope_55.png
 Usando Punto Fijo en PID.c: 54.2us scope_56.png
+
+=========================================================
+Comparaciones con diferentes frecuencias
+
+Para cambiar la frecuencia es con la opcion d <frequency>
+Luego se grafica la tension y el campo magnetico
+
+El objetivo de esta prueba es comparar el funcionamiento del dispositivo con paralelizacion en el ADC y sin paralelizacion en el ADC.
+a diferentes frecuencias. Se puede hacer con d 50 y con d 25.
+
+
+
+

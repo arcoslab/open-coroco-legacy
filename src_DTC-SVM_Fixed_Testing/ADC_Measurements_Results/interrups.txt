@@ -31,6 +31,6 @@ funcionamiento del open-coroco.
 
 
 
-
-
-
+Martes 21 de abril, 
+Se encontro un problema a la hora de mostrar los resultados con el programa de python, sucedio que cuando se requeria mostrar los resultados de la corriente usando varios ADC, el ADC2 no estaba funcionando, entonces se determino que era que los relojes no estaban activados.
+Se modifico el initial_setup.c
