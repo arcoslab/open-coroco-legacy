@@ -596,9 +596,9 @@ else
 
   SVM_phase_duty_cycles           (&duty_a, &duty_b, &duty_c, cita_V_s,T_max_on,T_med_on,T_min_on);
   
-  //duty_a=0.5f;
-  //duty_b=0.0f;
-  //duty_c=0.0f;
+  duty_a=0.8f;
+  duty_b=0.0f;
+  duty_c=0.0f;
 
   
 

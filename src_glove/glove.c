@@ -109,7 +109,7 @@ float voltage_measure (uint32_t adc,uint8_t channel)
     channels[0] = channel;
     adc_set_regular_sequence(adc, 1, channels);	
     adc_start_conversion_regular(adc);
-
+    gpio_toggle (GPIOD,GPIO15);
 
     while (!adc_eoc(adc));
     voltage=adc_read_regular(adc)*(VREF/ADC_CONVERSION_FACTOR);
@@ -141,7 +141,7 @@ int main(void)
         joint_1_angle = CONVERSION_FACTOR_JOINT_1*voltage_joint_1;
         joint_2_angle = CONVERSION_FACTOR_JOINT_2*voltage_joint_2;   
 
-        printf("%6.2f %6.2f %6.2f \n",joint_0_angle,joint_1_angle,joint_2_angle);    
+        printf("1 %6.2f %6.2f %6.2f \n",joint_0_angle,joint_1_angle,joint_2_angle);    
     }
 
 

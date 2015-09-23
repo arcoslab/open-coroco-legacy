@@ -108,7 +108,7 @@ float voltage_measure_ADC1 (uint8_t channel)
 	//ADC_SQR1(adc)=channel;
 
 
-       	adc_start_conversion_regular(ADC1);
+    adc_start_conversion_regular(ADC1);
 	while (!adc_eoc(ADC1));
 	hall_voltage=adc_read_regular(ADC1)*(VREF/ADC_CONVERSION_FACTOR);
 	return hall_voltage;

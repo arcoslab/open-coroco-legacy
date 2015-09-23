@@ -27,7 +27,7 @@
 #define psi_F_0                 0.0075f  //0.0016f//0.005f    //0.0016f  //Wb-t (weber-turn) (kg m2 s-2 A-1)
 #define pole_pairs_0            5.0f	    //five pole pairs (five d-axis)
 #define gear_ratio              200.0f   //200:1
-#define DEAD_TIME_PERCENTAGE    1000.0f     //Dead time for switching from high to low transistors
+#define DEAD_TIME_PERCENTAGE    0.1f     //Dead time for switching from high to low transistors
 
 //PID parameters
 
