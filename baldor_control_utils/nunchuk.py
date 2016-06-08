@@ -10,7 +10,7 @@ portname="/wiimote/nunchuk/stick_y"
 corocoportname="/coroco/baldor/in"
 port.open(portname)
 style=y.ContactStyle()
-style.persistent=1
+style.persistent=True
 y.Network.connect(portname,corocoportname,style)
 print "Press 1 and 2 buttons at once now"
 wm=w.Wiimote()
