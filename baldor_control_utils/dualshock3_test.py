@@ -30,7 +30,7 @@ joystick_output_port_4.open(joystick_output_port_4_name)
 
 #connecting joystick data to motors
 style=y.ContactStyle()
-style.persistent=1
+style.persistent=True
 stm32_1_input_port_speed_1_name="/stm32_1/speed/in_1"
 stm32_2_input_port_speed_1_name="/stm32_2/speed/in_1"
 stm32_3_input_port_speed_1_name="/stm32_3/speed/in_1"

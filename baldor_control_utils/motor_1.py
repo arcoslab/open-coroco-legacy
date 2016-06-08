@@ -31,7 +31,7 @@ in_speed.open(in_speed_name)
 
 #connecting with remote ports
 style=y.ContactStyle()
-style.persistent=1
+style.persistent=True
 stm32_2_in_1_name="/stm32_2/position/in1"
 stm32_3_in_1_name="/stm32_3/position/in1"
 stm32_4_in_1_name="/stm32_4/position/in1"
