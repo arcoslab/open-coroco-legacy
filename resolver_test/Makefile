@@ -23,7 +23,9 @@ OBJS :=
 
 LDSCRIPT = ../libopencm3-plus/lib/libopencm3_plus_stm32f4discovery.ld
 
-OOCD_INTERFACE = stlink-v2
+DEVICE=STM32F407VG
+
+OOCD_INTERFACE = stlink-v2-1
 OOCD_BOARD = stm32f4discovery
 
 include Makefile.include

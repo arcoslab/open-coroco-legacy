@@ -18,3 +18,5 @@
 
 void system_init(void);
 void leds_init(void);
+void spi_init(void);
+void ad2s1210_init(void);
