@@ -16,14 +16,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <libopencm3/stm32/f4/rcc.h>
-#include <libopencm3/stm32/f4/gpio.h>
-#include <libopencm3-plus/cdcacm_one_serial/cdcacm.h>
-#include <libopencm3/stm32/f4/spi.h>
-#include <libopencm3/stm32/f4/timer.h>
+#include <libopencm3/stm32/rcc.h>
+#include <libopencm3/stm32/gpio.h>
+#include <libopencm3/stm32/timer.h>
 #include <libopencm3/stm32/f4/nvic.h>
-#include "baldor_control.h"
+#include <libopencm3/stm32/spi.h>
 #include <libopencm3-plus/newlib/syscall.h>
+#include "baldor_control.h"
+#include <libopencm3-plus/cdcacm_one_serial/cdcacm.h>
 #include <libopencm3-plus/utils/misc.h>
 #include <libopencm3-plus/stm32f4discovery/leds.h>
 #include "ad2s1210.h"
@@ -187,7 +187,7 @@ void serial_conf(void) {
 bool ad_ready=false; //resolver circuit ad2s
 
 void system_init(void) {
-  rcc_clock_setup_hse_3v3(&hse_8mhz_3v3[CLOCK_3V3_168MHZ]);
+  rcc_clock_setup_hse_3v3(&rcc_hse_8mhz_3v3[RCC_CLOCK_3V3_168MHZ]);
   leds_init();
   cdcacm_init(); //default 921600bps
   ad2s1210_init();
@@ -444,12 +444,13 @@ int main(void)
 	//printf("New reference frequency: %f. Confirm? (Press \"y\")\n", value);
 	ref_freq=value;
 	//printf("ef: %010.5f ca: %05d\n", est_freq, raw_pos); //**************Remove comment and comment the line below
-    //printf("ef: %010.5f ca: %05d\n", ref_freq, raw_pos);
-    //printf("STM32_POSITION %010.5f ca %05d\n", ref_freq, raw_pos);
-
-    //printf("STM32_POSITION %010.5f ca %05d\n", ref_freq, raw_pos);
-    //printf("%d %010.5f ca %05d\n",STM32_POSITION, ref_freq, raw_pos);
-    printf("%d %010.5f ca: %05d ref: %6.2f\n",STM32_POSITION, est_freq, raw_pos,ref_freq);
+        //printf("ef: %010.5f ca: %05d\n", ref_freq, raw_pos);
+        //printf("STM32_POSITION %010.5f ca %05d\n", ref_freq, raw_pos);
+        
+        //printf("STM32_POSITION %010.5f ca %05d\n", ref_freq, raw_pos);
+        //printf("%d %010.5f ca %05d\n",STM32_POSITION, ref_freq, raw_pos);
+        //printf("%d %010.5f ca: %05d ref: %6.2f\n",STM32_POSITION, est_freq, raw_pos,ref_freq);
+        printf("%010.5f ca: %05d ref: %6.2f\n", est_freq, raw_pos,ref_freq);
 	if (value == 0.0f) {
 	  //motor_off=true;
 	} else {
@@ -459,7 +460,7 @@ int main(void)
       }
     }
 
-    //printf("ad2s_fault: 0x%02X, raw_pos: %05d, raw_pos_last: %05d, diff_pos: %05d, ref_freq: %010.5f, est_freq: %010.5f, exc_volt: %04.2f, p_error: %08.5f, i_error: %04.2f, pi_control: %04.2f, cmd_angle: %04.2f\n", ad2s1210_fault, raw_pos, raw_pos_last, diff_pos, ref_freq, est_freq, exc_volt, p_error, i_error, pi_control, cmd_angle*360/(2*PI));
+    printf("ad2s_fault: 0x%02X, raw_pos: %05d, raw_pos_last: %05d, diff_pos: %05d, ref_freq: %010.5f, est_freq: %010.5f, exc_volt: %04.2f, p_error: %08.5f, i_error: %04.2f, pi_control: %04.2f, cmd_angle: %04.2f\n", ad2s1210_fault, raw_pos, raw_pos_last, diff_pos, ref_freq, est_freq, exc_volt, p_error, i_error, pi_control, cmd_angle*360/(2*PI));
     //printf("cur_angle: %05d, ref_freq: %010.5f, est_freq: %010.5f, exc_volt: %04.2f, error: %05.2f, p_error: %08.5f, i_error: %04.2f, pi_control: %08.5f, cmd_angle: %06.2f, exc_volt: %04.2f, test: %04.2f\n", raw_pos*360/(1<<16), ref_freq/(2*PI), est_freq/(2*PI), exc_volt, error, p_error, i_error, pi_control, cmd_angle*360/(2*PI), exc_volt, test);
     //printf("ef: %010.5f ca: %6.5f\n", est_freq, ref_freq);
     //printf("ef: %010.5f ca: %05d\n", ref_freq, raw_pos);
