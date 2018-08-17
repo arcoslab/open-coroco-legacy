@@ -30,6 +30,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define INCR 0.01f
+float cur_angle=0;
 
 
 void leds_init(void) {
@@ -328,6 +330,7 @@ float test=0;
 
 void gen_pwm(void) {
   pid_controller();
+  //cmd_angle=2*RAW_TO_RAD(raw_pos)+RESOLVER_STATOR_OFFSET+pi_control;
   cmd_angle=2*RAW_TO_RAD(raw_pos)+RESOLVER_STATOR_OFFSET+pi_control;
 
   //cmd_angle+=2.0f*PI*TICK_PERIOD*8; //openloop
@@ -339,7 +342,7 @@ void gen_pwm(void) {
   if (fabsf(est_freq)<MIN_EXC_FREQ_PERC*MAX_FREQ) {
     exc_volt=MIN_EXC_VOLT;
   } else {
-    exc_volt=MIN_EXC_VOLT+(MAX_EXC_VOLT-MIN_EXC_VOLT)*(fabsf(est_freq)-MIN_EXC_FREQ_PERC*MAX_FREQ)/(MAX_FREQ-MIN_EXC_FREQ_PERC*MAX_FREQ);
+  exc_volt=MIN_EXC_VOLT+(MAX_EXC_VOLT-MIN_EXC_VOLT)*(fabsf(est_freq)-MIN_EXC_FREQ_PERC*MAX_FREQ)/(MAX_FREQ-MIN_EXC_FREQ_PERC*MAX_FREQ);
   }
 
   exc_volt+=(MAX_EXC_VOLT-exc_volt)*(fabsf(pi_control)/PID_MAX);
@@ -351,6 +354,36 @@ void gen_pwm(void) {
   duty_a=sinf(cmd_angle);
   duty_b=sinf(cmd_angle+2.0f*PI/3.0f);
   duty_c=sinf(cmd_angle+4.0f*PI/3.0f);
+
+  exc_volt=0.7;
+
+/*   static float pi_times; */
+/*   static int cont=0; */
+/*   static float paso=0.0f; */
+/*   cont=cont+1; */
+/*   if (cont >= 3200 && ref_freq <= MAX_FREQ_OPEN){ */
+/*     //paso=1.0f*PI/180.0f; */
+/*     cont=0; */
+/*     ref_freq=ref_freq+INCR; */
+/*   } else */
+/*     {//paso=0.0f; */
+/* } */
+
+/*   if (ref_freq >= MAX_FREQ_OPEN){ref_freq = MAX_FREQ_OPEN;} */
+/* cur_angle+=2.0f*PI*TICK_PERIOD*ref_freq+paso; */
+/*   //converting big angles into something between 0 and 2pi */
+/*   if (cur_angle >= (2.0f*PI)) { */
+/*     cur_angle=cur_angle-(2.0f*PI); */
+/*   } */
+
+/*   if ((cur_angle >= 89.0f*PI/180.0f) && (cur_angle <= 91.0f*PI/180.0f)) { */
+/*     //gpio_toggle(LBLUE); //To indicate start of electric cycle */
+/*   } */
+
+
+  //duty_a=sinf(cur_angle);
+  //duty_b=sinf(cur_angle+2.0f*PI/3.0f);
+  //duty_c=sinf(cur_angle+4.0f*PI/3.0f);
 
   if (motor_off) {
     duty_a=0;
@@ -460,8 +493,8 @@ int main(void)
       }
     }
 
-    printf("ad2s_fault: 0x%02X, raw_pos: %05d, raw_pos_last: %05d, diff_pos: %05d, ref_freq: %010.5f, est_freq: %010.5f, exc_volt: %04.2f, p_error: %08.5f, i_error: %04.2f, pi_control: %04.2f, cmd_angle: %04.2f\n", ad2s1210_fault, raw_pos, raw_pos_last, diff_pos, ref_freq, est_freq, exc_volt, p_error, i_error, pi_control, cmd_angle*360/(2*PI));
-    //printf("cur_angle: %05d, ref_freq: %010.5f, est_freq: %010.5f, exc_volt: %04.2f, error: %05.2f, p_error: %08.5f, i_error: %04.2f, pi_control: %08.5f, cmd_angle: %06.2f, exc_volt: %04.2f, test: %04.2f\n", raw_pos*360/(1<<16), ref_freq/(2*PI), est_freq/(2*PI), exc_volt, error, p_error, i_error, pi_control, cmd_angle*360/(2*PI), exc_volt, test);
+    //printf("ad2s_fault: 0x%02X, raw_pos: %05d, raw_pos_last: %05d, diff_pos: %05d, ref_freq: %010.5f, est_freq: %010.5f, exc_volt: %04.2f, p_error: %08.5f, i_error: %04.2f, pi_control: %04.2f, cmd_angle: %04.2f\n", ad2s1210_fault, raw_pos, raw_pos_last, diff_pos, ref_freq, est_freq, exc_volt, p_error, i_error, pi_control, cmd_angle*360/(2*PI));
+    printf("ad2s_fault: 0x%02X, cur_angle: %05d, ref_freq: %010.5f, est_freq: %010.5f, exc_volt: %04.2f, error: %05.2f, p_error: %08.5f, i_error: %04.2f, pi_control: %08.5f, cmd_angle: %06.2f, exc_volt: %04.2f, test: %04.2f\n", ad2s1210_fault, raw_pos*360/(1<<16), ref_freq/(2*PI), est_freq/(2*PI), exc_volt, error, p_error, i_error, pi_control*180.0/PI, cmd_angle*360/(2*PI), exc_volt, cur_angle*180.0/PI);
     //printf("ef: %010.5f ca: %6.5f\n", est_freq, ref_freq);
     //printf("ef: %010.5f ca: %05d\n", ref_freq, raw_pos);
     //printf("%d %010.5f ca %05d\n",STM32_POSITION, ref_freq, raw_pos);

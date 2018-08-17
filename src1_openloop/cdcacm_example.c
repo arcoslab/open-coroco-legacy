@@ -44,9 +44,10 @@
 #define CUR_FREQ 1.0f/(period/TICK_PERIOD)
 
 #define HALL_A() gpio_get(GPIOE, GPIO15);
-#define OPEN_LOOP_FREQ 3.0f
-#define INCR 0.1f
-#define MAX_FREQ 15.0f
+#define OPEN_LOOP_FREQ 0.01f
+#define INCR 0.001f
+#define MAX_FREQ 14.0f
+#define DT_PERCENT 0.1
 
 float attenuation=MIN_ATTENUATION;
 int hall_a;
@@ -96,8 +97,10 @@ void tim_init(void)
 	//Set TIM1 channel (and complementary) output to alternate function push-pull'.
 	//f4 TIM1=> GIO9: CH1, GPIO11: CH2, GPIO13: CH3
 	//f4 TIM1=> GIO8: CH1N, GPIO10: CH2N, GPIO12: CH3N
+	gpio_set_af(GPIOE, GPIO_AF1, GPIO9 | GPIO11 | GPIO13);
 	gpio_mode_setup(GPIOE, GPIO_MODE_AF,GPIO_PUPD_NONE,GPIO9 | GPIO11 | GPIO13);
 	gpio_set_af(GPIOE, GPIO_AF1, GPIO9 | GPIO11 | GPIO13);
+	gpio_set_af(GPIOE, GPIO_AF1, GPIO8 | GPIO10 | GPIO12);
 	gpio_mode_setup(GPIOE, GPIO_MODE_AF,GPIO_PUPD_NONE,GPIO8 | GPIO10 | GPIO12);
 	gpio_set_af(GPIOE, GPIO_AF1, GPIO8 | GPIO10 | GPIO12);
 
@@ -128,7 +131,7 @@ void tim_init(void)
 	timer_set_period(TIM1, PWM_PERIOD_ARR); //ARR (value compared against main counter to reload counter aka: period of counter)
 
 	/* Configure break and deadtime. */
-	//timer_set_deadtime(TIM1, deadtime_percentage*pwm_period_ARR);
+	timer_set_deadtime(TIM1, 0xCF);
 	timer_set_enabled_off_state_in_idle_mode(TIM1);
 	timer_set_enabled_off_state_in_run_mode(TIM1);
 	timer_disable_break(TIM1);
@@ -529,6 +532,6 @@ int main(void)
       ref_freq=value;
       //printf("Close loop\n");
     }
-    printf(" e: %7.2f, e_p %6.2f, e_i: %6.2f, adv: %6.2f, c_f: %6.2f, r_f: %6.2f, att: %6.2f, counter %d, eof %d, buf: %s, v %f\n", error, p_error, i_error, pi_control*180.0f/PI, 1.0f/(period/TICK_PERIOD), ref_freq, attenuation, counter, eof, cmd, value);
+    printf(" e: %7.2f, e_p %6.2f, e_i: %6.2f, adv: %6.2f, c_f: %6.2f, r_f: %6.2f, att: %6.2f, counter %d, eof %d, buf: %s, v %f\n", error, p_error, i_error, pi_control*180.0f/PI, 1.0f/(period/TICK_PERIOD), ref_freq, attenuation, counter, eof, cmd, cur_angle*180.0f/PI);
   }
 }
