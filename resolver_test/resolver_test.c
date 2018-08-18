@@ -16,11 +16,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <libopencm3/stm32/f4/rcc.h>
-#include <libopencm3/stm32/f4/gpio.h>
-#include <libopencm3/stm32/f4/timer.h>
+#include <libopencm3/stm32/rcc.h>
+#include <libopencm3/stm32/gpio.h>
+#include <libopencm3/stm32/timer.h>
 #include <libopencm3/stm32/f4/nvic.h>
-#include <libopencm3/stm32/f4/spi.h>
+#include <libopencm3/stm32/spi.h>
 #include <libopencm3-plus/newlib/syscall.h>
 #include "resolver_test.h"
 #include <libopencm3-plus/cdcacm_one_serial/cdcacm.h>
@@ -136,7 +136,7 @@ void ad2s1210_init(void) {
 }
 
 void system_init(void) {
-  rcc_clock_setup_hse_3v3(&hse_8mhz_3v3[CLOCK_3V3_168MHZ]);
+  rcc_clock_setup_hse_3v3(&rcc_hse_8mhz_3v3[RCC_CLOCK_3V3_168MHZ]);
   leds_init();
   cdcacm_init();
   ad2s1210_init();
