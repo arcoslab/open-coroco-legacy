@@ -32,7 +32,7 @@ void ad2s1210_conf(void);
 #define AD2S1210_RESETPIN_PORT GPIOD
 //#define AD2S1210_CSPIN GPIO2
 //#define AD2S1210_CSPIN_PORT GPIOA
-#define AD2S1210_CSPIN GPIO8 //Brian test
+#define AD2S1210_CSPIN GPIO7 //Brian test
 #define AD2S1210_CSPIN_PORT GPIOE //Brian test
 
 #define AD2S1210_REG_FAULT 0xff

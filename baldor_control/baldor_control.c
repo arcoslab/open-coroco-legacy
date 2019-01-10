@@ -20,199 +20,63 @@
 #include <libopencm3/stm32/gpio.h>
 #include <libopencm3/stm32/timer.h>
 #include <libopencm3/stm32/f4/nvic.h>
-#include <libopencm3/stm32/spi.h>
 #include <libopencm3-plus/newlib/syscall.h>
-#include "baldor_control.h"
 #include <libopencm3-plus/cdcacm_one_serial/cdcacm.h>
+#include <libopencm3/stm32/spi.h>
+
 #include <libopencm3-plus/utils/misc.h>
 #include <libopencm3-plus/stm32f4discovery/leds.h>
-#include "ad2s1210.h"
 #include <stdlib.h>
 #include <string.h>
+
+#include "ad2s1210.h"
+#include "baldor_control.h"
+
+/*
+
+  PortD:
+  12,13,14,15: out leds
+  8: out, ad2s1210(reset)
+
+  PortC:
+  0,1,3: out, ad2s1210(res0, res1, sample)
+
+  PortE:
+  7,15: out, ad2s1210(cs , rd)
+  9,11,13: tim
+  8,10,12: tim
+
+  PortB:
+  11,12: out, ad2s1210(a0, a1)
+  13,14,15: spi, ad2s1210( )
+
+  PortA:
+  3: out, ad2s1210(wr)
+
+ */
+
 
 #define INCR 0.01f
 float cur_angle=0;
 
 
-void leds_init(void) {
-  rcc_periph_clock_enable(RCC_GPIOD);
-  gpio_mode_setup(GPIOD, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO12 | GPIO13 | GPIO14 | GPIO15);
-}
-
-void spi_init(void) {
-  /* For spi signal pins */
-  rcc_periph_clock_enable(RCC_SPI2);
-  rcc_periph_clock_enable(RCC_GPIOB);
-
-  /* Setup GPIO pins for AF5 for SPI2 signals. */
-  gpio_mode_setup(GPIOB, GPIO_MODE_AF, GPIO_PUPD_NONE,
-		  GPIO13 | GPIO14 | GPIO15);
-  gpio_set_af(GPIOB, GPIO_AF5, GPIO13 | GPIO14 | GPIO15);
-
-  //spi initialization, SPI2 working at 21MHz
-  spi_init_master(SPI2, SPI_CR1_BR_FPCLK_DIV_64, SPI_CR1_CPOL_CLK_TO_0_WHEN_IDLE , SPI_CR1_CPHA_CLK_TRANSITION_1, SPI_CR1_DFF_8BIT, SPI_CR1_MSBFIRST);
-
-  spi_set_baudrate_prescaler(SPI2, SPI_CR1_BR_FPCLK_DIV_16);
-  spi_set_clock_polarity_0(SPI2);
-  spi_set_clock_phase_1(SPI2);
-  spi_enable_software_slave_management(SPI2);
-  spi_set_nss_high(SPI2);
-  spi_enable(SPI2);
-}
-
-void tim_init(void)
-{
-  /* Enable TIM1 clock. and Port E clock (for outputs) */
-  rcc_periph_clock_enable(RCC_TIM1);
-  rcc_periph_clock_enable(RCC_GPIOE);
-
-  //Set TIM1 channel (and complementary) output to alternate function push-pull'.
-  //f4 TIM1=> GIO9: CH1, GPIO11: CH2, GPIO13: CH3
-  //f4 TIM1=> GIO8: CH1N, GPIO10: CH2N, GPIO12: CH3N
-  gpio_mode_setup(GPIOE, GPIO_MODE_AF,GPIO_PUPD_NONE,GPIO9 | GPIO11 | GPIO13);
-  gpio_set_af(GPIOE, GPIO_AF1, GPIO9 | GPIO11 | GPIO13);
-  gpio_mode_setup(GPIOE, GPIO_MODE_AF,GPIO_PUPD_NONE,GPIO8 | GPIO10 | GPIO12);
-  gpio_set_af(GPIOE, GPIO_AF1, GPIO8 | GPIO10 | GPIO12);
-
-  /* Reset TIM1 peripheral. */
-  timer_reset(TIM1);
-
-  /* Timer global mode:
-   * - No divider
-   * - Alignment edge
-   * - Direction up
-   */
-  timer_set_mode(TIM1, TIM_CR1_CKD_CK_INT, //For dead time and filter sampling, not important for now.
-		 TIM_CR1_CMS_CENTER_3,	//TIM_CR1_CMS_EDGE
-		 //TIM_CR1_CMS_CENTER_1
-		 //TIM_CR1_CMS_CENTER_2
-		 //TIM_CR1_CMS_CENTER_3 la frequencia del pwm se divide a la mitad.
-		 TIM_CR1_DIR_UP);
-
-  timer_set_prescaler(TIM1, PRESCALE); //1 = disabled (max speed)
-  timer_set_repetition_counter(TIM1, 0); //disabled
-  timer_enable_preload(TIM1);
-  timer_continuous_mode(TIM1);
-
-  /* Period (32kHz). */
-  timer_set_period(TIM1, PWM_PERIOD_ARR); //ARR (value compared against main counter to reload counter aka: period of counter)
-
-  /* Configure break and deadtime. */
-  timer_set_enabled_off_state_in_idle_mode(TIM1);
-  timer_set_enabled_off_state_in_run_mode(TIM1);
-  timer_disable_break(TIM1);
-  timer_set_break_polarity_high(TIM1);
-  timer_disable_break_automatic_output(TIM1);
-  timer_set_break_lock(TIM1, TIM_BDTR_LOCK_OFF);
-
-  /* Disable outputs. */
-  timer_disable_oc_output(TIM1, TIM_OC1);
-  timer_disable_oc_output(TIM1, TIM_OC1N);
-  timer_disable_oc_output(TIM1, TIM_OC2);
-  timer_disable_oc_output(TIM1, TIM_OC2N);
-  timer_disable_oc_output(TIM1, TIM_OC3);
-  timer_disable_oc_output(TIM1, TIM_OC3N);
-
-  /* -- OC1 and OC1N configuration -- */
-  /* Configure global mode of line 1. */
-  timer_enable_oc_preload(TIM1, TIM_OC1);
-  timer_set_oc_mode(TIM1, TIM_OC1, TIM_OCM_PWM1);
-  /* Configure OC1. */
-  timer_set_oc_polarity_high(TIM1, TIM_OC1);
-  timer_set_oc_idle_state_unset(TIM1, TIM_OC1); //When idle (braked) put 0 on output
-  /* Configure OC1N. */
-  timer_set_oc_polarity_high(TIM1, TIM_OC1N);
-  timer_set_oc_idle_state_unset(TIM1, TIM_OC1N);
-  /* Set the capture compare value for OC1. */
-  timer_set_oc_value(TIM1, TIM_OC1, INIT_DUTY*PWM_PERIOD_ARR);//initial_duty_cycle*pwm_period_ARR);
-
-  /* -- OC2 and OC2N configuration -- */
-  /* Configure global mode of line 2. */
-  timer_enable_oc_preload(TIM1, TIM_OC2);
-  timer_set_oc_mode(TIM1, TIM_OC2, TIM_OCM_PWM1);
-  /* Configure OC2. */
-  timer_set_oc_polarity_high(TIM1, TIM_OC2);
-  timer_set_oc_idle_state_unset(TIM1, TIM_OC2);
-  /* Configure OC2N. */
-  timer_set_oc_polarity_high(TIM1, TIM_OC2N);
-  timer_set_oc_idle_state_unset(TIM1, TIM_OC2N);
-  /* Set the capture compare value for OC2. */
-  timer_set_oc_value(TIM1, TIM_OC2, INIT_DUTY*PWM_PERIOD_ARR);//initial_duty_cycle*pwm_period_ARR);
-
-  /* -- OC3 and OC3N configuration -- */
-  /* Configure global mode of line 3. */
-  timer_enable_oc_preload(TIM1, TIM_OC3);
-  timer_set_oc_mode(TIM1, TIM_OC3, TIM_OCM_PWM1);
-  /* Configure OC3. */
-  timer_set_oc_polarity_high(TIM1, TIM_OC3);
-  timer_set_oc_idle_state_unset(TIM1, TIM_OC3);
-  /* Configure OC3N. */
-  timer_set_oc_polarity_high(TIM1, TIM_OC3N);
-  timer_set_oc_idle_state_unset(TIM1, TIM_OC3N);
-  /* Set the capture compare value for OC3. */
-  timer_set_oc_value(TIM1, TIM_OC3, INIT_DUTY*PWM_PERIOD_ARR);//initial_duty_cycle*pwm_period_ARR);//100);
-
-  /* ARR reload enable. */
-  timer_enable_preload(TIM1);
-
-  /*
-   * Enable preload of complementary channel configurations and
-   * update on COM event.
-   */
-  timer_disable_preload_complementry_enable_bits(TIM1);
-
-  /* Enable outputs in the break subsystem. */
-  timer_enable_break_main_output(TIM1);
-
-  /* Generate update event to reload all registers before starting*/
-  timer_generate_event(TIM1, TIM_EGR_UG);
-
-  /* Counter enable. */
-  timer_enable_counter(TIM1);
-
-  //enable capture compare interrupt
-  timer_enable_update_event(TIM1);
-
-  timer_enable_irq(TIM1, TIM_DIER_UIE);
-  nvic_enable_irq(NVIC_TIM1_UP_TIM10_IRQ);
-}
-
-void serial_conf(void) {
-  setvbuf(stdin,NULL,_IONBF,0); // Sets stdin in unbuffered mode (normal for usart com)
-  setvbuf(stdout,NULL,_IONBF,0); // Sets stdin in unbuffered mode (normal for usart com)
-  while (poll(stdin) > 0) {
-    //printf("Cleaning stdin\n");
-    getc(stdin);
-  }
-}
-
 bool ad_ready=false; //resolver circuit ad2s
 
-void system_init(void) {
-  rcc_clock_setup_hse_3v3(&rcc_hse_8mhz_3v3[RCC_CLOCK_3V3_168MHZ]);
-  leds_init();
-  cdcacm_init(); //default 921600bps
-  ad2s1210_init();
-  spi_init();
-  tim_init();
-  serial_conf();
-  ad2s1210_conf();
-  ad_ready=true;
-}
+#define AVG_FILTER_LEN 2
 
-inline int avg_filter(int in) {
+int avg_filter(int in) {
   static int window[]={0,0,0,0,0,0,0,0,0,0};
   static uint8_t pw=0;
   window[pw]=in;
   pw++;
-  if (pw==10){
+  if (pw==AVG_FILTER_LEN){
     pw=0;
   }
-  return((window[0]+window[1]+window[2]+window[3]+window[4]+window[5]+window[6]+window[7]+window[8]+window[9])/10);
+  return((window[0]+window[1]+window[2]+window[3]+window[4]+window[5]+window[6]+window[7]+window[8]+window[9])/AVG_FILTER_LEN);
 }
 
 #define FILTER_LEN 100
-inline int avg_filter2(int in) {
+int avg_filter2(int in) {
   static int filter_window[FILTER_LEN];
   static uint8_t pw=0;
   static bool first=true;
@@ -355,7 +219,7 @@ void gen_pwm(void) {
   duty_b=sinf(cmd_angle+2.0f*PI/3.0f);
   duty_c=sinf(cmd_angle+4.0f*PI/3.0f);
 
-  exc_volt=0.7;
+  //exc_volt=0.7;
 
 /*   static float pi_times; */
 /*   static int cont=0; */
@@ -448,6 +312,170 @@ void tim1_up_tim10_isr(void) {
   gen_pwm();
 }
 
+void serial_conf(void) {
+  setvbuf(stdin,NULL,_IONBF,0); // Sets stdin in unbuffered mode (normal for usart com)
+  setvbuf(stdout,NULL,_IONBF,0); // Sets stdin in unbuffered mode (normal for usart com)
+  while (poll(stdin) > 0) {
+    //printf("Cleaning stdin\n");
+    getc(stdin);
+  }
+}
+
+void tim_init(void)
+{
+  /* Enable TIM1 clock. and Port E clock (for outputs) */
+  rcc_periph_clock_enable(RCC_TIM1);
+  rcc_periph_clock_enable(RCC_GPIOE);
+
+  //Set TIM1 channel (and complementary) output to alternate function push-pull'.
+  //f4 TIM1=> GIO9: CH1, GPIO11: CH2, GPIO13: CH3
+  //f4 TIM1=> GIO8: CH1N, GPIO10: CH2N, GPIO12: CH3N
+  gpio_mode_setup(GPIOE, GPIO_MODE_AF,GPIO_PUPD_NONE,GPIO9 | GPIO11 | GPIO13);
+  gpio_set_af(GPIOE, GPIO_AF1, GPIO9 | GPIO11 | GPIO13);
+  gpio_mode_setup(GPIOE, GPIO_MODE_AF,GPIO_PUPD_NONE,GPIO8 | GPIO10 | GPIO12);
+  gpio_set_af(GPIOE, GPIO_AF1, GPIO8 | GPIO10 | GPIO12);
+
+  /* Reset TIM1 peripheral. */
+  timer_reset(TIM1);
+
+  /* Timer global mode:
+   * - No divider
+   * - Alignment edge
+   * - Direction up
+   */
+  timer_set_mode(TIM1, TIM_CR1_CKD_CK_INT, //For dead time and filter sampling, not important for now.
+		 TIM_CR1_CMS_CENTER_3,	//TIM_CR1_CMS_EDGE
+		 //TIM_CR1_CMS_CENTER_1
+		 //TIM_CR1_CMS_CENTER_2
+		 //TIM_CR1_CMS_CENTER_3 la frequencia del pwm se divide a la mitad.
+		 TIM_CR1_DIR_UP);
+
+  timer_set_prescaler(TIM1, PRESCALE); //1 = disabled (max speed)
+  timer_set_repetition_counter(TIM1, 0); //disabled
+  timer_enable_preload(TIM1);
+  timer_continuous_mode(TIM1);
+
+  /* Period (32kHz). */
+  timer_set_period(TIM1, PWM_PERIOD_ARR); //ARR (value compared against main counter to reload counter aka: period of counter)
+
+  /* Configure break and deadtime. */
+  timer_set_enabled_off_state_in_idle_mode(TIM1);
+  timer_set_enabled_off_state_in_run_mode(TIM1);
+  timer_disable_break(TIM1);
+  timer_set_break_polarity_high(TIM1);
+  timer_disable_break_automatic_output(TIM1);
+  timer_set_break_lock(TIM1, TIM_BDTR_LOCK_OFF);
+
+  /* Disable outputs. */
+  timer_disable_oc_output(TIM1, TIM_OC1);
+  timer_disable_oc_output(TIM1, TIM_OC1N);
+  timer_disable_oc_output(TIM1, TIM_OC2);
+  timer_disable_oc_output(TIM1, TIM_OC2N);
+  timer_disable_oc_output(TIM1, TIM_OC3);
+  timer_disable_oc_output(TIM1, TIM_OC3N);
+
+  /* -- OC1 and OC1N configuration -- */
+  /* Configure global mode of line 1. */
+  timer_enable_oc_preload(TIM1, TIM_OC1);
+  timer_set_oc_mode(TIM1, TIM_OC1, TIM_OCM_PWM1);
+  /* Configure OC1. */
+  timer_set_oc_polarity_high(TIM1, TIM_OC1);
+  timer_set_oc_idle_state_unset(TIM1, TIM_OC1); //When idle (braked) put 0 on output
+  /* Configure OC1N. */
+  timer_set_oc_polarity_high(TIM1, TIM_OC1N);
+  timer_set_oc_idle_state_unset(TIM1, TIM_OC1N);
+  /* Set the capture compare value for OC1. */
+  timer_set_oc_value(TIM1, TIM_OC1, INIT_DUTY*PWM_PERIOD_ARR);//initial_duty_cycle*pwm_period_ARR);
+
+  /* -- OC2 and OC2N configuration -- */
+  /* Configure global mode of line 2. */
+  timer_enable_oc_preload(TIM1, TIM_OC2);
+  timer_set_oc_mode(TIM1, TIM_OC2, TIM_OCM_PWM1);
+  /* Configure OC2. */
+  timer_set_oc_polarity_high(TIM1, TIM_OC2);
+  timer_set_oc_idle_state_unset(TIM1, TIM_OC2);
+  /* Configure OC2N. */
+  timer_set_oc_polarity_high(TIM1, TIM_OC2N);
+  timer_set_oc_idle_state_unset(TIM1, TIM_OC2N);
+  /* Set the capture compare value for OC2. */
+  timer_set_oc_value(TIM1, TIM_OC2, INIT_DUTY*PWM_PERIOD_ARR);//initial_duty_cycle*pwm_period_ARR);
+
+  /* -- OC3 and OC3N configuration -- */
+  /* Configure global mode of line 3. */
+  timer_enable_oc_preload(TIM1, TIM_OC3);
+  timer_set_oc_mode(TIM1, TIM_OC3, TIM_OCM_PWM1);
+  /* Configure OC3. */
+  timer_set_oc_polarity_high(TIM1, TIM_OC3);
+  timer_set_oc_idle_state_unset(TIM1, TIM_OC3);
+  /* Configure OC3N. */
+  timer_set_oc_polarity_high(TIM1, TIM_OC3N);
+  timer_set_oc_idle_state_unset(TIM1, TIM_OC3N);
+  /* Set the capture compare value for OC3. */
+  timer_set_oc_value(TIM1, TIM_OC3, INIT_DUTY*PWM_PERIOD_ARR);//initial_duty_cycle*pwm_period_ARR);//100);
+
+  /* ARR reload enable. */
+  timer_enable_preload(TIM1);
+
+  /*
+   * Enable preload of complementary channel configurations and
+   * update on COM event.
+   */
+  timer_disable_preload_complementry_enable_bits(TIM1);
+
+  /* Enable outputs in the break subsystem. */
+  timer_enable_break_main_output(TIM1);
+
+  /* Generate update event to reload all registers before starting*/
+  timer_generate_event(TIM1, TIM_EGR_UG);
+
+  /* Counter enable. */
+  timer_enable_counter(TIM1);
+
+  //enable capture compare interrupt
+  timer_enable_update_event(TIM1);
+
+  timer_enable_irq(TIM1, TIM_DIER_UIE);
+  nvic_enable_irq(NVIC_TIM1_UP_TIM10_IRQ);
+}
+
+void spi_init(void) {
+  /* For spi signal pins */
+  rcc_periph_clock_enable(RCC_SPI2);
+  rcc_periph_clock_enable(RCC_GPIOB);
+
+  /* Setup GPIO pins for AF5 for SPI2 signals. */
+  gpio_mode_setup(GPIOB, GPIO_MODE_AF, GPIO_PUPD_NONE,
+		  GPIO13 | GPIO14 | GPIO15);
+  gpio_set_af(GPIOB, GPIO_AF5, GPIO13 | GPIO14 | GPIO15);
+
+  //spi initialization, SPI2 working at 21MHz
+  spi_init_master(SPI2, SPI_CR1_BR_FPCLK_DIV_64, SPI_CR1_CPOL_CLK_TO_0_WHEN_IDLE , SPI_CR1_CPHA_CLK_TRANSITION_1, SPI_CR1_DFF_8BIT, SPI_CR1_MSBFIRST);
+
+  spi_set_baudrate_prescaler(SPI2, SPI_CR1_BR_FPCLK_DIV_16);
+  spi_set_clock_polarity_0(SPI2);
+  spi_set_clock_phase_1(SPI2);
+  spi_enable_software_slave_management(SPI2);
+  spi_set_nss_high(SPI2);
+  spi_enable(SPI2);
+}
+
+void leds_init(void) {
+  rcc_periph_clock_enable(RCC_GPIOD);
+  gpio_mode_setup(GPIOD, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO12 | GPIO13 | GPIO14 | GPIO15);
+}
+
+void system_init(void) {
+  rcc_clock_setup_hse_3v3(&rcc_hse_8mhz_3v3[RCC_CLOCK_3V3_168MHZ]);
+  leds_init();
+  cdcacm_init(); //default 921600bps
+  ad2s1210_init();
+  spi_init();
+  tim_init();
+  serial_conf();
+  ad2s1210_conf();
+  ad_ready=true;
+}
+
 int main(void)
 {
   int i;
@@ -494,7 +522,7 @@ int main(void)
     }
 
     //printf("ad2s_fault: 0x%02X, raw_pos: %05d, raw_pos_last: %05d, diff_pos: %05d, ref_freq: %010.5f, est_freq: %010.5f, exc_volt: %04.2f, p_error: %08.5f, i_error: %04.2f, pi_control: %04.2f, cmd_angle: %04.2f\n", ad2s1210_fault, raw_pos, raw_pos_last, diff_pos, ref_freq, est_freq, exc_volt, p_error, i_error, pi_control, cmd_angle*360/(2*PI));
-    printf("ad2s_fault: 0x%02X, cur_angle: %05d, ref_freq: %010.5f, est_freq: %010.5f, exc_volt: %04.2f, error: %05.2f, p_error: %08.5f, i_error: %04.2f, pi_control: %08.5f, cmd_angle: %06.2f, exc_volt: %04.2f, test: %04.2f\n", ad2s1210_fault, raw_pos*360/(1<<16), ref_freq/(2*PI), est_freq/(2*PI), exc_volt, error, p_error, i_error, pi_control*180.0/PI, cmd_angle*360/(2*PI), exc_volt, cur_angle*180.0/PI);
+    printf("ad2s_fault: 0x%02X, cur_angle: %05d, ref_freq: %010.5f, est_freq: %010.5f, exc_volt: %04.2f, error: %05.2f, p_error: %08.5f, i_error: %04.2f, pi_control: %08.5f, cmd_angle: %06.2f, exc_volt: %04.2f, test: %04.2f\n", ad2s1210_fault, raw_pos*360/(1<<16), ref_freq, est_freq, exc_volt, error, p_error, i_error, pi_control*180.0/PI, cmd_angle*360/(2*PI), exc_volt, cur_angle*180.0/PI);
     //printf("ef: %010.5f ca: %6.5f\n", est_freq, ref_freq);
     //printf("ef: %010.5f ca: %05d\n", ref_freq, raw_pos);
     //printf("%d %010.5f ca %05d\n",STM32_POSITION, ref_freq, raw_pos);

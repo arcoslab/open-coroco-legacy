@@ -30,7 +30,7 @@ void ad2s1210_init(void) {
 
   //PE15=RD
   rcc_periph_clock_enable(RCC_GPIOE);
-  gpio_mode_setup(GPIOE, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO8 | GPIO15);
+  gpio_mode_setup(GPIOE, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO15);
   gpio_set(GPIOE, GPIO15); //RD
 
   //PB11=A0

@@ -22,8 +22,8 @@ void spi_init(void);
 void tim_init(void);
 void serial_conf(void);
 void update_est_freq(void);
-inline int avg_filter(int);
-inline int avg_filter2(int);
+int avg_filter(int);
+int avg_filter2(int);
 void pid_controller(void);
 void gen_pwm(void);
 
@@ -32,7 +32,7 @@ void gen_pwm(void);
 
 //pwm-related timer configuration
 #define SYSFREQ     168000000 //168MHz
-#define PWMFREQ        16000  //32000
+#define PWMFREQ        8000  //32000
 #define PWMFREQ_F       ((float )(PWMFREQ)) //32000.0f
 #define PRESCALE        1                                       //freq_CK_CNT=freq_CK_PSC/(PSC[15:0]+1)
 #define PWM_PERIOD_ARR  (SYSFREQ/( PWMFREQ*(PRESCALE+1) ))

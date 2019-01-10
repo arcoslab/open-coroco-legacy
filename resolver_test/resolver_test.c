@@ -20,15 +20,38 @@
 #include <libopencm3/stm32/gpio.h>
 #include <libopencm3/stm32/timer.h>
 #include <libopencm3/stm32/f4/nvic.h>
-#include <libopencm3/stm32/spi.h>
 #include <libopencm3-plus/newlib/syscall.h>
-#include "resolver_test.h"
 #include <libopencm3-plus/cdcacm_one_serial/cdcacm.h>
+#include <libopencm3/stm32/spi.h>
+
 #include <stdio.h>
 #include <libopencm3-plus/utils/misc.h>
 #include <libopencm3-plus/stm32f4discovery/leds.h>
 #include <limits.h>
 #include <stdbool.h>
+
+#include "resolver_test.h"
+/*
+
+  PortD:
+  12,13,14,15: out, leds
+  8: out, ad2s1210 (reset)
+
+  PortC:
+  0,1,3: out, ad2s1210 (res0, res1, sample)
+
+  PortE:
+  7,15: out, ad2s1210 (cs , rd)
+
+  PortB:
+  11,12: out, ad2s1210 (a0, a1)
+  13,14,15: spi, ad2s1210( )
+
+  PortA:
+  3:out, ad2s1210 (wr)
+
+ */
+
 
 
 //#define AD2S1210_WRPIN GPIO2
@@ -44,7 +67,7 @@
 #define AD2S1210_RESETPIN_PORT GPIOD
 //#define AD2S1210_CSPIN GPIO2
 //#define AD2S1210_CSPIN_PORT GPIOA
-#define AD2S1210_CSPIN GPIO8 //Brian test
+#define AD2S1210_CSPIN GPIO7 //Brian test
 #define AD2S1210_CSPIN_PORT GPIOE //Brian test
 
 #define AD2S1210_REG_FAULT 0xff
@@ -113,11 +136,6 @@
   WAIT_100NANO(5); \
   }
 
-void leds_init(void) {
-  rcc_peripheral_enable_clock(&RCC_AHB1ENR, RCC_AHB1ENR_IOPDEN);
-  gpio_mode_setup(GPIOD, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO12 | GPIO13 | GPIO14 | GPIO15);
-}
-
 void spi_init(void) {
   rcc_periph_clock_enable(RCC_SPI2);
   /* For spi signal pins */
@@ -161,7 +179,7 @@ void ad2s1210_init(void) {
 
   //PE15=RD
   rcc_periph_clock_enable(RCC_GPIOE);
-  gpio_mode_setup(GPIOE, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO8 | GPIO15);
+  gpio_mode_setup(GPIOE, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO15);
   gpio_set(GPIOE, GPIO15); //RD
 
   //PB11=A0
@@ -199,6 +217,11 @@ void ad2s1210_init(void) {
   gpio_mode_setup(AD2S1210_SAMPLEPIN_PORT, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, AD2S1210_SAMPLEPIN);
   /* Start with sample high, data register update is done in high to low edge */
   gpio_set(AD2S1210_SAMPLEPIN_PORT, AD2S1210_SAMPLEPIN);
+}
+
+void leds_init(void) {
+  rcc_peripheral_enable_clock(&RCC_AHB1ENR, RCC_AHB1ENR_IOPDEN);
+  gpio_mode_setup(GPIOD, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO12 | GPIO13 | GPIO14 | GPIO15);
 }
 
 void system_init(void) {
