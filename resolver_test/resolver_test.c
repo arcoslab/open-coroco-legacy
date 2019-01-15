@@ -30,12 +30,39 @@
 #include <limits.h>
 #include <stdbool.h>
 
+#define AD2S1210_RESETN GPIO14
+#define AD2S1210_RESETN_PORT GPIOE
+#define AD2S1210_RESETN_PORT_RCC RCC_GPIOE
 
-#define AD2S1210_WRPIN GPIO2
-#define AD2S1210_WRPIN_PORT GPIOA
+#define AD2S1210_RES0 GPIO11
+#define AD2S1210_RES0_PORT GPIOD
+#define AD2S1210_RES0_PORT_RCC RCC_GPIOD
+
+#define AD2S1210_RES1 GPIO1
+#define AD2S1210_RES1_PORT GPIOD
+#define AD2S1210_RES1_PORT_RCC RCC_GPIOD
+
+#define AD2S1210_CSN GPIO7
+#define AD2S1210_CSN_PORT GPIOE
+#define AD2S1210_CSN_PORT_RCC RCC_GPIOE
+
+#define AD2S1210_A0 GPIO4
+#define AD2S1210_A0_PORT GPIOB
+#define AD2S1210_A0_PORT_RCC RCC_GPIOB
+
+#define AD2S1210_A1 GPIO7
+#define AD2S1210_A1_PORT GPIOD
+#define AD2S1210_A1_PORT_RCC RCC_GPIOD
+
+#define AD2S1210_WRPIN GPIO10
+#define AD2S1210_WRPIN_PORT GPIOD
+#define AD2S1210_WRPIN_PORT_RCC RCC_GPIOD
+
 #define AD2S1210_SPI SPI2
-#define AD2S1210_SAMPLEPIN GPIO2
-#define AD2S1210_SAMPLEPIN_PORT GPIOC
+
+#define AD2S1210_SAMPLEPIN GPIO12
+#define AD2S1210_SAMPLEPIN_PORT GPIOB
+#define AD2S1210_SAMPLEPIN_PORT_RCC RCC_GPIOB
 
 #define AD2S1210_REG_FAULT 0xff
 #define AD2S1210_REG_POS_H 0x80
@@ -121,18 +148,64 @@ void spi_init(void) {
 }
 
 void ad2s1210_init(void) {
-  /* For spi mode select on the ad2s1210 */
-  rcc_periph_clock_enable(RCC_GPIOA);
-  /* Setup GPIOA2 pin for spi mode ad2s1210 select. */
-  gpio_mode_setup(GPIOA, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO2);
-  /* Start with spi communication disabled */
-  gpio_set(GPIOA, GPIO2);
-  // Pin PC2 for sample generation
-  rcc_periph_clock_enable(RCC_GPIOC);
-  /* Setup GPIOC2 pin for ad2s1210 sample. */
-  gpio_mode_setup(GPIOC, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO2);
+
+  //Reset wait
+  WAIT_100NANO(100);
+
+  //Do reset
+  rcc_periph_clock_enable(AD2S1210_RESETN_PORT_RCC);
+  gpio_mode_setup(AD2S1210_RESETN_PORT, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, AD2S1210_RESETN);
+  gpio_clear(AD2S1210_RESETN_PORT, AD2S1210_RESETN);
+
+  //Reset wait
+  WAIT_100NANO(100);
+
+  //A0 configuration mode
+  rcc_periph_clock_enable(AD2S1210_A0_PORT_RCC);
+  gpio_mode_setup(AD2S1210_A0_PORT, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, AD2S1210_A0);
+  gpio_set(AD2S1210_A0_PORT, AD2S1210_A0);
+
+  //A1 configuration mode
+  rcc_periph_clock_enable(AD2S1210_A1_PORT_RCC);
+  gpio_mode_setup(AD2S1210_A1_PORT, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, AD2S1210_A1);
+  gpio_set(AD2S1210_A1_PORT, AD2S1210_A1);
+
+  //RES0 12 bits
+  rcc_periph_clock_enable(AD2S1210_RES0_PORT_RCC);
+  gpio_mode_setup(AD2S1210_RES0_PORT, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, AD2S1210_RES0);
+  gpio_clear(AD2S1210_RES0_PORT, AD2S1210_RES0);
+
+  //RES1 12 bits
+  rcc_periph_clock_enable(AD2S1210_RES1_PORT_RCC);
+  gpio_mode_setup(AD2S1210_RES1_PORT, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, AD2S1210_RES1);
+  gpio_set(AD2S1210_RES1_PORT, AD2S1210_RES1);
+
+  //Chip select
+  rcc_periph_clock_enable(AD2S1210_CSN_PORT_RCC);
+  gpio_mode_setup(AD2S1210_CSN_PORT, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, AD2S1210_CSN);
+  gpio_clear(AD2S1210_CSN_PORT, AD2S1210_CSN);
+
+  //Reset wait
+  WAIT_100NANO(100);
+
+  //Remove reset
+  gpio_set(AD2S1210_RESETN_PORT, AD2S1210_RESETN);
+
+  //Reset wait
+  WAIT_100NANO(100);
+
+  /* For spi enable on the ad2s1210 */
+  rcc_periph_clock_enable(AD2S1210_WRPIN_PORT_RCC);
+  /* Setup pin for spi enable  ad2s1210. */
+  gpio_mode_setup(AD2S1210_WRPIN_PORT, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, AD2S1210_WRPIN);
+  /* Start with spi disabled */
+  gpio_set(AD2S1210_WRPIN_PORT, AD2S1210_WRPIN);
+  // Pin for sample generation
+  rcc_periph_clock_enable(AD2S1210_SAMPLEPIN_PORT_RCC);
+  /* Setup pin for ad2s1210 sample. */
+  gpio_mode_setup(AD2S1210_SAMPLEPIN_PORT, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, AD2S1210_SAMPLEPIN);
   /* Start with sample high, data register update is done in high to low edge */
-  gpio_set(GPIOC, GPIO2);
+  gpio_set(AD2S1210_SAMPLEPIN_PORT, AD2S1210_SAMPLEPIN);
 }
 
 void system_init(void) {
@@ -167,13 +240,13 @@ int main(void)
     counter+=1;
     wait(50);
     //configure
-    gpio_clear(GPIOA, GPIO2);
+    gpio_clear(AD2S1210_WRPIN_PORT, AD2S1210_WRPIN);
     spi_write(SPI2, 0x91);
     spi_data1=spi_read(SPI2);
-    gpio_set(GPIOA, GPIO2);
-    //gpio_clear(GPIOA, GPIO2);
-    //gpio_set(GPIOA, GPIO2);
-    gpio_clear(GPIOA, GPIO2);
+    gpio_set(AD2S1210_WRPIN_PORT, AD2S1210_WRPIN);
+    //gpio_clear(AD2S1210_WRPIN_PORT, AD2S1210_WRPIN);
+    //gpio_set(AD2S1210_WRPIN_PORT, AD2S1210_WRPIN);
+    gpio_clear(AD2S1210_WRPIN_PORT, AD2S1210_WRPIN);
     //if (counter>20) {
     //  spi_write(SPI2, 0x28); // 10KHz
     //} else {
@@ -183,24 +256,24 @@ int main(void)
       counter=0;
     }
     spi_data2=spi_read(SPI2);
-    gpio_set(GPIOA, GPIO2);
-    //gpio_clear(GPIOA, GPIO2);
-    //gpio_set(GPIOA, GPIO2);
+    gpio_set(AD2S1210_WRPIN_PORT, AD2S1210_WRPIN);
+    //gpio_clear(AD2S1210_WRPIN_PORT, AD2S1210_WRPIN);
+    //gpio_set(AD2S1210_WRPIN_PORT, AD2S1210_WRPIN);
 
     //fault register
     spi_data1=AD2S1210_RD(AD2S1210_REG_FAULT);
-    /* gpio_clear(GPIOA, GPIO2); */
+    /* gpio_clear(AD2S1210_WRPIN_PORT, AD2S1210_WRPIN); */
     /* spi_write(SPI2, 0xff); */
     /* spi_data1=spi_read(SPI2); */
-    /* gpio_set(GPIOA, GPIO2); */
-    /* //gpio_clear(GPIOA, GPIO2); */
-    /* //gpio_set(GPIOA, GPIO2); */
-    /* gpio_clear(GPIOA, GPIO2); */
+    /* gpio_set(AD2S1210_WRPIN_PORT, AD2S1210_WRPIN); */
+    /* //gpio_clear(AD2S1210_WRPIN_PORT, AD2S1210_WRPIN); */
+    /* //gpio_set(AD2S1210_WRPIN_PORT, AD2S1210_WRPIN); */
+    /* gpio_clear(AD2S1210_WRPIN_PORT, AD2S1210_WRPIN); */
     /* spi_write(SPI2, 0x00); */
     /* spi_data1=spi_read(SPI2); */
-    /* gpio_set(GPIOA, GPIO2); */
-    /* //gpio_clear(GPIOA, GPIO2); */
-    /* //gpio_set(GPIOA, GPIO2); */
+    /* gpio_set(AD2S1210_WRPIN_PORT, AD2S1210_WRPIN); */
+    /* //gpio_clear(AD2S1210_WRPIN_PORT, AD2S1210_WRPIN); */
+    /* //gpio_set(AD2S1210_WRPIN_PORT, AD2S1210_WRPIN); */
 
     AD2S1210_SAMPLE();
 
