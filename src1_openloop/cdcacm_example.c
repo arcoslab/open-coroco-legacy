@@ -229,13 +229,30 @@ void tim_init(void)
 	nvic_enable_irq(NVIC_TIM1_UP_TIM10_IRQ);
 }
 
+void shutdown_on() {
+  gpio_set(GPIOD, GPIO3);
+}
+
+void shutdown_off() {
+  gpio_clear(GPIOD, GPIO3);
+}
+
+void shutdown_init(){
+  rcc_periph_clock_enable(RCC_GPIOD);
+  gpio_mode_setup(GPIOD, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO3);
+  shutdown_on();
+}
+
 void system_init(void) {
   rcc_clock_setup_hse_3v3(&rcc_hse_8mhz_3v3[RCC_CLOCK_3V3_168MHZ]);
   leds_init();
+  shutdown_init();
+  shutdown_on();
   hall_init();
   cdcacm_init();
   printled(4, LRED);
   tim_init();
+  shutdown_off();
 }
 
 void calc_freq(void) {

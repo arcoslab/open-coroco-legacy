@@ -69,6 +69,9 @@
 #define AD2S1210_REG_POS_L 0x81
 #define AD2S1210_REG_VEL_H 0x82
 #define AD2S1210_REG_VEL_L 0x83
+#define AD2S1210_REG_LOS_THRESHOLD 0x88
+#define AD2S1210_REG_DOS_OVER_THRESHOLD 0x89
+#define AD2S1210_REG_DOS_MIS_THRESHOLD 0x8A
 
 #define AD2S1210_WR(reg, data) {\
   gpio_clear(AD2S1210_WRPIN_PORT, AD2S1210_WRPIN);\
@@ -236,27 +239,33 @@ int main(void)
     getc(stdin);
   }
   int counter=0;
+  
+  wait(50);
+  //configure
+  gpio_clear(AD2S1210_WRPIN_PORT, AD2S1210_WRPIN);
+  spi_write(SPI2, 0x91);
+  spi_data1=spi_read(SPI2);
+  gpio_set(AD2S1210_WRPIN_PORT, AD2S1210_WRPIN);
+  //gpio_clear(AD2S1210_WRPIN_PORT, AD2S1210_WRPIN);
+  //gpio_set(AD2S1210_WRPIN_PORT, AD2S1210_WRPIN);
+  gpio_clear(AD2S1210_WRPIN_PORT, AD2S1210_WRPIN);
+  //if (counter>20) {
+  //  spi_write(SPI2, 0x28); // 10KHz
+  //} else {
+  spi_write(SPI2, 0x12); // 4.5KHz
+  //}
+  if (counter>40) {
+    counter=0;
+  }
+  spi_data2=spi_read(SPI2);
+  gpio_set(AD2S1210_WRPIN_PORT, AD2S1210_WRPIN);
+
+  //AD2S1210_WR(AD2S1210_REG_LOS_THRESHOLD, 3);
+  AD2S1210_WR(AD2S1210_REG_DOS_OVER_THRESHOLD, 121);
+  //  AD2S1210_WR(AD2S1210_REG_DOS_MIS_THRESHOLD, 14);
+
   while (1){
     counter+=1;
-    wait(50);
-    //configure
-    gpio_clear(AD2S1210_WRPIN_PORT, AD2S1210_WRPIN);
-    spi_write(SPI2, 0x91);
-    spi_data1=spi_read(SPI2);
-    gpio_set(AD2S1210_WRPIN_PORT, AD2S1210_WRPIN);
-    //gpio_clear(AD2S1210_WRPIN_PORT, AD2S1210_WRPIN);
-    //gpio_set(AD2S1210_WRPIN_PORT, AD2S1210_WRPIN);
-    gpio_clear(AD2S1210_WRPIN_PORT, AD2S1210_WRPIN);
-    //if (counter>20) {
-    //  spi_write(SPI2, 0x28); // 10KHz
-    //} else {
-      spi_write(SPI2, 0x12); // 4.5KHz
-      //}
-    if (counter>40) {
-      counter=0;
-    }
-    spi_data2=spi_read(SPI2);
-    gpio_set(AD2S1210_WRPIN_PORT, AD2S1210_WRPIN);
     //gpio_clear(AD2S1210_WRPIN_PORT, AD2S1210_WRPIN);
     //gpio_set(AD2S1210_WRPIN_PORT, AD2S1210_WRPIN);
 
