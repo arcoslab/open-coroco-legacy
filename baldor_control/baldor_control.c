@@ -20,6 +20,7 @@
 #include <libopencm3/stm32/gpio.h>
 #include <libopencm3-plus/cdcacm_one_serial/cdcacm.h>
 #include <libopencm3/stm32/spi.h>
+#include <libopencm3/stm32/adc.h>
 #include <libopencm3/stm32/timer.h>
 #include <libopencm3/stm32/f4/nvic.h>
 #include "baldor_control.h"
@@ -198,6 +199,33 @@ void serial_conf(void) {
 
 bool ad_ready=false; //resolver circuit ad2s
 
+static void adc_setup(void)
+{
+  rcc_periph_clock_enable(RCC_ADC1);
+  rcc_periph_clock_enable(RCC_GPIOA);
+  rcc_periph_clock_enable(RCC_GPIOC);
+	gpio_mode_setup(GPIOA, GPIO_MODE_ANALOG, GPIO_PUPD_NONE, GPIO1);
+	gpio_mode_setup(GPIOC, GPIO_MODE_ANALOG, GPIO_PUPD_NONE, GPIO1);
+
+	adc_power_off(ADC1);
+	adc_disable_scan_mode(ADC1);
+	adc_set_sample_time_on_all_channels(ADC1, ADC_SMPR_SMP_3CYC);
+
+	adc_power_on(ADC1);
+
+}
+
+static uint16_t read_adc_naiive(uint8_t channel)
+{
+	uint8_t channel_array[16];
+	channel_array[0] = channel;
+	adc_set_regular_sequence(ADC1, 1, channel_array);
+	adc_start_conversion_regular(ADC1);
+	while (!adc_eoc(ADC1));
+	uint16_t reg16 = adc_read_regular(ADC1);
+	return reg16;
+}
+
 void system_init(void) {
   rcc_clock_setup_hse_3v3(&rcc_hse_8mhz_3v3[RCC_CLOCK_3V3_168MHZ]);
   leds_init();
@@ -211,6 +239,7 @@ void system_init(void) {
   serial_conf();
   ad2s1210_conf();
   ad_ready=true;
+  adc_setup();
 }
 
 int avg_filter(int in) {
@@ -474,7 +503,11 @@ int main(void)
     }
 
     //printf("ad2s_fault: 0x%02X, raw_pos: %05d, raw_pos_last: %05d, diff_pos: %05d, ref_freq: %010.5f, est_freq: %010.5f, exc_volt: %04.2f, p_error: %08.5f, i_error: %04.2f, pi_control: %04.2f, cmd_angle: %04.2f\n", ad2s1210_fault, raw_pos, raw_pos_last, diff_pos, ref_freq, est_freq, exc_volt, p_error, i_error, pi_control, cmd_angle*360/(2*PI));
-    printf("ad2s_fault: 0x%02X, cur_angle: %05d, ref_freq: %010.5f, est_freq: %010.5f, exc_volt: %04.2f, error: %05.2f, p_error: %08.5f, i_error: %04.2f, pi_control: %08.5f, cmd_angle: %06.2f, exc_volt: %04.2f, test: %04.2f\n", ad2s1210_fault, raw_pos*360/(1<<16), ref_freq/(2*PI), est_freq/(2*PI), exc_volt, error, p_error, i_error, pi_control, cmd_angle*360/(2*PI), exc_volt, test);
+    uint16_t input_adc1 = read_adc_naiive(1);
+    uint16_t input_adc11 = read_adc_naiive(11);
+
+    //printf("ad2s_fault: 0x%02X, cur_angle: %05d, ref_freq: %010.5f, est_freq: %010.5f, exc_volt: %04.2f, error: %05.2f, p_error: %08.5f, i_error: %04.2f, pi_control: %08.5f, cmd_angle: %06.2f, exc_volt: %04.2f, test: %04.2f\n", ad2s1210_fault, raw_pos*360/(1<<16), ref_freq/(2*PI), est_freq/(2*PI), exc_volt, error, p_error, i_error, pi_control, cmd_angle*360/(2*PI), exc_volt, test);
+    printf("ad2s_fault: 0x%02X, cur_angle: %05d, ref_freq: %010.5f, est_freq: %010.5f, exc_volt: %04.2f, error: %05.2f, p_error: %08.5f, i_error: %04.2f, pi_control: %08.5f, cmd_angle: %06.2f, adc1: %d, adc11: %d\n", ad2s1210_fault, raw_pos*360/(1<<16), ref_freq/(2*PI), est_freq/(2*PI), exc_volt, error, p_error, i_error, pi_control, cmd_angle*360/(2*PI), input_adc1, input_adc11);
     //printf("ef: %010.5f ca: %6.5f\n", est_freq, ref_freq);
     //printf("ef: %010.5f ca: %05d\n", ref_freq, raw_pos);
     //printf("%d %010.5f ca %05d\n",STM32_POSITION, ref_freq, raw_pos);
