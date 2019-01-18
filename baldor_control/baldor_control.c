@@ -173,6 +173,20 @@ void tim_init(void)
   nvic_enable_irq(NVIC_TIM1_UP_TIM10_IRQ);
 }
 
+void shutdown_on() {
+  gpio_set(GPIOD, GPIO3);
+}
+
+void shutdown_off() {
+  gpio_clear(GPIOD, GPIO3);
+}
+
+void shutdown_init(){
+  rcc_periph_clock_enable(RCC_GPIOD);
+  gpio_mode_setup(GPIOD, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO3);
+  shutdown_on();
+}
+
 void serial_conf(void) {
   setvbuf(stdin,NULL,_IONBF,0); // Sets stdin in unbuffered mode (normal for usart com)
   setvbuf(stdout,NULL,_IONBF,0); // Sets stdin in unbuffered mode (normal for usart com)
@@ -187,16 +201,19 @@ bool ad_ready=false; //resolver circuit ad2s
 void system_init(void) {
   rcc_clock_setup_hse_3v3(&rcc_hse_8mhz_3v3[RCC_CLOCK_3V3_168MHZ]);
   leds_init();
+  shutdown_init();
+  shutdown_on();
   cdcacm_init(); //default 921600bps
   ad2s1210_init();
   spi_init();
   tim_init();
+  shutdown_off();
   serial_conf();
   ad2s1210_conf();
   ad_ready=true;
 }
 
-inline int avg_filter(int in) {
+int avg_filter(int in) {
   static int window[]={0,0,0,0,0,0,0,0,0,0};
   static uint8_t pw=0;
   window[pw]=in;

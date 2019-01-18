@@ -4,6 +4,7 @@
 #define MIN_EXC_VOLT 0.1f
 #define MAX_EXC_VOLT 1.0f
 #define RESOLVER_STATOR_OFFSET -120*2*PI/360
+#define RESOLVER_STATOR_OFFSET 30*2*PI/360
 
 #define P 0.1f //12V
 #define P 0.03f //24V

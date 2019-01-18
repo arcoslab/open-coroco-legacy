@@ -22,7 +22,7 @@ void spi_init(void);
 void tim_init(void);
 void serial_conf(void);
 void update_est_freq(void);
-inline int avg_filter(int);
+int avg_filter(int);
 inline int avg_filter2(int);
 void pid_controller(void);
 void gen_pwm(void);

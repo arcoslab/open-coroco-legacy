@@ -54,15 +54,13 @@ endif
 
 $(info plus $(LIBOPENCM3_PLUS))
 
-
-
 CFLAGS		+= -Os -g \
 		   -Wall -Wextra -Wimplicit-function-declaration \
 		   -Wredundant-decls -Wmissing-prototypes -Wstrict-prototypes \
 		   -Wundef -Wshadow \
 		   -I$(TOOLCHAIN_DIR)/include -I$(LIBOPENCM3_PLUS)/include\
 		   -fno-common -mcpu=cortex-m4 -mthumb \
-		   -mfloat-abi=hard -mfpu=fpv4-sp-d16 -MD -DSTM32F4 $(BALDOR_FLAGS)
+		   -mfloat-abi=hard -mfpu=fpv4-sp-d16 -MD -DSTM32F4
 LDSCRIPT	?= $(BINARY).ld
 LDFLAGS		+= --static -lc -lm -lnosys -L$(TOOLCHAIN_DIR)/lib \
 			 -L$(TOOLCHAIN_DIR)/lib/stm32/f4 -L$(LIBOPENCM3_PLUS)/lib\
@@ -74,6 +72,8 @@ CLEAN		+= $(OBJS) $(OBJS:.o=.d)
 OOCD		?= openocd
 OOCD_INTERFACE	?= flossjtag
 OOCD_BOARD	?= olimex_stm32_h103
+OOCD_TARGET     ?= stm32f4x
+
 # Black magic probe specific variables
 # Set the BMP_PORT to a serial port and then BMP is used for flashing
 BMP_PORT        ?=
@@ -143,11 +143,9 @@ ifeq ($(OOCD_SERIAL),)
 	@printf "  FLASH   $<\n"
 	@# IMPORTANT: Don't use "resume", only "reset" will work correctly!
 	$(Q)$(OOCD) -f interface/$(OOCD_INTERFACE).cfg \
-		    -f board/$(OOCD_BOARD).cfg \
-		    -c "init" -c "reset init" \
-		    -c "flash write_image erase $(*).hex" \
-		    -c "reset" \
-		    -c "shutdown" $(NULL)
+                    -f target/$(OOCD_TARGET).cfg \
+                    -c "program $(*).hex verify reset exit" \
+                    $(NULL)
 else
 %.flash: %.hex
 	@printf "  FLASH   $<\n"

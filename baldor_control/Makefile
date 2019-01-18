@@ -23,7 +23,7 @@ OBJS := ad2s1210.o
 
 LDSCRIPT = ../libopencm3-plus/lib/libopencm3_plus_stm32f4discovery.ld
 
-OOCD_INTERFACE = stlink-v2
+OOCD_INTERFACE = stlink-v2-1
 OOCD_BOARD = stm32f4discovery
 
 
