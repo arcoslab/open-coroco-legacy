@@ -31,6 +31,13 @@ class Open_coroco(object):
     def set_speed(self, speed):
         self.ref_speed=speed
 
+    def set_ascii_speed(self, speed):
+        print("Sending speed")
+        self.ref_speed=speed
+        send_data=bytes("f "+str(int(speed))+"\n\r", "utf-8")
+        print(send_data)
+        self.serial_dev.write(send_data)
+
     def update_ascii_data(self):
         found_n=False
         while self.serial_dev.in_waiting>0:
@@ -64,9 +71,10 @@ if __name__=="__main__":
     open_coroco_1=Open_coroco()
     open_coroco_1.connect()
 
-    open_coroco_1.set_speed(2*pi)
+    open_coroco_1.set_speed(10*2*pi)
 
     while (True):
         if open_coroco_1.update_ascii_data():
+            open_coroco_1.set_ascii_speed(0*2*pi)
             print("Current speed: "+str(open_coroco_1.get_cur_speed()))
             print("Currents: "+str(open_coroco_1.get_currents()))
