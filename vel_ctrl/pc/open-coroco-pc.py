@@ -2,6 +2,7 @@
 
 import serial
 from numpy import pi
+import struct
 
 class Open_coroco(object):
     def __init__(self):
@@ -30,6 +31,9 @@ class Open_coroco(object):
 
     def set_speed(self, speed):
         self.ref_speed=speed
+        raw_out=struct.pack("h", int(self.ref_speed*100.0))
+        print("Data out: "+raw_out.hex())
+        self.serial_dev.write(bytes("s", "utf-8")+raw_out)
 
     def set_ascii_speed(self, speed):
         print("Sending speed")
@@ -60,6 +64,34 @@ class Open_coroco(object):
             return(True)
         return(False)
 
+    def update_data(self):
+        found=False
+        while (not found) and (self.serial_dev.in_waiting>0):
+            #print("Reading serial data")
+            raw_data=self.serial_dev.read(1)
+            if raw_data==bytes.fromhex("55"):
+                print("55 found")
+                while self.serial_dev.in_waiting<=0:
+                    pass
+                #print("Reading serial data")
+                raw_data=self.serial_dev.read(1)
+                if raw_data==bytes.fromhex("AA"):
+                    print("AA found")
+                    found=True
+
+        if found:
+            raw_data=bytes()
+            while len(raw_data)<(2+1+1+2+2*4+2*4+2+2+2):
+                if (self.serial_dev.in_waiting>0):
+                    raw_data+=self.serial_dev.read(1)
+            print("All data received")
+            print(len(raw_data))
+            data=struct.unpack("HBh4H4HHHH", raw_data)
+            for i in data:
+                print("% 06d " % i, end='');
+            print("");
+        return(found)
+
     def get_cur_speed(self):
         return(self.est_speed)
 
@@ -71,10 +103,11 @@ if __name__=="__main__":
     open_coroco_1=Open_coroco()
     open_coroco_1.connect()
 
-    open_coroco_1.set_speed(10*2*pi)
+    open_coroco_1.set_speed(0*2.0*pi)
 
     while (True):
-        if open_coroco_1.update_ascii_data():
-            open_coroco_1.set_ascii_speed(0*2*pi)
+        if open_coroco_1.update_data():
+            open_coroco_1.set_speed(10*2.0*pi)
+            #open_coroco_1.set_ascii_speed(0*2*pi)
             print("Current speed: "+str(open_coroco_1.get_cur_speed()))
             print("Currents: "+str(open_coroco_1.get_currents()))
