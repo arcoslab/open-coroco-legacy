@@ -19,7 +19,7 @@
 
 BINARY = vel_ctrl
 
-OBJS := ad2s1210.o
+OBJS := ad2s1210.o bin_comm.o
 
 LDSCRIPT = ../libopencm3-plus/lib/libopencm3_plus_stm32f4discovery.ld
 

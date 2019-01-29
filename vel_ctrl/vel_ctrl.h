@@ -41,4 +41,15 @@ void gen_pwm(void);
 #define PI 3.1416f
 #define RAW_TO_RAD(RAW) ((RAW)*2.0f*PI/(1<<16))
 
+#define ADC_STRAIN_GAUGE 11
+#define ADC_CURRENT_BATTERY 1
+#define ADC_CURRENT_L0 3
+#define ADC_CURRENT_L1 15
+#define ADC_CURRENT_L2 9
+#define ADC_VOLTAGE_NEUTRAL 12
+#define ADC_VOLTAGE_L0 2
+#define ADC_VOLTAGE_L1 14
+#define ADC_VOLTAGE_L2 8
+#define ADC_TEMP48V 0
+
 

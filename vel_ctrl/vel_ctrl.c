@@ -30,6 +30,7 @@
 #include "ad2s1210.h"
 #include <stdlib.h>
 #include <string.h>
+#include "bin_comm.h"
 
 void leds_init(void) {
   rcc_periph_clock_enable(RCC_GPIOD);
@@ -204,8 +205,12 @@ static void adc_setup(void)
   rcc_periph_clock_enable(RCC_ADC1);
   rcc_periph_clock_enable(RCC_GPIOA);
   rcc_periph_clock_enable(RCC_GPIOC);
-	gpio_mode_setup(GPIOA, GPIO_MODE_ANALOG, GPIO_PUPD_NONE, GPIO1);
-	gpio_mode_setup(GPIOC, GPIO_MODE_ANALOG, GPIO_PUPD_NONE, GPIO1);
+  rcc_periph_clock_enable(RCC_GPIOB);
+	gpio_mode_setup(GPIOA, GPIO_MODE_ANALOG, GPIO_PUPD_NONE, GPIO0 | GPIO1 | GPIO2 | GPIO3);
+	gpio_mode_setup(GPIOC, GPIO_MODE_ANALOG, GPIO_PUPD_NONE, GPIO1 | GPIO2 | GPIO4 | GPIO5);
+	gpio_mode_setup(GPIOB, GPIO_MODE_ANALOG, GPIO_PUPD_NONE, GPIO0 | GPIO1);
+        gpio_mode_setup(GPIOC, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO6);
+        gpio_set(GPIOC, GPIO6); //Clear for 48V voltage, set for temp
 
 	adc_power_off(ADC1);
 	adc_disable_scan_mode(ADC1);
@@ -465,49 +470,71 @@ int main(void)
   int c=0;
   char cmd_s[50]="";
   char cmd[10]="";
+  char cmd_bin[2];
+  for (int i=0; i<4; i++){
+    cmd_bin[i]=0;
+  }
   float value=0;
+  In cmd_in;
+  Out *data_out;
+  char raw_data_out[sizeof(Out)];
+  for (int i=0; i<sizeof(Out); i++) {
+    raw_data_out[i]=0;
+  }
+  data_out=(Out *) raw_data_out;
+  cmd_in.ref_freq=(short int *)cmd_bin;
+
+
   system_init();
 
   while(true) {
     if ((poll(stdin) > 0)) {
-      i=0;
-      if (poll(stdin) > 0) {
-	c=0;
-	while (c!='\r') {
-	  c=getc(stdin);
-	  cmd_s[i]=c;
-	  i++;
-	  //putc(c, stdout);
-	}
-	cmd_s[i]='\0';
+      cmd[0]=getc(stdin);
+      if (cmd[0]=='s') {
+        //printf("new cmd\n");
+        while ((poll(stdin) == 0)) {
+        }
+        cmd_bin[0]=getc(stdin);
+        //printf("cmd data 0\n");
+        while ((poll(stdin) == 0)) {
+        }
+        cmd_bin[1]=getc(stdin);
+        //printf("cmd data 1\n");
       }
-      //printf("%s", cmd_s);
-      sscanf(cmd_s, "%s %f", cmd, &value);
-      if (strcmp(cmd, "f") == 0){ //set ref freq
-	//printf("New reference frequency: %f. Confirm? (Press \"y\")\n", value);
-	ref_freq=value;
-	//printf("ef: %010.5f ca: %05d\n", est_freq, raw_pos); //**************Remove comment and comment the line below
-    //printf("ef: %010.5f ca: %05d\n", ref_freq, raw_pos);
-    //printf("STM32_POSITION %010.5f ca %05d\n", ref_freq, raw_pos);
-
-    //printf("STM32_POSITION %010.5f ca %05d\n", ref_freq, raw_pos);
-    //printf("%d %010.5f ca %05d\n",STM32_POSITION, ref_freq, raw_pos);
-    //printf("%010.5f ca: %05d ref: %6.2f\n", est_freq, raw_pos,ref_freq);
-	if (value == 0.0f) {
-	  //motor_off=true;
-	} else {
-	  //printf("Motor on\n");
-	  motor_off=false;
-	}
+      value=(float) (*(cmd_in.ref_freq));
+      ref_freq=value/100;
+      if (value == 0.0f) {
+        //motor_off=true;
+      } else {
+        //printf("Motor on\n");
+        motor_off=false;
       }
     }
 
+
     //printf("ad2s_fault: 0x%02X, raw_pos: %05d, raw_pos_last: %05d, diff_pos: %05d, ref_freq: %010.5f, est_freq: %010.5f, exc_volt: %04.2f, p_error: %08.5f, i_error: %04.2f, pi_control: %04.2f, cmd_angle: %04.2f\n", ad2s1210_fault, raw_pos, raw_pos_last, diff_pos, ref_freq, est_freq, exc_volt, p_error, i_error, pi_control, cmd_angle*360/(2*PI));
-    uint16_t input_adc1 = read_adc_naiive(1);
-    uint16_t input_adc11 = read_adc_naiive(11);
 
     //printf("ad2s_fault: 0x%02X, cur_angle: %05d, ref_freq: %010.5f, est_freq: %010.5f, exc_volt: %04.2f, error: %05.2f, p_error: %08.5f, i_error: %04.2f, pi_control: %08.5f, cmd_angle: %06.2f, exc_volt: %04.2f, test: %04.2f\n", ad2s1210_fault, raw_pos*360/(1<<16), ref_freq/(2*PI), est_freq/(2*PI), exc_volt, error, p_error, i_error, pi_control, cmd_angle*360/(2*PI), exc_volt, test);
-    printf("ad2s_fault: 0x%02X, cur_angle: %05d, ref_freq: %010.5f, est_freq: %010.5f, exc_volt: %04.2f, error: %05.2f, p_error: %08.5f, i_error: %04.2f, pi_control: %08.5f, cmd_angle: %06.2f, adc1: %d, adc11: %d\n", ad2s1210_fault, raw_pos*360/(1<<16), ref_freq/(2*PI), est_freq/(2*PI), exc_volt, error, p_error, i_error, pi_control, cmd_angle*360/(2*PI), input_adc1, input_adc11);
+    //printf("ad2s_fault: 0x%02X, cur_angle: %05d, ref_freq: %010.5f, est_freq: %010.5f, exc_volt: %04.2f, error: %05.2f, p_error: %08.5f, i_error: %04.2f, pi_control: %08.5f, cmd_angle: %06.2f, adc1: %d, adc11: %d, cmd: 0x%02X, cmd_bin: 0x%02X 0x%02X, ref_freq: %d\n", ad2s1210_fault, raw_pos*360/(1<<16), ref_freq/(2*PI), est_freq/(2*PI), exc_volt, error, p_error, i_error, pi_control, cmd_angle*360/(2*PI), input_adc1, input_adc11, cmd[0], cmd_bin[0], cmd_bin[1], *(cmd_in.ref_freq));
+    (*data_out).cur_angle=raw_pos;
+    (*data_out).ad2s1210_fault=ad2s1210_fault;
+    (*data_out).est_freq=(int16_t) (est_freq*100);
+    (*data_out).strain_gauge= read_adc_naiive(ADC_STRAIN_GAUGE);
+    (*data_out).current[0]= read_adc_naiive(ADC_CURRENT_BATTERY);
+    (*data_out).current[1]= read_adc_naiive(ADC_CURRENT_L0);
+    (*data_out).current[2]= read_adc_naiive(ADC_CURRENT_L1);
+    (*data_out).current[3]= read_adc_naiive(ADC_CURRENT_L2);
+    (*data_out).voltage_neutral= read_adc_naiive(ADC_VOLTAGE_NEUTRAL);
+    (*data_out).voltage[1]= read_adc_naiive(ADC_VOLTAGE_L0);
+    (*data_out).voltage[2]= read_adc_naiive(ADC_VOLTAGE_L1);
+    (*data_out).voltage[3]= read_adc_naiive(ADC_VOLTAGE_L2);
+    (*data_out).voltage[0]= read_adc_naiive(ADC_TEMP48V);
+    (*data_out).temp= read_adc_naiive(ADC_TEMP48V);
+    putc(0x55, stdout);
+    putc(0xAA, stdout);
+    for (int i=0; i<sizeof(Out); i++) {
+      putc(raw_data_out[i], stdout);
+    }
     //printf("ef: %010.5f ca: %6.5f\n", est_freq, ref_freq);
     //printf("ef: %010.5f ca: %05d\n", ref_freq, raw_pos);
     //printf("%d %010.5f ca %05d\n",STM32_POSITION, ref_freq, raw_pos);
